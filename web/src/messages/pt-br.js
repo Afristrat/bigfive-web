@@ -42,7 +42,7 @@ const portuguese = {
       },
       translated: {
         title: 'Traduzido',
-        text: 'Traduzido para mais de 20 idiomas. Ajude <a href="/translations" rel="noreferrer" target="blank">aqui</a>!'
+        text: 'Traduzido para mais de 20 idiomas. Ajude <a href="/translations" rel="noopener noreferrer" target="_blank">aqui</a>!'
       }
     },
     description: {

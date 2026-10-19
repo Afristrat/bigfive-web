@@ -16,9 +16,11 @@ const store = globalThis as typeof globalThis & {
 const hits = (store.__tengaRateLimitHits ??= new Map<string, number[]>());
 const SWEEP_INTERVAL_MS = 60 * 1000;
 
+// Plafonds par IP dimensionnés pour une équipe ou une salle qui passe le test
+// derrière une seule adresse (NAT d'entreprise).
 export const limits = {
-  getResult: { max: 120, windowMs: HOUR_MS },
-  saveTest: { max: 20, windowMs: HOUR_MS },
+  getResult: { max: 600, windowMs: HOUR_MS },
+  saveTest: { max: 60, windowMs: HOUR_MS },
   saveFeedback: { max: 5, windowMs: HOUR_MS },
   translation: { max: 5, windowMs: HOUR_MS },
   sendEmailPerIp: { max: 5, windowMs: HOUR_MS },

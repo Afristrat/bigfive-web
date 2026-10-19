@@ -6,8 +6,7 @@ export default function FaqPage() {
   const faq = [
     {
       question: 'I got an error on this website',
-      answer:
-        'Submit an issue at GitHub.'
+      answer: 'Submit an issue at GitHub.'
     },
     {
       question: 'Can I use the code for this website for Commercial Purposes?',

@@ -1,5 +1,7 @@
 import { base64url } from '@/lib/helpers';
+import { notFound } from 'next/navigation';
 import { getTestResult } from '@/actions';
+import { B5Error } from '@/types';
 import { title } from '@/components/primitives';
 import { DomainComparePage } from './domain';
 import { BarChartCompare } from '@/components/bar-chart-generic';
@@ -32,7 +34,6 @@ export async function generateMetadata({ params }: ComparePageProps) {
   };
 }
 
-
 type Person = {
   id: string;
   name: string;
@@ -54,8 +55,15 @@ export default async function ComparePage({ params }: ComparePageProps) {
   }
   const reports = await Promise.all(
     people.map(async (person) => {
-      const report = await getTestResult(person.id, locale);
-      if (!report) throw new Error('No report found');
+      let report;
+      try {
+        report = await getTestResult(person.id, locale);
+      } catch (error) {
+        if (error instanceof B5Error && error.name === 'NotFoundError')
+          notFound();
+        throw error;
+      }
+      if (!report) notFound();
       return {
         name: person.name,
         report
@@ -70,9 +78,7 @@ export default async function ComparePage({ params }: ComparePageProps) {
     return {
       name,
       data: domains.map((domain) => {
-        const match = report.results.find(
-          (r) => r.domain === domain.domain
-        );
+        const match = report.results.find((r) => r.domain === domain.domain);
         return match?.score ?? 0;
       })
     };
@@ -84,7 +90,7 @@ export default async function ComparePage({ params }: ComparePageProps) {
       );
       return {
         name: report.name,
-        facets: domainResult?.facets
+        facets: domainResult?.facets ?? []
       };
     });
 
@@ -109,7 +115,6 @@ export default async function ComparePage({ params }: ComparePageProps) {
             key={domain.domain}
             title={domain.title}
             shortDescription={domain.shortDescription}
-            // @ts-ignore
             domain={getNamedFacets(domain.domain)}
           />
         ))}

@@ -41,7 +41,7 @@ const catalan = {
       },
       translated: {
         title: 'Traduït',
-        text: 'Traduït a més de 20 idiomes. Ajuda en <a href="/translations" rel="noreferrer" target="blank">aquesta pàgina de traduccions</a>!'
+        text: 'Traduït a més de 20 idiomes. Ajuda en <a href="/translations" rel="noopener noreferrer" target="_blank">aquesta pàgina de traduccions</a>!'
       }
     },
     description: {

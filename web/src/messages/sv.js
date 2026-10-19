@@ -40,7 +40,7 @@ const svenska = {
       },
       translated: {
         title: 'Översättningar',
-        text: 'Testet har översatts till mer än 20 språk. Hjälp till <a href="/translations" rel="noreferrer" target="blank">här</a>!'
+        text: 'Testet har översatts till mer än 20 språk. Hjälp till <a href="/translations" rel="noopener noreferrer" target="_blank">här</a>!'
       }
     },
     description: {
@@ -48,9 +48,9 @@ const svenska = {
       subtop: '',
       subtop2:
         ' är en vetenskaplig och trovärdig psykologisk modell för att mäta personlighet.',
-      reference: `Tester og evalueringer for bigfive-test.com er hentet fra
+      reference: `Tester och utvärderingar på den här webbplatsen är hämtade från
 <a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-innholdet er fra <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+innehållet är från <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
       info: 'Testet som följer har 120 frågor och beräknad tid är 10 minuter.',
       result:
         'När du har slutfört testet får du en detaljerad personlighetsrapport inom följande domäner:',

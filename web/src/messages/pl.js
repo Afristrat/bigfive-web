@@ -42,7 +42,7 @@ const polish = {
       },
       translated: {
         title: 'Przetłumaczony',
-        text: 'Przetłumaczony na ponad 20 języków. Pomóż <a href="/translations" rel="noreferrer" target="blank">tutaj</a>!'
+        text: 'Przetłumaczony na ponad 20 języków. Pomóż <a href="/translations" rel="noopener noreferrer" target="_blank">tutaj</a>!'
       }
     },
     description: {

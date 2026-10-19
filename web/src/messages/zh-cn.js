@@ -39,7 +39,7 @@ const chinese = {
       },
       translated: {
         title: '已翻译',
-        text: '翻译成 20 多种语言。<a href="/translations" rel="noreferrer" target="blank">点击这里</a>帮助翻译!'
+        text: '翻译成 20 多种语言。<a href="/translations" rel="noopener noreferrer" target="_blank">点击这里</a>帮助翻译!'
       }
     },
     description: {

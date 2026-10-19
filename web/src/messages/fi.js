@@ -40,7 +40,7 @@ const finnish = {
       },
       translated: {
         title: 'Käännetty',
-        text: 'Käännetty yli 20 kielelle. Auttaa <a href="/translations" rel="noreferrer" target="blank">tässä</a>!'
+        text: 'Käännetty yli 20 kielelle. Auttaa <a href="/translations" rel="noopener noreferrer" target="_blank">tässä</a>!'
       }
     },
     description: {

@@ -40,7 +40,7 @@ const hungarian = {
       },
       translated: {
         title: 'Fordított',
-        text: 'Több mint 20 nyelvre lefordítva. Segíts ebben a <a href="/translations" rel="noreferrer" target="blank">fordítási oldalon</a>!'
+        text: 'Több mint 20 nyelvre lefordítva. Segíts ebben a <a href="/translations" rel="noopener noreferrer" target="_blank">fordítási oldalon</a>!'
       }
     },
     description: {

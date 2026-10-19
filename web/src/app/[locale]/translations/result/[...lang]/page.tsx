@@ -5,8 +5,7 @@ import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { Input, Textarea } from '@nextui-org/input';
 import { subtitle, title } from '@/components/primitives';
 import { TranslationState, generateResultTextTranslation } from '@/actions';
-import { use, useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { type FormEvent, use, useActionState, useTransition } from 'react';
 import { supportEmail } from '@/config/site';
 import type { ResultTemplateDomain } from '@/types';
 import { Button } from '@nextui-org/button';
@@ -17,17 +16,28 @@ interface TranslationResultProps {
     lang: string[];
   }>;
 }
-export default function TranslationResult({
-  params
-}: TranslationResultProps) {
+export default function TranslationResult({ params }: TranslationResultProps) {
   const { lang } = use(params);
   const template: ResultTemplateDomain[] = getTemplate(lang[0]);
-  const [state, formAction] = useActionState(generateResultTextTranslation, {
-    message: '',
-    type: 'success'
-  } as TranslationState);
+  const [state, formAction, isPending] = useActionState(
+    generateResultTextTranslation,
+    {
+      message: '',
+      type: 'success'
+    } as TranslationState
+  );
+  const [, startTransition] = useTransition();
+
+  // onSubmit plutôt que action : React 19 réinitialise les champs non
+  // contrôlés après une action de formulaire, ce qui ferait perdre la traduction.
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    startTransition(() => formAction(data));
+  };
+
   return (
-    <form action={formAction}>
+    <form onSubmit={handleSubmit}>
       <div className='gap-4 flex flex-col'>
         <h1 className={title()}>Translation</h1>
         <h2 className={subtitle()}>
@@ -43,6 +53,17 @@ export default function TranslationResult({
             </>
           )}
         </h2>
+
+        <Card>
+          <CardHeader>
+            <h1 className='text-large font-bold'>Personal information</h1>
+          </CardHeader>
+          <CardBody className='gap-4'>
+            <Input name='name' label='Name (will be credited)' isRequired />
+            <Input name='email' type='email' label='Email' isRequired />
+            <Textarea name='notes' label='Other notes' />
+          </CardBody>
+        </Card>
 
         {template.map((item) => {
           return (
@@ -116,7 +137,7 @@ export default function TranslationResult({
           );
         })}
       </div>
-      <SubmitButton />
+      <SubmitButton pending={isPending} />
       {state.message && (
         <div className='flex mt-4 justify-center'>
           <Chip
@@ -132,8 +153,7 @@ export default function TranslationResult({
   );
 }
 
-const SubmitButton = () => {
-  const { pending } = useFormStatus();
+const SubmitButton = ({ pending }: { pending: boolean }) => {
   return (
     <div className='flex justify-end mt-8'>
       <Button color='primary' type='submit' isLoading={pending}>

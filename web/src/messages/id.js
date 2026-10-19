@@ -41,7 +41,7 @@ const indonesian = {
       },
       translated: {
         title: 'Diterjemahkan',
-        text: 'Diterjemahkan ke lebih dari 20 bahasa. Membantu <a href="/translations" rel="noreferrer" target="blank">sini</a>!'
+        text: 'Diterjemahkan ke lebih dari 20 bahasa. Membantu <a href="/translations" rel="noopener noreferrer" target="_blank">sini</a>!'
       }
     },
     description: {

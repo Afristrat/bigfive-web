@@ -40,7 +40,7 @@ const urdu = {
       },
       translated: {
         title: 'ترجمہ شدہ',
-        text: '20 سے زائد زبانوں میں ترجمہ کیا گیا۔ <a href="/translations" rel="noreferrer" target="blank">اس ترجمہ صفحہ</a> پر مدد کریں!'
+        text: '20 سے زائد زبانوں میں ترجمہ کیا گیا۔ <a href="/translations" rel="noopener noreferrer" target="_blank">اس ترجمہ صفحہ</a> پر مدد کریں!'
       }
     },
     description: {

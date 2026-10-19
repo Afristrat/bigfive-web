@@ -14,6 +14,7 @@ import useWindowDimensions from '@/hooks/useWindowDimensions';
 import useTimer from '@/hooks/useTimer';
 import { type Answer, type DbResult } from '@/types';
 import { Card, CardHeader } from '@nextui-org/card';
+import { Alert } from '@/components/alert';
 
 interface SurveyProps {
   questions: Question[];
@@ -37,6 +38,7 @@ export const Survey = ({
   const [questionsPerPage, setQuestionsPerPage] = useState(1);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [loading, setLoading] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
   const [restored, setRestored] = useState(false);
   const [inProgress, setInProgress] = useState(false);
   const { width } = useWindowDimensions();
@@ -141,19 +143,27 @@ export const Survey = ({
 
   async function submitTest() {
     setLoading(true);
-    confetti({});
-    const result = await saveTest({
-      testId: 'b5-120',
-      lang: language,
-      invalid: false,
-      timeElapsed: seconds,
-      dateStamp: new Date(),
-      answers
-    });
-    localStorage.removeItem('inProgress');
-    localStorage.removeItem('b5data');
-    localStorage.setItem('resultId', result.id);
-    router.push(`/result/${result.id}`);
+    setSaveFailed(false);
+    try {
+      const result = await saveTest({
+        testId: 'b5-120',
+        lang: language,
+        invalid: false,
+        timeElapsed: seconds,
+        dateStamp: new Date(),
+        answers
+      });
+      confetti({});
+      localStorage.removeItem('inProgress');
+      localStorage.removeItem('b5data');
+      localStorage.setItem('resultId', result.id);
+      router.push(`/result/${result.id}`);
+    } catch (error) {
+      // La progression locale est conservée pour permettre un nouvel essai.
+      console.error('Could not save the test', error);
+      setSaveFailed(true);
+      setLoading(false);
+    }
   }
 
   function dataInLocalStorage() {
@@ -250,6 +260,15 @@ export const Survey = ({
           </div>
         </div>
       ))}
+      {saveFailed && (
+        <div className='mt-4'>
+          <Alert title='Result not saved'>
+            <p>
+              Your result could not be saved. Please try again in a few minutes.
+            </p>
+          </Alert>
+        </div>
+      )}
       <div className='my-12 space-x-4 inline-flex'>
         <Button
           color='primary'

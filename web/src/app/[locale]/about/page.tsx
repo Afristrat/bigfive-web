@@ -29,11 +29,11 @@ export default async function AboutPage({ params }: Props) {
       </div>
       <div className='mt-2 text-medium lg:mt-4 lg:text-large'>
         <p>
-          Welcome to the Big Five personality test, your premier destination for exploring
-          personality traits using the scientifically acclaimed Big Five model.
-          Our free, open-source test offers detailed insights into the five key
-          dimensions of personality: Openness, Conscientiousness, Extraversion,
-          Agreeableness, and Neuroticism.
+          Welcome to the Big Five personality test, your premier destination for
+          exploring personality traits using the scientifically acclaimed Big
+          Five model. Our free, open-source test offers detailed insights into
+          the five key dimensions of personality: Openness, Conscientiousness,
+          Extraversion, Agreeableness, and Neuroticism.
         </p>
         <br />
         <p>
@@ -43,8 +43,8 @@ export default async function AboutPage({ params }: Props) {
         <p>
           Developed with precision and accessibility in mind, our test helps you
           understand yourself better and foster personal growth. Embrace the
-          journey of self-discovery with this test, where psychological
-          insights meet user-friendly technology.
+          journey of self-discovery with this test, where psychological insights
+          meet user-friendly technology.
         </p>
         <br />
         <p>

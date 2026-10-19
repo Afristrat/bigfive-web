@@ -40,7 +40,7 @@ const icelandic = {
       },
       translated: {
         title: 'Translated',
-        text: 'Þýtt á yfir 20 tungumál. Hjálpaðu <a href="/translations" rel="noreferrer" target="blank"> hér </a>!'
+        text: 'Þýtt á yfir 20 tungumál. Hjálpaðu <a href="/translations" rel="noopener noreferrer" target="_blank"> hér </a>!'
       }
     },
     description: {

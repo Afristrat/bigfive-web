@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 
 interface Props {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ id: string; edit: string }>;
+  searchParams: Promise<{ id?: string; edit?: string }>;
 }
 
 export default async function ComparePage({ params, searchParams }: Props) {

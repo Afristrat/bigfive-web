@@ -41,7 +41,7 @@ const turkish = {
       },
       translated: {
         title: 'Çevrilmiş',
-        text: `20'den fazla dile çevrildi. <a href="/translations" rel="noreferrer" target="blank">bu çeviri sayfasında</a> yardım edin!`
+        text: `20'den fazla dile çevrildi. <a href="/translations" rel="noopener noreferrer" target="_blank">bu çeviri sayfasında</a> yardım edin!`
       }
     },
     description: {

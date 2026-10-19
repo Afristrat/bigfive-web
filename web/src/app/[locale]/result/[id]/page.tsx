@@ -1,16 +1,16 @@
+import { notFound } from 'next/navigation';
 import { Report, getTestResult } from '@/actions';
+import { B5Error } from '@/types';
 import { Snippet } from '@nextui-org/snippet';
 import { useTranslations } from 'next-intl';
 import { title } from '@/components/primitives';
 import { getTranslations } from 'next-intl/server';
 import { BarChart } from '@/components/bar-chart';
 import { Link } from '@/navigation';
-import { Alert } from '@/components/alert';
-import { basePath, locales, supportEmail } from '@/config/site';
+import { basePath, locales } from '@/config/site';
 import ShareBar from '@/components/share-bar';
 import { DomainTabs } from './domain-tabs';
 import { Chip } from '@nextui-org/react';
-import Mbti from './mbti';
 
 interface ResultPageParams {
   params: Promise<{ id: string; locale: string }>;
@@ -34,33 +34,23 @@ export async function generateMetadata({ params }: ResultPageParams) {
   };
 }
 
-
 export default async function ResultPage({
   params,
   searchParams
 }: ResultPageParams) {
   const { id, locale } = await params;
   const { showExpanded } = await searchParams;
-  let report;
+  let report: Report | undefined;
 
   try {
     report = await getTestResult(id.substring(0, 24), locale);
   } catch (error) {
-    throw new Error('Could not retrieve report');
+    if (error instanceof B5Error && error.name === 'NotFoundError') notFound();
+    throw error;
   }
 
-  if (!report)
-    return (
-      <Alert title='Could not retrive report'>
-        <>
-          <p>We could not retrive the following id {id}.</p>
-          <p>
-            Please check that it is correct
-            {supportEmail && <> or contact us at {supportEmail}</>}.
-          </p>
-        </>
-      </Alert>
-    );
+  // Le type de retour autorise undefined : on le traite comme une page introuvable.
+  if (!report) notFound();
 
   return <Results report={report} showExpanded={!!showExpanded} />;
 }
@@ -114,7 +104,6 @@ const Results = ({ report, showExpanded }: ResultsProps) => {
         showExpanded={showExpanded}
         scoreText={t('score')}
       />
-      {/* <Mbti results={report.results} /> */}
     </>
   );
 };

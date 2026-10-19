@@ -59,9 +59,7 @@ export function calculateReadingTime(content: string) {
     .replace(/\s{2,}/g, ' ')
     .trim();
 
-  const wordCount = text
-    .split(/\s+/)
-    .filter((word) => word.length > 0).length;
+  const wordCount = text.split(/\s+/).filter((word) => word.length > 0).length;
 
   // Calculate reading time
   const readingTime = Math.ceil(wordCount / wordsPerMinute);
@@ -69,7 +67,6 @@ export function calculateReadingTime(content: string) {
   return readingTime;
 }
 
-const spanishLanguages = ['es', 'ca', 'pt-br', 'pt'];
 const translatedLanguages = ['no'];
 
 export function getTranslationLocale(locale: string) {

@@ -40,7 +40,7 @@ const chineseTraditional = {
       },
       translated: {
         title: '已翻譯',
-        text: '已翻譯成超過20種語言。幫助翻譯請訪問 <a href="/translations" rel="noreferrer" target="blank">這個翻譯頁面</a>!'
+        text: '已翻譯成超過20種語言。幫助翻譯請訪問 <a href="/translations" rel="noopener noreferrer" target="_blank">這個翻譯頁面</a>!'
       }
     },
     description: {

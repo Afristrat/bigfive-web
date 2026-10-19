@@ -9,7 +9,7 @@ import {
   LinkProps,
   SlotsToClasses
 } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/navigation';
 import { LinkIcon } from '@nextui-org/shared-icons';
 
 const styles = tv({

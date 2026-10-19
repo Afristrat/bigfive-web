@@ -40,7 +40,7 @@ const italian = {
       },
       translated: {
         title: 'Tradotto',
-        text: 'Tradotto in oltre 20 lingue. Aiuta nella traduzione <a href="/translations" rel="noreferrer" target="blank">qui</a>!'
+        text: 'Tradotto in oltre 20 lingue. Aiuta nella traduzione <a href="/translations" rel="noopener noreferrer" target="_blank">qui</a>!'
       }
     },
     description: {

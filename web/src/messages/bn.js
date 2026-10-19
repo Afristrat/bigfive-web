@@ -42,7 +42,7 @@ const bengali = {
       },
       translated: {
         title: 'বিভিন্ন ভাষায় অনূদিত',
-        text: '২০টিরও বেশি ভাষায় অনূদিত হয়েছে। চাইলে আপনিও <a href="/translations" rel="noreferrer" target="blank"> অনুবাদ করতে</a> সাহায্য করতে পারেন!'
+        text: '২০টিরও বেশি ভাষায় অনূদিত হয়েছে। চাইলে আপনিও <a href="/translations" rel="noopener noreferrer" target="_blank"> অনুবাদ করতে</a> সাহায্য করতে পারেন!'
       }
     },
     description: {

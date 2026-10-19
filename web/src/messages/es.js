@@ -40,7 +40,7 @@ const spanish = {
       },
       translated: {
         title: 'Traducido',
-        text: 'Traducido a más de 20 idiomas. Puedes ayudar <a href="/translations" rel="noreferrer" target="blank">aquí</a>!'
+        text: 'Traducido a más de 20 idiomas. Puedes ayudar <a href="/translations" rel="noopener noreferrer" target="_blank">aquí</a>!'
       }
     },
     description: {

@@ -7,8 +7,7 @@ import { Button } from '@nextui-org/button';
 import { TranslationState, generateSurveyTranslation } from '@/actions';
 import { subtitle, title } from '@/components/primitives';
 import { Chip } from '@nextui-org/react';
-import { use, useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { type FormEvent, use, useActionState, useTransition } from 'react';
 import { supportEmail } from '@/config/site';
 
 interface TranslatePageProps {
@@ -26,18 +25,30 @@ export default function TranslatePage({
 }: TranslatePageProps) {
   const { lang } = use(params);
   const code = lang[0];
-  const [state, formAction] = useActionState(generateSurveyTranslation, {
-    message: '',
-    type: 'success'
-  } as TranslationState);
+  const [state, formAction, isPending] = useActionState(
+    generateSurveyTranslation,
+    {
+      message: '',
+      type: 'success'
+    } as TranslationState
+  );
+  const [, startTransition] = useTransition();
   const items = getItems(code);
   const choices = items[0].choices;
   const language = getInfo().languages.find((l) => l.id === code);
 
   const edit = !!use(searchParams).edit;
 
+  // onSubmit plutôt que action : React 19 réinitialise les champs non
+  // contrôlés après une action de formulaire, ce qui ferait perdre la traduction.
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    startTransition(() => formAction(data));
+  };
+
   return (
-    <form action={formAction}>
+    <form onSubmit={handleSubmit}>
       <div className='gap-4 flex flex-col'>
         <h1 className={title()}>Translation from {language?.text}</h1>
         <h2 className={subtitle()}>
@@ -105,7 +116,7 @@ export default function TranslatePage({
                 </div>
               ))}
             </div>
-            <SubmitButton />
+            <SubmitButton pending={isPending} />
             {state.message && (
               <div className='flex mt-4 justify-center'>
                 <Chip
@@ -124,8 +135,7 @@ export default function TranslatePage({
   );
 }
 
-const SubmitButton = () => {
-  const { pending } = useFormStatus();
+const SubmitButton = ({ pending }: { pending: boolean }) => {
   return (
     <div className='flex justify-end mt-8'>
       <Button color='primary' type='submit' isLoading={pending}>

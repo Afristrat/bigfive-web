@@ -9,9 +9,6 @@ export default createMiddleware({
 });
 
 export const config = {
-  matcher: [
-    '/',
-    '/(en|ar|de|es|fr|id|it|no|pt|sv|uk|da|fi|hi|is|ja|pl|ru|th|zh|vi)/:path*',
-    '/((?!api|_next|.*..*).*)'
-  ]
+  // Toutes les routes sauf api, _next et les fichiers avec extension (le point est échappé).
+  matcher: ['/((?!api|_next|.*\\..*).*)']
 };

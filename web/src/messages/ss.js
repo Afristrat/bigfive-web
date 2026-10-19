@@ -41,7 +41,7 @@ const siswati = {
       },
       translated: {
         title: 'Ihumushwe',
-        text: 'Ihumushwe kuya kulimi letehlukene letili-20. Sita kulokuhumusha <a href="/translations" rel="noreferrer" target="blank">lapha</a>!'
+        text: 'Ihumushwe kuya kulimi letehlukene letili-20. Sita kulokuhumusha <a href="/translations" rel="noopener noreferrer" target="_blank">lapha</a>!'
       }
     },
     description: {

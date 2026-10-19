@@ -39,7 +39,7 @@ const romanian = {
       },
       translated: {
         title: 'Tradus',
-        text: 'Tradus în peste 20 de limbi. Ajută la <a href="/translations" rel="noreferrer" target="blank">această pagină de traducere</a>!'
+        text: 'Tradus în peste 20 de limbi. Ajută la <a href="/translations" rel="noopener noreferrer" target="_blank">această pagină de traducere</a>!'
       }
     },
     description: {

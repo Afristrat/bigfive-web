@@ -2,9 +2,17 @@ import { getTranslations } from 'next-intl/server';
 
 export type SiteConfig = typeof siteConfig;
 
-export const basePath = (
-  process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-).replace(/\/+$/, '');
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
+// Pas de repli silencieux sur localhost en production : URLs canoniques fausses.
+if (process.env.NODE_ENV === 'production' && !siteUrl) {
+  throw new Error('NEXT_PUBLIC_SITE_URL must be set for production builds');
+}
+
+export const basePath = (siteUrl || 'http://localhost:3000').replace(
+  /\/+$/,
+  ''
+);
 
 // Adresse de contact affichée sur le site ; absente si non configurée.
 export const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || '';

@@ -41,7 +41,7 @@ const french = {
       },
       translated: {
         title: 'Traduit',
-        text: 'Traduit dans plus de 20 langues. Aider <a href="/translations" rel="noreferrer" target="blank">here</a>!'
+        text: 'Traduit dans plus de 20 langues. Aider <a href="/translations" rel="noopener noreferrer" target="_blank">here</a>!'
       }
     },
     description: {

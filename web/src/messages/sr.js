@@ -40,7 +40,7 @@ const serbian = {
       },
       translated: {
         title: 'Prevedeno',
-        text: 'Prevedeno na više od 20 jezika. Pomozite na <a href="/translations" rel="noreferrer" target="blank">stranici za prevođenje</a>!'
+        text: 'Prevedeno na više od 20 jezika. Pomozite na <a href="/translations" rel="noopener noreferrer" target="_blank">stranici za prevođenje</a>!'
       }
     },
     description: {

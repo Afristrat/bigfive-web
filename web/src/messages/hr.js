@@ -40,7 +40,7 @@ const croatian = {
       },
       translated: {
         title: 'Prevedeno',
-        text: 'Prevedeno na više od 20 jezika. Pomozite na <a href="/translations" rel="noreferrer" target="blank">ovoj stranici za prijevode</a>!'
+        text: 'Prevedeno na više od 20 jezika. Pomozite na <a href="/translations" rel="noopener noreferrer" target="_blank">ovoj stranici za prijevode</a>!'
       }
     },
     description: {

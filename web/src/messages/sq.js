@@ -39,7 +39,7 @@ const albanian = {
       },
       translated: {
         title: 'I përkthyer',
-        text: 'Përkthyer në mbi 20 gjuhë. Ndihmoni në <a href="/translations" rel="noreferrer" target="blank">këtë faqe përkthimi</a>!'
+        text: 'Përkthyer në mbi 20 gjuhë. Ndihmoni në <a href="/translations" rel="noopener noreferrer" target="_blank">këtë faqe përkthimi</a>!'
       }
     },
     description: {

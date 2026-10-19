@@ -1,5 +1,5 @@
 import { Post } from 'contentlayer/generated';
-import { unstable_noStore as noStore } from 'next/cache';
+import { connection } from 'next/server';
 import { connectToDatabase } from '@/db';
 
 interface ViewCounterProps {
@@ -12,7 +12,7 @@ const getViewsCollection = async () =>
   (await connectToDatabase()).collection<ViewDocument>('views');
 
 export async function ViewCounter({ postId }: ViewCounterProps) {
-  noStore();
+  await connection();
   try {
     const views = await (
       await getViewsCollection()
@@ -30,7 +30,7 @@ export async function ViewCounter({ postId }: ViewCounterProps) {
 }
 
 export async function ariclesByPopularity(posts: Post[]): Promise<Post[]> {
-  noStore();
+  await connection();
   const counts = new Map<string, number>();
   try {
     const documents = await (await getViewsCollection())

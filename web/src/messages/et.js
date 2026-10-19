@@ -40,7 +40,7 @@ const estonian = {
       },
       translated: {
         title: 'Tõlgitud',
-        text: 'Tõlgitud üle 20 keelde. Aita kaasa <a href="/translations" rel="noreferrer" target="blank">sellel tõlkepaneelil</a>!'
+        text: 'Tõlgitud üle 20 keelde. Aita kaasa <a href="/translations" rel="noopener noreferrer" target="_blank">sellel tõlkepaneelil</a>!'
       }
     },
     description: {

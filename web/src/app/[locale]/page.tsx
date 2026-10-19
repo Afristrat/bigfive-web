@@ -79,7 +79,7 @@ export default async function Home({ params }: HomeProps) {
       title: t('cards.translated.title'),
       description: t.raw('cards.translated.text'),
       icon: LanguageIcon({}),
-      href: `${basePath}/translations`
+      href: '/translations'
     }
   ];
 

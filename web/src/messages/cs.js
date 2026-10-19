@@ -40,7 +40,7 @@ const czech = {
       },
       translated: {
         title: 'Přeloženo',
-        text: 'Přeloženo do více než 20 jazyků. Pomozte nám na <a href="https://b5.translations.alheimsins.net/" rel="noreferrer" target="blank">této překladatelské stránce</a>!'
+        text: 'Přeloženo do více než 20 jazyků. Pomozte nám na <a href="https://b5.translations.alheimsins.net/" rel="noopener noreferrer" target="_blank">této překladatelské stránce</a>!'
       }
     },
     description: {

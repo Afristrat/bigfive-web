@@ -1,24 +1,26 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useActionState, useMemo, useState } from 'react';
 import { Input, Textarea } from '@nextui-org/input';
 import { Button } from '@nextui-org/button';
 import { FeebackState, saveFeedback } from '@/actions';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
 import { Chip } from '@nextui-org/react';
+
+const initialFeedback: FeebackState = {
+  message: '',
+  type: 'success'
+};
 
 export default function Feedback() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
-  const [state, formAction] = useFormState(saveFeedback, {
-    message: '',
-    type: 'success'
-  } as FeebackState);
+  const [state, formAction] = useActionState(saveFeedback, initialFeedback);
 
   const validateEmail = (value: string) =>
-    value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+    value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
 
   const isInvalidEmail = useMemo(() => {
     if (email === '') return false;

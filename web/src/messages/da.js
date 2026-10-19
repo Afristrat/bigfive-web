@@ -41,7 +41,7 @@ const dansk = {
       },
       translated: {
         title: 'Oversættelse',
-        text: 'Testen er blevet oversat til mere end 20 sprog. Hjælp <a href="/translations" rel="noreferrer" target="blank">her</a>!'
+        text: 'Testen er blevet oversat til mere end 20 sprog. Hjælp <a href="/translations" rel="noopener noreferrer" target="_blank">her</a>!'
       }
     },
     description: {
@@ -49,9 +49,9 @@ const dansk = {
       subtop: '',
       subtop2:
         ' er en videnskabelig og troværdig psykologisk model til måling af personlighed.',
-      reference: `Tester og evalueringer for bigfive-test.com er hentet fra
+      reference: `Tests og evalueringer på dette websted er hentet fra
 <a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-innholdet er fra <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+indholdet er fra <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
       info: 'Den følgende test har 120 spørgsmål, og den estimerede tid er 10 minutter.',
       result:
         'Efter afslutningen af testen får du en detaljeret personlighedsrapport inden for følgende domæner:',

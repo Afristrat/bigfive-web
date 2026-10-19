@@ -10,7 +10,6 @@ import { basePath, getNavItems, locales } from '@/config/site';
 import { NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { isRtlLang } from 'rtl-detect';
-import Script from 'next/script';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -112,7 +111,6 @@ export default async function RootLayout({
             </div>
           </Providers>
         </NextIntlClientProvider>
-        <Script src='/sw.js' strategy='afterInteractive' />
       </body>
     </html>
   );
