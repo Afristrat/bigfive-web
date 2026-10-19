@@ -9,9 +9,9 @@ const french = {
   },
   frontpage: {
     seo: {
-      title: 'Free open-source BigFive personality traits test',
+      title: 'Test de personnalité Big Five',
       description:
-        'Take a free, open-source Big Five personality test. Learn to know your personality traits and compare yourself with your partner, colleagues, friends or family.'
+        'Passez le test de personnalité Big Five : découvrez vos traits de personnalité et comparez-vous à vos collègues, à votre équipe ou à vos proches.'
     },
     title: 'Test de personnalité Big Five',
     call_to_action: 'Faites le test gratuit maintenant',
@@ -127,7 +127,13 @@ const french = {
     next: 'Suivant',
     back: 'Retour',
     more: 'Plus',
-    seeResults: 'Voir les résultats'
+    seeResults: 'Voir les résultats',
+    restored: 'Vos réponses ont été restaurées. Cliquez ici pour',
+    newTest: 'recommencer le test',
+    saveFailedTitle: 'Résultat non enregistré',
+    saveFailedText:
+      'Votre résultat n’a pas pu être enregistré, souvent parce que le site a été mis à jour pendant votre test. Vos réponses sont conservées sur cet appareil : rechargez la page, puis cliquez de nouveau sur le bouton des résultats.',
+    reload: 'Recharger la page'
   },
   big_five: {
     title: 'What are the big five?',

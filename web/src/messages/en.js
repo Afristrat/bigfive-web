@@ -9,9 +9,9 @@ const english = {
   },
   frontpage: {
     seo: {
-      title: 'Free open-source BigFive personality traits test',
+      title: 'Big Five personality test',
       description:
-        'Take a free, open-source Big Five personality test. Learn to know your personality traits and compare yourself with your partner, colleagues, friends or family.'
+        'Take the Big Five personality test. Learn to know your personality traits and compare yourself with your partner, colleagues, friends or family.'
     },
     title: 'Big Five Personality Test',
     call_to_action: 'Take the free test now',
@@ -128,8 +128,12 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     back: 'back',
     more: 'more',
     seeResults: 'see results',
-    restored: 'Your answers has been restored. Click here to',
+    restored: 'Your answers have been restored. Click here to',
     newTest: 'start a new test',
+    saveFailedTitle: 'Result not saved',
+    saveFailedText:
+      'Your result could not be saved, often because the site was updated while you were taking the test. Your answers are kept on this device: reload the page, then click the results button again.',
+    reload: 'Reload the page',
     surveyLanguage: 'Survey language'
   },
   big_five: {

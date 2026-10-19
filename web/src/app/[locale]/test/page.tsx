@@ -19,6 +19,13 @@ export default async function TestPage({ params }: Props) {
         nextText={t('next')}
         prevText={t('back')}
         resultsText={t('seeResults')}
+        labels={{
+          restored: t('restored'),
+          newTest: t('newTest'),
+          saveFailedTitle: t('saveFailedTitle'),
+          saveFailedText: t('saveFailedText'),
+          reload: t('reload')
+        }}
         saveTest={saveTest}
         locale={locale}
       />

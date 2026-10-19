@@ -16,11 +16,20 @@ import { type Answer, type DbResult } from '@/types';
 import { Card, CardHeader } from '@nextui-org/card';
 import { Alert } from '@/components/alert';
 
+export type SurveyLabels = {
+  restored: string;
+  newTest: string;
+  saveFailedTitle: string;
+  saveFailedText: string;
+  reload: string;
+};
+
 interface SurveyProps {
   questions: Question[];
   nextText: string;
   prevText: string;
   resultsText: string;
+  labels: SurveyLabels;
   saveTest: (result: DbResult) => Promise<{ id: string }>;
   locale: string;
 }
@@ -30,6 +39,7 @@ export const Survey = ({
   nextText,
   prevText,
   resultsText,
+  labels,
   saveTest,
   locale: language
 }: SurveyProps) => {
@@ -218,13 +228,13 @@ export const Survey = ({
               <InfoIcon />
             </Button>
             <p>
-              Your answers has been restored. Click here to&nbsp;
+              {labels.restored}&nbsp;
               <a
                 className='underline cursor-pointer'
                 onClick={clearDataInLocalStorage}
                 aria-label='Clear data'
               >
-                start a new test
+                {labels.newTest}
               </a>
               .
             </p>
@@ -265,18 +275,14 @@ export const Survey = ({
       ))}
       {saveFailed && (
         <div className='mt-4'>
-          <Alert title='Result not saved'>
-            <p>
-              Your result could not be saved, often because the site was updated
-              while you were taking the test. Your answers are kept on this
-              device: reload the page, then click the results button again.
-            </p>
+          <Alert title={labels.saveFailedTitle}>
+            <p>{labels.saveFailedText}</p>
             <Button
               className='mt-3'
               color='primary'
               onClick={() => location.reload()}
             >
-              Reload the page
+              {labels.reload}
             </Button>
           </Alert>
         </div>

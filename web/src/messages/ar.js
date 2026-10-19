@@ -126,7 +126,13 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     next: 'التالي',
     back: 'السابق',
     more: 'أكثر',
-    seeResults: 'شاهد النتيجة'
+    seeResults: 'شاهد النتيجة',
+    restored: 'تمت استعادة إجاباتك. انقر هنا من أجل',
+    newTest: 'بدء اختبار جديد',
+    saveFailedTitle: 'لم يتم حفظ النتيجة',
+    saveFailedText:
+      'تعذّر حفظ نتيجتك، وغالبًا ما يكون السبب تحديث الموقع أثناء إجرائك للاختبار. إجاباتك محفوظة على هذا الجهاز: أعد تحميل الصفحة ثم انقر مرة أخرى على زر النتائج.',
+    reload: 'إعادة تحميل الصفحة'
   },
   big_five: {
     title: 'What are the big five?',
