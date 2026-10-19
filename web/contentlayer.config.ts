@@ -2,7 +2,7 @@ import {
   defineDocumentType,
   defineNestedType,
   makeSource
-} from 'contentlayer/source-files';
+} from 'contentlayer2/source-files';
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',

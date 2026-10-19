@@ -1,66 +1,32 @@
 # bigfive-web
 
-https://bigfive-test.com
-
 Website for five factor model of personality based on work from [IPIP-NEO-PI](https://github.com/kholia/IPIP-NEO-PI).
 
-Tests and evaluation is gathered from [ipip.ori.org](http://ipip.ori.org).
-
-See it live @ [bigfive-test.com](https://bigfive-test.com)
+Fork of [rubynor/bigfive-web](https://github.com/rubynor/bigfive-web) (MIT license), original project by Jonas Enge and contributors. Tests and evaluation are gathered from [ipip.ori.org](http://ipip.ori.org).
 
 The frontend is written in [nodejs](https://nodejs.org) using the
-[Next.js](https://nextjs.org/) framework.
+[Next.js](https://nextjs.org/) framework. Results are saved to a [mongodb](https://www.mongodb.com/) database.
 
-## Installation
+## Configuration
 
-Download and install [nodejs](https://nodejs.org),
-[git](https://git-scm.com/downloads) and [vercel-cli](https://vercel.com/download)
+See `.env.example`. `DB_URL` is only needed at runtime (the build does not require it); `NEXT_PUBLIC_SITE_URL` is read at build time.
 
-Install [pnpm](https://pnpm.io/installation)
+## Build and deployment
 
-```
-npm install --global pnpm
-```
-
-Install docker and docker-compose
-
-The results are saved to a [mongodb](https://www.mongodb.com/) database, so for a full test you either need a running mongodb or an instance at [mlab](https://mlab.com/)
-
-## Development
-
-add .env.local file
+The app builds to a Next.js standalone output and ships with a `Dockerfile` (health check on `/api/health`).
 
 ```
-NEXT_PUBLIC_ENV=development
-DB_URL=mongodb://root:example@localhost:27017
-DB_NAME=b5
-DB_COLLECTION=results
+docker build --build-arg NEXT_PUBLIC_SITE_URL=https://example.org -t bigfive-web .
+docker run -p 3000:3000 --env-file .env bigfive-web
 ```
 
-Run the setup script to install all dependencies
+## Checks
 
 ```
-pnpm install
-```
-
-Start mongodb server
-
-```
-docker-compose up -d
-```
-
-Run the development server
-
-```
-pnpm dev
-```
-
-## Linting
-
-Run the linter
-
-```
-pnpm lint && pnpm format:fix
+pnpm typecheck
+pnpm lint
+pnpm build
+pnpm audit --prod
 ```
 
 ## License

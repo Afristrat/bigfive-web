@@ -2,6 +2,20 @@ packages:
   - '.'
 
 allowBuilds:
-  contentlayer: true
+  contentlayer2: true
   esbuild: true
   protobufjs: true
+
+# Versions corrigées des dépendances transitives (avis de sécurité)
+overrides:
+  'braces@<3.0.3': '^3.0.3'
+  'cross-spawn@<7.0.5': '^7.0.6'
+  'glob@>=10.2.0 <10.5.0': '^10.5.0'
+  'minimatch@>=9.0.0 <9.0.7': '^9.0.9'
+  'brace-expansion@>=2.0.0 <2.1.7': '^2.1.7'
+  'picomatch@<2.3.2': '^2.3.2'
+  'micromatch@<4.0.8': '^4.0.8'
+  'nanoid@<3.3.18': '^3.3.20'
+  'postcss@<8.5.23': '^8.5.31'
+  'source-map-js@<1.2.2': '^1.2.2'
+  'yaml@>=2.0.0 <2.8.3': '^2.9.1'
