@@ -1,0 +1,18 @@
+{
+  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Squelette du lot 0 : les objets sont remplis au lot 1.",
+  "version": 1,
+  "personnages": [
+    { "id": "anonyme", "description": "Aucune identité (rôle anon)." },
+    { "id": "participant_a", "description": "Participant de l'organisation A, première personne." },
+    { "id": "participant_b", "description": "Participant de l'organisation A, seconde personne (ne doit rien voir de participant_a)." },
+    { "id": "responsable_a", "description": "Responsable de l'organisation A." },
+    { "id": "consultant_affecte_a", "description": "Consultant affecté à l'organisation A." },
+    { "id": "consultant_autre", "description": "Consultant affecté uniquement à une autre organisation." },
+    { "id": "responsable_b", "description": "Responsable d'une autre organisation B." },
+    { "id": "membre_a_et_b", "description": "Personne membre des deux organisations A et B." },
+    { "id": "admin_tenga", "description": "Administrateur Tenga (table private.tenga_admins)." }
+  ],
+  "operations": ["select", "insert", "update", "delete", "execute"],
+  "verdicts": ["autorise", "refuse", "propres_lignes", "organisation", "fonction_seule"],
+  "objets": []
+}

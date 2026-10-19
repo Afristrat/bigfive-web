@@ -6,7 +6,8 @@
 #   sh supabase/scripts/push-instance.sh <tenga-sb|tenga-sb-preprod> <SITE_URL>
 #
 # Au premier passage, le .env est créé sur le serveur par init-env.sh.
-# Ensuite, verify-instance.sh contrôle plafonds, ports et santé.
+# Ensuite : migrations (migrate.sh), tests SQL (test-sql.sh), puis
+# verify-instance.sh (plafonds, exposition, certification des clés).
 
 set -eu
 
@@ -23,7 +24,8 @@ ssh_run() { ssh -i "$key" -o BatchMode=yes "$host" "$@"; }
 
 ssh_run "mkdir -p $remote/db $remote/scripts $remote/volumes/db/data"
 tar -C "$here" -cf - compose/docker-compose.yml compose/kong.yml compose/kong-entrypoint.sh compose/db/roles.sql compose/db/schemas.sql \
-    scripts/init-env.sh scripts/verify-instance.sh \
+    scripts/init-env.sh scripts/verify-instance.sh scripts/migrate.sh scripts/test-sql.sh \
+    migrations tests \
     | ssh_run "tar -xf - -C $remote --transform 's,^compose/,,'"
 
 ssh_run "cd $remote && [ -e .env ] || sh scripts/init-env.sh $remote $stack $site_url"
@@ -34,4 +36,6 @@ ssh_run "for i in \$(seq 1 36); do
     n=\$(for c in db auth rest kong; do docker inspect -f '{{.State.Health.Status}}' $stack-\$c; done | grep -c '^healthy\$')
     [ \"\$n\" -eq 4 ] && exit 0; sleep 5
 done; echo 'push-instance: conteneurs non sains après 3 min' >&2; exit 1"
+ssh_run "sh $remote/scripts/migrate.sh $stack"
+ssh_run "sh $remote/scripts/test-sql.sh $stack"
 ssh_run "sh $remote/scripts/verify-instance.sh $stack"
