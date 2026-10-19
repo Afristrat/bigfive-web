@@ -66,12 +66,12 @@ const french = {
     }
   },
   toolbar: {
-    home: 'Home',
+    home: 'Accueil',
     result: 'Résultat',
     compare: 'Comparer',
-    articles: 'Des articles',
-    privacy: 'Intimité',
-    about: 'Sur',
+    articles: 'Articles',
+    privacy: 'Confidentialité',
+    about: 'À propos',
     see_results: 'Voir vos résultats',
     compare_with: 'Comparez avec les autres',
     faq: 'FAQ'
@@ -124,10 +124,10 @@ const french = {
     toTestButton: 'Alrighty, take me to the test'
   },
   test: {
-    next: 'prochain',
-    back: 'retour',
-    more: 'plus',
-    seeResults: 'see results'
+    next: 'Suivant',
+    back: 'Retour',
+    more: 'Plus',
+    seeResults: 'Voir les résultats'
   },
   big_five: {
     title: 'What are the big five?',
