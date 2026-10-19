@@ -40,7 +40,7 @@ const dutch = {
       },
       translated: {
         title: 'Vertaald',
-        text: 'Vertaald in meer dan 20 talen. Help mee op <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">deze vertalingspagina</a>!'
+        text: 'Vertaald in meer dan 20 talen. Help mee op <a href="/translations" rel="noreferrer" target="blank">deze vertalingspagina</a>!'
       }
     },
     description: {

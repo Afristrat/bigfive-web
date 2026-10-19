@@ -30,7 +30,7 @@ export const useIsMobile = (mobileScreenSize = 768) => {
         mediaListener.removeListener(checkIsMobile);
       }
     };
-  }, [mobileScreenSize]);
+  }, [mobileScreenSize, checkIsMobile]);
 
   return isMobile;
 };

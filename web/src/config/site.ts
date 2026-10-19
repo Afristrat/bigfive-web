@@ -2,9 +2,12 @@ import { getTranslations } from 'next-intl/server';
 
 export type SiteConfig = typeof siteConfig;
 
-export const basePath = 'https://bigfive-test.com';
+export const basePath = (
+  process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+).replace(/\/+$/, '');
 
-export const supportEmail = 'bigfive-test@rubynor.com';
+// Adresse de contact affichée sur le site ; absente si non configurée.
+export const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || '';
 
 export type Language = {
   code: string;
@@ -75,7 +78,6 @@ export const locales = languages.map((lang) => lang.code) as string[];
 
 export const siteConfig = {
   name: 'Big Five Personality Test',
-  creator: '@maccyber',
   description:
     'Learn to know yourself better with a free, open-source personality test.',
   navItems: [
@@ -153,11 +155,7 @@ export const siteConfig = {
     }
   ],
   links: {
-    github: 'https://github.com/rubynor/bigfive-web',
-    twitter: 'https://twitter.com/BigFiveOrg',
-    linkedIn: 'https://www.linkedin.com/company/bigfive-personality/',
-    facebook: 'https://www.facebook.com/bigfivepersonality/',
-    mastadon: 'https://mastodon.social/@bigfive'
+    github: 'https://github.com/rubynor/bigfive-web'
   }
 };
 

@@ -40,7 +40,7 @@ const persian = {
       },
       translated: {
         title: 'ترجمه شده',
-        text: 'به بیش از ۲۰ زبان ترجمه شده است. در <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">صفحه ترجمه‌ها</a> کمک کنید!'
+        text: 'به بیش از ۲۰ زبان ترجمه شده است. در <a href="/translations" rel="noreferrer" target="blank">صفحه ترجمه‌ها</a> کمک کنید!'
       }
     },
     description: {

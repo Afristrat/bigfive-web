@@ -1,4 +1,3 @@
-import { useTranslations } from 'next-intl';
 import { Link } from '@nextui-org/link';
 import { button as buttonStyles } from '@nextui-org/theme';
 import { title, subtitle } from '@/components/primitives';
@@ -19,20 +18,19 @@ import { allPosts } from 'contentlayer/generated';
 import { PostCard } from '@/components/post-card';
 import { SonarPulse } from '@/components/sonar-pulse';
 import { Button } from '@nextui-org/button';
-import { unstable_setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Chip, Tooltip } from '@nextui-org/react';
 import NextLink from 'next/link';
 import { Translated } from '@/components/translated';
-import { HomeHeader, HomeHrec1 } from '@/components/ads/ads';
 import { basePath } from '@/config/site';
 import { getTranslationLocale } from '@/lib/helpers';
-import EnterpriseCTA from '@/components/enterprise-cta';
 
 interface HomeProps {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export async function generateMetadata({ params: { locale } }: HomeProps) {
+export async function generateMetadata({ params }: HomeProps) {
+  const { locale } = await params;
   const localePath = locale === 'en' ? '' : `/${locale}`;
   return {
     alternates: {
@@ -45,10 +43,11 @@ export async function generateMetadata({ params: { locale } }: HomeProps) {
   };
 }
 
-export default function Home({ params: { locale } }: HomeProps) {
-  unstable_setRequestLocale(locale);
-  const t = useTranslations('frontpage');
-  const f = useTranslations('facets');
+export default async function Home({ params }: HomeProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations('frontpage');
+  const f = await getTranslations('facets');
 
   const translationLocale = getTranslationLocale(locale);
 
@@ -80,7 +79,7 @@ export default function Home({ params: { locale } }: HomeProps) {
       title: t('cards.translated.title'),
       description: t.raw('cards.translated.text'),
       icon: LanguageIcon({}),
-      href: 'https://bigfive-test.com/translations'
+      href: `${basePath}/translations`
     }
   ];
 
@@ -149,15 +148,11 @@ export default function Home({ params: { locale } }: HomeProps) {
           <div className='font-normal text-default-500 block max-w-full text-center underline md:mb-8'>
             {t('no_registration')}
           </div>
-
-          <HomeHeader />
         </section>
 
         <div className='mt-20 mx-2'>
           <FeaturesGrid features={features} />
         </div>
-
-        <EnterpriseCTA />
       </div>
 
       <section className='border-t border-b border-divider px-8 mt-16 lg:mt-44 text-center'>
@@ -224,7 +219,7 @@ export default function Home({ params: { locale } }: HomeProps) {
               { name: f('extraversion.title'), href: '/articles/extraversion' },
               {
                 name: t('compare.action'),
-                href: '/compare/W3sibmFtZSI6Ik1hcnZpbiIsImlkIjoiNThhNzA2MDZhODM1YzQwMGM4YjM4ZTg0In0seyJuYW1lIjoiQXJ0aHVyIERlbnQiLCJpZCI6IjVlNTZiYTdhYjA5NjEzMDAwN2Q1ZDZkOCJ9LHsibmFtZSI6IkZvcmQgUGVyZmVjdCIsImlkIjoiNWRlYTllODhlMTA4Y2IwMDYyMTgzYWYzIn0seyJuYW1lIjoiU2xhcnRpYmFydGZhc3QiLCJpZCI6IjVlNTZiNjUwYjA5NjEzMDAwN2Q1ZDZkMCJ9XQ'
+                href: '/compare'
               },
               {
                 name: f('agreeableness.title'),
@@ -267,8 +262,6 @@ export default function Home({ params: { locale } }: HomeProps) {
           </div>
         </SonarPulse>
       </div>
-
-      <HomeHrec1 />
 
       <div className='text-center mx-2 mt-8'>
         <Link href='/articles' color='foreground'>

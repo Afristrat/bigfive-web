@@ -39,7 +39,7 @@ const vietnamese = {
       },
       translated: {
         title: 'Được dịch',
-        text: 'Đã được dịch sang hơn 20 ngôn ngữ. Hãy giúp đỡ trên <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">trang dịch này</a>!'
+        text: 'Đã được dịch sang hơn 20 ngôn ngữ. Hãy giúp đỡ trên <a href="/translations" rel="noreferrer" target="blank">trang dịch này</a>!'
       }
     },
     description: {

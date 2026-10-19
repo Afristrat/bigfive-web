@@ -43,7 +43,7 @@ const portugues = {
       },
       translated: {
         title: 'Traduzido',
-        text: 'Traduzido para mais de 20 idiomas. Ajude na <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">página de tradução</a>!'
+        text: 'Traduzido para mais de 20 idiomas. Ajude na <a href="/translations" rel="noreferrer" target="blank">página de tradução</a>!'
       }
     },
     description: {

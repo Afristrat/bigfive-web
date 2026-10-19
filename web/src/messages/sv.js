@@ -40,7 +40,7 @@ const svenska = {
       },
       translated: {
         title: 'Översättningar',
-        text: 'Testet har översatts till mer än 20 språk. Hjälp till <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">här</a>!'
+        text: 'Testet har översatts till mer än 20 språk. Hjälp till <a href="/translations" rel="noreferrer" target="blank">här</a>!'
       }
     },
     description: {

@@ -40,7 +40,7 @@ const slovenian = {
       },
       translated: {
         title: 'Prevedeno',
-        text: 'Prevedeno v več kot 20 jezikov. Pomagajte na <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">tej prevajalski strani</a>!'
+        text: 'Prevedeno v več kot 20 jezikov. Pomagajte na <a href="/translations" rel="noreferrer" target="blank">tej prevajalski strani</a>!'
       }
     },
     description: {

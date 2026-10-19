@@ -41,7 +41,7 @@ const ukrainian = {
       },
       translated: {
         title: 'Перекладений',
-        text: 'Перекладений більш ніж на 20 мов. Допоможи нам <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank"> тут </a>!'
+        text: 'Перекладений більш ніж на 20 мов. Допоможи нам <a href="/translations" rel="noreferrer" target="blank"> тут </a>!'
       }
     },
     description: {

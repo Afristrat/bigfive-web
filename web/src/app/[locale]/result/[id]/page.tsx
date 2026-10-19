@@ -10,14 +10,15 @@ import { basePath, locales, supportEmail } from '@/config/site';
 import ShareBar from '@/components/share-bar';
 import { DomainTabs } from './domain-tabs';
 import { Chip } from '@nextui-org/react';
-import { ResultHeader } from '@/components/ads/ads';
 import Mbti from './mbti';
 
-export async function generateMetadata({
-  params: { locale, id }
-}: {
-  params: { locale: string; id: string };
-}) {
+interface ResultPageParams {
+  params: Promise<{ id: string; locale: string }>;
+  searchParams: Promise<{ showExpanded?: string }>;
+}
+
+export async function generateMetadata({ params }: ResultPageParams) {
+  const { locale, id } = await params;
   const t = await getTranslations({ locale, namespace: 'results' });
   const localePath = locale === 'en' ? '' : `/${locale}`;
   return {
@@ -33,19 +34,17 @@ export async function generateMetadata({
   };
 }
 
-interface ResultPageParams {
-  params: { id: string; locale: string };
-  searchParams: { showExpanded?: boolean };
-}
 
 export default async function ResultPage({
   params,
   searchParams
 }: ResultPageParams) {
+  const { id, locale } = await params;
+  const { showExpanded } = await searchParams;
   let report;
 
   try {
-    report = await getTestResult(params.id.substring(0, 24), params.locale);
+    report = await getTestResult(id.substring(0, 24), locale);
   } catch (error) {
     throw new Error('Could not retrieve report');
   }
@@ -54,23 +53,26 @@ export default async function ResultPage({
     return (
       <Alert title='Could not retrive report'>
         <>
-          <p>We could not retrive the following id {params.id}.</p>
-          <p>Please check that it is correct or contact us at {supportEmail}</p>
+          <p>We could not retrive the following id {id}.</p>
+          <p>
+            Please check that it is correct
+            {supportEmail && <> or contact us at {supportEmail}</>}.
+          </p>
         </>
       </Alert>
     );
 
-  return <Results report={report} showExpanded={searchParams.showExpanded} />;
+  return <Results report={report} showExpanded={!!showExpanded} />;
 }
 
 interface ResultsProps {
   report: Report;
-  showExpanded?: boolean;
+  showExpanded: boolean;
 }
 
 const Results = ({ report, showExpanded }: ResultsProps) => {
   const t = useTranslations('results');
-  const link = `https://bigfive-test.com/result/${report.id}`;
+  const link = `${basePath}/result/${report.id}`;
 
   return (
     <>
@@ -97,10 +99,11 @@ const Results = ({ report, showExpanded }: ResultsProps) => {
         </Snippet>
       </div>
       <div className='flex mt-8 justify-end w-full gap-x-1 print:hidden'>
-        <ShareBar link={link} description='Explore my personality traits' />
-      </div>
-      <div className='mt-8'>
-        <ResultHeader />
+        <ShareBar
+          link={link}
+          description='Explore my personality traits'
+          resultId={report.id}
+        />
       </div>
       <div className='mt-10'>
         <h1 className={title()}>{t('theBigFive')}</h1>
@@ -108,7 +111,7 @@ const Results = ({ report, showExpanded }: ResultsProps) => {
       <BarChart max={120} results={report.results} />
       <DomainTabs
         results={report.results}
-        showExpanded={!!showExpanded}
+        showExpanded={showExpanded}
         scoreText={t('score')}
       />
       {/* <Mbti results={report.results} /> */}

@@ -41,7 +41,7 @@ const dansk = {
       },
       translated: {
         title: 'Oversættelse',
-        text: 'Testen er blevet oversat til mere end 20 sprog. Hjælp <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">her</a>!'
+        text: 'Testen er blevet oversat til mere end 20 sprog. Hjælp <a href="/translations" rel="noreferrer" target="blank">her</a>!'
       }
     },
     description: {

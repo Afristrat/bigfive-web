@@ -40,7 +40,7 @@ const thai = {
       },
       translated: {
         title: 'แปลภาษา',
-        text: 'ได้รับการแปลเป็นภาษาต่างๆมากกว่า 20 ภาษา คุณสามารถช่วยได้ <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">ที่นี่</a>!'
+        text: 'ได้รับการแปลเป็นภาษาต่างๆมากกว่า 20 ภาษา คุณสามารถช่วยได้ <a href="/translations" rel="noreferrer" target="blank">ที่นี่</a>!'
       }
     },
     description: {

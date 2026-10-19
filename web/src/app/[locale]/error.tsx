@@ -38,7 +38,7 @@ export default function Error({
           Try again
         </Button>
       </div>
-      <Image src='/error.webp' className='mt-5' />
+      <Image src='/error.webp' alt='' className='mt-5' />
     </main>
   );
 }

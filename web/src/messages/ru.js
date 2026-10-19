@@ -42,7 +42,7 @@ const russian = {
       },
       translated: {
         title: 'Перевод',
-        text: 'Переведен более чем на 20 языков. Помоги нам <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">тут</a>!'
+        text: 'Переведен более чем на 20 языков. Помоги нам <a href="/translations" rel="noreferrer" target="blank">тут</a>!'
       }
     },
     description: {

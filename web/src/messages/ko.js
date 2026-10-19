@@ -40,7 +40,7 @@ const korean = {
       },
       translated: {
         title: '번역됨',
-        text: '20개 이상의 언어로 번역되었습니다. <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">이 번역 페이지</a>에서 도와주세요!'
+        text: '20개 이상의 언어로 번역되었습니다. <a href="/translations" rel="noreferrer" target="blank">이 번역 페이지</a>에서 도와주세요!'
       }
     },
     description: {

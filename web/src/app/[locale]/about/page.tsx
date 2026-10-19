@@ -1,18 +1,16 @@
 import { HeartBoldIcon } from '@/components/icons';
 import { title } from '@/components/primitives';
-import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Feedback from './feedback';
 import { Link } from '@/navigation';
+import { supportEmail } from '@/config/site';
 
 interface Props {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export async function generateMetadata({
-  params: { locale }
-}: {
-  params: { locale: string };
-}) {
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'about' });
   return {
     title: t('seo.title'),
@@ -20,8 +18,9 @@ export async function generateMetadata({
   };
 }
 
-export default function AboutPage({ params: { locale } }: Props) {
-  unstable_setRequestLocale(locale);
+export default async function AboutPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
 
   return (
     <>
@@ -30,7 +29,7 @@ export default function AboutPage({ params: { locale } }: Props) {
       </div>
       <div className='mt-2 text-medium lg:mt-4 lg:text-large'>
         <p>
-          Welcome to bigfive-test.com, your premier destination for exploring
+          Welcome to the Big Five personality test, your premier destination for exploring
           personality traits using the scientifically acclaimed Big Five model.
           Our free, open-source test offers detailed insights into the five key
           dimensions of personality: Openness, Conscientiousness, Extraversion,
@@ -44,7 +43,7 @@ export default function AboutPage({ params: { locale } }: Props) {
         <p>
           Developed with precision and accessibility in mind, our test helps you
           understand yourself better and foster personal growth. Embrace the
-          journey of self-discovery with bigfive-test.com, where psychological
+          journey of self-discovery with this test, where psychological
           insights meet user-friendly technology.
         </p>
         <br />
@@ -53,8 +52,14 @@ export default function AboutPage({ params: { locale } }: Props) {
           <Link href='/faq' className='underline'>
             FAQ
           </Link>{' '}
-          first. If you can&apos;t find an answer there, feel free to contact us
-          at bigfive-test@rubynor.com.
+          first.
+          {supportEmail && (
+            <>
+              {' '}
+              If you can&apos;t find an answer there, feel free to contact us at{' '}
+              {supportEmail}.
+            </>
+          )}
         </p>
       </div>
       <section>

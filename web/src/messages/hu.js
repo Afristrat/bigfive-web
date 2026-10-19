@@ -40,7 +40,7 @@ const hungarian = {
       },
       translated: {
         title: 'Fordított',
-        text: 'Több mint 20 nyelvre lefordítva. Segíts ebben a <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">fordítási oldalon</a>!'
+        text: 'Több mint 20 nyelvre lefordítva. Segíts ebben a <a href="/translations" rel="noreferrer" target="blank">fordítási oldalon</a>!'
       }
     },
     description: {

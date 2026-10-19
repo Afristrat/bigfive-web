@@ -154,7 +154,7 @@ export default function TranslationPage() {
           return getKeyValue(item, columnKey.toString());
       }
     },
-    []
+    [router]
   );
 
   return (

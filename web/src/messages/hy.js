@@ -41,7 +41,7 @@ const armenian = {
       },
       translated: {
         title: 'Թարգմանված',
-        text: 'Թարգմանված է ավելի քան 20 լեզուներով։ Օգնեք <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">այս թարգմանության էջում</a>!'
+        text: 'Թարգմանված է ավելի քան 20 լեզուներով։ Օգնեք <a href="/translations" rel="noreferrer" target="blank">այս թարգմանության էջում</a>!'
       }
     },
     description: {

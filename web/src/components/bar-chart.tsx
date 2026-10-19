@@ -7,7 +7,7 @@ const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface BarChartProps {
   max: number;
-  results: any;
+  results: { title: string; score: number }[];
 }
 
 export const BarChart = ({ max, results }: BarChartProps) => {
@@ -31,7 +31,7 @@ export const BarChart = ({ max, results }: BarChartProps) => {
       max
     },
     xaxis: {
-      categories: results.map((result: any) => result.title),
+      categories: results.map((result) => result.title),
       labels: {
         style: {
           fontFamily: 'Inter, sans-serif'
@@ -51,7 +51,7 @@ export const BarChart = ({ max, results }: BarChartProps) => {
   const series = [
     {
       name: 'You',
-      data: results.map((result: any) => result.score)
+      data: results.map((result) => result.score)
     }
   ];
 

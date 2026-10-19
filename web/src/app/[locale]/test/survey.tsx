@@ -12,7 +12,7 @@ import { type Question } from '@bigfive-org/questions';
 import { sleep, formatTimer, isDev } from '@/lib/helpers';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 import useTimer from '@/hooks/useTimer';
-import { type Answer } from '@/types';
+import { type Answer, type DbResult } from '@/types';
 import { Card, CardHeader } from '@nextui-org/card';
 
 interface SurveyProps {
@@ -20,7 +20,7 @@ interface SurveyProps {
   nextText: string;
   prevText: string;
   resultsText: string;
-  saveTest: Function;
+  saveTest: (result: DbResult) => Promise<{ id: string }>;
   locale: string;
 }
 
@@ -152,7 +152,6 @@ export const Survey = ({
     });
     localStorage.removeItem('inProgress');
     localStorage.removeItem('b5data');
-    console.log(result);
     localStorage.setItem('resultId', result.id);
     router.push(`/result/${result.id}`);
   }

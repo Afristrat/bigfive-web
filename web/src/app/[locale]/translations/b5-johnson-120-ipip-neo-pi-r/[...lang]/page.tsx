@@ -7,30 +7,34 @@ import { Button } from '@nextui-org/button';
 import { TranslationState, generateSurveyTranslation } from '@/actions';
 import { subtitle, title } from '@/components/primitives';
 import { Chip } from '@nextui-org/react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { use, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { supportEmail } from '@/config/site';
 
 interface TranslatePageProps {
-  params: {
-    lang: string;
-  };
-  searchParams: {
-    edit: boolean;
-  };
+  params: Promise<{
+    lang: string[];
+  }>;
+  searchParams: Promise<{
+    edit?: string;
+  }>;
 }
 
 export default function TranslatePage({
-  params: { lang },
+  params,
   searchParams
 }: TranslatePageProps) {
-  const [state, formAction] = useFormState(generateSurveyTranslation, {
+  const { lang } = use(params);
+  const code = lang[0];
+  const [state, formAction] = useActionState(generateSurveyTranslation, {
     message: '',
     type: 'success'
   } as TranslationState);
-  const items = getItems(lang);
+  const items = getItems(code);
   const choices = items[0].choices;
-  const language = getInfo().languages.find((l) => l.id === lang[0]);
+  const language = getInfo().languages.find((l) => l.id === code);
 
-  const edit = !!searchParams.edit;
+  const edit = !!use(searchParams).edit;
 
   return (
     <form action={formAction}>
@@ -38,11 +42,16 @@ export default function TranslatePage({
         <h1 className={title()}>Translation from {language?.text}</h1>
         <h2 className={subtitle()}>
           Survey {getInfo().name} ({getInfo().questions} questions). The
-          translation will be saved in the database and manually reviewed. If
-          you have any questions, please contact us at{' '}
-          <a href='mailto:bigfive-test@rubynor.com' className='underline'>
-            bigfive-test@rubynor.com
-          </a>
+          translation will be saved in the database and manually reviewed.
+          {supportEmail && (
+            <>
+              {' '}
+              If you have any questions, please contact us at{' '}
+              <a href={`mailto:${supportEmail}`} className='underline'>
+                {supportEmail}
+              </a>
+            </>
+          )}
         </h2>
         <Card>
           <CardHeader>
@@ -61,7 +70,7 @@ export default function TranslatePage({
           <CardBody>
             <div className='flex flex-col gap-4'>
               {choices.map((choice) => (
-                <div key={`${lang}-${choice.score}`}>
+                <div key={`${code}-${choice.score}`}>
                   <p className='m-2'>{choice.text}</p>
                   <Input
                     name={choice.score.toString()}

@@ -5,20 +5,24 @@ import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { Input, Textarea } from '@nextui-org/input';
 import { subtitle, title } from '@/components/primitives';
 import { TranslationState, generateResultTextTranslation } from '@/actions';
-import { useFormState, useFormStatus } from 'react-dom';
+import { use, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { supportEmail } from '@/config/site';
+import type { ResultTemplateDomain } from '@/types';
 import { Button } from '@nextui-org/button';
 import { Chip } from '@nextui-org/react';
 
 interface TranslationResultProps {
-  params: {
-    lang: string;
-  };
+  params: Promise<{
+    lang: string[];
+  }>;
 }
 export default function TranslationResult({
-  params: { lang }
+  params
 }: TranslationResultProps) {
-  const template = getTemplate(lang);
-  const [state, formAction] = useFormState(generateResultTextTranslation, {
+  const { lang } = use(params);
+  const template: ResultTemplateDomain[] = getTemplate(lang[0]);
+  const [state, formAction] = useActionState(generateResultTextTranslation, {
     message: '',
     type: 'success'
   } as TranslationState);
@@ -28,14 +32,19 @@ export default function TranslationResult({
         <h1 className={title()}>Translation</h1>
         <h2 className={subtitle()}>
           Translation of the results page. The translation will be saved in the
-          database and manually reviewed. If you have any questions, please
-          contact us at{' '}
-          <a href='mailto:bigfive-test@rubynor.com' className='underline'>
-            bigfive-test@rubynor.com
-          </a>
+          database and manually reviewed.
+          {supportEmail && (
+            <>
+              {' '}
+              If you have any questions, please contact us at{' '}
+              <a href={`mailto:${supportEmail}`} className='underline'>
+                {supportEmail}
+              </a>
+            </>
+          )}
         </h2>
 
-        {template.map((item: any) => {
+        {template.map((item) => {
           return (
             <Card key={item.domain}>
               <CardHeader>
@@ -57,7 +66,7 @@ export default function TranslationResult({
                   label='Domain description'
                   name={`${item.domain}.description`}
                 />
-                {item.results.map((result: any, i: number) => {
+                {item.results.map((result, i) => {
                   return (
                     <div key={`${item.domain}-${result.score}`}>
                       <Input
@@ -75,7 +84,7 @@ export default function TranslationResult({
                     </div>
                   );
                 })}
-                {item.facets.map((facet: any, i: number) => {
+                {item.facets.map((facet, i) => {
                   return (
                     <div
                       key={`${item.domain}-${facet.facet}`}
@@ -95,7 +104,7 @@ export default function TranslationResult({
                       <Input
                         className='hidden'
                         hidden
-                        defaultValue={facet.facet}
+                        defaultValue={String(facet.facet)}
                         label='facet'
                         name={`${item.domain}.facets[${i}].facet`}
                       />

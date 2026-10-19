@@ -40,7 +40,7 @@ const hebrew = {
       },
       translated: {
         title: 'מתורגם',
-        text: 'מתורגם ליותר מ-20 שפות. עזרו בתרגום בדף <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">התרגום הזה</a>!'
+        text: 'מתורגם ליותר מ-20 שפות. עזרו בתרגום בדף <a href="/translations" rel="noreferrer" target="blank">התרגום הזה</a>!'
       }
     },
     description: {

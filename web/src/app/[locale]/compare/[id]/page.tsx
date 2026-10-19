@@ -8,11 +8,15 @@ import CompareEdit from './compare-edit';
 import { getTranslations } from 'next-intl/server';
 import { basePath, locales } from '@/config/site';
 
-export async function generateMetadata({
-  params: { locale, id }
-}: {
-  params: { locale: string; id: string };
-}) {
+interface ComparePageProps {
+  params: Promise<{
+    id: string;
+    locale: string;
+  }>;
+}
+
+export async function generateMetadata({ params }: ComparePageProps) {
+  const { locale, id } = await params;
   const t = await getTranslations({ locale, namespace: 'getCompare' });
   const localePath = locale === 'en' ? '' : `/${locale}`;
   return {
@@ -28,21 +32,14 @@ export async function generateMetadata({
   };
 }
 
-interface ComparePageProps {
-  params: {
-    id: string;
-    locale: string;
-  };
-}
 
 type Person = {
   id: string;
   name: string;
 };
 
-export default async function ComparePage({
-  params: { id, locale }
-}: ComparePageProps) {
+export default async function ComparePage({ params }: ComparePageProps) {
+  const { id, locale } = await params;
   let people: Person[];
 
   if (id.includes('_')) {
@@ -91,7 +88,7 @@ export default async function ComparePage({
       };
     });
 
-  const link = `https://bigfive-test.com/compare/${id}`;
+  const link = `${basePath}/compare/${id}`;
 
   return (
     <>
@@ -110,7 +107,6 @@ export default async function ComparePage({
         {reports[0].report.results.map((domain) => (
           <DomainComparePage
             key={domain.domain}
-            domainKey={domain.domain}
             title={domain.title}
             shortDescription={domain.shortDescription}
             // @ts-ignore

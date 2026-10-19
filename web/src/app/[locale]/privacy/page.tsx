@@ -1,4 +1,5 @@
 import { title } from '@/components/primitives';
+import { supportEmail } from '@/config/site';
 
 export default function PrivacyPage() {
   return (
@@ -11,98 +12,54 @@ export default function PrivacyPage() {
         This privacy policy will explain how we use the personal data we collect
         from you when you use our website.
         <h2>What data do we collect?</h2>
-        We collect the following data
+        When you submit the test we collect the following data
         <br />
         <br />
         <ul>
           <li>Choosen test language</li>
           <li>Test answers</li>
+          <li>Time spent on the test</li>
           <li>Datetime of submitted test</li>
         </ul>
         <br />
-        We also use Google Analytics to measure traffic to our site and how
-        users interact with our site. The Google Analytics terms specify that no
-        personally identifiable information may be collected through the Google
-        Analytics software.
+        If you use the feedback form or the translation forms, we also store the
+        name, e-mail address and message you enter. If you ask us to e-mail you
+        the link to a result, the address you enter is only used to send that
+        message through our e-mail provider, Resend, and is not stored in our
+        database.
         <br />
         <br />
-        Read more about Google Analytics privacy policy{' '}
-        <a
-          href='https://policies.google.com/privacy'
-          rel='noopener noreferrer'
-          target='_blank'
-        >
-          here
-        </a>
-        .<h2>How do we collect your data?</h2>
-        Google Analytics sets the following cookies:
-        <br />
-        <br />
-        <ul>
-          <li>
-            &quot;_ga&quot; is used to distingusih users. The cookie is set the
-            first time a user access the website and has a lifetime of 2 until
-            years
-          </li>
-          <li>
-            &quot;_gat&quot; is used to limit the traffic from Google Analytics,
-            this cookie has a lifetime of 10 minutes.
-          </li>
-        </ul>
-        <br />
-        Your web browser also automatically sends information to our hosting
-        provider Vercel.
-        <br />
-        This can i.e. be information about wich browser and version you are
-        using and your Internet address (IP-address). For each page that is
-        displayed, the date and time information, which page you came from,
-        which page you are on, etc. are also stored.
+        We do not use analytics services, advertising or tracking cookies. The
+        site keeps a count of views per article, without any personal data.
+        <h2>How do we collect your data?</h2>
+        Your web browser automatically sends information to our server when you
+        load a page. This can i.e. be information about which browser and
+        version you are using and your Internet address (IP-address). Your
+        IP-address is kept temporarily in the memory of the server to limit the
+        number of submissions, and is not stored in our database.
         <br />
         <br />
         When you submit the test the information you provide (described above)
         is stored in our database.
         <h2>How will we use your data?</h2>
-        We use Google Analytics to get statistics on how visitors use the site.
-        <br />
-        <br />
         We will create statistical, aggregated data from the test results for
         analytical purposes.
-        <h2>How do we store your data?</h2>
         <h2>How to contact us?</h2>
-        {/* <br /> */}
-        {/* <br /> */}
-        {/* <p> */}
-        {/*   We and our partners store and/or access information on a device, such */}
-        {/*   as cookies and process personal data, such as unique identifiers and */}
-        {/*   standard information sent by a device for personalised advertising and */}
-        {/*   content, advertising and content measurement, audience research and */}
-        {/*   services development. */}
-        {/* </p> */}
-        {/* <p> */}
-        {/*   With your permission we and our partners may use precise geolocation */}
-        {/*   data and identification through device scanning. You may click to */}
-        {/*   consent to our and our 1430 partners’ processing as described above. */}
-        {/* </p> */}
-        {/* <p> */}
-        {/*   Alternatively you may access more detailed information and change your */}
-        {/*   preferences before consenting or to refuse consenting. */}
-        {/* </p> */}
-        {/* <p> */}
-        {/*   Please note that some processing of your personal data may not require */}
-        {/*   your consent, but you have a right to object to such processing. Your */}
-        {/*   preferences will apply to this website only. You can change your */}
-        {/*   preferences or withdraw your consent at any time by returning to this */}
-        {/*   site and clicking the "Privacy" button at the bottom of the webpage. */}
-        {/* </p> */}
-        If you have any questions about this privacy policy, please{' '}
-        <a
-          href='mailto:support@bigfive-test.com'
-          rel='noopener noreferrer'
-          target='_blank'
-        >
-          contact
-        </a>{' '}
-        us.
+        {supportEmail ? (
+          <>
+            If you have any questions about this privacy policy, please{' '}
+            <a
+              href={`mailto:${supportEmail}`}
+              rel='noopener noreferrer'
+              target='_blank'
+            >
+              contact
+            </a>{' '}
+            us.
+          </>
+        ) : (
+          'If you have any questions about this privacy policy, please contact the operator of this website.'
+        )}
       </div>
     </>
   );

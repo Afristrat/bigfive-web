@@ -61,7 +61,7 @@ export function calculateReadingTime(content: string) {
 
   const wordCount = text
     .split(/\s+/)
-    .filter((word: any) => word.length > 0).length;
+    .filter((word) => word.length > 0).length;
 
   // Calculate reading time
   const readingTime = Math.ceil(wordCount / wordsPerMinute);

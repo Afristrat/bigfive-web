@@ -7,7 +7,7 @@ export default function FaqPage() {
     {
       question: 'I got an error on this website',
       answer:
-        'Submit an issue at GitHub or send us an e-mail at bigfive-test@rubynor.com'
+        'Submit an issue at GitHub.'
     },
     {
       question: 'Can I use the code for this website for Commercial Purposes?',
@@ -26,7 +26,7 @@ export default function FaqPage() {
     {
       question: 'I want to translate the questions to my language',
       answer:
-        "Use this website to translate the questions. Select the language you want to translate from.Translate the questions and click 'generate'. This will generate a file and download it to your computer. Send the downloaded file to bigfive- test@rubynor.com and tell us which language you have translated. If you want to translate it directly on github instead, you can follow the description here."
+        "Use the translations page of this website. Select the language you want to translate from, translate the questions and click 'Generate translation'. Your translation is saved and reviewed manually. If you want to translate it directly on github instead, you can follow the description here."
     },
     {
       question: 'I want to translate the result text to my language',

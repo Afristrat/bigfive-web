@@ -1,23 +1,19 @@
 import { getItems } from '@bigfive-org/questions';
 import { Survey } from './survey';
-import { useTranslations } from 'next-intl';
 import { saveTest } from '@/actions';
-import { unstable_setRequestLocale } from 'next-intl/server';
-import { TestHeader, TestHrec1 } from '@/components/ads/ads';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 interface Props {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
-export default function TestPage({ params: { locale } }: Props) {
-  unstable_setRequestLocale(locale);
+export default async function TestPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const questions = getItems(locale);
-  const t = useTranslations('test');
+  const t = await getTranslations('test');
   return (
     <>
-      <div className='my-4'>
-        <TestHeader />
-      </div>
       <Survey
         questions={questions}
         nextText={t('next')}
@@ -26,9 +22,6 @@ export default function TestPage({ params: { locale } }: Props) {
         saveTest={saveTest}
         locale={locale}
       />
-      <div className='my-4'>
-        <TestHrec1 />
-      </div>
     </>
   );
 }

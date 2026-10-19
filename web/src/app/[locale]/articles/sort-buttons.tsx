@@ -5,7 +5,7 @@ import { Button } from '@nextui-org/button';
 import { useRouter } from '@/navigation';
 
 interface SortButtonsProps {
-  sortBy: string;
+  sortBy?: string;
 }
 
 export default function SortButtons({ sortBy }: SortButtonsProps) {

@@ -13,24 +13,27 @@ import { Metadata } from 'next';
 import { PostCard } from '@/components/post-card';
 import { ShareArticle } from '@/components/share-article';
 
+interface PostLayoutProps {
+  params: Promise<{
+    slug: string;
+    locale: string;
+  }>;
+}
+
 export const generateStaticParams = async () =>
   allPosts.map((post) => ({ slug: post.slug }));
 
-export const generateMetadata = ({
+export const generateMetadata = async ({
   params
-}: {
-  params: {
-    slug: string;
-    locale: string;
-  };
-}): Metadata => {
-  const translationLocale = getTranslationLocale(params.locale);
+}: PostLayoutProps): Promise<Metadata> => {
+  const { slug, locale } = await params;
+  const translationLocale = getTranslationLocale(locale);
   const localizedPosts = allPosts.filter(
     (post) => post.locale === translationLocale
   );
 
-  const post = localizedPosts.find((post) => post.slug === params.slug);
-  if (!post) throw new Error(`Post not found for slug: ${params.slug}`);
+  const post = localizedPosts.find((post) => post.slug === slug);
+  if (!post) throw new Error(`Post not found for slug: ${slug}`);
   return {
     title: post.title,
     description: post.description,
@@ -60,20 +63,14 @@ export const generateMetadata = ({
   };
 };
 
-interface PostLayoutProps {
-  params: {
-    slug: string;
-    locale: string
-  };
-}
-
 const PostLayout = async ({ params }: PostLayoutProps) => {
-  const translationLocale = getTranslationLocale(params.locale);
+  const { slug, locale } = await params;
+  const translationLocale = getTranslationLocale(locale);
   const localizedPosts = allPosts.filter(
     (post) => post.locale === translationLocale
   );
 
-  const currentPost = localizedPosts.find((post) => post.slug === params.slug);
+  const currentPost = localizedPosts.find((post) => post.slug === slug);
   const posts = allPosts.filter((aPost) => aPost._id !== currentPost?._id);
 
   const currentTags = new Set(currentPost?.tags?.split(', '));
@@ -89,7 +86,7 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
     .sort((a, b) => b.relevance - a.relevance)
     .slice(0, 3);
 
-  if (!currentPost) throw new Error(`Post not found for slug: ${params.slug}`);
+  if (!currentPost) throw new Error(`Post not found for slug: ${slug}`);
   return (
     <article className='w-full flex flex-col justify-start items-center prose prose-neutral'>
       <div className='lg:max-w-screen-md m-auto'>
@@ -108,7 +105,7 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
             />
             Back to articles
           </Link>
-          {!['en', 'no'].includes(getTranslationLocale(params.locale)) && (
+          {!['en', 'no'].includes(translationLocale) && (
             <div className='text-default-700 ml-auto'>
               <InfoIcon size={20} className='inline-block mr-1' />
               AI generated translation
@@ -152,7 +149,7 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
               description={currentPost.author?.username}
             />
           </div>
-          <ShareArticle slug={params.slug} />
+          <ShareArticle slug={slug} />
         </div>
         <Divider className='mt-4' />
         <div

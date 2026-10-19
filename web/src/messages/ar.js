@@ -40,7 +40,7 @@ const arabic = {
       },
       translated: {
         title: 'مترجم',
-        text: 'الاختبار مترجم إلى أكثر من ٢٠ لغة. بإمكانك المساعدة <a href="https://bigfive-test.com/translations" rel="noreferrer" target="blank">here</a>!'
+        text: 'الاختبار مترجم إلى أكثر من ٢٠ لغة. بإمكانك المساعدة <a href="/translations" rel="noreferrer" target="blank">here</a>!'
       }
     },
     description: {
