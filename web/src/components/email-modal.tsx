@@ -9,20 +9,21 @@ import {
   useDisclosure
 } from '@nextui-org/react';
 
-import { Input, Textarea } from '@nextui-org/input';
+import { Input } from '@nextui-org/input';
 import { useEffect, useState } from 'react';
 import { EmailState, sendEmail } from '@/actions';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { sleep } from '@/lib/helpers';
 import { MailIcon } from './icons';
 
 interface EmailModalProps {
   disclosure: ReturnType<typeof useDisclosure>;
-  link: string;
+  resultId: string;
 }
 
-export const EmailModal = ({ disclosure, link }: EmailModalProps) => {
-  const [state, formAction] = useFormState(sendEmail, {
+export const EmailModal = ({ disclosure, resultId }: EmailModalProps) => {
+  const [state, formAction] = useActionState(sendEmail, {
     message: '',
     type: 'success'
   } as EmailState);
@@ -36,12 +37,14 @@ export const EmailModal = ({ disclosure, link }: EmailModalProps) => {
 
   const isInvalidForm = isInvalidEmail || email === '';
 
+  const { onClose } = disclosure;
+
   useEffect(() => {
     if (state.type === 'success') {
-      sleep(700).then(() => disclosure.onClose());
+      sleep(700).then(() => onClose());
       setEmail('');
     }
-  }, [state]);
+  }, [state, onClose]);
 
   return (
     <Modal isOpen={disclosure.isOpen} onOpenChange={disclosure.onOpenChange}>
@@ -69,7 +72,7 @@ export const EmailModal = ({ disclosure, link }: EmailModalProps) => {
               placeholder='Enter your email'
               variant='bordered'
             />
-            <Textarea name='message' className='hidden' value={link} />
+            <input type='hidden' name='resultId' value={resultId} />
             {state.message && (
               <Chip color={state.type === 'success' ? 'success' : 'danger'}>
                 {state.message}

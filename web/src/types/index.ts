@@ -17,8 +17,18 @@ export type DbResult = {
   lang: string;
   invalid: boolean;
   timeElapsed: number;
-  dateStamp: string;
+  dateStamp: Date;
   answers: Answer[];
+};
+
+// getTemplate() est typé `any` par @bigfive-org/results : on fixe ici la forme réelle.
+export type ResultTemplateDomain = {
+  domain: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  results: { score: string; text: string }[];
+  facets: { facet: number; title: string; text: string }[];
 };
 
 export type Feedback = {
@@ -32,7 +42,7 @@ type ErrorName = 'NotFoundError' | 'SavingError';
 class ErrorBase<T extends string> extends Error {
   name: T;
   message: string;
-  cause: any;
+  cause: unknown;
 
   constructor({
     name,
@@ -41,7 +51,7 @@ class ErrorBase<T extends string> extends Error {
   }: {
     name: T;
     message: string;
-    cause?: any;
+    cause?: unknown;
   }) {
     super();
     this.name = name;

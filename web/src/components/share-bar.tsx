@@ -15,9 +15,15 @@ import { EmailModal } from './email-modal';
 interface ShareBarProps {
   link: string;
   description: string;
+  // Identifiant du résultat : l'envoi par e-mail n'existe que pour un résultat.
+  resultId?: string;
 }
 
-export default function ShareBar({ link, description }: ShareBarProps) {
+export default function ShareBar({
+  link,
+  description,
+  resultId
+}: ShareBarProps) {
   const [_, copy] = useCopyToClipboard();
   const disclosure = useDisclosure();
 
@@ -65,18 +71,20 @@ export default function ShareBar({ link, description }: ShareBarProps) {
           <PDFIcon size={32} />
         </Button>
       </Tooltip>
-      <Tooltip color='secondary' content='Mail link'>
-        <Button
-          isIconOnly
-          aria-label='Mail the link'
-          radius='full'
-          size='md'
-          variant='light'
-          onPress={disclosure.onOpen}
-        >
-          <MailIcon size={42} />
-        </Button>
-      </Tooltip>
+      {resultId && (
+        <Tooltip color='secondary' content='Mail link'>
+          <Button
+            isIconOnly
+            aria-label='Mail the link'
+            radius='full'
+            size='md'
+            variant='light'
+            onPress={disclosure.onOpen}
+          >
+            <MailIcon size={42} />
+          </Button>
+        </Tooltip>
+      )}
       <Tooltip color='secondary' content='Copy link'>
         <Button
           isIconOnly
@@ -89,7 +97,7 @@ export default function ShareBar({ link, description }: ShareBarProps) {
           <CopyIcon size={42} />
         </Button>
       </Tooltip>
-      <EmailModal disclosure={disclosure} link={link} />
+      {resultId && <EmailModal disclosure={disclosure} resultId={resultId} />}
     </>
   );
 }
