@@ -37,10 +37,6 @@ const serbian = {
       scientific: {
         title: 'Naučno',
         text: 'BigFive je naučno validiran i pouzdan psihološki model.'
-      },
-      translated: {
-        title: 'Prevedeno',
-        text: 'Prevedeno na više od 20 jezika. Pomozite na <a href="/translations" rel="noopener noreferrer" target="_blank">stranici za prevođenje</a>!'
       }
     },
     description: {

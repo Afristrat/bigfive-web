@@ -37,10 +37,6 @@ const bulgarian = {
       scientific: {
         title: 'Научен',
         text: 'Големите Пет е научно валидиран и надежден психологически модел.'
-      },
-      translated: {
-        title: 'Преведен',
-        text: 'Преведен на над 20 езика. Можете да помогнете на <a href="/translations" rel="noopener noreferrer" target="_blank">тази страница за преводи</a>!'
       }
     },
     description: {

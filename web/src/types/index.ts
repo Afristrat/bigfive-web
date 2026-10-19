@@ -21,22 +21,6 @@ export type DbResult = {
   answers: Answer[];
 };
 
-// getTemplate() est typé `any` par @bigfive-org/results : on fixe ici la forme réelle.
-export type ResultTemplateDomain = {
-  domain: string;
-  title: string;
-  shortDescription: string;
-  description: string;
-  results: { score: string; text: string }[];
-  facets: { facet: number; title: string; text: string }[];
-};
-
-export type Feedback = {
-  name: string;
-  email: string;
-  message: string;
-};
-
 type ErrorName = 'NotFoundError' | 'SavingError' | 'RateLimitError';
 
 class ErrorBase<T extends string> extends Error {

@@ -37,10 +37,6 @@ const japanese = {
       scientific: {
         title: '科学的',
         text: 'BigFiveは、科学的に検証された信頼できる心理モデルです。'
-      },
-      translated: {
-        title: '翻訳済み',
-        text: '20以上の言語に翻訳されています。 <a href="/translations" rel="noopener noreferrer" target="_blank">こちら</a>をご覧ください。'
       }
     },
     description: {

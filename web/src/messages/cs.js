@@ -37,10 +37,6 @@ const czech = {
       scientific: {
         title: 'Vědecky ověřeno',
         text: 'Velká Pětka je vědecky ověřený a spolehlivý psychologický model.'
-      },
-      translated: {
-        title: 'Přeloženo',
-        text: 'Přeloženo do více než 20 jazyků. Pomozte nám na <a href="/translations" rel="noopener noreferrer" target="_blank">této překladatelské stránce</a>!'
       }
     },
     description: {

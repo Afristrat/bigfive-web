@@ -1,7 +1,5 @@
-import { HeartBoldIcon } from '@/components/icons';
 import { title } from '@/components/primitives';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import Feedback from './feedback';
 import { Link } from '@/navigation';
 import { supportEmail } from '@/config/site';
 
@@ -62,25 +60,6 @@ export default async function AboutPage({ params }: Props) {
           )}
         </p>
       </div>
-      <section>
-        <div className='text-center justify-center mt-20'>
-          <h2 className={title()}>We love feedback!&nbsp;</h2>
-          <div className='flex md:inline-flex flex-col md:flex-row items-center'>
-            <HeartBoldIcon
-              className='text-pink-500 animate-heartbeat'
-              size={50}
-              style={{
-                animationDuration: '2.5s'
-              }}
-            />
-          </div>
-          <div className='mt-2 text-medium lg:mt-4 lg:text-large'>
-            Send us feedback about how our features can be improved or specific
-            issues.
-          </div>
-        </div>
-        <Feedback />
-      </section>
     </>
   );
 }

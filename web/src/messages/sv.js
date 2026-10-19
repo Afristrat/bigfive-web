@@ -37,10 +37,6 @@ const svenska = {
       scientific: {
         title: 'Vetenskaplig',
         text: 'Big Five är en validerad i vetenskap och pålitlig psykologisk model.'
-      },
-      translated: {
-        title: 'Översättningar',
-        text: 'Testet har översatts till mer än 20 språk. Hjälp till <a href="/translations" rel="noopener noreferrer" target="_blank">här</a>!'
       }
     },
     description: {

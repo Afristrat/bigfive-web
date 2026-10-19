@@ -39,10 +39,6 @@ const bengali = {
       scientific: {
         title: 'বৈজ্ঞানিকভাবে যাচাইকৃত',
         text: 'বিগফাইভ একটি বৈজ্ঞানিকভাবে যাচাইকৃত এবং নির্ভরযোগ্য মনস্তাত্ত্বিক মডেল।'
-      },
-      translated: {
-        title: 'বিভিন্ন ভাষায় অনূদিত',
-        text: '২০টিরও বেশি ভাষায় অনূদিত হয়েছে। চাইলে আপনিও <a href="/translations" rel="noopener noreferrer" target="_blank"> অনুবাদ করতে</a> সাহায্য করতে পারেন!'
       }
     },
     description: {

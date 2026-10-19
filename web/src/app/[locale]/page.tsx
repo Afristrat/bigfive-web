@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import { FeaturesGrid } from '@/components/features-grid';
 import {
   ExperimentIcon,
-  LanguageIcon,
   LogosOpensource,
   MoneyIcon,
   PlusLinearIcon
@@ -73,12 +72,6 @@ export default async function Home({ params }: HomeProps) {
       title: t('cards.scientific.title'),
       description: t('cards.scientific.text'),
       icon: ExperimentIcon({})
-    },
-    {
-      title: t('cards.translated.title'),
-      description: t.raw('cards.translated.text'),
-      icon: LanguageIcon({}),
-      href: '/translations'
     }
   ];
 

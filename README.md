@@ -10,10 +10,6 @@ See it live @ [bigfive-test.com](https://bigfive-test.com)
 
 Also check out https://pairperspective.com
 
-## Help wanted
-
-If you want to help by translating the items to other languages look [here](https://bigfive-test.com/translations).
-
 ## License
 
 [MIT](LICENSE)

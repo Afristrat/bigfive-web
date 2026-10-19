@@ -36,10 +36,6 @@ const romanian = {
       scientific: {
         title: 'Științific',
         text: 'BigFive este un model psihologic validat științific și de încredere.'
-      },
-      translated: {
-        title: 'Tradus',
-        text: 'Tradus în peste 20 de limbi. Ajută la <a href="/translations" rel="noopener noreferrer" target="_blank">această pagină de traducere</a>!'
       }
     },
     description: {

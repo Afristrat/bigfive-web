@@ -39,10 +39,6 @@ const polish = {
       scientific: {
         title: 'Naukowy',
         text: 'BigFive jest udowodnionym naukowo i wiarygodnym modelem psychologicznym.'
-      },
-      translated: {
-        title: 'Przetłumaczony',
-        text: 'Przetłumaczony na ponad 20 języków. Pomóż <a href="/translations" rel="noopener noreferrer" target="_blank">tutaj</a>!'
       }
     },
     description: {

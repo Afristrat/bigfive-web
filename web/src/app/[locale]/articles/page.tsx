@@ -2,24 +2,15 @@ import { compareDesc } from 'date-fns';
 import { allPosts } from 'contentlayer/generated';
 import { PostCard } from '@/components/post-card';
 import { setRequestLocale } from 'next-intl/server';
-import { ariclesByPopularity } from '@/components/view-counter';
-import SortButtons from './sort-buttons';
 import { supportEmail } from '@/config/site';
 import { getTranslationLocale } from '@/lib/helpers';
 
 interface ArticlesProps {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{
-    sort?: string;
-  }>;
 }
 
-export default async function ArticlesPage({
-  params,
-  searchParams
-}: ArticlesProps) {
+export default async function ArticlesPage({ params }: ArticlesProps) {
   const { locale } = await params;
-  const { sort } = await searchParams;
   setRequestLocale(locale);
 
   const translationLocale = getTranslationLocale(locale);
@@ -28,14 +19,9 @@ export default async function ArticlesPage({
     (post) => post.locale === translationLocale
   );
 
-  let posts;
-  if (sort === 'popularity') {
-    posts = await ariclesByPopularity(localizedPosts);
-  } else {
-    posts = localizedPosts.sort((a, b) =>
-      compareDesc(new Date(a.date), new Date(b.date))
-    );
-  }
+  const posts = localizedPosts.sort((a, b) =>
+    compareDesc(new Date(a.date), new Date(b.date))
+  );
 
   return (
     <div className='w-full lg:px-16 mt-12'>
@@ -55,8 +41,6 @@ export default async function ArticlesPage({
           )}
         </h5>
       </div>
-      <SortButtons sortBy={sort} />
-
       <div className='mt-2 grid gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]'>
         {posts.map((post, idx) => (
           <PostCard key={idx} {...post} />

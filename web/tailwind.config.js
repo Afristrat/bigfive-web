@@ -14,11 +14,6 @@ module.exports = {
         mono: ['var(--font-geist-mono)']
       },
       keyframes: {
-        heartbeat: {
-          '0%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.2)' },
-          '100%': { transform: 'scale(1)' }
-        },
         'infinite-scroll': {
           from: { transform: 'translateX(0)' },
           to: { transform: 'translateX(-50%)' }
@@ -33,7 +28,6 @@ module.exports = {
         }
       },
       animation: {
-        heartbeat: 'heartbeat 1s ease-in-out infinite',
         'infinite-scroll': 'infinite-scroll 25s linear infinite',
         'shadow-pulse': 'shadow-pulse 3s infinite'
       }

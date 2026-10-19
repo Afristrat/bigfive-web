@@ -37,10 +37,6 @@ const urdu = {
       scientific: {
         title: 'سائنسی',
         text: 'بگفائیو ایک سائنسی طور پر تصدیق شدہ اور قابل اعتماد نفسیاتی ماڈل ہے۔'
-      },
-      translated: {
-        title: 'ترجمہ شدہ',
-        text: '20 سے زائد زبانوں میں ترجمہ کیا گیا۔ <a href="/translations" rel="noopener noreferrer" target="_blank">اس ترجمہ صفحہ</a> پر مدد کریں!'
       }
     },
     description: {

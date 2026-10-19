@@ -21,8 +21,6 @@ const SWEEP_INTERVAL_MS = 60 * 1000;
 export const limits = {
   getResult: { max: 600, windowMs: HOUR_MS },
   saveTest: { max: 60, windowMs: HOUR_MS },
-  saveFeedback: { max: 5, windowMs: HOUR_MS },
-  translation: { max: 5, windowMs: HOUR_MS },
   sendEmailPerIp: { max: 5, windowMs: HOUR_MS },
   sendEmailPerRecipient: { max: 3, windowMs: HOUR_MS },
   sendEmailGlobal: { max: 100, windowMs: HOUR_MS }

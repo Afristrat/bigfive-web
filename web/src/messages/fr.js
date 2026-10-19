@@ -38,10 +38,6 @@ const french = {
       scientific: {
         title: 'Scientifique',
         text: 'BigFive est un modèle psychologique scientifiquement validé et fiable.'
-      },
-      translated: {
-        title: 'Traduit',
-        text: 'Traduit dans plus de 20 langues. Aider <a href="/translations" rel="noopener noreferrer" target="_blank">here</a>!'
       }
     },
     description: {

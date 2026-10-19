@@ -37,10 +37,6 @@ const hungarian = {
       scientific: {
         title: 'Tudományos',
         text: 'A Nagy Öt egy tudományosan validált és megbízható pszichológiai modell.'
-      },
-      translated: {
-        title: 'Fordított',
-        text: 'Több mint 20 nyelvre lefordítva. Segíts ebben a <a href="/translations" rel="noopener noreferrer" target="_blank">fordítási oldalon</a>!'
       }
     },
     description: {

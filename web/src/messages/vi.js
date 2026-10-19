@@ -36,10 +36,6 @@ const vietnamese = {
       scientific: {
         title: 'Khoa học',
         text: 'BigFive là một mô hình tâm lý học được xác thực khoa học và đáng tin cậy.'
-      },
-      translated: {
-        title: 'Được dịch',
-        text: 'Đã được dịch sang hơn 20 ngôn ngữ. Hãy giúp đỡ trên <a href="/translations" rel="noopener noreferrer" target="_blank">trang dịch này</a>!'
       }
     },
     description: {

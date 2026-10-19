@@ -37,10 +37,6 @@ const thai = {
       scientific: {
         title: 'วิทยาศาสตร์',
         text: 'บุคลิกภาพใหญ่ 5 อย่าง เป็นแบบจำลองทางจิตวิทยาที่เชื่อถือได้และสามารถตรวจสอบได้ทางวิทยาศาสตร์'
-      },
-      translated: {
-        title: 'แปลภาษา',
-        text: 'ได้รับการแปลเป็นภาษาต่างๆมากกว่า 20 ภาษา คุณสามารถช่วยได้ <a href="/translations" rel="noopener noreferrer" target="_blank">ที่นี่</a>!'
       }
     },
     description: {

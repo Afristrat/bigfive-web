@@ -139,31 +139,6 @@ export const SunFilledIcon = ({
   </svg>
 );
 
-export const HeartFilledIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => (
-  <svg
-    aria-hidden='true'
-    focusable='false'
-    height={size || height}
-    role='presentation'
-    viewBox='0 0 24 24'
-    width={size || width}
-    {...props}
-  >
-    <path
-      d='M12.62 20.81c-.34.12-.9.12-1.24 0C8.48 19.82 2 15.69 2 8.69 2 5.6 4.49 3.1 7.56 3.1c1.82 0 3.43.88 4.44 2.24a5.53 5.53 0 0 1 4.44-2.24C19.51 3.1 22 5.6 22 8.69c0 7-6.48 11.13-9.38 12.12Z'
-      fill='currentColor'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-      strokeWidth={1.5}
-    />
-  </svg>
-);
-
 export const ArrowRightIcon = ({
   size = 24,
   width,
@@ -246,28 +221,6 @@ export const ExperimentIcon = ({
       fill='currentColor'
       d='M5 21q-1.275 0-1.812-1.137t.262-2.113L9 11V5H8q-.425 0-.712-.288T7 4q0-.425.288-.712T8 3h8q.425 0 .713.288T17 4q0 .425-.288.713T16 5h-1v6l5.55 6.75q.8.975.263 2.113T19 21zm2-3h10l-3.4-4h-3.2zm-2 1h14l-6-7.3V5h-2v6.7zm7-7'
     />
-  </svg>
-);
-
-export const LanguageIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => (
-  <svg
-    xmlns='http://www.w3.org/2000/svg'
-    width={size || width}
-    height={size || height}
-    viewBox='0 0 36 36'
-    {...props}
-  >
-    <path fill='currentColor' d='m11 16.5l-1 3.1h2z' />
-    <path
-      fill='currentColor'
-      d='M30.3 3h-16v5h4v2h-13c-1.7 0-3 1.3-3 3v11c0 1.7 1.3 3 3 3h1v5.1l6.3-5.1h6.7v-7h11c1.7 0 3-1.3 3-3V6c0-1.7-1.3-3-3-3M13.1 22.9l-.5-1.6H9.5l-.6 1.6H6.5L9.8 14h2.4l3.3 8.9zM28.3 15v2c-1.3 0-2.7-.4-3.9-1c-1.2.6-2.6.9-4 1l-.1-2c.7 0 1.4-.1 2.1-.3c-.9-.9-1.5-2-1.8-3.2h2.1c.3.9.9 1.6 1.6 2.2c1.1-.9 1.8-2.2 1.9-3.7h-6V8h3V6h2v2h3.3l.1 1c.1 2.1-.7 4.2-2.2 5.7c.7.2 1.3.3 1.9.3'
-    />
-    <path fill='none' d='M0 0h36v36H0z' />
   </svg>
 );
 
@@ -429,29 +382,6 @@ export const DeleteIcon = ({
   </svg>
 );
 
-export const HeartBoldIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => (
-  <svg
-    aria-hidden='true'
-    fill='none'
-    focusable='false'
-    height={size || height}
-    role='presentation'
-    viewBox='0 0 24 24'
-    width={size || width}
-    {...props}
-  >
-    <path
-      d='M16.44 3.10156C14.63 3.10156 13.01 3.98156 12 5.33156C10.99 3.98156 9.37 3.10156 7.56 3.10156C4.49 3.10156 2 5.60156 2 8.69156C2 9.88156 2.19 10.9816 2.52 12.0016C4.1 17.0016 8.97 19.9916 11.38 20.8116C11.72 20.9316 12.28 20.9316 12.62 20.8116C15.03 19.9916 19.9 17.0016 21.48 12.0016C21.81 10.9816 22 9.88156 22 8.69156C22 5.60156 19.51 3.10156 16.44 3.10156Z'
-      fill='currentColor'
-    />
-  </svg>
-);
-
 export const PDFIcon = ({
   size = 24,
   width,
@@ -563,30 +493,6 @@ export const DotsIcon = ({
       <circle cx='10' cy='15' r='2' />
       <circle cx='10' cy='10' r='2' />
       <circle cx='10' cy='5' r='2' />
-    </g>
-  </svg>
-);
-
-export const SortIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => (
-  <svg
-    width={size || width}
-    height={size || height}
-    viewBox='0 0 20 20'
-    aria-hidden='true'
-    focusable='false'
-    {...props}
-  >
-    <g fill='currentColor' fillRule='evenodd' clipRule='evenodd'>
-      <path d='M10.293 7.707a1 1 0 0 1 0-1.414l3-3a1 1 0 1 1 1.414 1.414l-3 3a1 1 0 0 1-1.414 0' />
-      <path d='M17.707 7.707a1 1 0 0 1-1.414 0l-3-3a1 1 0 0 1 1.414-1.414l3 3a1 1 0 0 1 0 1.414' />
-      <path d='M14 5a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V6a1 1 0 0 1 1-1m-4.293 7.293a1 1 0 0 1 0 1.414l-3 3a1 1 0 0 1-1.414-1.414l3-3a1 1 0 0 1 1.414 0' />
-      <path d='M2.293 12.293a1 1 0 0 1 1.414 0l3 3a1 1 0 1 1-1.414 1.414l-3-3a1 1 0 0 1 0-1.414' />
-      <path d='M6 15a1 1 0 0 1-1-1V6a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1' />
     </g>
   </svg>
 );

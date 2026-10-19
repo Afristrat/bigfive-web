@@ -39,10 +39,6 @@ const russian = {
       scientific: {
         title: 'Научный',
         text: 'Большая пятерка - это научно обоснованная и надежная модель для измерения личности.'
-      },
-      translated: {
-        title: 'Перевод',
-        text: 'Переведен более чем на 20 языков. Помоги нам <a href="/translations" rel="noopener noreferrer" target="_blank">тут</a>!'
       }
     },
     description: {

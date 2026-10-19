@@ -38,10 +38,6 @@ const armenian = {
       scientific: {
         title: 'Գիտական',
         text: 'ՄեծՀինգը գիտականորեն հաստատված և վստահելի հոգեբանական մոդել է։'
-      },
-      translated: {
-        title: 'Թարգմանված',
-        text: 'Թարգմանված է ավելի քան 20 լեզուներով։ Օգնեք <a href="/translations" rel="noopener noreferrer" target="_blank">այս թարգմանության էջում</a>!'
       }
     },
     description: {

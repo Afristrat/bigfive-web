@@ -37,10 +37,6 @@ const slovenian = {
       scientific: {
         title: 'Znanstveno',
         text: 'BigFive je znanstveno potrjen in zanesljiv psihološki model.'
-      },
-      translated: {
-        title: 'Prevedeno',
-        text: 'Prevedeno v več kot 20 jezikov. Pomagajte na <a href="/translations" rel="noopener noreferrer" target="_blank">tej prevajalski strani</a>!'
       }
     },
     description: {

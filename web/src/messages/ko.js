@@ -37,10 +37,6 @@ const korean = {
       scientific: {
         title: '과학적',
         text: '빅파이브는 과학적으로 검증되고 신뢰할 수 있는 심리 모델입니다.'
-      },
-      translated: {
-        title: '번역됨',
-        text: '20개 이상의 언어로 번역되었습니다. <a href="/translations" rel="noopener noreferrer" target="_blank">이 번역 페이지</a>에서 도와주세요!'
       }
     },
     description: {

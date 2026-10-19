@@ -39,10 +39,6 @@ const deutsh = {
       scientific: {
         title: 'Wissenschaftlich',
         text: 'BigFive ist ein wissenschaftlich validiertes und zuverlässiges Modell zur Persönlichkeitsmessung.'
-      },
-      translated: {
-        title: 'Übersetzung',
-        text: 'Übersetzt in über 20 Sprachen. Hilf mit <a href="/translations" rel="noopener noreferrer" target="_blank">hier</a>!'
       }
     },
     description: {

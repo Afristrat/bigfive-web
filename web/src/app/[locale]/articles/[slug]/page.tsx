@@ -6,8 +6,6 @@ import { User } from '@nextui-org/user';
 import { Chip, Divider, Link } from '@nextui-org/react';
 import { Image } from '@nextui-org/image';
 import { calculateReadingTime, getTranslationLocale } from '@/lib/helpers';
-import { ViewCounter } from '@/components/view-counter';
-import { Suspense } from 'react';
 import { basePath } from '@/config/site';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -134,9 +132,6 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
         )}
         <div className='flex justify-between text-small mb-2 text-default-500 w-full'>
           <p>{calculateReadingTime(currentPost.body.raw)} min read</p>
-          <Suspense>
-            <ViewCounter postId={currentPost.slug} />
-          </Suspense>
           <time dateTime={currentPost.date}>
             {format(parseISO(currentPost.date), 'LLLL d, yyyy')}
           </time>

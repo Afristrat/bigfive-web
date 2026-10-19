@@ -37,10 +37,6 @@ const croatian = {
       scientific: {
         title: 'Znanstveno',
         text: 'BigFive je znanstveno potvrđen i pouzdan psihološki model.'
-      },
-      translated: {
-        title: 'Prevedeno',
-        text: 'Prevedeno na više od 20 jezika. Pomozite na <a href="/translations" rel="noopener noreferrer" target="_blank">ovoj stranici za prijevode</a>!'
       }
     },
     description: {

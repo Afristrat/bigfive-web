@@ -22,15 +22,12 @@ export default function PrivacyPage() {
           <li>Datetime of submitted test</li>
         </ul>
         <br />
-        If you use the feedback form or the translation forms, we also store the
-        name, e-mail address and message you enter. If you ask us to e-mail you
-        the link to a result, the address you enter is only used to send that
-        message through our e-mail provider, Resend, and is not stored in our
-        database.
+        If you ask us to e-mail you the link to a result, the address you enter
+        is only used to send that message through our e-mail provider, Resend,
+        and is not stored in our database.
         <br />
         <br />
-        We do not use analytics services, advertising or tracking cookies. The
-        site keeps a count of views per article, without any personal data.
+        We do not use analytics services, advertising or tracking cookies.
         <h2>How do we collect your data?</h2>
         Your web browser automatically sends information to our server when you
         load a page. This can i.e. be information about which browser and

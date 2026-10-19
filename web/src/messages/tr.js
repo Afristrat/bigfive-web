@@ -38,10 +38,6 @@ const turkish = {
       scientific: {
         title: 'Bilimsel',
         text: 'BigFive, bilimsel olarak doğrulanmış ve güvenilir bir psikolojik modeldir.'
-      },
-      translated: {
-        title: 'Çevrilmiş',
-        text: `20'den fazla dile çevrildi. <a href="/translations" rel="noopener noreferrer" target="_blank">bu çeviri sayfasında</a> yardım edin!`
       }
     },
     description: {

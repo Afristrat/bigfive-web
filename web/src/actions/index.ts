@@ -2,23 +2,15 @@
 
 import { connectToDatabase } from '@/db';
 import { ObjectId } from 'mongodb';
-import { B5Error, DbResult, ResultTemplateDomain } from '@/types';
+import { B5Error, DbResult } from '@/types';
 import calculateScore from '@bigfive-org/score';
 import generateResult, {
   getInfo,
   Language,
-  Domain,
-  getTemplate
+  Domain
 } from '@bigfive-org/results';
-import { getItems, getChoices } from '@bigfive-org/questions';
-import {
-  feedbackSchema,
-  sendEmailSchema,
-  resultTranslationSchema,
-  surveyTranslationSchema,
-  testId,
-  testSchema
-} from '@/schemas';
+import { getItems } from '@bigfive-org/questions';
+import { sendEmailSchema, testId, testSchema } from '@/schemas';
 import { isRateLimited, limits } from '@/lib/rate-limit';
 import { basePath } from '@/config/site';
 import { QUESTIONNAIRE_VERSION } from '@/lib/question-overrides';
@@ -122,46 +114,6 @@ export async function saveTest(testResult: DbResult) {
   }
 }
 
-export type FeebackState = {
-  message: string;
-  type: 'error' | 'success';
-};
-
-export async function saveFeedback(
-  _: FeebackState,
-  formData: FormData
-): Promise<FeebackState> {
-  const parsed = feedbackSchema.safeParse({
-    name: formData.get('name'),
-    email: formData.get('email'),
-    message: formData.get('message')
-  });
-  if (
-    !parsed.success ||
-    (await isRateLimited('saveFeedback', limits.saveFeedback))
-  ) {
-    return {
-      message: 'Error sending feedback!',
-      type: 'error'
-    };
-  }
-  try {
-    const db = await connectToDatabase();
-    const collection = db.collection('feedback');
-    await collection.insertOne({ feedback: parsed.data });
-    return {
-      message: 'Sent successfully!',
-      type: 'success'
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      message: 'Error sending feedback!',
-      type: 'error'
-    };
-  }
-}
-
 export type EmailState = {
   message: string;
   type: 'error' | 'success';
@@ -256,141 +208,3 @@ export async function sendEmail(
     return emailFailed;
   }
 }
-
-export type TranslationState = {
-  message: string;
-  type: 'error' | 'success';
-};
-
-const translationSaved: TranslationState = {
-  message: 'Thanks <3 Saved successfully!',
-  type: 'success'
-};
-
-const translationFailed: TranslationState = {
-  message: 'Error saving',
-  type: 'error'
-};
-
-export const generateResultTextTranslation = async (
-  _: TranslationState,
-  formData: FormData
-): Promise<TranslationState> => {
-  const template: ResultTemplateDomain[] = getTemplate('en');
-  const parsed = resultTranslationSchema.safeParse({
-    name: formData.get('name'),
-    email: formData.get('email'),
-    notes: formData.get('notes'),
-    results: template.map((domain) => ({
-      title: formData.get(`${domain.domain}.title`),
-      shortDescription: formData.get(`${domain.domain}.shortDescription`),
-      description: formData.get(`${domain.domain}.description`),
-      results: domain.results.map((_result, i) => ({
-        text: formData.get(`${domain.domain}.results[${i}].text`)
-      })),
-      facets: domain.facets.map((_facet, i) => ({
-        title: formData.get(`${domain.domain}.facets[${i}].title`),
-        text: formData.get(`${domain.domain}.facets[${i}].text`)
-      }))
-    }))
-  });
-  if (
-    !parsed.success ||
-    (await isRateLimited('translation', limits.translation))
-  ) {
-    return translationFailed;
-  }
-
-  const { name, email, notes, results } = parsed.data;
-  const translatedResultText = template.map((domain, d) => ({
-    ...domain,
-    title: results[d].title,
-    shortDescription: results[d].shortDescription,
-    description: results[d].description,
-    results: domain.results.map((result, i) => ({
-      ...result,
-      text: results[d].results[i].text
-    })),
-    facets: domain.facets.map((facet, i) => ({
-      ...facet,
-      title: results[d].facets[i].title,
-      text: results[d].facets[i].text
-    }))
-  }));
-
-  try {
-    const db = await connectToDatabase();
-    const collection = db.collection('translations');
-    await collection.insertOne({
-      name,
-      email,
-      notes,
-      results: translatedResultText
-    });
-    return translationSaved;
-  } catch (error) {
-    console.error(error);
-    return translationFailed;
-  }
-};
-
-export const generateSurveyTranslation = async (
-  _: TranslationState,
-  formData: FormData
-): Promise<TranslationState> => {
-  const choices = getChoices('en');
-  const items = getItems('en');
-  const parsed = surveyTranslationSchema.safeParse({
-    name: formData.get('name'),
-    email: formData.get('email'),
-    notes: formData.get('notes'),
-    choices: Object.fromEntries(
-      choices.plus.map((choice) => [
-        choice.score,
-        formData.get(choice.score.toString())
-      ])
-    ),
-    questions: Object.fromEntries(
-      items.map((item) => [item.id, formData.get(item.id)])
-    )
-  });
-  if (
-    !parsed.success ||
-    (await isRateLimited('translation', limits.translation))
-  ) {
-    return translationFailed;
-  }
-
-  const { name, email, notes, choices: choiceTexts, questions } = parsed.data;
-  const translatedChoices = {
-    plus: choices.plus.map((choice) => ({
-      ...choice,
-      text: choiceTexts[choice.score]
-    })),
-    minus: choices.minus.map((choice) => ({
-      ...choice,
-      text: choiceTexts[choice.score]
-    }))
-  };
-
-  const translatedItems = items.map(({ choices: _choices, ...rest }) => ({
-    ...rest,
-    text: questions[rest.id]
-  }));
-
-  try {
-    const db = await connectToDatabase();
-    const collection = db.collection('translations');
-    await collection.insertOne({
-      name,
-      email,
-      notes,
-      choices: translatedChoices,
-      questions: translatedItems
-    });
-    return translationSaved;
-  } catch (error) {
-    console.error(error);
-    return translationFailed;
-  }
-};

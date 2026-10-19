@@ -37,10 +37,6 @@ const dutch = {
       scientific: {
         title: 'Wetenschappelijk',
         text: 'BigFive is een wetenschappelijk gevalideerd en betrouwbaar psychologisch model.'
-      },
-      translated: {
-        title: 'Vertaald',
-        text: 'Vertaald in meer dan 20 talen. Help mee op <a href="/translations" rel="noopener noreferrer" target="_blank">deze vertalingspagina</a>!'
       }
     },
     description: {

@@ -36,10 +36,6 @@ const albanian = {
       scientific: {
         title: 'Shkencor',
         text: 'BigFive është një model psikologjik i verifikuar dhe i besueshëm.'
-      },
-      translated: {
-        title: 'I përkthyer',
-        text: 'Përkthyer në mbi 20 gjuhë. Ndihmoni në <a href="/translations" rel="noopener noreferrer" target="_blank">këtë faqe përkthimi</a>!'
       }
     },
     description: {

@@ -37,10 +37,6 @@ const persian = {
       scientific: {
         title: 'علمی',
         text: 'بیگ فایو یک مدل روانشناختی معتبر و قابل اعتماد است.'
-      },
-      translated: {
-        title: 'ترجمه شده',
-        text: 'به بیش از ۲۰ زبان ترجمه شده است. در <a href="/translations" rel="noopener noreferrer" target="_blank">صفحه ترجمه‌ها</a> کمک کنید!'
       }
     },
     description: {

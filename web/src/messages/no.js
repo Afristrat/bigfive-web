@@ -38,10 +38,6 @@ const norsk = {
       scientific: {
         title: 'Vitenskapelig',
         text: 'BigFive er en vitenskapelig validert og pålitelig psykologisk modell.'
-      },
-      translated: {
-        title: 'Oversettelser',
-        text: 'Testen er oversatt til mer enn 20 språk. Hjelp til på <a href="/translations" rel="noopener noreferrer" target="_blank">oversettelsesiden</a>!'
       }
     },
     description: {

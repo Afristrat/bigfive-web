@@ -37,10 +37,6 @@ const hebrew = {
       scientific: {
         title: 'מדעי',
         text: 'חמש הגדולות הוא מודל פסיכולוגי מאומת ואמין מדעית.'
-      },
-      translated: {
-        title: 'מתורגם',
-        text: 'מתורגם ליותר מ-20 שפות. עזרו בתרגום בדף <a href="/translations" rel="noopener noreferrer" target="_blank">התרגום הזה</a>!'
       }
     },
     description: {

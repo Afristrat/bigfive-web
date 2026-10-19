@@ -38,10 +38,6 @@ const siswati = {
       scientific: {
         title: 'Ngesayensi',
         text: 'BigFive yinhlelo leyinetembeko nesayensi levikelekile.'
-      },
-      translated: {
-        title: 'Ihumushwe',
-        text: 'Ihumushwe kuya kulimi letehlukene letili-20. Sita kulokuhumusha <a href="/translations" rel="noopener noreferrer" target="_blank">lapha</a>!'
       }
     },
     description: {

@@ -37,10 +37,6 @@ const arabic = {
       scientific: {
         title: 'علمي',
         text: 'نموذج السمات الخمسة في علم النفس هو نموذج علمي محقّق وموثوق'
-      },
-      translated: {
-        title: 'مترجم',
-        text: 'الاختبار مترجم إلى أكثر من ٢٠ لغة. بإمكانك المساعدة <a href="/translations" rel="noopener noreferrer" target="_blank">here</a>!'
       }
     },
     description: {

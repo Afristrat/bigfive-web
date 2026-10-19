@@ -6,6 +6,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
     "typecheck": "contentlayer2 build && tsc --noEmit",
     "format": "prettier --check --ignore-path .gitignore .",
     "format:fix": "prettier --write --ignore-path .gitignore ."
@@ -31,7 +33,6 @@
     "@nextui-org/radio": "2.3.8",
     "@nextui-org/react": "2.6.11",
     "@nextui-org/select": "2.4.9",
-    "@nextui-org/shared-icons": "2.1.1",
     "@nextui-org/snippet": "2.2.10",
     "@nextui-org/spinner": "2.2.6",
     "@nextui-org/switch": "2.2.8",
@@ -60,6 +61,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@types/canvas-confetti": "1.6.4",
     "@types/node": "20.12.12",
     "@types/react": "19.3.0",
@@ -74,6 +76,7 @@
     "postcss": "8.4.38",
     "prettier": "3.2.5",
     "tailwindcss": "3.4.19",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "vitest": "5.0.3"
   }
 }

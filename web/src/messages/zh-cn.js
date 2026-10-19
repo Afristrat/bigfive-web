@@ -36,10 +36,6 @@ const chinese = {
       scientific: {
         title: '科学',
         text: '五大人格是经过科学验证且可靠的心理模型'
-      },
-      translated: {
-        title: '已翻译',
-        text: '翻译成 20 多种语言。<a href="/translations" rel="noopener noreferrer" target="_blank">点击这里</a>帮助翻译!'
       }
     },
     description: {
