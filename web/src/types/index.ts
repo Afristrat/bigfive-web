@@ -37,7 +37,7 @@ export type Feedback = {
   message: string;
 };
 
-type ErrorName = 'NotFoundError' | 'SavingError';
+type ErrorName = 'NotFoundError' | 'SavingError' | 'RateLimitError';
 
 class ErrorBase<T extends string> extends Error {
   name: T;

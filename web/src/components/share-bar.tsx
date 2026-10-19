@@ -40,7 +40,7 @@ export default function ShareBar({
           variant='light'
           as={NextUiLink}
           isExternal
-          href={`https://www.facebook.com/sharer/sharer.php?u=${link}`}
+          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`}
         >
           <FacebookIcon size={48} />
         </Button>
@@ -54,7 +54,7 @@ export default function ShareBar({
           variant='light'
           target='_blank'
           as={NextUiLink}
-          href={`https://twitter.com/intent/tweet?text=${description}!&url=${link}`}
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${description}!`)}&url=${encodeURIComponent(link)}`}
         >
           <TwitterIcon size={42} />
         </Button>

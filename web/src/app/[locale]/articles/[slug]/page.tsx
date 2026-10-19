@@ -10,6 +10,7 @@ import { ViewCounter } from '@/components/view-counter';
 import { Suspense } from 'react';
 import { basePath } from '@/config/site';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { PostCard } from '@/components/post-card';
 import { ShareArticle } from '@/components/share-article';
 
@@ -33,7 +34,7 @@ export const generateMetadata = async ({
   );
 
   const post = localizedPosts.find((post) => post.slug === slug);
-  if (!post) throw new Error(`Post not found for slug: ${slug}`);
+  if (!post) notFound();
   return {
     title: post.title,
     description: post.description,
@@ -86,7 +87,7 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
     .sort((a, b) => b.relevance - a.relevance)
     .slice(0, 3);
 
-  if (!currentPost) throw new Error(`Post not found for slug: ${slug}`);
+  if (!currentPost) notFound();
   return (
     <article className='w-full flex flex-col justify-start items-center prose prose-neutral'>
       <div className='lg:max-w-screen-md m-auto'>

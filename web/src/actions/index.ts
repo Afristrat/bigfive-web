@@ -24,6 +24,15 @@ import { basePath } from '@/config/site';
 
 const collectionName = process.env.DB_COLLECTION || 'results';
 const resultLanguages = getInfo().languages;
+const resultLanguageIds = new Set(resultLanguages.map((l) => l.id));
+// Domaine et facette de chaque question font foi côté serveur, jamais ceux du client.
+const itemsById = new Map(getItems('en').map((item) => [item.id, item]));
+
+const notFound = (id: string): B5Error =>
+  new B5Error({
+    name: 'NotFoundError',
+    message: `The test results with id ${id} is not found in the database!`
+  });
 
 export type Report = {
   id: string;
@@ -38,10 +47,11 @@ export async function getTestResult(
   language?: string
 ): Promise<Report | undefined> {
   const parsedId = testId.safeParse({ id });
-  if (!parsedId.success) {
+  if (!parsedId.success) throw notFound(id);
+  if (await isRateLimited('getResult', limits.getResult)) {
     throw new B5Error({
-      name: 'NotFoundError',
-      message: `The test results with id ${id} is not found in the database!`
+      name: 'RateLimitError',
+      message: 'Too many requests, please try again later.'
     });
   }
   try {
@@ -51,14 +61,16 @@ export async function getTestResult(
     const report = await collection.findOne(query);
     if (!report) {
       console.error(`The test results with id ${id} are not found!`);
-      throw new B5Error({
-        name: 'NotFoundError',
-        message: `The test results with id ${id} is not found in the database!`
-      });
+      throw notFound(id);
     }
+    // La langue sert de chemin de module dans @bigfive-org/results : seule une
+    // langue de la liste fermée est acceptée.
     const selectedLanguage =
-      language ||
-      (!!resultLanguages.find((l) => l.id == report.lang) ? report.lang : 'en');
+      language && resultLanguageIds.has(language)
+        ? language
+        : resultLanguageIds.has(report.lang)
+          ? report.lang
+          : 'en';
     const scores = calculateScore({ answers: report.answers });
     const results = generateResult({ lang: selectedLanguage, scores });
     return {
@@ -87,7 +99,17 @@ export async function saveTest(testResult: DbResult) {
   try {
     const db = await connectToDatabase();
     const collection = db.collection(collectionName);
-    const result = await collection.insertOne(parsed.data);
+    const answers = parsed.data.answers.map((answer) => {
+      const item = itemsById.get(answer.id);
+      return item
+        ? { ...answer, domain: item.domain, facet: item.facet }
+        : answer;
+    });
+    const result = await collection.insertOne({
+      ...parsed.data,
+      answers,
+      dateStamp: new Date()
+    });
     return { id: result.insertedId.toString() };
   } catch (error) {
     console.error(error);
@@ -156,6 +178,17 @@ const emailFailed: EmailState = {
   type: 'error'
 };
 
+const RESEND_TIMEOUT_MS = 8000;
+
+// Adresse ramenée à sa forme canonique pour le plafond par destinataire, afin
+// que les alias (« a+1@ », points Gmail) ne le contournent pas.
+const canonicalRecipient = (address: string): string => {
+  const [local, domain] = address.toLowerCase().split('@');
+  const base = local.split('+')[0];
+  const isGmail = domain === 'gmail.com' || domain === 'googlemail.com';
+  return `${isGmail ? base.replace(/\./g, '') : base}@${domain}`;
+};
+
 /**
  * Envoie le lien d'un résultat par e-mail via l'API Resend. Le client ne
  * fournit que `to` et `resultId` : sujet, texte et HTML sont construits ici.
@@ -177,8 +210,9 @@ export async function sendEmail(
     (await isRateLimited(
       'sendEmailTo',
       limits.sendEmailPerRecipient,
-      to.toLowerCase()
-    ))
+      canonicalRecipient(to)
+    )) ||
+    (await isRateLimited('sendEmailAll', limits.sendEmailGlobal, 'all'))
   ) {
     return emailFailed;
   }
@@ -197,6 +231,7 @@ export async function sendEmail(
 
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
+      signal: AbortSignal.timeout(RESEND_TIMEOUT_MS),
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json'

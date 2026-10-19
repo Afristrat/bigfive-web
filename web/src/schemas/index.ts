@@ -1,26 +1,36 @@
 import { z } from 'zod';
+import { getInfo, getItems } from '@bigfive-org/questions';
 
 // Bornes de taille : toute entrée de server action est validée ici avant
 // d'atteindre la base.
-export const MAX_ANSWERS = 300;
+
+// Les identifiants des questions sont identiques dans toutes les langues.
+const questionIds = new Set(getItems('en').map((item) => item.id));
+const questionLanguages = new Set(getInfo().languages.map((l) => l.id));
 
 export const testSchema = z.object({
-  testId: z.string().min(1).max(50),
-  lang: z.string().min(1).max(10),
+  testId: z.literal('b5-120'),
+  lang: z
+    .string()
+    .refine((lang) => questionLanguages.has(lang), 'Unknown language'),
   invalid: z.boolean(),
   answers: z
     .array(
       z.object({
-        id: z.string().min(1).max(64),
+        id: z.string().refine((id) => questionIds.has(id), 'Unknown question'),
         score: z.number().int().min(1).max(5),
         domain: z.enum(['O', 'C', 'E', 'A', 'N']),
         facet: z.number().int().min(1).max(6)
       })
     )
-    .min(1)
-    .max(MAX_ANSWERS),
+    .length(questionIds.size)
+    .refine(
+      (answers) => new Set(answers.map((a) => a.id)).size === answers.length,
+      'Duplicate answers'
+    ),
   timeElapsed: z.number().int().min(0).max(31_536_000),
-  // Le client envoie un objet Date (sérialisé tel quel par les server actions).
+  // Le client envoie un objet Date ; la valeur n'est pas conservée, le serveur
+  // horodate lui-même l'enregistrement.
   dateStamp: z.date()
 });
 
