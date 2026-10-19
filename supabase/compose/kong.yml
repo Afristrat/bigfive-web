@@ -1,0 +1,84 @@
+_format_version: '2.1'
+_transform: true
+
+# Configuration déclarative de Kong, élaguée du gabarit officiel supabase/docker.
+# Les $VARIABLES sont substituées au démarrage par kong-entrypoint.sh.
+# Aucune clé héritée HS256 : seules les clés opaques sb_ sont des identifiants,
+# traduites en jetons ES256 internes par le request-transformer.
+# Les cibles visent les noms de conteneurs, uniques sur le serveur, parce que
+# Kong est aussi branché sur le réseau partagé coolify.
+
+consumers:
+  - username: anon
+    keyauth_credentials:
+      - key: $SUPABASE_PUBLISHABLE_KEY
+  - username: service_role
+    keyauth_credentials:
+      - key: $SUPABASE_SECRET_KEY
+
+acls:
+  - consumer: anon
+    group: anon
+  - consumer: service_role
+    group: admin
+
+services:
+  - name: auth-v1-open-jwks
+    url: http://$TENGA_STACK-auth:9999/.well-known/jwks.json
+    routes:
+      - name: auth-v1-open-jwks
+        strip_path: true
+        paths:
+          - /auth/v1/.well-known/jwks.json
+
+  - name: auth-v1
+    url: http://$TENGA_STACK-auth:9999/
+    routes:
+      - name: auth-v1-all
+        strip_path: true
+        paths:
+          - /auth/v1/
+    plugins:
+      - name: key-auth
+        config:
+          hide_credentials: false
+      - name: request-transformer
+        config:
+          add:
+            headers:
+              - "Authorization: $LUA_AUTH_EXPR"
+          replace:
+            headers:
+              - "Authorization: $LUA_AUTH_EXPR"
+      - name: acl
+        config:
+          hide_groups_header: true
+          allow:
+            - admin
+            - anon
+
+  - name: rest-v1
+    url: http://$TENGA_STACK-rest:3000/
+    routes:
+      - name: rest-v1-all
+        strip_path: true
+        paths:
+          - /rest/v1/
+    plugins:
+      - name: key-auth
+        config:
+          hide_credentials: false
+      - name: request-transformer
+        config:
+          add:
+            headers:
+              - "Authorization: $LUA_AUTH_EXPR"
+          replace:
+            headers:
+              - "Authorization: $LUA_AUTH_EXPR"
+      - name: acl
+        config:
+          hide_groups_header: true
+          allow:
+            - admin
+            - anon

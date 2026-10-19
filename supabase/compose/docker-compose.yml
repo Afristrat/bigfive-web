@@ -1,0 +1,203 @@
+# Instance Supabase dédiée à Tenga Assessments : 4 conteneurs sur 13.
+# Dérivé du compose officiel supabase/docker (juillet 2026, copie en service
+# sous /home/serveuria/tamkin-supabase) et élagué selon le plan v2 :
+# docs/plan-implementation-espace-prive.md, § 2.
+#
+# Une seule source pour la production et la préproduction : le .env de chaque
+# dossier de déploiement fixe TENGA_STACK (tenga-sb ou tenga-sb-preprod).
+# Le .env est créé sur le serveur par supabase/scripts/init-env.sh, jamais ici.
+#
+# Invariants vérifiés par supabase/scripts/verify-instance.sh :
+# - aucun port publié, aucune étiquette Traefik ;
+# - chaque conteneur porte mem_limit, mem_reservation, memswap_limit et
+#   pids_limit (SOP-020) ;
+# - aucun secret HS256 lisible par PostgREST : il ne connaît que la clé
+#   publique ES256 (JWT_JWKS) ; la base ne reçoit aucun app.settings.jwt_secret
+#   (SOP-028).
+
+name: ${TENGA_STACK}
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+
+  db:
+    container_name: ${TENGA_STACK}-db
+    image: supabase/postgres:17.6.1.136
+    restart: unless-stopped
+    logging: *logging
+    mem_limit: 768m
+    mem_reservation: 256m
+    memswap_limit: 1024m
+    pids_limit: 256
+    volumes:
+      - ./db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
+      - ./db/schemas.sql:/docker-entrypoint-initdb.d/migrations/99-tenga-schemas.sql:Z
+      - ./volumes/db/data:/var/lib/postgresql/data:Z
+      - db-config:/etc/postgresql-custom
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      # La première initialisation (migrations de l'image) dépasse 50 s.
+      start_period: 180s
+    environment:
+      POSTGRES_HOST: /var/run/postgresql
+      PGPORT: 5432
+      POSTGRES_PORT: 5432
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: postgres
+      POSTGRES_DB: postgres
+    command:
+      [
+        "postgres",
+        "-c", "config_file=/etc/postgresql/postgresql.conf",
+        "-c", "log_min_messages=fatal",
+        "-c", "shared_buffers=128MB",
+        "-c", "max_connections=40",
+        "-c", "cron.timezone=Africa/Casablanca"
+      ]
+
+  auth:
+    container_name: ${TENGA_STACK}-auth
+    image: supabase/gotrue:v2.189.0
+    restart: unless-stopped
+    logging: *logging
+    mem_limit: 128m
+    mem_reservation: 32m
+    memswap_limit: 256m
+    pids_limit: 128
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9999/health"]
+      timeout: 5s
+      interval: 5s
+      retries: 3
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      API_EXTERNAL_URL: ${API_EXTERNAL_URL}
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD}@db:5432/postgres
+      GOTRUE_SITE_URL: ${SITE_URL}
+      GOTRUE_URI_ALLOW_LIST: ${SITE_URL}
+      # Inscription fermée : un compte ne naît que par l'API d'administration
+      # (acceptation d'une invitation ou amorçage d'un administrateur).
+      GOTRUE_DISABLE_SIGNUP: "true"
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_MAILER_AUTOCONFIRM: "true"
+      GOTRUE_EXTERNAL_PHONE_ENABLED: "false"
+      GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: "false"
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_JWT_ISSUER: ${API_EXTERNAL_URL}
+      # Paire EC P-256 seule (aucune clé oct) : les sessions sont signées en
+      # ES256. GOTRUE_JWT_SECRET reste exigé au démarrage ; sa valeur aléatoire
+      # n'est connue que du .env et la certification prouve qu'un jeton HS256
+      # signé avec elle est refusé partout.
+      GOTRUE_JWT_KEYS: ${JWT_KEYS}
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      # Décision 4 : sessions inactives supprimées après 30 jours.
+      GOTRUE_SESSIONS_INACTIVITY_TIMEOUT: 720h
+      # L'application envoie les e-mails (Resend) : GoTrue n'a aucun SMTP.
+      GOTRUE_SMTP_ADMIN_EMAIL: ""
+      GOTRUE_SMTP_HOST: ""
+
+  rest:
+    container_name: ${TENGA_STACK}-rest
+    image: postgrest/postgrest:v14.12
+    restart: unless-stopped
+    logging: *logging
+    mem_limit: 256m
+    mem_reservation: 96m
+    memswap_limit: 384m
+    pids_limit: 384
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "postgrest", "--ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@db:5432/postgres
+      # Seul le schéma app est exposé ; private ne l'est jamais.
+      PGRST_DB_SCHEMAS: app
+      PGRST_DB_EXTRA_SEARCH_PATH: public,extensions
+      PGRST_DB_MAX_ROWS: 1000
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_OPENAPI_MODE: disabled
+      PGRST_ADMIN_SERVER_PORT: 3001
+      PGRST_ADMIN_SERVER_HOST: localhost
+      # Clé publique ES256 seule, sans repli sur un secret HS256.
+      PGRST_JWT_SECRET: ${JWT_JWKS}
+    command: ["postgrest"]
+
+  kong:
+    container_name: ${TENGA_STACK}-kong
+    image: kong/kong:3.9.1
+    restart: unless-stopped
+    logging: *logging
+    mem_limit: 256m
+    mem_reservation: 128m
+    memswap_limit: 384m
+    pids_limit: 128
+    # Aucun port publié, aucune étiquette Traefik : la passerelle n'est
+    # joignable que par l'application, sur le réseau coolify, sous l'alias
+    # ${TENGA_STACK}-gw.
+    networks:
+      default: {}
+      coolify:
+        aliases:
+          - ${TENGA_STACK}-gw
+    depends_on:
+      auth:
+        condition: service_healthy
+      rest:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./kong.yml:/home/kong/temp.yml:ro,z
+      - ./kong-entrypoint.sh:/home/kong/kong-entrypoint.sh:ro,z
+    environment:
+      KONG_NGINX_WORKER_PROCESSES: "2"
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
+      KONG_ROUTER_FLAVOR: expressions
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_DNS_NOT_FOUND_TTL: 1
+      KONG_PLUGINS: request-transformer,key-auth,acl
+      KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
+      KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
+      # Pas de journal d'accès : il ne contiendrait que des adresses internes
+      # et des chemins portant des identifiants.
+      KONG_PROXY_ACCESS_LOG: "off"
+      TENGA_STACK: ${TENGA_STACK}
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY}
+      SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY}
+      ANON_KEY_ASYMMETRIC: ${ANON_KEY_ASYMMETRIC}
+      SERVICE_ROLE_KEY_ASYMMETRIC: ${SERVICE_ROLE_KEY_ASYMMETRIC}
+    entrypoint: ["/bin/sh", "/home/kong/kong-entrypoint.sh"]
+
+networks:
+  coolify:
+    external: true
+
+volumes:
+  db-config:
