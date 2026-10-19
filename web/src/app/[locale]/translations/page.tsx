@@ -243,21 +243,9 @@ export default function TranslationPage() {
                   </div>
                 </CardHeader>
                 <CardBody className='flex flex-wrap flex-row gap-3'>
-                  {userTranslatorsSurvey
-                    .sort((a, _) => (a?.githubUser ? -1 : 1))
-                    .map((translator) =>
-                      translator?.githubUser ? (
-                        <User
-                          key={translator?.name}
-                          name={translator?.name}
-                          avatarProps={{
-                            src: `https://avatars.githubusercontent.com/${translator?.githubUser}`
-                          }}
-                        />
-                      ) : (
-                        <User key={translator?.name} name={translator?.name} />
-                      )
-                    )}
+                  {userTranslatorsSurvey.map((translator) => (
+                    <User key={translator?.name} name={translator?.name} />
+                  ))}
                 </CardBody>
               </Card>
               <Card>
@@ -269,21 +257,9 @@ export default function TranslationPage() {
                   </div>
                 </CardHeader>
                 <CardBody className='flex flex-wrap flex-row gap-3'>
-                  {userTranslatorsReport
-                    .sort((a, _) => (a?.githubUser ? -1 : 1))
-                    .map((translator) =>
-                      translator?.githubUser ? (
-                        <User
-                          key={translator?.name}
-                          name={translator?.name}
-                          avatarProps={{
-                            src: `https://avatars.githubusercontent.com/${translator?.githubUser}`
-                          }}
-                        />
-                      ) : (
-                        <User key={translator?.name} name={translator?.name} />
-                      )
-                    )}
+                  {userTranslatorsReport.map((translator) => (
+                    <User key={translator?.name} name={translator?.name} />
+                  ))}
                 </CardBody>
               </Card>
             </div>

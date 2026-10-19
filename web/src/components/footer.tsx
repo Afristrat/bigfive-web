@@ -1,8 +1,6 @@
-import { Link as NextUILink } from '@nextui-org/link';
 import { Link } from '../navigation';
 
-import { GithubIcon, Logo } from '@/components/icons';
-import { siteConfig } from '@/config/site';
+import { Logo } from '@/components/icons';
 
 interface FooterProps {
   footerLinks: {
@@ -21,15 +19,6 @@ export default function Footer({ footerLinks }: FooterProps) {
             <Logo />
           </span>
         </div>
-        <div className='justify-end'>
-          <NextUILink
-            isExternal
-            href={siteConfig.links.github}
-            aria-label='Github'
-          >
-            <GithubIcon size={48} className='text-default-500' />
-          </NextUILink>
-        </div>
       </div>
 
       <div className='w-full flex justify-center mt-12'>
@@ -45,15 +34,7 @@ export default function Footer({ footerLinks }: FooterProps) {
       </div>
 
       <div className='flex text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:py-2 mt-14 justify-center'>
-        © {year} AI-MPower. Based on{' '}
-        <NextUILink
-          isExternal
-          href={siteConfig.links.github}
-          className='text-sm text-gray-500 underline mx-1'
-        >
-          bigfive-web
-        </NextUILink>{' '}
-        (MIT license) by Jonas Enge and contributors.
+        © {year} Tenga Conseil
       </div>
     </footer>
   );

@@ -161,10 +161,7 @@ export const siteConfig = {
       label: 'faq',
       href: '/faq'
     }
-  ],
-  links: {
-    github: 'https://github.com/rubynor/bigfive-web'
-  }
+  ]
 };
 
 export const getNavItems = async ({

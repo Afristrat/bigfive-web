@@ -6,16 +6,7 @@ export default function FaqPage() {
   const faq = [
     {
       question: 'I got an error on this website',
-      answer: 'Submit an issue at GitHub.'
-    },
-    {
-      question: 'Can I use the code for this website for Commercial Purposes?',
-      answer: 'Yes, this project is licensed under the MIT license.'
-    },
-    {
-      question: 'Can I use the questions for Commercial Purposes?',
-      answer:
-        'Yes, the questions and translations are licensed under the MIT license.'
+      answer: 'Tell us what happened using the feedback form on the About page.'
     },
     {
       question: 'How do I print my test results?',
@@ -25,12 +16,12 @@ export default function FaqPage() {
     {
       question: 'I want to translate the questions to my language',
       answer:
-        "Use the translations page of this website. Select the language you want to translate from, translate the questions and click 'Generate translation'. Your translation is saved and reviewed manually. If you want to translate it directly on github instead, you can follow the description here."
+        "Use the translations page of this website. Select the language you want to translate from, translate the questions and click 'Generate translation'. Your translation is saved and reviewed manually."
     },
     {
       question: 'I want to translate the result text to my language',
       answer:
-        'If you want to translate the result text you need to follow the description here.'
+        'Use the result text tab of the translations page, in the same way as for the questions.'
     },
     {
       question:
@@ -38,13 +29,9 @@ export default function FaqPage() {
       answer: 'See the IPIP Website for more information.'
     },
     {
-      question: 'Where can I find the questions?',
+      question: 'Where do the questions come from?',
       answer:
-        'All questions and translations are in this repo in the data folder. The questions and scoring is taken from ipip.ori.org'
-    },
-    {
-      question: 'Where can I find the code?',
-      answer: 'The code is found here at GitHub.'
+        'The questions and the scoring are taken from the public domain International Personality Item Pool (ipip.ori.org).'
     }
   ];
   return (

@@ -32,7 +32,7 @@ export async function generateMetadata({
     },
     description: t('seo.description'),
     keywords: s('keywords'),
-    authors: [{ name: 'AI-MPower' }],
+    authors: [{ name: 'Tenga Conseil' }],
     icons: {
       icon: '/favicon.ico',
       shortcut: '/favicon-16x16.png',

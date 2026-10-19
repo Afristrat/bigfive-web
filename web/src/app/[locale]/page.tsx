@@ -5,14 +5,13 @@ import clsx from 'clsx';
 import { FeaturesGrid } from '@/components/features-grid';
 import {
   ExperimentIcon,
-  GithubIcon,
   LanguageIcon,
   LogosOpensource,
   MoneyIcon,
   PlusLinearIcon
 } from '@/components/icons';
 import { ArrowRightIcon } from '@/components/icons';
-import { locales, siteConfig } from '@/config/site';
+import { locales } from '@/config/site';
 import { compareDesc } from 'date-fns';
 import { allPosts } from 'contentlayer/generated';
 import { PostCard } from '@/components/post-card';
@@ -125,22 +124,6 @@ export default async function Home({ params }: HomeProps) {
                 )}
               >
                 {t('call_to_action')} <ArrowRightIcon />
-              </Link>
-              <Link
-                isExternal
-                className={clsx(
-                  buttonStyles({
-                    variant: 'bordered',
-                    radius: 'full',
-                    size: 'lg',
-                    fullWidth: true
-                  }),
-                  'md:w-auto'
-                )}
-                href={siteConfig.links.github}
-              >
-                <GithubIcon size={20} />
-                GitHub
               </Link>
             </div>
           </div>
