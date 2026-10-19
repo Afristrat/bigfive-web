@@ -81,13 +81,6 @@ export default async function Home({ params }: HomeProps) {
     )
   });
 
-  const testsTaken = t.rich('tests_taken', {
-    green: (chunks) => (
-      <span className={title({ color: 'green' })}>{chunks}</span>
-    ),
-    n: '4.000.000'
-  });
-
   return (
     <section className='relative'>
       <div>
@@ -133,7 +126,6 @@ export default async function Home({ params }: HomeProps) {
 
       <section className='border-t border-b border-divider px-8 mt-16 lg:mt-44 text-center'>
         <div className='my-8'>
-          <h1 className={title()}>{testsTaken}</h1>
         </div>
       </section>
 
