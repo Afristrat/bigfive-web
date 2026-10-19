@@ -1,4 +1,4 @@
-import { getItems } from '@bigfive-org/questions';
+import { getLocalizedItems } from '@/lib/question-overrides';
 import { Survey } from './survey';
 import { saveTest } from '@/actions';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -10,7 +10,7 @@ interface Props {
 export default async function TestPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const questions = getItems(locale);
+  const questions = getLocalizedItems(locale);
   const t = await getTranslations('test');
   return (
     <>

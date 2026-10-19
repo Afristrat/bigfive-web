@@ -21,6 +21,7 @@ import {
 } from '@/schemas';
 import { isRateLimited, limits } from '@/lib/rate-limit';
 import { basePath } from '@/config/site';
+import { QUESTIONNAIRE_VERSION } from '@/lib/question-overrides';
 
 const collectionName = process.env.DB_COLLECTION || 'results';
 const resultLanguages = getInfo().languages;
@@ -108,6 +109,7 @@ export async function saveTest(testResult: DbResult) {
     const result = await collection.insertOne({
       ...parsed.data,
       answers,
+      questionnaireVersion: QUESTIONNAIRE_VERSION,
       dateStamp: new Date()
     });
     return { id: result.insertedId.toString() };

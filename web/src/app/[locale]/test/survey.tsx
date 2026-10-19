@@ -51,6 +51,18 @@ export const Survey = ({
     handleResize();
   }, [width]);
 
+  // Sauvegarde locale après chaque changement d'état, pour que la dernière
+  // réponse donnée soit toujours incluse. Rien n'est écrit tant qu'aucune
+  // réponse n'existe, afin de ne pas écraser une progression à restaurer.
+  useEffect(() => {
+    if (answers.length === 0) return;
+    localStorage.setItem('inProgress', 'true');
+    localStorage.setItem(
+      'b5data',
+      JSON.stringify({ answers, currentQuestionIndex })
+    );
+  }, [answers, currentQuestionIndex]);
+
   useEffect(() => {
     const restoreData = () => {
       if (dataInLocalStorage()) {
@@ -112,7 +124,6 @@ export const Survey = ({
       window.scrollTo(0, 0);
       setInProgress(false);
     }
-    populateDataInLocalStorage();
   }
 
   function handlePreviousQuestions() {
@@ -168,14 +179,6 @@ export const Survey = ({
 
   function dataInLocalStorage() {
     return !!localStorage.getItem('inProgress');
-  }
-
-  function populateDataInLocalStorage() {
-    localStorage.setItem('inProgress', 'true');
-    localStorage.setItem(
-      'b5data',
-      JSON.stringify({ answers, currentQuestionIndex })
-    );
   }
 
   function restoreDataFromLocalStorage() {
@@ -264,8 +267,17 @@ export const Survey = ({
         <div className='mt-4'>
           <Alert title='Result not saved'>
             <p>
-              Your result could not be saved. Please try again in a few minutes.
+              Your result could not be saved, often because the site was updated
+              while you were taking the test. Your answers are kept on this
+              device: reload the page, then click the results button again.
             </p>
+            <Button
+              className='mt-3'
+              color='primary'
+              onClick={() => location.reload()}
+            >
+              Reload the page
+            </Button>
           </Alert>
         </div>
       )}
