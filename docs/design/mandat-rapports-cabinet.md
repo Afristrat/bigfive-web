@@ -1,6 +1,6 @@
 # Mandat : rapports individuels, de binôme et d'équipe, au niveau d'un cabinet international
 
-Statut : **proposition à valider par Amine, rien n'est codé.** Établi le 20 octobre 2026 à partir de sa demande du même jour. Complète `bases-rapports-individuel-et-binome.md` (moteur, bibliothèque de textes, packs de restitution) et `roles-et-invitations.md` (qui voit quoi).
+Statut : **validé par Amine le 20 octobre 2026, avec deux nuances intégrées (Maroc d'abord, interculturel pour les multinationales) ; rien n'est codé.** Établi le 20 octobre 2026 à partir de sa demande du même jour. Complète `bases-rapports-individuel-et-binome.md` (moteur, bibliothèque de textes, packs de restitution) et `roles-et-invitations.md` (qui voit quoi).
 
 ## 1. Ce que j'ai compris (à corriger ligne par ligne)
 
@@ -11,7 +11,8 @@ Statut : **proposition à valider par Amine, rien n'est codé.** Établi le 20 o
    - la **position** de chacune (fonction, niveau, ancienneté, rôle dans la décision) ;
    - la **nature de la relation** (ligne hiérarchique directe ou fonctionnelle, pairs, client-fournisseur interne, mentorat, co-direction) et sa **hiérarchie** ;
    - l'**orientation des objectifs** (exploration ou exploitation, croissance, redressement, conformité, innovation) ;
-   - les **contraintes stratégiques et organisationnelles** (budget, délais, réglementation, culture, héritage, ressources).
+   - les **contraintes stratégiques et organisationnelles** (budget, délais, réglementation, culture, héritage, ressources) ;
+   - le **contexte marocain** (droit marocain d'abord, langues de travail arabe, darija, français, anglais, amazighe) et, pour les organisations qui le vivent, notamment les **multinationales**, la **gestion de l'interculturel** (siège et filiale, expatriés et équipes locales, équipes réparties sur plusieurs pays).
 4. **Recommandations « tous azimuts ».** Coaching individuel et d'équipe, accompagnement, formation, et aussi dispositifs d'organisation (rôles, règles de décision, rituels, répartition des responsabilités).
 5. **Rôle et contexte de prompt.** Choisir le rôle d'expert, le contexte et la méthode de prompt les plus adéquats pour que Claude produise l'analyse et les recommandations.
 6. **Niveau d'exigence.** Un livrable digne d'un cabinet international de premier rang en excellence organisationnelle (méthode explicite, preuves, hiérarchisation, plan d'action chiffré en jalons, mesure d'impact).
@@ -38,11 +39,12 @@ Constat prouvé : la bibliothèque `bib-0.2` ne couvre que **5 facettes sur 30**
 1. **Limite de la mesure.** La personnalité auto-déclarée explique une part **modeste** de la performance au travail. La méta-analyse de référence sur les Big Five et la performance (Barrick et Mount, 1991) trouve des liens réels mais limités, le plus constant étant la conscience. Un rapport « cabinet » qui promettrait de prédire la performance d'une équipe serait faux. **Le mandat doit imposer des formulations d'hypothèses, jamais de prédiction.**
 2. **Composition d'équipe.** Les méta-analyses sur la composition des équipes (par exemple Bell, 2007) montrent des effets de la personnalité moyenne et de la dispersion qui dépendent du type de tâche et de l'interdépendance. Il n'existe pas de « bon mélange » universel. La **recommandation doit donc dépendre de la tâche et du contexte saisis**, pas d'une formule.
 3. **Hiérarchie et consentement.** Calibrer un rapport sur la relation hiérarchique veut dire qu'un supérieur pourrait lire des éléments sur un subordonné. C'est précisément ce que la plateforme interdit aujourd'hui (l'employeur ne voit jamais un résultat individuel, seuil d'anonymat de 5 personnes pour les agrégats, migration 0005). **Deux niveaux de rapport sont nécessaires** : un rapport privé pour la personne, et un rapport de relation ou d'équipe qui n'expose que ce que chacun a consenti à partager. Sans cela, le risque de contrainte et de biais de désirabilité sociale (on répond pour plaire au chef) ruine la valeur de la mesure.
-4. **Cadre juridique.** Dans l'Union européenne, les systèmes d'IA utilisés pour gérer des travailleurs (recrutement, affectation, évaluation) relèvent de la catégorie « haut risque » du règlement européen sur l'IA (règlement 2024/1689) ; l'article 22 du RGPD encadre les décisions automatisées. Au Maroc, loi 09-08 et CNDP. **Règle déjà retenue : max(RGPD, CNDP). Base juridique à faire instruire par Tenga Conseil avant tout usage.** Le mandat interdit toute décision d'emploi fondée sur ces rapports.
-5. **Normes absentes.** Aucune norme de population pour l'IPIP-NEO-120 en français ni en arabe n'existe encore dans la plateforme. Les niveaux « bas à haut » sont des conventions. Le rapport ne peut donc **comparer personne à une moyenne** ; il compare des personnes entre elles et chacune à sa propre échelle.
-6. **Garde-fous de qualité de cabinet.** Un livrable « Big Five » du conseil se reconnaît à trois choses : une méthode lisible, des sources vérifiables, et une mesure d'impact (avant et après). Sans indicateur de suivi, le plan d'accompagnement est du théâtre.
-7. **Qui signe.** Un psychologue ou consultant qualifié doit relire et signer. L'IA prépare et argumente, elle ne conclut pas (cohérent avec le pack A, annexe consultante, décision D3). Les bonnes pratiques à viser : norme ISO 10667 (prestation d'évaluation en contexte de travail) et lignes directrices de la Commission internationale des tests.
-8. **Références** (citées de mémoire, **à vérifier avant diffusion**, DÉFCON 1) : Barrick et Mount 1991 (Personnel Psychology) ; Bell 2007 (Journal of Applied Psychology) ; Judge et al. 2002 (Journal of Applied Psychology, personnalité et leadership) ; Edmondson 1999 (Administrative Science Quarterly, sécurité psychologique) ; Mintzberg 1979 (configurations structurelles) ; Cameron et Quinn 1999 (modèle des valeurs concurrentes) ; Nadler et Tushman 1980 (modèle de congruence) ; Thompson 1967 (interdépendance) ; March 1991 (exploration et exploitation) ; Graen et Uhl-Bien 1995 (relation leader-membre) ; Kirkpatrick (évaluation des formations).
+4. **Cadre juridique : le Maroc d'abord.** Le droit applicable de référence est marocain : loi 09-08 relative à la protection des personnes physiques à l'égard du traitement des données à caractère personnel, contrôlée par la CNDP (déclaration ou autorisation préalable du traitement, information et consentement des personnes, transferts hors du Maroc encadrés), et Code du travail (loi 65-99) pour la relation d'emploi. Le RGPD et le règlement européen sur l'IA (règlement 2024/1689, qui classe « à haut risque » l'IA utilisée pour gérer des travailleurs) ne s'appliquent **que si** l'organisation cliente y est soumise, ce qui est fréquent pour les **multinationales** (maison mère ou filiales dans l'Union, salariés situés dans l'Union, données hébergées ou consultées depuis l'Union). La règle de prudence retenue reste **max(RGPD, CNDP)** : on applique l'exigence la plus forte des deux quand les deux pourraient s'appliquer. **Base juridique à faire instruire par Tenga Conseil avant tout usage**, y compris le cadre d'un éventuel transfert de données vers un siège à l'étranger. Le mandat interdit toute décision d'emploi fondée sur ces rapports.
+5. **Interculturel : trois pièges à éviter.** (a) Les grilles culturelles nationales (Hofstede, GLOBE, carte culturelle d'Erin Meyer, Hall pour le contexte élevé ou faible) décrivent des **tendances de pays, pas des personnes** : appliquer une moyenne nationale à un individu est une erreur de raisonnement (erreur écologique). On les utilise pour lire les **règles du jeu d'une organisation et les frottements entre sites**, jamais pour expliquer le profil d'une personne. (b) Les **styles de réponse** à un questionnaire varient selon les cultures et la langue de passation (tendance à acquiescer, à éviter les extrêmes) : comparer un salarié marocain qui a répondu en arabe et un expatrié qui a répondu en anglais demande de la prudence, tant que l'équivalence des versions n'est pas établie. (c) Dans une multinationale, la **culture de la maison mère, celle de la filiale marocaine et celle des métiers** coexistent : le calibrage doit dire laquelle s'applique à la relation étudiée (par exemple un manager expatrié et une équipe locale, ou une équipe projet répartie entre Casablanca, Paris et Dubaï).
+6. **Normes absentes.** Aucune norme de population pour l'IPIP-NEO-120 en français ni en arabe n'existe encore dans la plateforme. Les niveaux « bas à haut » sont des conventions. Le rapport ne peut donc **comparer personne à une moyenne** ; il compare des personnes entre elles et chacune à sa propre échelle.
+7. **Garde-fous de qualité de cabinet.** Un livrable « Big Five » du conseil se reconnaît à trois choses : une méthode lisible, des sources vérifiables, et une mesure d'impact (avant et après). Sans indicateur de suivi, le plan d'accompagnement est du théâtre.
+8. **Qui signe.** Un psychologue ou consultant qualifié doit relire et signer. L'IA prépare et argumente, elle ne conclut pas (cohérent avec le pack A, annexe consultante, décision D3). Les bonnes pratiques à viser : norme ISO 10667 (prestation d'évaluation en contexte de travail) et lignes directrices de la Commission internationale des tests.
+9. **Références** (citées de mémoire, **à vérifier avant diffusion**, DÉFCON 1) : Barrick et Mount 1991 (Personnel Psychology) ; Bell 2007 (Journal of Applied Psychology) ; Judge et al. 2002 (Journal of Applied Psychology, personnalité et leadership) ; Edmondson 1999 (Administrative Science Quarterly, sécurité psychologique) ; Mintzberg 1979 (configurations structurelles) ; Cameron et Quinn 1999 (modèle des valeurs concurrentes) ; Nadler et Tushman 1980 (modèle de congruence) ; Thompson 1967 (interdépendance) ; March 1991 (exploration et exploitation) ; Graen et Uhl-Bien 1995 (relation leader-membre) ; Kirkpatrick (évaluation des formations) ; Hofstede (dimensions culturelles nationales) ; House et al. 2004 (étude GLOBE) ; Meyer 2014 (The Culture Map) ; Hall 1976 (Beyond Culture, contexte élevé ou faible).
 
 ## 4. L'objectif exhaustif à demander à Claude (le mandat)
 
@@ -64,7 +66,8 @@ Produire, pour une organisation cliente donnée, un **diagnostic de coordination
 |---|---|---|
 | Organisation | secteur, taille, âge, pays, structure (configuration de Mintzberg), culture dominante (modèle des valeurs concurrentes), maturité, historique récent (fusion, crise, croissance) | choix dans une liste, pas de texte libre non contrôlé |
 | Stratégie | objectifs des 12 à 24 mois, orientation (exploration, exploitation, redressement, croissance, conformité), indicateurs de succès, arbitrages déjà faits | saisis par le commanditaire |
-| Contraintes | budget, délais, réglementation, ressources, culture, héritage, sensibilités syndicales ou politiques | listées, avec leur dureté (dure, négociable) |
+| Contraintes | budget, délais, réglementation (droit marocain d'abord ; RGPD et règlement européen sur l'IA si l'organisation y est soumise), ressources, culture, héritage, sensibilités syndicales ou politiques | listées, avec leur dureté (dure, négociable) |
+| Interculturel | pays et sites concernés, nationalités en présence, langues de travail et langue de passation du questionnaire de chacun, rapport siège et filiale, part d'expatriés, travail à distance ou réparti, fuseaux horaires, culture de la maison mère et culture locale | rempli seulement si l'organisation le vit ; sert à lire les règles du jeu et les frottements entre sites, jamais à expliquer une personne |
 | Personnes | fonction, niveau, ancienneté, périmètre de décision, rôle dans l'équipe, **consentement de partage** par niveau de rapport | aucune donnée sans consentement tracé |
 | Relations | pour chaque lien : nature (ligne, fonctionnel, pairs, client-fournisseur, mentorat, co-direction), sens, fréquence de contact, **interdépendance de la tâche** (mise en commun, séquentielle, réciproque) | une matrice, pas une phrase |
 | Tâche et enjeux | ce que l'équipe doit réussir ensemble, nature de la tâche (routine, créative, urgence, projet), échéances, risques connus | pivot du calibrage |
@@ -98,8 +101,9 @@ Choix de modèle : modèle de raisonnement avec brief clair et critères de succ
 4. **DÉFCON 1** : aucune source, chiffre ou référence inventée ; toute référence est vérifiée avant diffusion ; un doute est signalé.
 5. **Aucune comparaison à une moyenne de population** tant qu'aucune norme n'existe.
 6. **Consentement et niveaux de partage** respectés ; seuil d'anonymat de 5 pour tout agrégat.
-7. **Arabe natif, jamais traduit** ; relu par un arabophone natif avant usage ; voix de marque (`voix-de-marque.md`).
-8. **Entrées non fiables** (texte libre du client) balisées comme **données** et jamais comme instructions (durcissement contre l'injection de prompt).
+7. **Interculturel lu au niveau des organisations et des sites, jamais des personnes** : aucune moyenne nationale n'est attribuée à un individu ; la langue de passation de chacun est indiquée à côté de toute comparaison.
+8. **Arabe natif, jamais traduit** ; relu par un arabophone natif avant usage ; voix de marque (`voix-de-marque.md`).
+9. **Entrées non fiables** (texte libre du client) balisées comme **données** et jamais comme instructions (durcissement contre l'injection de prompt).
 
 ### 4.7 Évaluation (« le niveau cabinet » se prouve)
 
@@ -136,6 +140,7 @@ Le livrable est acceptable si : (a) chaque affirmation chiffrée se retrouve dan
 | Qui lit le rapport d'équipe : l'employeur ou seulement le consultant ? | le consultant ; l'employeur ne reçoit que la lecture organisationnelle agrégée |
 | Typologie d'organisation à proposer à la saisie | configurations de Mintzberg et quadrants du modèle des valeurs concurrentes, en liste fermée |
 | Langue de livraison | français d'abord, arabe après relecture native |
+| Interculturel | module activé à la saisie pour les organisations multisites ou multinationales, désactivé sinon |
 | Qui signe les rapports | un consultant qualifié désigné par Tenga Conseil |
 | Hébergement du modèle | auto-hébergé ; externe seulement après base juridique |
 
@@ -152,6 +157,8 @@ le signera. Vous raisonnez à partir de faits fournis, vous distinguez toujours 
 
 <contexte_organisation>
 {{type_organisation}} ; {{secteur}} ; {{taille}} ; culture dominante : {{culture}}.
+Pays de référence : Maroc (droit marocain d'abord). Interculturel : {{interculturel}} (sites, langues de travail,
+siège et filiale, expatriés ; vide si non concerné).
 Objectifs des 12 à 24 mois : {{objectifs}} (orientation : {{orientation}}).
 Contraintes : {{contraintes}} (dureté indiquée pour chacune).
 </contexte_organisation>
