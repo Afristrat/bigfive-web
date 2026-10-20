@@ -11,7 +11,21 @@ SELECT is(
   (SELECT string_agg(schemaname || '.' || tablename || '|' || policyname || '|' || cmd || '|' || array_to_string(roles, ','),
                      E'\n' ORDER BY schemaname, tablename, policyname)
      FROM pg_policies WHERE schemaname IN ('app', 'private')),
-  $f$app.memberships|memberships_insertion_owner|INSERT|tenga_owner
+  $f$app.attempts|attempts_insertion_owner|INSERT|tenga_owner
+app.attempts|attempts_lecture_owner|SELECT|tenga_owner
+app.attempts|attempts_lecture_proprietaire|SELECT|authenticated
+app.attempts|attempts_modification_owner|UPDATE|tenga_owner
+app.attempts|attempts_suppression_owner|DELETE|tenga_owner
+app.campaigns|campaigns_insertion_owner|INSERT|tenga_owner
+app.campaigns|campaigns_lecture|SELECT|authenticated
+app.campaigns|campaigns_lecture_owner|SELECT|tenga_owner
+app.campaigns|campaigns_modification_owner|UPDATE|tenga_owner
+app.invitations|invitations_insertion_owner|INSERT|tenga_owner
+app.invitations|invitations_lecture_owner|SELECT|tenga_owner
+app.invitations|invitations_lecture_responsable|SELECT|authenticated
+app.invitations|invitations_modification_owner|UPDATE|tenga_owner
+app.invitations|invitations_suppression_owner|DELETE|tenga_owner
+app.memberships|memberships_insertion_owner|INSERT|tenga_owner
 app.memberships|memberships_lecture|SELECT|authenticated
 app.memberships|memberships_lecture_owner|SELECT|tenga_owner
 app.memberships|memberships_modification_owner|UPDATE|tenga_owner
@@ -20,10 +34,19 @@ app.organizations|organizations_insertion_owner|INSERT|tenga_owner
 app.organizations|organizations_lecture|SELECT|authenticated
 app.organizations|organizations_lecture_owner|SELECT|tenga_owner
 app.organizations|organizations_modification_owner|UPDATE|tenga_owner
+app.participations|participations_insertion_owner|INSERT|tenga_owner
+app.participations|participations_lecture_owner|SELECT|tenga_owner
+app.participations|participations_lecture_proprietaire|SELECT|authenticated
+app.participations|participations_lecture_responsable|SELECT|authenticated
+app.participations|participations_modification_owner|UPDATE|tenga_owner
 app.profiles|profiles_insertion_owner|INSERT|tenga_owner
 app.profiles|profiles_lecture_owner|SELECT|tenga_owner
 app.profiles|profiles_lecture_proprietaire|SELECT|authenticated
 app.profiles|profiles_modification_owner|UPDATE|tenga_owner
+app.results|results_insertion_owner|INSERT|tenga_owner
+app.results|results_lecture_owner|SELECT|tenga_owner
+app.results|results_lecture_proprietaire|SELECT|authenticated
+app.results|results_suppression_owner|DELETE|tenga_owner
 private.audit_log|audit_insertion_owner|INSERT|tenga_owner
 private.audit_log|audit_lecture_owner|SELECT|tenga_owner
 private.audit_log|audit_suppression_owner|DELETE|tenga_owner
@@ -41,7 +64,7 @@ SELECT is(
       AND NOT (roles = ARRAY['tenga_owner']::name[])),
   0, 'aucune règle d''écriture pour un autre rôle que tenga_owner (verrou 2)');
 
--- Droits figés sur les tables : le rôle connecté ne lit que trois tables, rien d'autre
+-- Droits figés sur les tables : le rôle connecté lit huit tables, en lecture seule, rien d'autre
 SELECT is(
   (SELECT string_agg(n.nspname || '.' || c.relname || '>' || r.rol || '>' || x.privs, E'\n' ORDER BY n.nspname, c.relname, r.rol)
      FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
@@ -50,10 +73,15 @@ SELECT is(
                            FROM unnest(ARRAY['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'REFERENCES', 'TRIGGER']) AS pr
                           WHERE has_table_privilege(r.rol, c.oid, pr)) x
     WHERE n.nspname IN ('app', 'private') AND c.relkind IN ('r', 'p', 'v') AND x.privs IS NOT NULL),
-  $f$app.memberships>authenticated>SELECT
+  $f$app.attempts>authenticated>SELECT
+app.campaigns>authenticated>SELECT
+app.invitations>authenticated>SELECT
+app.memberships>authenticated>SELECT
 app.organizations>authenticated>SELECT
-app.profiles>authenticated>SELECT$f$,
-  'droits figés : authenticated lit trois tables ; anon et service_role n''ont aucun droit sur les tables');
+app.participations>authenticated>SELECT
+app.profiles>authenticated>SELECT
+app.results>authenticated>SELECT$f$,
+  'droits figés : authenticated lit huit tables (SELECT seul) ; anon et service_role n''ont aucun droit sur les tables');
 
 -- Fonctions exécutables par l'API, figées
 SELECT is(
@@ -61,17 +89,32 @@ SELECT is(
      FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
      CROSS JOIN unnest(ARRAY['anon', 'authenticated', 'service_role']) AS r(rol)
     WHERE n.nspname IN ('app', 'private') AND has_function_privilege(r.rol, p.oid, 'EXECUTE')),
-  $f$app.attribuer_role>authenticated
+  $f$app.accepter_invitation>service_role
+app.attribuer_role>authenticated
+app.clore_campagne>authenticated
 app.consommer_code_connexion>service_role
 app.consommer_lien_connexion>service_role
+app.consulter_invitation>service_role
+app.creer_campagne>authenticated
 app.creer_organisation>authenticated
 app.demander_lien_connexion>service_role
 app.derniere_purge>service_role
+app.effacer_compte>service_role
+app.enregistrer_progression>authenticated
+app.exporter_mes_donnees>authenticated
+app.informer_responsable>authenticated
+app.inviter>authenticated
 app.lire_journal>authenticated
+app.lire_resultat_individuel>authenticated
+app.mes_resultats>authenticated
 app.mettre_a_jour_profil>authenticated
+app.mon_role>authenticated
+app.ouvrir_campagne>authenticated
 app.retirer_role>authenticated
+app.soumettre_resultat>authenticated
 app.suis_admin_tenga>authenticated
-app.suis_membre>authenticated$f$,
+app.suis_membre>authenticated
+app.supprimer_mon_compte>authenticated$f$,
   'liste figée des fonctions exécutables par l''API');
 
 SELECT is(
@@ -79,12 +122,12 @@ SELECT is(
     WHERE n.nspname IN ('app', 'private') AND has_function_privilege('public', p.oid, 'EXECUTE')),
   0, 'aucune fonction de app ni private n''est exécutable par PUBLIC');
 
--- Verrou 4 : une seule fonction de app crée des rôles (à mettre à jour au lot 2 : acceptation d'invitation)
+-- Verrou 4 : deux fonctions seulement créent des rôles (attribution réservée aux administrateurs ; acceptation d'invitation, rôle de participant uniquement, appelable par le serveur seul)
 SELECT is(
   (SELECT string_agg(p.proname, ',' ORDER BY p.proname) FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
     WHERE n.nspname IN ('app', 'private')
       AND p.prosrc ~* 'insert\s+into\s+app\.memberships'),
-  'attribuer_role', 'seule app.attribuer_role insère dans app.memberships (verrou 4)');
+  'accepter_invitation,attribuer_role', 'seules app.attribuer_role et app.accepter_invitation insèrent dans app.memberships (verrou 4)');
 
 -- Toutes les fonctions SECURITY DEFINER de app et private ont un search_path vide
 SELECT is(

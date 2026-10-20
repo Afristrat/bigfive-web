@@ -42,6 +42,29 @@ sh supabase/scripts/test-sql.sh <tenga-sb|tenga-sb-preprod> [dossier]
 | `10_socle_fonctions.sql` | lot 1 : création d'organisation, attribution et retrait de rôle, lecture du journal, journal en ajout seul (UPDATE, TRUNCATE, DELETE récent refusés), profil |
 | `11_connexion.sql` | lot 1 : lien `/c/{jeton}` et code à 6 chiffres : empreintes seules, usage unique, expiration, plafond de 3 demandes et de 5 essais, réponse de même forme pour une adresse inconnue |
 | `12_purge.sql` | lot 1 : tâche pg_cron, purge des liens et du journal échus, trace chiffrée, règles `TO tenga_owner` qui contraignent la purge (vu rouge), point de santé |
+| `13_campagnes_structure.sql` | lots 2 et 3 : cinq tables protégées (RLS forcée, anonyme et `service_role` sans droit, écriture fermée), liste des règles figée, déclencheurs (écriture par l'API, transition de statut, campagne ouverte, résultat immuable), invitation sans colonne de rôle, jeton haché, adresse effacée à l'acceptation, clés composites (l'organisation d'un résultat est celle de sa campagne), cascade |
+| `14_campagnes_acces.sql` | lots 2 et 3 : accès par personnage de la matrice, étanchéité entre organisations avec identifiants forgés, le responsable (et le consultant, et l'administrateur) ne lit RIEN dans `attempts` ni `results`, même par filtre ou jointure forgés, écritures directes refusées, verrous 2 et 3 éprouvés sur les nouvelles tables |
+| `15_campagnes_fonctions.sql` | lot 2 : créer, ouvrir, clore une campagne, inviter (jeton haché, réinvitation, 14 jours), droits par rôle, journal sans adresse ni trace des refus |
+| `16_invitation_acceptation.sql` | lot 2 : consulter et accepter une invitation (serveur seul) : rôle de participant et rien d'autre, adresse et prénom effacés, usage unique, expiration, campagne close, compte non conforme, rôle déjà tenu dans l'organisation |
+| `17_passation.sql` | lots 2 et 3 : progression avec contrôle de révision (conflit 40001), validation des réponses, soumission unique, lecture individuelle par le consultant affecté ou l'administrateur (journal écrit avant le résultat, refus sans trace) |
+| `18_mes_donnees.sql` | lot 3 : mes résultats, export JSON, suppression de compte en cascade (journal pseudonymisé), rejeu d'un effacement par le serveur, information du responsable sans identité |
+| `19_purge_lots_2_3.sql` | lots 2 et 3 : purge des invitations, tentatives, résultats et comptes vides, traces chiffrées, règles de suppression qui contraignent la purge (vu rouge), durées lues dans `private.settings` |
+
+## Mutations (contrôle « vu rouge », plan § 7)
+
+```
+sh supabase/scripts/mutate-sql.sh <tenga-sb|tenga-sb-preprod>
+```
+
+`mutations/NN_nom.sql` : une altération du schéma par fichier (règle ajoutée ou retirée, droit ouvert,
+déclencheur supprimé, fonction sans journalisation ou sans contrôle de droit, contrainte retirée, garde-fou
+désactivé...). `mutate-sql.sh` vérifie d'abord que le témoin sans mutation est entièrement vert, puis, pour
+chaque mutation, rejoue les fichiers de `sql/` dans une transaction annulée dont la mutation est appliquée en
+premier. Une mutation doit faire échouer au moins un test (sinon elle est SURVIVANTE et le script sort en
+erreur) ; une mutation qui ne s'applique pas seule est INVALIDE (c'est le cas d'un `NO FORCE ROW LEVEL
+SECURITY` seul : le garde-fou DDL le refuse, la mutation désactive donc d'abord le garde-fou). Au moins 12
+mutations sont exigées. Le script refuse la production. `TENGA_MUTATION_TOUT=1` rejoue tous les fichiers
+pour chaque mutation au lieu de s'arrêter au premier rouge.
 
 ## Constats sur les rôles de l'instance (lus en base)
 
@@ -73,7 +96,16 @@ Conséquences :
   liste, `12` retire des règles pour vérifier qu'elles contraignent vraiment).
 - La migration 0002 ajoute une règle de lecture `TO tenga_owner` sur
   `auth.users` (table GoTrue à RLS activée sans règle) et des droits de colonne
-  (`id`, `email`, `banned_until`) : c'est l'unique ouverture sur le schéma auth.
+  (`id`, `email`, `banned_until`). La migration 0003 y ajoute le droit
+  `DELETE` et une règle de suppression `TO tenga_owner` (effacement d'un compte
+  par `private.effacer_compte`, en cascade) : ce sont les deux seules ouvertures
+  sur le schéma auth, et `23_suppression_compte_sans_regle` (mutation) les
+  protège.
+- Piège relevé en écrivant la migration 0003 : `app.mon_role` renvoie `NULL`
+  sans appartenance, et `faux OU NULL` vaut `NULL`, que `NOT` laisserait passer.
+  Tout contrôle de droit écrit `COALESCE(..., false)` ; les refus de
+  `15_campagnes_fonctions.sql` et `17_passation.sql` l'éprouvent (responsable
+  d'une autre organisation).
 
 ## Limites connues
 
@@ -102,7 +134,7 @@ Matrice d'accès unique du plan § 7, écrite indépendamment des règles.
 | `personnages` | identités simulées (`id`, `description`) |
 | `operations` | opérations testées par objet |
 | `verdicts` | valeurs permises dans une cellule |
-| `objets` | objets du lot 1 (tables, fonctions), avec une `note` libre ; une table sans cellule est fermée à tous |
+| `objets` | objets des lots 1 à 3 (tables, fonctions), avec une `note` libre ; une table sans cellule est fermée à tous |
 
 Forme prévue d'un objet :
 
@@ -116,4 +148,4 @@ Forme prévue d'un objet :
 }
 ```
 
-Une cellule absente est lue comme `refuse` : on ne décrit que ce qui est permis.
+Une cellule absente est lue comme `refuse` : on ne décrit que ce qui est permis (les tables `attempts` et `results` listent pourtant `refuse` pour le responsable, le consultant et l'administrateur : c'est la décision à ne jamais perdre). Verdict `participation` : lignes liées à une participation de la personne (campagnes).

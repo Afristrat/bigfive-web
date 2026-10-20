@@ -1,6 +1,6 @@
 {
-  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 2 : objets du lot 1 (socle). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 transcrivent ces cellules (identités simulées, rôle réel).",
-  "version": 2,
+  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 3 : objets des lots 1 (socle), 2 (campagnes, invitations, passation) et 3 (mes résultats). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 (lot 1) et 14 à 19 (lots 2 et 3) transcrivent ces cellules (identités simulées, rôle réel).",
+  "version": 3,
   "personnages": [
     {
       "id": "anonyme",
@@ -55,6 +55,7 @@
     "refuse",
     "propres_lignes",
     "organisation",
+    "participation",
     "fonction_seule"
   ],
   "objets": [
@@ -280,6 +281,313 @@
         }
       },
       "note": "Point de santé de la purge."
+    },
+    {
+      "objet": "app.campaigns",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "participant_a": "participation",
+          "participant_b": "participation",
+          "responsable_a": "organisation",
+          "consultant_affecte_a": "organisation",
+          "consultant_autre": "organisation",
+          "responsable_b": "organisation",
+          "membre_a_et_b": "participation",
+          "admin_tenga": "autorise"
+        },
+        "insert": {
+          "responsable_a": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        },
+        "update": {
+          "responsable_a": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        }
+      },
+      "note": "Responsable et consultant lisent les campagnes de leur organisation ; un participant lit les campagnes où il a une participation ; l'administrateur Tenga lit toutes. Création, ouverture et clôture par app.creer_campagne, app.ouvrir_campagne, app.clore_campagne (responsable de l'organisation ou administrateur Tenga). Le statut ne fait qu'avancer : brouillon, ouverte, close (déclencheur)."
+    },
+    {
+      "objet": "app.invitations",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "responsable_a": "organisation",
+          "responsable_b": "organisation"
+        },
+        "insert": {
+          "responsable_a": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        },
+        "update": {
+          "responsable_a": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        }
+      },
+      "note": "Aucune colonne de rôle. Jeton haché (32 octets), expiration 14 jours, adresse et prénom effacés à l'acceptation (contrainte). Lecture par le responsable de l'organisation seulement ; création par app.inviter ; acceptation par app.accepter_invitation (serveur seul)."
+    },
+    {
+      "objet": "app.participations",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "participant_a": "propres_lignes",
+          "participant_b": "propres_lignes",
+          "responsable_a": "organisation",
+          "responsable_b": "organisation",
+          "membre_a_et_b": "propres_lignes"
+        },
+        "insert": {
+          "serveur": "fonction_seule"
+        },
+        "update": {
+          "participant_a": "fonction_seule",
+          "participant_b": "fonction_seule"
+        }
+      },
+      "note": "Le responsable lit le statut de participation de chacun dans son organisation (identifiants opaques, sans nom). Consultant, consultant d'une autre organisation et administrateur Tenga : aucune lecture directe. Ouverture par app.accepter_invitation ; passage en cours et terminé par app.enregistrer_progression et app.soumettre_resultat."
+    },
+    {
+      "objet": "app.attempts",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "participant_a": "propres_lignes",
+          "participant_b": "propres_lignes",
+          "membre_a_et_b": "propres_lignes",
+          "responsable_a": "refuse",
+          "consultant_affecte_a": "refuse",
+          "consultant_autre": "refuse",
+          "responsable_b": "refuse",
+          "admin_tenga": "refuse"
+        },
+        "insert": {
+          "participant_a": "fonction_seule",
+          "participant_b": "fonction_seule"
+        },
+        "update": {
+          "participant_a": "fonction_seule",
+          "participant_b": "fonction_seule"
+        }
+      },
+      "note": "AUCUNE règle de lecture pour le responsable, le consultant ni l'administrateur, même par requête forgée (filtre sur la personne, la participation ou l'organisation, jointure). Écriture par app.enregistrer_progression avec contrôle de révision."
+    },
+    {
+      "objet": "app.results",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "participant_a": "propres_lignes",
+          "participant_b": "propres_lignes",
+          "membre_a_et_b": "propres_lignes",
+          "responsable_a": "refuse",
+          "consultant_affecte_a": "refuse",
+          "consultant_autre": "refuse",
+          "responsable_b": "refuse",
+          "admin_tenga": "refuse"
+        },
+        "insert": {
+          "participant_a": "fonction_seule",
+          "participant_b": "fonction_seule"
+        },
+        "update": {
+          "participant_a": "refuse",
+          "participant_b": "refuse"
+        },
+        "delete": {
+          "participant_a": "fonction_seule",
+          "participant_b": "fonction_seule"
+        }
+      },
+      "note": "AUCUNE règle de lecture pour le responsable, le consultant ni l'administrateur : la lecture individuelle passe par app.lire_resultat_individuel, qui journalise avant de renvoyer. Insertion par app.soumettre_resultat (une seule par participation, campagne ouverte). Un résultat soumis ne se modifie jamais ; il s'efface avec le compte (app.supprimer_mon_compte) ou par la purge (3 ans)."
+    },
+    {
+      "objet": "app.mon_role",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "responsable_a": "autorise",
+          "consultant_affecte_a": "autorise",
+          "consultant_autre": "autorise",
+          "responsable_b": "autorise",
+          "membre_a_et_b": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Répond sur le rôle de l'appelant dans l'organisation demandée (NULL sans appartenance)."
+    },
+    {
+      "objet": "app.creer_campagne",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "responsable_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Responsable de l'organisation ou administrateur Tenga ; refus identique pour une organisation inexistante ; journalisée."
+    },
+    {
+      "objet": "app.ouvrir_campagne",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "responsable_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Brouillon vers ouverte ; journalisée."
+    },
+    {
+      "objet": "app.clore_campagne",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "responsable_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Ouverte vers close, irréversible ; efface les invitations sans réponse ; journalisée avec le nombre de participations terminées."
+    },
+    {
+      "objet": "app.inviter",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "responsable_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Campagne ouverte seulement. Renvoie le jeton en clair une seule fois ; réinviter une adresse renouvelle le jeton ; journalisée sans adresse."
+    },
+    {
+      "objet": "app.enregistrer_progression",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "membre_a_et_b": "autorise"
+        }
+      },
+      "note": "Titulaire de la participation, rôle de participant, campagne ouverte. Révision attendue (0 la première fois) ; conflit 40001."
+    },
+    {
+      "objet": "app.soumettre_resultat",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "membre_a_et_b": "autorise"
+        }
+      },
+      "note": "Titulaire, campagne ouverte, une seule soumission (23505). Efface la tentative, journalisée."
+    },
+    {
+      "objet": "app.lire_resultat_individuel",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "consultant_affecte_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Consultant de l'organisation du résultat ou administrateur Tenga. Écrit la ligne de journal PUIS renvoie le résultat ; aucun refus ne laisse de trace ; aucune identité renvoyée."
+    },
+    {
+      "objet": "app.mes_resultats",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "responsable_a": "autorise",
+          "consultant_affecte_a": "autorise",
+          "consultant_autre": "autorise",
+          "responsable_b": "autorise",
+          "membre_a_et_b": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Historique de l'appelant (ses participations, scores des terminées)."
+    },
+    {
+      "objet": "app.exporter_mes_donnees",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "responsable_a": "autorise",
+          "consultant_affecte_a": "autorise",
+          "consultant_autre": "autorise",
+          "responsable_b": "autorise",
+          "membre_a_et_b": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Export JSON de toutes les données de l'appelant ; journalisé."
+    },
+    {
+      "objet": "app.supprimer_mon_compte",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "responsable_a": "autorise",
+          "consultant_affecte_a": "autorise",
+          "consultant_autre": "autorise",
+          "responsable_b": "autorise",
+          "membre_a_et_b": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Efface le compte de l'appelant en cascade ; journal pseudonymisé sans adresse."
+    },
+    {
+      "objet": "app.informer_responsable",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "responsable_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Effectifs d'une campagne (participants, en cours, terminés, invitations en attente), sans aucune identité."
+    },
+    {
+      "objet": "app.consulter_invitation",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "serveur": "autorise"
+        }
+      },
+      "note": "Lecture d'une invitation valide par son jeton (page /i/{jeton}) : le serveur a besoin de l'adresse pour créer le compte."
+    },
+    {
+      "objet": "app.accepter_invitation",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "serveur": "autorise"
+        }
+      },
+      "note": "Une transaction : rôle de participant seul, participation ouverte, adresse et prénom effacés, journalisée. Refuse un compte d'une autre adresse et un rôle déjà tenu dans l'organisation."
+    },
+    {
+      "objet": "app.effacer_compte",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "serveur": "autorise"
+        }
+      },
+      "note": "Même effacement que app.supprimer_mon_compte, pour le rejeu du registre des effacements après restauration ; faux si le compte n'existe plus."
     }
   ]
 }
