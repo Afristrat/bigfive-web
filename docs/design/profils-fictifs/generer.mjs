@@ -7,6 +7,7 @@ import { createRequire } from 'module';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { radarSvg, dumbbellSvg, heatmapSvg, CSS_VISUELS, SCRIPT_TETE, SCRIPT_MOUVEMENT } from './visuels.mjs';
 
 const web = process.env.WEB_DIR || path.resolve(process.cwd());
 const require = createRequire(path.join(web, '/'));
@@ -100,7 +101,7 @@ function avatar(p, taille = 96, badge = true) {
   const col = h ? `<path d="M42 76 L50 86 L58 76 Z" fill="#ffffff" opacity=".9"/>` : `<path d="M40 76 C46 84 54 84 60 76 Z" fill="#ffffff" opacity=".35"/>`;
   const visage = `<ellipse cx="50" cy="52" rx="19" ry="23" fill="${p.peau}"/>`;
   const cou = `<rect x="44" y="68" width="12" height="12" rx="4" fill="${p.peau}"/>`;
-  const yeux = `<circle cx="43" cy="51" r="2" fill="#2a1d14"/><circle cx="57" cy="51" r="2" fill="#2a1d14"/>`;
+  const yeux = `<circle class="oeil" cx="43" cy="51" r="2" fill="#2a1d14"/><circle class="oeil" cx="57" cy="51" r="2" fill="#2a1d14"/>`;
   const sourcils = `<path d="M38 45 Q43 42 47 45" stroke="${p.cheveux}" stroke-width="1.6" fill="none"/><path d="M53 45 Q57 42 62 45" stroke="${p.cheveux}" stroke-width="1.6" fill="none"/>`;
   const bouche = `<path d="M44 62 Q50 67 56 62" stroke="#7a3b2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
   const bandeau = `<path d="M31 47 C32 31 68 31 69 47 C60 40 40 40 31 47 Z" fill="${p.couleur}"/>`;
@@ -113,7 +114,7 @@ function avatar(p, taille = 96, badge = true) {
 // ---------- Éléments de rendu ----------
 const barre = (m, couleur, etiquette) => MODE === 'docx' ? '' : `<div class="barre" title="${esc(etiquette)}"><span style="width:${((m - 1) / 4 * 100).toFixed(1)}%;background:${couleur}"></span></div>`;
 function carteDomaines(p) {
-  return `<table class="dom">${DOMAINES.map((d) => `<tr><th>${NOM_DOMAINE[d]}</th><td>${barre(p.domMoy[d], p.couleur, NOM_DOMAINE[d])}</td><td class="n">${p.domaine[d]}</td><td>${NIV_FR[niveau(p.domMoy[d])]}</td></tr>`).join('')}</table>`;
+  return `<table class="dom">${DOMAINES.map((d) => `<tr><th>${NOM_DOMAINE[d]}</th><td>${barre(p.domMoy[d], p.couleur, NOM_DOMAINE[d])}</td><td class="n"><span data-count="${p.domaine[d]}">${p.domaine[d]}</span></td><td>${NIV_FR[niveau(p.domMoy[d])]}</td></tr>`).join('')}</table>`;
 }
 function tableFacettes(a, b) {
   const lignes = [];
@@ -157,10 +158,12 @@ function rapportBinome(a, b) {
       : `<div class="deux">${lis(x.x, a)}${lis(x.y, b)}</div>`;
     return `<div class="pilote"><h4>${facetteTitre[k]} (${k}) : écart notable de ${fmt(Math.abs(x.delta))}</h4>${corps}<p class="question"><strong>Question pour l'entretien.</strong> ${esc(question)}</p></div>`;
   }).join('');
-  return `<section class="binome" id="b-${a.code}-${b.code}">
+  return `<section class="binome reveal" id="b-${a.code}-${b.code}">
     <header class="entete"><div class="duo">${avatar(a, 84)}<span class="et">×</span>${avatar(b, 84)}</div><div><h3>${esc(a.nom)} et ${esc(b.nom)}</h3><p class="sous">Rapport de binôme · ${nb('proche')} facettes proches, ${nb('intermédiaire')} intermédiaires, ${nb('notable')} notables sur 30</p></div></header>
+    ${MODE === 'docx' ? '' : radarSvg([a, b], { titre: 'Radar de ' + a.nom + ' et ' + b.nom })}
     <h4>Les cinq domaines</h4>
     <div class="defil"><table class="comp"><thead><tr><th></th><th><span class="leg" style="background:${a.couleur}"></span>${esc(a.code)} <span class="leg" style="background:${b.couleur}"></span>${esc(b.code)}</th><th>Scores (24 à 120)</th><th>Écart</th><th>Lecture (hypothèse à confirmer en entretien)</th></tr></thead><tbody>${dom}</tbody></table></div>
+    ${MODE === 'docx' ? '' : "<h4>Les 30 facettes d'un coup d'œil</h4>" + dumbbellSvg(a, b, facetteTitre, ecart)}
     <h4>Les écarts les plus nets</h4>
     <div class="defil"><table class="comp"><thead><tr><th>Facette</th><th>${esc(a.code)}</th><th>${esc(b.code)}</th><th>Δ</th><th>Niveaux</th></tr></thead><tbody>${lignesNotables}</tbody></table></div>
     ${blocs ? `<h4>Textes de la bibliothèque (facettes pilotes, version ${esc(lib.version)}, non relus)</h4>${blocs}` : '<p class="muet">Aucun écart notable sur les cinq facettes dotées d\'un texte dans la bibliothèque pilote : les autres facettes ne sont décrites que par leurs chiffres, volontairement, tant que la bibliothèque n\'est pas étendue et relue.</p>'}
@@ -178,10 +181,12 @@ function rapportEquipe(ps) {
   const convergence = facs.filter((f) => f.max - f.min <= 0.5);
   const carte = (f) => `<li><strong>${facetteTitre[f.k]}</strong> (${f.k}) : ${ps.map((p, i) => `${p.code} ${fmt(f.v[i])}`).join(', ')}</li>`;
   const manques = DOMAINES.map((d) => { const bas = ps.filter((p) => p.domMoy[d] < 2.6).map((p) => p.code); const haut = ps.filter((p) => p.domMoy[d] >= 3.4).map((p) => p.code); return `<tr><th>${NOM_DOMAINE[d]}</th><td>${haut.join(', ') || 'aucun'}</td><td>${bas.join(', ') || 'aucun'}</td></tr>`; }).join('');
-  return `<section class="equipe" id="equipe">
+  return `<section class="equipe reveal" id="equipe">
     <header class="entete"><div class="groupe">${ps.map((p) => avatar(p, 72)).join('')}</div><div><h3>Rapport d'équipe : ${ps.map((p) => p.code).join(', ')}</h3><p class="sous">Quatre personnes, ${ps.filter((p) => p.sexe === 'f').length} femmes et ${ps.filter((p) => p.sexe === 'h').length} hommes · une personne estimée, trois fictives</p></div></header>
+    ${MODE === 'docx' ? '' : radarSvg(ps, { taille: 340, titre: 'Radar de ' + ps.map((q) => q.nom).join(', ') })}
     <h4>Cinq domaines : position de chacun et dispersion</h4>
     <div class="defil"><table class="comp"><thead><tr><th></th><th>${ps.map((p) => `<span class="leg" style="background:${p.couleur}"></span>${p.code}`).join(' ')}</th><th>Scores</th><th>Moyenne (étendue)</th><th>Dispersion</th></tr></thead><tbody>${lignesDom}</tbody></table></div>
+    ${MODE === 'docx' ? '' : "<h4>Les 30 facettes de l'équipe en une carte</h4>" + heatmapSvg(ps, facetteTitre)}
     <h4>Qui se situe haut, qui se situe bas</h4>
     <div class="defil"><table class="comp"><thead><tr><th></th><th>Plutôt haut ou haut (moyenne ≥ 3,4)</th><th>Plutôt bas ou bas (moyenne &lt; 2,6)</th></tr></thead><tbody>${manques}</tbody></table></div>
     <h4>Là où l'équipe est diverse (étendue ≥ 2,0 sur une facette)</h4>
@@ -197,7 +202,7 @@ function rapportEquipe(ps) {
 // ---------- Assemblage ----------
 const paires = [];
 for (let i = 0; i < PROFILS.length; i++) for (let j = i + 1; j < PROFILS.length; j++) paires.push([PROFILS[i], PROFILS[j]]);
-const cartes = PROFILS.map((p) => `<article class="carte" style="--c:${p.couleur}"><div class="tete">${avatar(p, 96)}<div><h3>${esc(p.nom)}</h3><span class="etiq ${p.fictif ? 'fic' : 'est'}">${p.fictif ? 'Profil fictif' : 'Estimation, pas une mesure'}</span></div></div><p class="muet">${esc(p.note)}</p>${carteDomaines(p)}</article>`).join('');
+const cartes = PROFILS.map((p) => `<article class="carte reveal" style="--c:${p.couleur}"><div class="tete">${avatar(p, 96)}<div><h3>${esc(p.nom)}</h3><span class="etiq ${p.fictif ? 'fic' : 'est'}">${p.fictif ? 'Profil fictif' : 'Estimation, pas une mesure'}</span></div></div><p class="muet">${esc(p.note)}</p>${MODE === 'docx' ? '' : radarSvg([p], { taille: 260, titre: 'Radar de ' + p.nom })}${carteDomaines(p)}</article>`).join('');
 const toc = MODE === 'docx' ? '' : `<nav class="toc"><a href="#profils">Profils</a>${paires.map(([a, b]) => `<a href="#b-${a.code}-${b.code}">${a.code} × ${b.code}</a>`).join('')}<a href="#equipe">Équipe</a></nav>`;
 const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rapports comparatifs Big Five, démonstration</title>
 <style>
@@ -226,8 +231,9 @@ section.binome,section.equipe{background:var(--card);border:1px solid var(--ln);
 .pilote{border-left:4px solid var(--mid);padding-left:12px;margin:14px 0}.question{background:var(--bg);padding:8px 12px;border-radius:8px}
 .liste li{margin:.3em 0}small{color:var(--mut)}
 @media print{.toc{display:none}body{background:#fff}section,.carte{break-inside:avoid}}
-</style></head><body><main>
+${MODE === 'docx' ? '' : CSS_VISUELS}</style>${MODE === 'docx' ? '' : '<script>' + SCRIPT_TETE + '</script>'}</head><body><main>
 <h1>Rapports comparatifs Big Five : démonstration</h1>
+${MODE === 'docx' ? '' : '<div class="outils"><button id="imprimer" type="button">Imprimer ou enregistrer en PDF</button></div>'}
 <p class="muet">Généré le 20 octobre 2026 avec le moteur de score de l'application (IPIP-NEO-120) et la bibliothèque de textes pilote ${esc(lib.version)}.</p>
 <div class="avert"><strong>À lire avant tout.</strong><ul>
 <li><strong>Trois des quatre profils sont fictifs</strong> (KB, SR, HT), construits pour illustrer les rapports. Ce ne sont pas des personnes réelles.</li>
@@ -240,7 +246,7 @@ ${toc}
 <h2 id="profils">Les quatre profils</h2><div class="grille">${cartes}</div>
 <h2>Rapports de binôme, un à un</h2>${paires.map(([a, b]) => rapportBinome(a, b)).join('')}
 <h2>Rapport d'équipe</h2>${rapportEquipe(PROFILS)}
-</main></body></html>`;
+</main>${MODE === 'docx' ? '' : '<script>' + SCRIPT_MOUVEMENT + '</script>'}</body></html>`;
 // Variante Word : les barres n'existent pas, on retire la colonne vide et son en-tête de légende.
 const htmlSortie = MODE === 'docx'
   ? html.replace(/<td><\/td>/g, '').replace(/<th><span class="leg"[^>]*><\/span>[^<]*(?:<span class="leg"[^>]*><\/span>[^<]*)*<\/th>/g, '')
