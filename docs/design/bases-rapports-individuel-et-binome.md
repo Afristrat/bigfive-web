@@ -139,6 +139,7 @@ Passerelle agnostique (LiteLLM de la plateforme), aucun modèle imposé : le mod
 | Guide d'entretien pour le consultant | Les rapports décrivent, personne ne prépare la conversation | Questions générées à partir des tensions et des écarts, audit de lexique |
 | Scénarios et pré-mortem du binôme | Les rapports de collaboration comparent, ils n'anticipent pas | Étiquetés « hypothèse », centrés sur la tâche (F5) |
 | Auditeur d'affirmations | Les rapports de référence affirment sans source (F1) | Second passage contre la liste d'affirmations autorisées |
+| Entretien de restitution conversationnel (décision D3) | Un document fixe ne répond pas aux questions de la personne | Dialogue ancré sur les blocs du rapport, audit en temps réel, passage à un humain (§ 9 bis) |
 | Bilingue natif | Traduction mot à mot incompatible avec `voix-de-marque.md` § 2, principe 3 | Rédaction directe en arabe, contrôle du sens par glossaire |
 | Reproductibilité | Un texte généré qui change à chaque rendu est invérifiable | Versions et empreintes (étape 11) |
 
@@ -225,16 +226,36 @@ et tout mot du lexique interdit. Rends un JSON ; ne réécris rien.
 
 ## 9. Décisions qui reviennent à Amine
 
+État au 20 octobre 2026 : Amine a tranché D3 (restitution par une IA sous la forme d'un avatar de Nezha Bentara, voir § 9 bis). Pour D1, D2, D4, D5 et D6, accord de principe donné pendant la lecture du document, à confirmer à la fin de cette lecture.
+
 | N° | Décision | Recommandation | Raison |
 |---|---|---|---|
 | D1 | Motivations et styles comportementaux | Ne pas les produire avec le questionnaire actuel ; couvrir le besoin par les « situations de travail » (hypothèses dérivées des facettes). Instruire à part l'ajout d'un instrument de motivation (sources, droits d'usage, validation en arabe et en français) | Les inventer à partir de facettes serait de la fausse mesure ; l'ajout d'un instrument est une décision d'offre |
 | D2 | Consentement du binôme | Double consentement explicite, révocable, limité aux deux personnes et au consultant, sans copie à l'employeur, durée de conservation fixée | Cohérent avec la règle « l'employeur ne voit jamais un résultat individuel » ; à faire valider juridiquement (RGPD et CNDP) |
-| D3 | Qui remet le rapport | Remise à la personne avec l'entretien de restitution du consultant, pas en libre-service | Le retour centré sur la personne est moins efficace sans cadrage (Kluger et DeNisi 1996) |
+| D3 | Qui conduit l'entretien de restitution | **Décidé par Amine le 20 octobre 2026** : un entretien conduit par une IA, sous la forme d'un avatar de Nezha Bentara. Cadrage recommandé au § 9 bis (quatre conditions à lever avant toute mise en service) | Le retour centré sur la personne est moins efficace sans cadrage (Kluger et DeNisi 1996). Le dossier de preuves ne contient aucune étude sur une restitution conduite par une IA : le bénéfice attendu (disponibilité, coût) est une hypothèse, à mesurer pendant un pilote |
 | D4 | Conventions de niveaux et d'écarts | Les valider par un psychométricien, puis les recalibrer dès qu'une norme existe | Les seuils du § 7.2 sont des conventions, pas des résultats |
 | D5 | Place dans l'offre commerciale, prix, positionnement | Ne rien figer avant D1 à D3 | Décision d'Amine ; ce document ne la prend pas |
 | D6 | Noms des deux rapports | À proposer par Tenga Conseil | Identité de marque ; éviter tout rapprochement avec MyPrint |
 
 Ces rapports s'insèrent dans le plan existant comme une suite du lot 4 (groupes) et du lot 6 (rendu PDF), plus une migration de consentement propre au binôme. Leur numérotation reste à inscrire dans `plan-implementation-espace-prive.md` après vos décisions.
+
+## 9 bis. Restitution par un avatar de Nezha Bentara : cadrage
+
+Décision d'Amine du 20 octobre 2026. Elle change trois textes déjà écrits et ouvre cinq conditions.
+
+**Ce qui change.** Les textes réservés dans l'espace `upcoming` de `fr.js` (lignes 739, 749 et 761), puis de `en.js` et `ar.js`, promettent aujourd'hui « un entretien de restitution avec un consultant Tenga », « le consultant restitue, explique et recadre » et « Restituer : un consultant Tenga remet son profil ». Aucun n'est vrai tel quel avec un avatar. La garantie de tiers de confiance, qui reposait sur une personne, devient une garantie sur un système. L'annexe « guide d'entretien » du § 5 devient le scénario du dialogue.
+
+**Les cinq conditions.**
+
+| N° | Condition | Recommandation |
+|---|---|---|
+| C1 | Accord de Nezha | Consentement écrit et révocable pour son image, sa voix et sa manière de conduire un entretien, avec le périmètre (usages, durée). L'accord de Nezha n'est pas acquis par cette note : il reste à obtenir d'elle |
+| C2 | Transparence | La personne sait dès le premier écran qu'elle parle à une IA. Recommandation : l'étiqueter « Assistant Tenga, entraîné sur l'approche de Nezha Bentara » plutôt que la présenter comme Nezha elle-même. Sans cela, la personne croit confier ses résultats à une personne identifiée et le texte de confiance de la voix de marque cesse d'être exact |
+| C3 | Ancrage | Le dialogue ne parle qu'à partir des blocs du rapport et des faits calculés. Le même audit que pour les rapports (lexique interdit, chaque nombre présent dans les entrées, aucune comparaison avec une population) s'applique en temps réel. Aucune improvisation sur la santé, l'aptitude ou une décision d'emploi |
+| C4 | Passage à un humain | Bouton permanent, et déclenchement automatique sur des signaux de détresse, avec un consultant humain joignable dans un délai annoncé. Sans cela, la mention « ce n'est pas un diagnostic » ne suffit pas, en particulier pour le névrosisme |
+| C5 | Données | La voix, l'image et les transcriptions sont des données personnelles : hébergement auto-hébergé, durée de conservation fixée, suppression de la transcription possible par la personne. La plateforme voix de Dīwān permet de cloner une voix déposée sur Sawt, piste à instruire pour la voix. Aucune solution souveraine d'avatar animé n'a été inventoriée ici : elle est à inventorier avant de promettre une image |
+
+Ces conditions sont des recommandations d'encadrement, pas un avis juridique : le droit à l'image et à la voix, l'information de la personne sur l'usage d'une IA et la base légale du traitement sont à faire instruire par Tenga Conseil avant le pilote.
 
 ## 10. Étapes suivantes sans rien décider
 
