@@ -1,5 +1,14 @@
 {
- "version": "bib-0.1",
+ "version": "bib-0.2",
+ "accord": {
+  "syntaxe": "{masculin|féminin|sans accord} : exactement trois alternatives, sans imbrication ; la troisième est la formulation sans accord et doit être identique au texte d'avant le marquage",
+  "valeurs": [
+   "m",
+   "f",
+   "n"
+  ],
+  "defaut": "n (profil sans valeur renseignée)"
+ },
  "date": "2026-10-20",
  "statut": "ébauche pilote, non relue : relecture humaine requise avant tout usage (§ 7.2 étape 7)",
  "sources": {
@@ -63,7 +72,7 @@
      },
      "ar": {
       "description": [
-       "تشير إجاباتك إلى أن الأحداث نادرًا ما تُربكك، وإلى أن هدوءك يبقى حاضرًا في الغالب تحت الضغط.",
+       "تشير إجاباتك إلى أن الأحداث نادرًا ما تُربكك، {وإلى أنك تحتفظ بهدوئك|وإلى أنك تحتفظين بهدوئك|وإلى أن هدوءك يبقى حاضرًا} في الغالب تحت الضغط.",
        "تعبّر هذه القراءة عمّا تصرّح به إجاباتك، لا عمّا يحدث في الموقف الفعلي."
       ],
       "apport": [
@@ -104,7 +113,7 @@
       ],
       "cout": [
        "ربما يتأخر إدراكك لإرهاقك حين يطول الضغط.",
-       "قد تفاجئك مواقف كان المتوقع لديك أن تمرّ دون صعوبة."
+       "قد تفاجئك مواقف {كنت تتوقع أن تمرّ|كنتِ تتوقعين أن تمرّ|كان المتوقع لديك أن تمرّ} دون صعوبة."
       ],
       "question": "ما المواقف التي تشكّل استثناءً، وما الذي يجمع بينها؟"
      }
@@ -176,7 +185,7 @@
     "haut": {
      "fr": {
       "description": [
-       "Vos réponses indiquent que la pression et les événements imprévus vous affectent très nettement, et que vous avez parfois le sentiment de ne plus pouvoir tout gérer.",
+       "Vos réponses indiquent que la pression et les événements imprévus vous affectent très nettement, et que {vous vous sentez parfois dépassé par eux|vous vous sentez parfois dépassée par eux|vous avez parfois le sentiment de ne plus pouvoir tout gérer}.",
        "Il s’agit d’une tendance de réaction au stress, jamais d’un diagnostic ; elle peut varier selon la période de vie et le contexte de travail."
       ],
       "apport": [
@@ -267,7 +276,7 @@
        "قد تبقى أفكارك في الظل حين يحتدم النقاش.",
        "حين لا يبادر أحد، قد يطول انتظارك أكثر مما يلزم."
       ],
-      "question": "ما المواقف التي انتهى بك الأمر فيها إلى القيادة رغم تفضيلك، وكيف جرى ذلك؟"
+      "question": "ما المواقف التي {تولّيتَ فيها|تولّيتِ فيها|انتهى بك الأمر فيها إلى} القيادة رغم تفضيلك، وكيف جرى ذلك؟"
      }
     },
     "plutot_bas": {
@@ -384,7 +393,7 @@
      },
      "ar": {
       "description": [
-       "تشير إجاباتك إلى ميل واضح جدًّا إلى تولّي زمام الأمور وإلى حب قيادة الآخرين.",
+       "تشير إجاباتك إلى {أنك تتولى زمام الأمور بحماس وتحب قيادة الآخرين|أنكِ تتولين زمام الأمور بحماس وتحبين قيادة الآخرين|ميل واضح جدًّا إلى تولّي زمام الأمور وإلى حب قيادة الآخرين}.",
        "يتعلق هذا الميل بالمبادرة والفعل، ولا يقول شيئًا عن جودة العمل المنجز."
       ],
       "apport": [
@@ -460,7 +469,7 @@
        "قد تفوتك أفكار لا تظهر فائدتها إلا بعد المرور بالنظرية.",
        "قد يبدو لك التفكير في العمق بعيدًا عن واقع عملك."
       ],
-      "question": "ما مواقف العمل التي بدت لك فيها فائدة التفكير الأكثر تجريدًا؟"
+      "question": "ما مواقف العمل التي {رأيتَ فيها|رأيتِ فيها|بدت لك فيها} فائدة التفكير الأكثر تجريدًا؟"
      }
     },
     "plutot_bas": {
@@ -556,7 +565,7 @@
        "قد يطول بك نقاش نظري أكثر مما يسمح به المشروع.",
        "قد يرى محاوروك أن كلامك بعيد عن شواغلهم الآنية."
       ],
-      "question": "كيف يتبيّن لك أن التفكير بلغ ما يكفي للانتقال إلى التنفيذ؟"
+      "question": "كيف {تقدّر|تقدّرين|يتبيّن لك} أن التفكير بلغ ما يكفي للانتقال إلى التنفيذ؟"
      }
     },
     "haut": {
@@ -752,7 +761,7 @@
        "قد تبقى بعض الخلافات دون تعبير رغم فائدة معالجتها.",
        "قد يجهل محاوروك أن لك رأيًا مخالفًا."
       ],
-      "question": "ما الخلافات التي تبقى في داخلك دون تعبير، وماذا يحدث بعد ذلك؟"
+      "question": "ما الخلافات التي {تحتفظ بها|تحتفظين بها|تبقى في داخلك} دون تعبير، وماذا يحدث بعد ذلك؟"
      }
     },
     "haut": {
@@ -773,7 +782,7 @@
      },
      "ar": {
       "description": [
-       "تشير إجاباتك إلى استبعاد واضح جدًّا للمشاجرة والصراخ والإهانة والانتقام.",
+       "تشير إجاباتك إلى {أنك تستبعد بوضوح تام المشاجرة والصراخ والإهانة والانتقام|أنكِ تستبعدين بوضوح تام المشاجرة والصراخ والإهانة والانتقام|استبعاد واضح جدًّا للمشاجرة والصراخ والإهانة والانتقام}.",
        "يبدو أن التوتر يُعبَّر عنه لديك دون مواجهة علنية."
       ],
       "apport": [
@@ -827,7 +836,7 @@
        "Ce que vous déclarez ici concerne la mise en route et la continuité, non votre valeur ni votre intelligence."
       ],
       "apport": [
-       "Vous pouvez rester disponible à l’imprévu plutôt que de suivre un plan à la lettre.",
+       "Vous pouvez rester {ouvert|ouverte|disponible} à l’imprévu plutôt que de suivre un plan à la lettre.",
        "Vous pouvez saisir une occasion qui n’était pas prévue."
       ],
       "cout": [
@@ -842,7 +851,7 @@
        "يتعلق ما تصرّح به إجاباتك بالشروع والاستمرار، لا بقيمتك ولا بذكائك."
       ],
       "apport": [
-       "قد يبقى مجال الطارئ مفتوحًا أمامك بدل اتباع خطة حرفيًّا.",
+       "قد {تبقى منفتحًا على الطارئ|تبقين منفتحةً على الطارئ|يبقى مجال الطارئ مفتوحًا أمامك} بدل اتباع خطة حرفيًّا.",
        "قد يتاح لك اغتنام فرصة لم تكن مخططة."
       ],
       "cout": [
@@ -881,7 +890,7 @@
        "قد تُؤجَّل المهام الأقل حفزًا.",
        "قد يلزمك إطار خارجي للالتزام بجدول زمني."
       ],
-      "question": "في أي أنواع المهام يتكرر التأجيل لديك، ولماذا؟"
+      "question": "في أي أنواع المهام {تؤجّل|تؤجّلين|يتكرر التأجيل لديك}، ولماذا؟"
      }
     },
     "milieu": {
@@ -960,7 +969,7 @@
       ],
       "cout": [
        "Il se peut que l’imprévu vous demande un effort particulier.",
-       "Vous pouvez assumer sans partage une charge de préparation que le groupe pourrait partager."
+       "Vous pouvez {porter seul|porter seule|assumer sans partage} une charge de préparation que le groupe pourrait partager."
       ],
       "question": "Que se passe-t-il pour vous quand un plan préparé avec soin doit être abandonné ?"
      },

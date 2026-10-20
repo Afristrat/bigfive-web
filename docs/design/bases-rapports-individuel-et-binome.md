@@ -115,7 +115,7 @@ Le calcul reste un script (réflexe déterministe d'abord) ; le modèle de langa
 
 ### 7.2 Chaîne de production
 
-1. **Entrées.** `scores` par facette (moyenne de 4 affirmations, de 1 à 5), versions, langue. Aucun champ de genre n'est collecté : la bibliothèque est rédigée sans accord (vouvoiement et formulations épicènes en français, formes non genrées en arabe selon `voix-de-marque.md` § 2).
+1. **Entrées.** `scores` par facette (moyenne de 4 affirmations, de 1 à 5), versions, langue. La forme d'adresse vient du profil (`accord`, § 7.5) ; sans valeur, la bibliothèque rend sa forme sans accord (vouvoiement et formulations épicènes en français, formes non genrées en arabe selon `voix-de-marque.md` § 2).
 2. **Position.** `position = (moyenne - 1) / 4 × 100`, jamais affichée en pourcentage précis.
 3. **Niveau.** Cinq niveaux : bas (moyenne de 1 à 2), plutôt bas (2 à 2,6), milieu (2,6 à 3,4), plutôt haut (3,4 à 4), haut (4 à 5). **Convention, à calibrer** dès qu'une norme de population existe ; la page du rapport dit « réponses proches du milieu de l'échelle », jamais « équilibré ».
 4. **Écart de binôme.** Différence des moyennes de facette : proche si |Δ| ≤ 0,5, notable si |Δ| ≥ 1,0, intermédiaire entre les deux. **Convention à calibrer** (une affirmation d'écart sur une facette de 4 affirmations vaut 0,25).
@@ -142,6 +142,22 @@ Passerelle agnostique (LiteLLM de la plateforme), aucun modèle imposé : le mod
 | Entretien de restitution conversationnel (décision D3) | Un document fixe ne répond pas aux questions de la personne | Dialogue ancré sur les blocs du rapport, audit en temps réel, passage à un humain (§ 9 bis) |
 | Bilingue natif | Traduction mot à mot incompatible avec `voix-de-marque.md` § 2, principe 3 | Rédaction directe en arabe, contrôle du sens par glossaire |
 | Reproductibilité | Un texte généré qui change à chaque rendu est invérifiable | Versions et empreintes (étape 11) |
+
+### 7.5 Accord grammatical selon le profil
+
+Décision D8 à confirmer. Mécanisme réalisé et contrôlé dans `bibliotheque-textes/` ; rien n'est branché dans l'application.
+
+**Donnée.** Une colonne `accord` dans `app.profiles` (aujourd'hui : `user_id`, `nom`, `langue`, `derniere_connexion_le`, `cree_le`, sans aucun champ de genre), valeurs `'m'`, `'f'`, `'n'` ou vide. Vide équivaut à `'n'`. La personne la renseigne elle-même (« Comment souhaitez-vous que les textes s'adressent à vous ? » : au masculin, au féminin, sans accord), avec une phrase d'information sur l'usage unique. Jamais déduite du prénom. Lisible par la personne et par la fonction qui génère son rapport, jamais par le responsable d'organisation ; incluse dans l'export et la suppression de compte (lot 3).
+
+**Texte.** Marqueurs `{masculin|féminin|sans accord}`, exactement trois alternatives, sans imbrication ; la troisième est la formulation sans accord et reste identique au texte d'avant le marquage (preuve : `controle.py --regression`, 0 écart sur les 25 blocs). Une fonction `accorder(texte, accord)` résout les marqueurs ; une valeur inconnue ou absente donne la forme sans accord. La bibliothèque pilote porte 13 phrases marquées (3 en français, 10 en arabe), choisies là où l'accord rend le texte plus naturel. Le gain est surtout en arabe, où les verbes à la deuxième personne changent au féminin : sans accord connu, tout le texte doit éviter ces verbes.
+
+**Contrôle.** Chaque phrase est contrôlée dans ses trois formes (lexique interdit, chiffres, tournure d'hypothèse, ponctuation). Dix-neuf mutations volontaires font échouer le contrôle, dont un mot interdit placé seulement dans la forme féminine, un chiffre seulement dans la forme masculine, un marqueur à deux alternatives et un marqueur imbriqué.
+
+**Synthèse par modèle.** Le modèle écrit avec les mêmes marqueurs, et un contrôle déterministe vérifie leur forme : ne pas lui demander d'accorder lui-même, l'erreur serait invisible.
+
+**Binôme.** Les phrases sur l'autre personne exigent sa forme d'adresse : le consentement croisé (D2) doit inclure ce partage entre les deux personnes.
+
+**Questionnaire.** Constat à part : plusieurs affirmations françaises du questionnaire sont au masculin seulement (« Je peux être dépassé par les événements », « Je suis toujours préparé », « Je ne suis pas intéressé par les discussions théoriques »). Seule la facette O6 a été reformulée (`question-overrides.ts`). Appliquer l'accord aux 120 affirmations modifie le texte de l'instrument : à faire valider par un psychométricien avant, dans la logique de D4. Rien n'a été modifié.
 
 ## 8. Prompts de départ
 
@@ -226,7 +242,7 @@ et tout mot du lexique interdit. Rends un JSON ; ne réécris rien.
 
 ## 9. Décisions qui reviennent à Amine
 
-État au 20 octobre 2026 : Amine a confirmé les six décisions D1 à D6, après lecture du document. D7, apparue pendant la rédaction de la bibliothèque, est ouverte. D3 est précisée par deux packs (§ 9 bis). Les conventions de D4 restent à valider par un psychométricien : la confirmation vaut accord sur la démarche, pas validation des seuils.
+État au 20 octobre 2026 : Amine a confirmé les six décisions D1 à D6, après lecture du document. D7 (libellé de la facette A4) et D8 (forme d'adresse dans le profil) sont ouvertes. D3 est précisée par deux packs (§ 9 bis). Les conventions de D4 restent à valider par un psychométricien : la confirmation vaut accord sur la démarche, pas validation des seuils.
 
 | N° | Décision | Recommandation | Raison |
 |---|---|---|---|
@@ -237,6 +253,7 @@ et tout mot du lexique interdit. Rends un JSON ; ne réécris rien.
 | D5 | Place dans l'offre commerciale, prix, positionnement | Ne rien figer avant D1 à D3 | Décision d'Amine ; ce document ne la prend pas |
 | D6 | Noms des deux rapports | À proposer par Tenga Conseil | Identité de marque ; éviter tout rapprochement avec MyPrint |
 | D7 | Libellé de la facette A4 « Coopération » | Garder le libellé tant que l'avertissement de la bibliothèque est affiché, puis décider d'un renommage avec Tenga Conseil | Les quatre affirmations de la facette (« J'adore une bonne dispute », « Je crie sur les gens », « J'insulte les gens », « Je me venge », toutes inversées) mesurent la confrontation ouverte : un résultat haut décrit l'absence d'hostilité, pas la qualité de la coopération. Le libellé figure aussi sur la page « Méthode et références » |
+| D8 | Collecter une forme d'adresse grammaticale dans le profil | Oui, facultative, vide par défaut, finalité unique (accorder les textes), modifiable par la personne, invisible du responsable d'organisation. Base juridique et durée de conservation à faire valider par Tenga Conseil (RGPD et CNDP) | Renverse le principe initial de ce document (aucun champ de genre collecté). Le mécanisme est réalisé et contrôlé ; sans valeur, le texte est identique à l'existant, donc aucune régression pour les profils sans réponse |
 
 Ces rapports s'insèrent dans le plan existant comme une suite du lot 4 (groupes) et du lot 6 (rendu PDF), plus une migration de consentement propre au binôme. Leur numérotation reste à inscrire dans `plan-implementation-espace-prive.md` après vos décisions.
 
@@ -270,7 +287,7 @@ Ces conditions sont des recommandations d'encadrement, pas un avis juridique : l
 
 ## 10. Étapes suivantes sans rien décider
 
-1. **Fait le 20 octobre 2026** : bibliothèque de textes de cinq facettes (N6 Vulnérabilité au stress, E3 Affirmation de soi, O5 Curiosité intellectuelle, A4 Coopération, C5 Autodiscipline), cinq niveaux, français et arabe, dans `docs/design/bibliotheque-textes/`. Reste : relecture humaine (Nezha pour le français, un arabophone natif pour l'arabe) avant d'étendre aux 30 facettes.
+1. **Fait le 20 octobre 2026** : bibliothèque de textes de cinq facettes (N6 Vulnérabilité au stress, E3 Affirmation de soi, O5 Curiosité intellectuelle, A4 Coopération, C5 Autodiscipline), cinq niveaux, français et arabe, dans `docs/design/bibliotheque-textes/`. Le mécanisme d'accord grammatical (§ 7.5) y est réalisé : 13 phrases marquées, forme sans accord identique à l'existant, 19 mutations rouges. Reste : relecture humaine (Nezha pour le français, un arabophone natif pour l'arabe) avant d'étendre aux 30 facettes.
 2. Construire le jeu d'évaluation : 12 profils synthétiques (extrêmes, milieu, tension interne, réponses manquantes, incohérence) et 6 binômes (proches, opposés, tous au milieu, un profil peu fiable).
 3. Écrire les contrôles déterministes de l'audit, puis les désactiver un à un pour vérifier qu'au moins un test échoue (la pratique « vu rouge » du plan).
 4. Choisir le modèle sur cette éval, pas sur sa réputation.

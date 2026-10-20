@@ -1,10 +1,12 @@
 # Bibliothèque de textes : facettes pilotes (une par domaine)
 
-Version `bib-0.1`, 2026-10-20. Statut : **ébauche pilote, non relue : relecture humaine requise avant tout usage (§ 7.2 étape 7)**.
+Version `bib-0.2`, 2026-10-20. Statut : **ébauche pilote, non relue : relecture humaine requise avant tout usage (§ 7.2 étape 7)**.
 
 Cinq facettes sur trente, cinq niveaux chacune, en français et en arabe. Fichier source : `facettes-pilote.json` ; ce document en est une copie lisible, générée par `controle.py --md` : ne pas l’éditer à la main. Les espaces avant les signes doubles du français et dans les guillemets sont à convertir en espaces insécables au moment de l’intégration dans les fichiers de messages (`voix-de-marque.md`).
 
 **Statut des blocs.** La description d’un niveau est tirée des quatre affirmations réelles de la facette (source `ipip-items`). Les rubriques « Ce que cela peut apporter », « Ce que cela peut coûter » et la question sont des **hypothèses de lecture, sans étude citée** (source `hypothese`) : le rapport les introduit par « Hypothèses de lecture, à confirmer en entretien ». Les niveaux sont des conventions de l’outil (`bases-rapports-individuel-et-binome.md` § 7.2), non des positions par rapport à d’autres personnes.
+
+**Accord grammatical.** Le corps de chaque bloc ci-dessous est la forme **sans accord**, celle que reçoit tout profil sans valeur renseignée. Les phrases qui s’accordent portent des marqueurs dans le fichier source et sont listées sous chaque bloc avec leurs trois formes (masculin, féminin, sans accord). Syntaxe : `{masculin|féminin|sans accord}`, exactement trois alternatives ; la forme sans accord est identique au texte d’avant le marquage (prouvé par `--regression`).
 
 ## N6 · Vulnérabilité au stress / الهشاشة أمام الضغط
 
@@ -53,6 +55,11 @@ Vos réponses indiquent que les événements vous déstabilisent rarement et que
 
 **سؤال للجلسة** (`hypothese`) : متى يبدأ الضغط في الارتفاع لديك، ومن أي علامة يظهر لك ذلك؟
 
+*متغيّرات الصياغة بحسب الصيغة المختارة (مذكر، مؤنث):*
+
+- m : تشير إجاباتك إلى أن الأحداث نادرًا ما تُربكك، وإلى أنك تحتفظ بهدوئك في الغالب تحت الضغط.
+  f : تشير إجاباتك إلى أن الأحداث نادرًا ما تُربكك، وإلى أنك تحتفظين بهدوئك في الغالب تحت الضغط.
+
 ### N6 · Plutôt bas / منخفض نسبيًّا
 
 **Description** (`ipip-items`, fr)
@@ -86,6 +93,11 @@ Vos réponses indiquent que vous gardez le plus souvent votre calme face aux év
 - قد تفاجئك مواقف كان المتوقع لديك أن تمرّ دون صعوبة.
 
 **سؤال للجلسة** (`hypothese`) : ما المواقف التي تشكّل استثناءً، وما الذي يجمع بينها؟
+
+*متغيّرات الصياغة بحسب الصيغة المختارة (مذكر، مؤنث):*
+
+- m : قد تفاجئك مواقف كنت تتوقع أن تمرّ دون صعوبة.
+  f : قد تفاجئك مواقف كنتِ تتوقعين أن تمرّ دون صعوبة.
 
 ### N6 · Milieu de l’échelle / قرب المنتصف
 
@@ -173,6 +185,11 @@ Vos réponses indiquent que la pression et les événements imprévus vous affec
 
 **Question pour l’entretien** (`hypothese`) : Quels appuis (personnes, méthodes, rythme de travail) vous aident aujourd’hui quand la pression monte ?
 
+*Variantes d’accord de ce bloc (masculin, féminin) :*
+
+- m : Vos réponses indiquent que la pression et les événements imprévus vous affectent très nettement, et que vous vous sentez parfois dépassé par eux.
+  f : Vos réponses indiquent que la pression et les événements imprévus vous affectent très nettement, et que vous vous sentez parfois dépassée par eux.
+
 **الوصف** (`ipip-items`, ar)
 
 تشير إجاباتك إلى أن الضغط والأحداث غير المتوقعة تؤثر فيك بوضوح شديد، وإلى شعور أحيانًا بأن الأمور تفوق ما يمكن تدبّره. يتعلق الأمر بميل في التفاعل مع الضغط، وليس بتشخيص، وقد يتغير بحسب مرحلة الحياة وسياق العمل.
@@ -235,6 +252,11 @@ Vos réponses indiquent que vous préférez le plus souvent laisser d’autres p
 - حين لا يبادر أحد، قد يطول انتظارك أكثر مما يلزم.
 
 **سؤال للجلسة** (`hypothese`) : ما المواقف التي انتهى بك الأمر فيها إلى القيادة رغم تفضيلك، وكيف جرى ذلك؟
+
+*متغيّرات الصياغة بحسب الصيغة المختارة (مذكر، مؤنث):*
+
+- m : ما المواقف التي تولّيتَ فيها القيادة رغم تفضيلك، وكيف جرى ذلك؟
+  f : ما المواقف التي تولّيتِ فيها القيادة رغم تفضيلك، وكيف جرى ذلك؟
 
 ### E3 · Plutôt bas / منخفض نسبيًّا
 
@@ -372,6 +394,11 @@ Vos réponses indiquent que vous prenez très volontiers la direction des opéra
 
 **سؤال للجلسة** (`hypothese`) : في أي مواقف يكون مفيدًا لك أن يقود غيرك؟
 
+*متغيّرات الصياغة بحسب الصيغة المختارة (مذكر، مؤنث):*
+
+- m : تشير إجاباتك إلى أنك تتولى زمام الأمور بحماس وتحب قيادة الآخرين.
+  f : تشير إجاباتك إلى أنكِ تتولين زمام الأمور بحماس وتحبين قيادة الآخرين.
+
 ## O5 · Curiosité intellectuelle / الفضول الفكري
 
 **Définition.** Cette facette porte sur l’intérêt pour les idées abstraites, la lecture exigeante et les discussions théoriques.
@@ -418,6 +445,11 @@ Vos réponses indiquent que vous préférez les sujets concrets aux discussions 
 - قد يبدو لك التفكير في العمق بعيدًا عن واقع عملك.
 
 **سؤال للجلسة** (`hypothese`) : ما مواقف العمل التي بدت لك فيها فائدة التفكير الأكثر تجريدًا؟
+
+*متغيّرات الصياغة بحسب الصيغة المختارة (مذكر، مؤنث):*
+
+- m : ما مواقف العمل التي رأيتَ فيها فائدة التفكير الأكثر تجريدًا؟
+  f : ما مواقف العمل التي رأيتِ فيها فائدة التفكير الأكثر تجريدًا؟
 
 ### O5 · Plutôt bas / منخفض نسبيًّا
 
@@ -520,6 +552,11 @@ Vos réponses indiquent un goût assez marqué pour les idées, la lecture exige
 - قد يرى محاوروك أن كلامك بعيد عن شواغلهم الآنية.
 
 **سؤال للجلسة** (`hypothese`) : كيف يتبيّن لك أن التفكير بلغ ما يكفي للانتقال إلى التنفيذ؟
+
+*متغيّرات الصياغة بحسب الصيغة المختارة (مذكر، مؤنث):*
+
+- m : كيف تقدّر أن التفكير بلغ ما يكفي للانتقال إلى التنفيذ؟
+  f : كيف تقدّرين أن التفكير بلغ ما يكفي للانتقال إلى التنفيذ؟
 
 ### O5 · Haut / مرتفع
 
@@ -708,6 +745,11 @@ Vos réponses indiquent que vous évitez le plus souvent la confrontation ouvert
 
 **سؤال للجلسة** (`hypothese`) : ما الخلافات التي تبقى في داخلك دون تعبير، وماذا يحدث بعد ذلك؟
 
+*متغيّرات الصياغة بحسب الصيغة المختارة (مذكر، مؤنث):*
+
+- m : ما الخلافات التي تحتفظ بها دون تعبير، وماذا يحدث بعد ذلك؟
+  f : ما الخلافات التي تحتفظين بها دون تعبير، وماذا يحدث بعد ذلك؟
+
 ### A4 · Haut / مرتفع
 
 **Description** (`ipip-items`, fr)
@@ -742,6 +784,11 @@ Vos réponses indiquent que vous écartez très nettement la dispute, les cris, 
 
 **سؤال للجلسة** (`hypothese`) : ما الذي يتيح لك التعبير عن خلاف مهم دون أن تتأثر العلاقة؟
 
+*متغيّرات الصياغة بحسب الصيغة المختارة (مذكر، مؤنث):*
+
+- m : تشير إجاباتك إلى أنك تستبعد بوضوح تام المشاجرة والصراخ والإهانة والانتقام.
+  f : تشير إجاباتك إلى أنكِ تستبعدين بوضوح تام المشاجرة والصراخ والإهانة والانتقام.
+
 ## C5 · Autodiscipline / الانضباط الذاتي
 
 **Définition.** Cette facette porte sur la préparation, la mise en route des tâches et la régularité avec laquelle vous menez vos projets à terme.
@@ -773,6 +820,11 @@ Vos réponses indiquent une difficulté fréquente à vous mettre au travail et 
 
 **Question pour l’entretien** (`hypothese`) : Quelles conditions (échéance, présence d’autrui, découpage de la tâche) vous aident à démarrer ?
 
+*Variantes d’accord de ce bloc (masculin, féminin) :*
+
+- m : Vous pouvez rester ouvert à l’imprévu plutôt que de suivre un plan à la lettre.
+  f : Vous pouvez rester ouverte à l’imprévu plutôt que de suivre un plan à la lettre.
+
 **الوصف** (`ipip-items`, ar)
 
 تشير إجاباتك إلى صعوبة متكررة في الشروع في العمل وفي مواصلة المشاريع حتى نهايتها. يتعلق ما تصرّح به إجاباتك بالشروع والاستمرار، لا بقيمتك ولا بذكائك.
@@ -788,6 +840,11 @@ Vos réponses indiquent une difficulté fréquente à vous mettre au travail et 
 - قد تتراكم المهام التي يصعب الشروع فيها.
 
 **سؤال للجلسة** (`hypothese`) : ما الظروف (موعد نهائي، وجود شخص آخر، تقسيم المهمة) التي تعينك على الشروع؟
+
+*متغيّرات الصياغة بحسب الصيغة المختارة (مذكر، مؤنث):*
+
+- m : قد تبقى منفتحًا على الطارئ بدل اتباع خطة حرفيًّا.
+  f : قد تبقين منفتحةً على الطارئ بدل اتباع خطة حرفيًّا.
 
 ### C5 · Plutôt bas / منخفض نسبيًّا
 
@@ -822,6 +879,11 @@ Vos réponses indiquent qu’il peut vous arriver de peiner à démarrer ou à p
 - قد يلزمك إطار خارجي للالتزام بجدول زمني.
 
 **سؤال للجلسة** (`hypothese`) : في أي أنواع المهام يتكرر التأجيل لديك، ولماذا؟
+
+*متغيّرات الصياغة بحسب الصيغة المختارة (مذكر، مؤنث):*
+
+- m : في أي أنواع المهام تؤجّل، ولماذا؟
+  f : في أي أنواع المهام تؤجّلين، ولماذا؟
 
 ### C5 · Milieu de l’échelle / قرب المنتصف
 
@@ -908,6 +970,11 @@ Vos réponses indiquent que vous vous préparez presque toujours et que vous men
 - Vous pouvez assumer sans partage une charge de préparation que le groupe pourrait partager.
 
 **Question pour l’entretien** (`hypothese`) : Que se passe-t-il pour vous quand un plan préparé avec soin doit être abandonné ?
+
+*Variantes d’accord de ce bloc (masculin, féminin) :*
+
+- m : Vous pouvez porter seul une charge de préparation que le groupe pourrait partager.
+  f : Vous pouvez porter seule une charge de préparation que le groupe pourrait partager.
 
 **الوصف** (`ipip-items`, ar)
 
