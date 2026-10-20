@@ -22,11 +22,6 @@ export default function PrivacyPage() {
           <li>Datetime of submitted test</li>
         </ul>
         <p>
-          If you ask us to e-mail you the link to a result, the address you
-          enter is only used to send that message through our e-mail provider,
-          Resend, and is not stored in our database.
-        </p>
-        <p>
           We do not use analytics services, advertising or tracking cookies.
         </p>
         <h2>How do we collect your data?</h2>

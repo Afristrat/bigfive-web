@@ -3,9 +3,10 @@ import { allPosts } from 'contentlayer/generated';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { boutonPrincipal, heading, title } from '@/components/primitives';
 import { ArrowRightIcon } from '@/components/icons';
-import { DomainShape, domainNumber } from '@/components/domain-shape';
+import { HomeClosing, HomeSections } from '@/components/home-sections';
 import { PostListItem } from '@/components/post-list-item';
 import { RadarChart } from '@/components/radar-chart';
+import { secondaryButtonClass } from '@/components/form-styles';
 import { Link } from '@/navigation';
 import { basePath } from '@/config/site';
 import { DomainCode, domainCodes, domainLabel } from '@/lib/domain-labels';
@@ -25,12 +26,6 @@ const specimen: Record<DomainCode, number> = {
   A: 79,
   C: 91
 };
-
-const languages = [
-  { code: 'fr', name: 'Français' },
-  { code: 'ar', name: 'العربية' },
-  { code: 'en', name: 'English' }
-];
 
 const chip =
   'inline-flex items-center gap-2 rounded-full border border-trait bg-creux px-3.5 py-1.5 text-petit font-semibold text-encre';
@@ -56,6 +51,7 @@ export default async function Home({ params }: HomeProps) {
   setRequestLocale(locale);
   const t = await getTranslations('frontpage');
   const h = await getTranslations('home');
+  const p = await getTranslations('presentation');
   const radar = await getTranslations('radar');
   const toolbar = await getTranslations('toolbar');
 
@@ -64,13 +60,6 @@ export default async function Home({ params }: HomeProps) {
     .filter((post) => post.locale === locale)
     .sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)))
     .slice(0, 3);
-
-  const faits = [
-    { valeur: 120, libelle: h('stats.statements') },
-    { valeur: 5, libelle: h('stats.domains') },
-    { valeur: 30, libelle: h('stats.facets') },
-    { valeur: 3, libelle: h('stats.languages') }
-  ];
 
   return (
     <>
@@ -100,6 +89,9 @@ export default async function Home({ params }: HomeProps) {
               <Link href='/test' className={boutonPrincipal()}>
                 {t('call_to_action')}
                 <ArrowRightIcon />
+              </Link>
+              <Link href='/presentation' className={secondaryButtonClass}>
+                {p('cta')}
               </Link>
             </div>
             <p
@@ -150,94 +142,7 @@ export default async function Home({ params }: HomeProps) {
         </div>
       </section>
 
-      <section className={section}>
-        <ul className='grid grid-cols-2 gap-3.5 min-[900px]:grid-cols-[1.25fr_1fr_1fr_1fr]'>
-          {faits.map((fait, index) => (
-            <li
-              key={fait.libelle}
-              className={`carte apparition p-[clamp(1.25rem,2.4vw,1.875rem)] ${
-                index === 0 ? 'border-accent bg-accent text-sur-accent' : ''
-              }`}
-              style={{ animationDelay: `${0.1 + index * 0.06}s` }}
-            >
-              <b className='block text-[clamp(3.25rem,7vw,5.75rem)] font-extrabold leading-none tracking-[-0.045em]'>
-                {formatNombre(fait.valeur, locale)}
-              </b>
-              <span
-                className={`mt-2.5 block font-semibold ${
-                  index === 0 ? 'opacity-90' : 'text-texte-2'
-                }`}
-              >
-                {fait.libelle}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section id='facteurs' className={section}>
-        <h2 className={title({ size: 'section' })}>{h('factors.title')}</h2>
-        <p className='mt-2.5 max-w-[40em] text-texte-2'>{h('factors.intro')}</p>
-        <ul className='mt-8 grid gap-3.5 sm:grid-cols-2 min-[1000px]:grid-cols-5'>
-          {domainCodes.map((code, index) => (
-            <li
-              key={code}
-              className='carte carte-survol apparition flex flex-col gap-3 p-6'
-              style={{ animationDelay: `${index * 0.06}s` }}
-            >
-              <div className='flex items-center justify-between'>
-                <span
-                  aria-hidden='true'
-                  className='grid size-[46px] flex-none place-items-center rounded-[15px] bg-accent-doux text-accent'
-                >
-                  <DomainShape domain={code} />
-                </span>
-                <span className='text-petit font-extrabold tracking-[0.04em] text-texte-2'>
-                  {domainNumber(code)}
-                </span>
-              </div>
-              <h3 className='text-titre-3 text-encre'>
-                {domainLabel(code, locale, 'short')}
-              </h3>
-              <p className='text-texte-2'>{h(`factors.${code}`)}</p>
-              <p className='mt-auto pt-1.5 text-petit font-bold text-accent'>
-                {h('factors.facets')}
-              </p>
-            </li>
-          ))}
-        </ul>
-        <div className='mt-3.5 grid gap-3.5 min-[800px]:grid-cols-2'>
-          <article className='carte'>
-            <h3 className='text-titre-3 text-encre'>{h('languages.title')}</h3>
-            <p className='mt-1.5 text-texte-2'>{h('languages.text')}</p>
-            <ul className='mt-[18px] flex flex-wrap gap-2.5'>
-              {languages.map((language) => (
-                <li
-                  key={language.code}
-                  lang={language.code}
-                  className='rounded-[14px] border-[1.5px] border-trait-fort bg-creux px-5 py-2.5 font-bold'
-                >
-                  {language.name}
-                </li>
-              ))}
-            </ul>
-          </article>
-          <article className='carte'>
-            <h3 className='text-titre-3 text-encre'>{h('reference.title')}</h3>
-            <p className='mt-2.5 text-texte-2'>{h('reference.text')}</p>
-            <p className='mt-2.5'>
-              <a
-                href='https://ipip.ori.org'
-                rel='noopener noreferrer'
-                target='_blank'
-                className='font-bold text-accent underline underline-offset-2 hover:text-accent-survol'
-              >
-                <bdi dir='ltr'>ipip.ori.org</bdi>
-              </a>
-            </p>
-          </article>
-        </div>
-      </section>
+      <HomeSections locale={locale} />
 
       {posts.length > 0 && (
         <section className={section}>
@@ -255,6 +160,8 @@ export default async function Home({ params }: HomeProps) {
           </Link>
         </section>
       )}
+
+      <HomeClosing locale={locale} />
     </>
   );
 }

@@ -2,6 +2,7 @@ import { getLocalizedItems } from '@/lib/question-overrides';
 import { Survey } from './survey';
 import { saveTest } from '@/actions';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { formatNombre } from '@/lib/format';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -25,7 +26,10 @@ export default async function TestPage({ params }: Props) {
             progress: String(t.raw('progress')),
             saving: t('saving'),
             dismiss: t('dismiss'),
-            instructions: t('instructions'),
+            instructions: t('instructions', {
+              total: formatNombre(questions.length, locale)
+            }),
+            halfway: String(t.raw('halfway')),
             noTimeLimit: t('noTimeLimit'),
             progressBar: t('progressBar'),
             statement: String(t.raw('statement')),

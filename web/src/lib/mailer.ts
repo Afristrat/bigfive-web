@@ -1,3 +1,6 @@
+import { recordSinkMail } from '@/lib/mail-sink';
+import { isMailSinkActive, isMailSinkAllowed } from '@/lib/startup-check';
+
 const RESEND_TIMEOUT_MS = 8000;
 
 export const escapeHtml = (value: string): string =>
@@ -22,6 +25,8 @@ type Mail = {
   subject: string;
   text: string;
   html: string;
+  /** Adresse de réponse (en-tête Reply-To), facultative. */
+  replyTo?: string;
 };
 
 /** Clé Resend absente : erreur de configuration, jamais un échec silencieux. */
@@ -32,17 +37,32 @@ export class MailConfigError extends Error {
   }
 }
 
+/** Réceptacle de test actif hors préproduction : refus net, rien ne part. */
+export class MailSinkForbiddenError extends Error {
+  constructor() {
+    super('MAIL_SINK est actif hors préproduction : envoi refusé.');
+    this.name = 'MailSinkForbiddenError';
+  }
+}
+
 /**
- * Envoie un e-mail via l'API REST Resend. Lève MailConfigError sans clé
- * Resend ; renvoie false si l'API répond en erreur ou est injoignable (seul le
+ * Envoie un e-mail via l'API REST Resend. En préproduction avec MAIL_SINK=true,
+ * le message est gardé dans le réceptacle de test et ne part pas. Lève
+ * MailConfigError sans clé Resend ; renvoie false si l'API répond en erreur ou est injoignable (seul le
  * code HTTP est journalisé, jamais l'adresse ni le corps).
  */
 export async function sendMail({
   to,
   subject,
   text,
-  html
+  html,
+  replyTo
 }: Mail): Promise<boolean> {
+  if (isMailSinkActive(process.env)) {
+    if (!isMailSinkAllowed(process.env)) throw new MailSinkForbiddenError();
+    recordSinkMail({ to, subject, text, html, replyTo });
+    return true;
+  }
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) throw new MailConfigError();
   try {
@@ -58,7 +78,8 @@ export async function sendMail({
         to: [to],
         subject,
         html,
-        text
+        text,
+        ...(replyTo ? { reply_to: replyTo } : {})
       })
     });
     if (!res.ok) {
@@ -84,6 +105,7 @@ export function buildLinkMail({
   message,
   action,
   url,
+  code,
   note,
   dir
 }: {
@@ -92,6 +114,8 @@ export function buildLinkMail({
   message?: { title: string; body: string };
   action: string;
   url: string;
+  /** Code à saisir à la main (autre appareil que celui du lien). */
+  code?: { label: string; value: string };
   note: string;
   dir: 'ltr' | 'rtl';
 }): { html: string; text: string } {
@@ -102,14 +126,18 @@ export function buildLinkMail({
     (message
       ? `<blockquote style="margin:12px 0;padding:8px 14px;border-inline-start:3px solid #cccccc"><strong>${escapeHtml(message.title)}</strong><br>${multiline(message.body)}</blockquote>`
       : '') +
-    `<p><a href="${escapeHtml(url)}" style="display:inline-block;padding:10px 18px;background:#0e4f8b;color:#ffffff;text-decoration:none;border-radius:6px">${escapeHtml(action)}</a></p>` +
+    `<p><a href="${escapeHtml(url)}" style="display:inline-block;padding:10px 18px;background:#3730a3;color:#ffffff;text-decoration:none;border-radius:6px">${escapeHtml(action)}</a></p>` +
     `<p>${escapeHtml(url)}</p>` +
+    (code
+      ? `<p>${escapeHtml(code.label)}<br><strong dir="ltr" style="font-size:24px;letter-spacing:4px">${escapeHtml(code.value)}</strong></p>`
+      : '') +
     `<p style="color:#666666">${escapeHtml(note)}</p></div>`;
   const text = [
     greeting,
     intro,
     message ? `${message.title}\n${message.body}` : undefined,
     `${action}\n${url}`,
+    code ? `${code.label}\n${code.value}` : undefined,
     note
   ]
     .filter((part): part is string => part !== undefined)

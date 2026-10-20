@@ -1,11 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   MailConfigError,
+  MailSinkForbiddenError,
   buildLinkMail,
   canonicalAddress,
   escapeHtml,
   sendMail
 } from '@/lib/mailer';
+import { clearSink, readSink, recordSinkMail } from '@/lib/mail-sink';
 
 describe('escapeHtml', () => {
   it('échappe les cinq caractères sensibles', () => {
@@ -93,6 +95,25 @@ describe('buildLinkMail', () => {
     expect(html).toContain('href="https://x.example/?a=&quot;1&quot;&amp;b=2"');
   });
 
+  it('affiche le code à saisir, de gauche à droite, en HTML et en texte', () => {
+    const { html, text } = buildLinkMail({
+      ...base,
+      code: { label: 'Votre code :', value: '042917' }
+    });
+    expect(html).toContain('<strong dir="ltr"');
+    expect(html).toContain('>042917</strong>');
+    expect(text).toContain('Votre code :\n042917');
+    expect(text.indexOf('042917')).toBeLessThan(text.indexOf('Valable 15'));
+  });
+
+  it('échappe le libellé du code', () => {
+    const { html } = buildLinkMail({
+      ...base,
+      code: { label: '<i>x</i>', value: '1' }
+    });
+    expect(html).not.toContain('<i>');
+  });
+
   it('pose la direction de droite à gauche', () => {
     expect(buildLinkMail({ ...base, dir: 'rtl' }).html).toContain('dir="rtl"');
   });
@@ -156,5 +177,42 @@ describe('sendMail', () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('a@b.c')));
     await expect(sendMail(mail)).resolves.toBe(false);
     expect(console.error).toHaveBeenCalledWith('Resend request failed');
+  });
+});
+
+describe('sendMail et réceptacle de test', () => {
+  const mail = { to: 'a@b.c', subject: 'S', text: 't', html: '<p>h</p>' };
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+    clearSink();
+  });
+
+  it('garde le message au lieu de l’envoyer en préproduction avec MAIL_SINK', async () => {
+    vi.stubEnv('MAIL_SINK', 'true');
+    vi.stubEnv('APP_ENV', 'preproduction');
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    await expect(sendMail(mail)).resolves.toBe(true);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(readSink()).toHaveLength(1);
+    expect(readSink()[0]).toMatchObject({ to: 'a@b.c', subject: 'S' });
+  });
+
+  it('REFUSE d’envoyer quand MAIL_SINK est actif hors préproduction', async () => {
+    vi.stubEnv('MAIL_SINK', 'true');
+    vi.stubEnv('APP_ENV', 'production');
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    await expect(sendMail(mail)).rejects.toBeInstanceOf(MailSinkForbiddenError);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(readSink()).toHaveLength(0);
+  });
+
+  it('borne le réceptacle à 50 messages', () => {
+    for (let i = 0; i < 60; i++) recordSinkMail({ ...mail, subject: `S${i}` });
+    expect(readSink()).toHaveLength(50);
+    expect(readSink()[0]?.subject).toBe('S10');
   });
 });

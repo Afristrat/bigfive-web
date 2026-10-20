@@ -31,7 +31,16 @@ export default async function FaqPage({ params }: Props) {
           }
         ]
       : []),
-    ...(['print', 'source', 'answers', 'diagnosis'] as const).map((key) => ({
+    ...(
+      [
+        'science',
+        'usefulness',
+        'source',
+        'answers',
+        'diagnosis',
+        'print'
+      ] as const
+    ).map((key) => ({
       key,
       question: t(`${key}.question`),
       answer: t(`${key}.answer`)

@@ -24,6 +24,17 @@ export function safeInternalPath(value: unknown, fallback = '/'): string {
   }
 }
 
-/** Préfixe de langue de l'application (« as-needed » : aucun pour l'anglais). */
+const LOCALE_SHAPE = /^[a-z]{2}(-[a-z]+)?$/;
+
+/**
+ * Préfixe de langue de l'application (« as-needed » : aucun pour l'anglais).
+ * Défensif : une langue qui n'a pas la forme d'un code de langue (« /evil.org »
+ * issu d'un paramètre d'URL décodé) se replie sur la langue par défaut, sans
+ * préfixe, et le résultat repasse toujours par safeInternalPath : il ne peut
+ * jamais commencer par « // ».
+ */
 export const localizedPath = (locale: string, path: string): string =>
-  locale === 'en' ? path : `/${locale}${path}`;
+  safeInternalPath(
+    locale !== 'en' && LOCALE_SHAPE.test(locale) ? `/${locale}${path}` : path,
+    '/'
+  );

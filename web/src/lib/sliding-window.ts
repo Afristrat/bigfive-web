@@ -5,11 +5,17 @@ const HOUR_MS = 60 * 60 * 1000;
 
 export type Limit = { readonly max: number; readonly windowMs: number };
 
-// Plafonds de la demande de lien de connexion (plan § 4), identiques à ceux de
-// l'ancienne branche : par IP et par adresse canonique.
+// Plafonds de la demande de lien de connexion (plan § 4, revue du lot 1) : par
+// IP et par adresse canonique. La base ne voit pas l'IP, d'où ce plafond ici.
 export const magicLinkLimits = {
-  perIp: { max: 5, windowMs: HOUR_MS },
+  perIp: { max: 10, windowMs: HOUR_MS },
   perAddress: { max: 3, windowMs: HOUR_MS }
+} as const satisfies Record<string, Limit>;
+
+// Saisie du code à 6 chiffres : 20 essais par IP et par heure (la base borne
+// déjà les essais par lien).
+export const codeLimits = {
+  perIp: { max: 20, windowMs: HOUR_MS }
 } as const satisfies Record<string, Limit>;
 
 export type RateLimiter = {

@@ -24,6 +24,7 @@ export type SurveyLabels = {
   saving: string;
   dismiss: string;
   instructions: string;
+  halfway: string; // gabarit « {half} affirmations sur {total} »
   noTimeLimit: string;
   progressBar: string;
   statement: string; // gabarit « Affirmation {number} »
@@ -112,6 +113,11 @@ export const Survey = ({
   const current = Math.min(currentQuestionIndex + 1, total);
   const progressLabel = labels.progress
     .replace('{current}', formatNombre(current, language))
+    .replace('{total}', formatNombre(total, language));
+  // Message de mi-parcours : affiché sur la première question après la moitié.
+  const half = Math.floor(total / 2);
+  const halfwayLabel = labels.halfway
+    .replace('{half}', formatNombre(half, language))
     .replace('{total}', formatNombre(total, language));
 
   function handleAnswer(id: string, value: string) {
@@ -246,6 +252,11 @@ export const Survey = ({
           </svg>
           <span>{labels.instructions}</span>
         </p>
+      )}
+      {currentQuestionIndex === half && (
+        <Notice ton='info' className='mt-5'>
+          <p>{halfwayLabel}</p>
+        </Notice>
       )}
       {restored && (
         <Notice ton='avis' className='mt-5'>

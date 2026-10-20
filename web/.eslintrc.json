@@ -1,3 +1,57 @@
 {
-  "extends": ["next/core-web-vitals", "next", "prettier"]
+  "root": true,
+  "extends": ["next/core-web-vitals", "next", "prettier"],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["**/supabase/server", "@/lib/supabase/server"],
+            "message": "Le module Supabase serveur ne s'importe que depuis src/lib, src/actions, src/app/**/actions, les routes serveur (src/app/api) et instrumentation.ts (plan § 2.3)."
+          }
+        ]
+      }
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "MemberExpression[property.name=/^SUPABASE_/]",
+        "message": "SUPABASE_URL et SUPABASE_SECRET_KEY ne se lisent que dans src/lib/supabase/server.ts (plan § 2.3)."
+      },
+      {
+        "selector": "MemberExpression[computed=true][object.object.name='process'][object.property.name='env'][property.type!='Literal']",
+        "message": "Accès calculé à process.env interdit : il pourrait lire SUPABASE_* (plan § 2.3). Nommer la variable."
+      },
+      {
+        "selector": ":matches(VariableDeclarator[init.object.name='process'][init.property.name='env'], AssignmentExpression[right.object.name='process'][right.property.name='env']) ObjectPattern > :matches(RestElement, Property[key.name=/^SUPABASE_/], Property[key.value=/^SUPABASE_/])",
+        "message": "Pas de déstructuration de SUPABASE_* (ni de reste) depuis process.env : seul src/lib/supabase/server.ts les lit (plan § 2.3)."
+      },
+      {
+        "selector": "Literal[value=/SUPABASE_/]",
+        "message": "Un nom SUPABASE_* ne s'écrit que dans src/lib/supabase/server.ts (plan § 2.3)."
+      },
+      {
+        "selector": "TemplateElement[value.raw=/SUPABASE_/]",
+        "message": "Un nom SUPABASE_* ne s'écrit que dans src/lib/supabase/server.ts (plan § 2.3)."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/lib/**/*.{ts,tsx}",
+        "src/actions/**/*.ts",
+        "src/app/**/actions/**/*.ts",
+        "src/app/api/**/route.ts",
+        "src/instrumentation.ts",
+        "tests/**/*.ts"
+      ],
+      "rules": { "no-restricted-imports": "off" }
+    },
+    {
+      "files": ["src/lib/supabase/server.ts"],
+      "rules": { "no-restricted-syntax": "off" }
+    }
+  ]
 }

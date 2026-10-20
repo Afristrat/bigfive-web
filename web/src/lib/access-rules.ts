@@ -1,29 +1,13 @@
 // Règles d'accès pures : aucune base, aucune session, aucun effet de bord.
-// Les appelants fournissent les faits (rôle lu en base, liste des
-// administrateurs lue dans la table `tenga_admins`) ; ces règles les jugent.
+// Les appelants fournissent les faits (rôle et appartenance à `tenga_admins`
+// lus en base) ; ces règles les jugent.
 
 // Un seul rôle par organisation (plan § 3) : responsable, consultant ou participant.
-export const orgRoles = ['owner', 'consultant', 'member'] as const;
+export const orgRoles = ['responsable', 'consultant', 'participant'] as const;
 export type OrgRole = (typeof orgRoles)[number];
 
 export const isOrgRole = (value: string): value is OrgRole =>
   orgRoles.some((role) => role === value);
-
-const normalize = (email: string): string => email.trim().toLowerCase();
-
-/**
- * Vrai si l'adresse figure dans la liste d'administrateurs injectée par
- * l'appelant (lue en base, jamais dans l'environnement). Comparaison en
- * minuscules, espaces ignorés.
- */
-export const isAdminEmail = (
-  email: string | null | undefined,
-  admins: readonly string[]
-): boolean => {
-  if (!email) return false;
-  const address = normalize(email);
-  return address !== '' && admins.some((admin) => normalize(admin) === address);
-};
 
 export type ResultOwnership = {
   userId?: string | null;
@@ -40,7 +24,7 @@ export type ReadViewer = {
 /**
  * Un résultat individuel se lit uniquement par son propriétaire, un
  * administrateur Tenga ou un consultant de l'organisation du résultat. Le
- * responsable (owner) du client n'y a jamais accès : il ne voit que des
+ * responsable (responsable) du client n'y a jamais accès : il ne voit que des
  * agrégats de groupe.
  */
 export function decideReadResult(
@@ -79,21 +63,6 @@ export function decideOrgAccess(
   return null;
 }
 
-/**
- * Inscription fermée : une adresse peut obtenir un lien de connexion seulement
- * si un compte existe, si elle figure parmi les administrateurs Tenga ou si
- * elle a une invitation en cours (le compte naît alors à l'ouverture du lien).
- */
-export function decideSignInEligibility(facts: {
-  accountExists: boolean;
-  isAdminEmail: boolean;
-  hasPendingInvitation: boolean;
-}): boolean {
-  return (
-    facts.accountExists || facts.isAdminEmail || facts.hasPendingInvitation
-  );
-}
-
 export type Membership = {
   organizationId: string;
   role: OrgRole;
@@ -104,7 +73,7 @@ export type TestMode =
   | { mode: 'denied' };
 
 /**
- * Accès au questionnaire : seul un participant (`member`) d'au moins une
+ * Accès au questionnaire : seul un participant (`participant`) d'au moins une
  * organisation le passe pour de bon, rattaché à l'organisation active si elle
  * en fait partie, sinon à la première de la liste (triée de la plus ancienne à
  * la plus récente par l'appelant). Tous les autres sont refusés : il n'y a plus
@@ -117,7 +86,7 @@ export function decideTestMode(
   } | null
 ): TestMode {
   if (!viewer) return { mode: 'denied' };
-  const asMember = viewer.memberships.filter((m) => m.role === 'member');
+  const asMember = viewer.memberships.filter((m) => m.role === 'participant');
   const chosen =
     asMember.find((m) => m.organizationId === viewer.activeOrganizationId) ??
     asMember[0];

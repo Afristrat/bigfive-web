@@ -21,6 +21,7 @@ export default async function AboutPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('about');
+  const p = await getTranslations('presentation');
 
   return (
     <article className='colonne-lecture'>
@@ -37,6 +38,11 @@ export default async function AboutPage({ params }: Props) {
           {supportEmail && (
             <> {t('contact_email', { email: isoler(supportEmail) })}</>
           )}
+        </p>
+        <p>
+          {p.rich('aboutLink', {
+            link: (chunks) => <Link href='/presentation'>{chunks}</Link>
+          })}
         </p>
       </div>
     </article>

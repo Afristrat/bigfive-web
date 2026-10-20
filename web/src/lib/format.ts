@@ -24,6 +24,16 @@ export const formatDate = (
     numberingSystem: 'latn'
   }).format(new Date(date));
 
+export const formatDateHeure = (
+  date: Date | string | number,
+  locale: string
+): string =>
+  new Intl.DateTimeFormat(avecChiffresLatins(locale), {
+    dateStyle: 'short',
+    timeStyle: 'short',
+    numberingSystem: 'latn'
+  }).format(new Date(date));
+
 // Isole un segment latin (adresse, identifiant) inséré dans une phrase traduite,
 // pour que l'algorithme bidirectionnel ne le réordonne pas en arabe.
 export const isoler = (texte: string): string =>

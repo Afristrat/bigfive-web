@@ -32,8 +32,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date()
     },
     {
+      url: `${basePath}/presentation`,
+      lastModified: new Date(),
+      alternates: {
+        languages: alternatesPageLang('/presentation')
+      }
+    },
+    {
       url: `${basePath}/faq`,
       lastModified: new Date()
+    },
+    {
+      url: `${basePath}/methode`,
+      lastModified: new Date(),
+      alternates: {
+        languages: alternatesPageLang('/methode')
+      }
     },
     {
       url: `${basePath}/privacy`,

@@ -13,29 +13,7 @@ export const formatAndValidateId = (id: string): boolean => {
   return validId(formattedId);
 };
 
-export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 export const isDev: boolean = process.env.NEXT_PUBLIC_ENV === 'development';
-
-const unescape = (str: string) =>
-  (str + '==='.slice((str.length + 3) % 4))
-    .replace(/-/g, '+')
-    .replace(/_/g, '/');
-const escape = (str: string) =>
-  str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-
-export const base64url = {
-  encode: (str: string) => escape(Buffer.from(str, 'utf8').toString('base64')),
-  decode: (str: string) => {
-    const trimmedString = str
-      .split('?')[0]
-      .replaceAll('=', '')
-      .replaceAll('%3D', '');
-    return JSON.parse(
-      Buffer.from(unescape(trimmedString), 'base64').toString('utf8')
-    );
-  }
-};
 
 export function calculateReadingTime(content: string) {
   // Define the average reading speed (words per minute)

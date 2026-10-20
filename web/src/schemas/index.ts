@@ -42,11 +42,40 @@ export const testId = z.object({
     .max(24)
 });
 
-const email = z.string().email().max(200);
+const email = z.string().trim().toLowerCase().email().max(200);
 
-// Le client ne fournit que le destinataire et l'identifiant du résultat :
-// sujet et corps sont construits côté serveur.
-export const sendEmailSchema = z.object({
-  to: email,
-  resultId: testId.shape.id
+const locale = z.string().regex(/^[a-z]{2}(-[a-z]+)?$/);
+
+export const loginRequestSchema = z.object({
+  email,
+  locale,
+  next: z.string().max(500).optional()
+});
+
+export const loginCodeSchema = z.object({
+  email,
+  code: z.string().regex(/^[0-9]{6}$/),
+  locale
+});
+
+export const profileSchema = z.object({
+  nom: z.string().trim().max(120),
+  langue: z.enum(['fr', 'ar', 'en'])
+});
+
+export const organizationSchema = z.object({
+  nom: z.string().trim().min(1).max(160),
+  slug: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .regex(/^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/)
+    .refine((slug) => !slug.includes('--'))
+});
+
+export const roleAssignmentSchema = z.object({
+  email,
+  organisation: z.string().uuid(),
+  role: z.enum(['responsable', 'consultant', 'participant']),
+  langue: z.enum(['fr', 'ar', 'en'])
 });

@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { createRateLimiter, magicLinkLimits } from '@/lib/sliding-window';
+import {
+  codeLimits,
+  createRateLimiter,
+  magicLinkLimits
+} from '@/lib/sliding-window';
 
 const clock = () => {
   let t = 1_000_000;
@@ -81,7 +85,8 @@ describe('createRateLimiter', () => {
   });
 
   it('expose les plafonds de la demande de lien', () => {
-    expect(magicLinkLimits.perIp.max).toBe(5);
+    expect(magicLinkLimits.perIp.max).toBe(10);
+    expect(codeLimits.perIp.max).toBe(20);
     expect(magicLinkLimits.perAddress.max).toBe(3);
   });
 });

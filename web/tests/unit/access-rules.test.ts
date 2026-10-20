@@ -2,9 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   decideOrgAccess,
   decideReadResult,
-  decideSignInEligibility,
   decideTestMode,
-  isAdminEmail,
   isInvitationLocale,
   isOrgRole,
   type OrgRole,
@@ -26,7 +24,7 @@ describe('decideReadResult', () => {
   });
 
   it('autorise le propriétaire', () => {
-    expect(decideReadResult(viewer('alice', 'member'), result)).toBe(true);
+    expect(decideReadResult(viewer('alice', 'participant'), result)).toBe(true);
   });
 
   it('autorise le propriétaire d’un résultat hors organisation', () => {
@@ -39,11 +37,13 @@ describe('decideReadResult', () => {
   });
 
   it('refuse un autre participant de la même organisation', () => {
-    expect(decideReadResult(viewer('bob', 'member'), result)).toBe(false);
+    expect(decideReadResult(viewer('bob', 'participant'), result)).toBe(false);
   });
 
-  it('refuse le responsable (owner) de la même organisation', () => {
-    expect(decideReadResult(viewer('carol', 'owner'), result)).toBe(false);
+  it('refuse le responsable (responsable) de la même organisation', () => {
+    expect(decideReadResult(viewer('carol', 'responsable'), result)).toBe(
+      false
+    );
   });
 
   it('autorise le consultant affecté à l’organisation du résultat', () => {
@@ -75,7 +75,7 @@ describe('decideReadResult', () => {
 });
 
 describe('decideOrgAccess', () => {
-  const dashboardRoles: OrgRole[] = ['owner', 'consultant'];
+  const dashboardRoles: OrgRole[] = ['responsable', 'consultant'];
 
   it('refuse sans session', () => {
     expect(decideOrgAccess(null, dashboardRoles)).toBeNull();
@@ -84,10 +84,10 @@ describe('decideOrgAccess', () => {
   it('renvoie le rôle d’un responsable', () => {
     expect(
       decideOrgAccess(
-        { isTengaAdmin: false, roleInOrganization: 'owner' },
+        { isTengaAdmin: false, roleInOrganization: 'responsable' },
         dashboardRoles
       )
-    ).toBe('owner');
+    ).toBe('responsable');
   });
 
   it('renvoie le rôle d’un consultant affecté', () => {
@@ -111,7 +111,7 @@ describe('decideOrgAccess', () => {
   it('refuse un participant quand son rôle n’est pas autorisé', () => {
     expect(
       decideOrgAccess(
-        { isTengaAdmin: false, roleInOrganization: 'member' },
+        { isTengaAdmin: false, roleInOrganization: 'participant' },
         dashboardRoles
       )
     ).toBeNull();
@@ -129,10 +129,10 @@ describe('decideOrgAccess', () => {
   it('prend le premier rôle autorisé pour l’administrateur Tenga sinon', () => {
     expect(
       decideOrgAccess({ isTengaAdmin: true, roleInOrganization: null }, [
-        'owner',
-        'member'
+        'responsable',
+        'participant'
       ])
-    ).toBe('owner');
+    ).toBe('responsable');
   });
 
   it('renvoie null si aucun rôle n’est autorisé, même pour un administrateur', () => {
@@ -144,78 +144,35 @@ describe('decideOrgAccess', () => {
   it('garde le rôle réel d’un administrateur Tenga membre', () => {
     expect(
       decideOrgAccess(
-        { isTengaAdmin: true, roleInOrganization: 'owner' },
+        { isTengaAdmin: true, roleInOrganization: 'responsable' },
         dashboardRoles
       )
-    ).toBe('owner');
+    ).toBe('responsable');
   });
 
   it('applique la règle d’administration à un administrateur membre sans rôle autorisé', () => {
     expect(
       decideOrgAccess(
-        { isTengaAdmin: true, roleInOrganization: 'member' },
+        { isTengaAdmin: true, roleInOrganization: 'participant' },
         dashboardRoles
       )
     ).toBe('consultant');
   });
 });
 
-describe('administrateurs et rôles', () => {
-  const admins = [' Admin@Tenga.ma ', 'autre@tenga.ma'];
-
-  it('compare les e-mails en minuscules, espaces ignorés', () => {
-    expect(isAdminEmail('ADMIN@tenga.ma', admins)).toBe(true);
-    expect(isAdminEmail('  autre@TENGA.ma ', admins)).toBe(true);
-    expect(isAdminEmail('intrus@tenga.ma', admins)).toBe(false);
-  });
-
-  it('refuse une adresse absente, vide ou une liste vide', () => {
-    expect(isAdminEmail(undefined, admins)).toBe(false);
-    expect(isAdminEmail(null, admins)).toBe(false);
-    expect(isAdminEmail('  ', ['  '])).toBe(false);
-    expect(isAdminEmail('x@y.z', [])).toBe(false);
-  });
-
+describe('rôles et langues', () => {
   it('reconnaît les trois rôles et rien d’autre', () => {
-    expect(isOrgRole('owner')).toBe(true);
+    expect(isOrgRole('responsable')).toBe(true);
     expect(isOrgRole('consultant')).toBe(true);
-    expect(isOrgRole('member')).toBe(true);
+    expect(isOrgRole('participant')).toBe(true);
     expect(isOrgRole('admin')).toBe(false);
-    expect(isOrgRole('owner,member')).toBe(false);
+    expect(isOrgRole('responsable,participant')).toBe(false);
   });
 
   it('reconnaît les langues d’invitation', () => {
     expect(isInvitationLocale('ar')).toBe(true);
     expect(isInvitationLocale('es')).toBe(false);
     expect(isInvitationLocale(undefined)).toBe(false);
-  });
-});
-
-describe('decideSignInEligibility', () => {
-  const none = {
-    accountExists: false,
-    isAdminEmail: false,
-    hasPendingInvitation: false
-  };
-
-  it('refuse une adresse inconnue sans invitation (inscription fermée)', () => {
-    expect(decideSignInEligibility(none)).toBe(false);
-  });
-
-  it('accepte un compte existant', () => {
-    expect(decideSignInEligibility({ ...none, accountExists: true })).toBe(
-      true
-    );
-  });
-
-  it('accepte un administrateur Tenga pas encore inscrit', () => {
-    expect(decideSignInEligibility({ ...none, isAdminEmail: true })).toBe(true);
-  });
-
-  it('accepte une invitation en cours', () => {
-    expect(
-      decideSignInEligibility({ ...none, hasPendingInvitation: true })
-    ).toBe(true);
   });
 });
 
@@ -227,7 +184,7 @@ describe('decideTestMode', () => {
   it('fait passer le test à un participant, dans son organisation', () => {
     expect(
       decideTestMode({
-        memberships: [{ organizationId: 'orgA', role: 'member' }],
+        memberships: [{ organizationId: 'orgA', role: 'participant' }],
         activeOrganizationId: null
       })
     ).toEqual({ mode: 'participate', organizationId: 'orgA' });
@@ -237,8 +194,8 @@ describe('decideTestMode', () => {
     expect(
       decideTestMode({
         memberships: [
-          { organizationId: 'orgA', role: 'member' },
-          { organizationId: 'orgB', role: 'member' }
+          { organizationId: 'orgA', role: 'participant' },
+          { organizationId: 'orgB', role: 'participant' }
         ],
         activeOrganizationId: 'orgB'
       })
@@ -249,8 +206,8 @@ describe('decideTestMode', () => {
     expect(
       decideTestMode({
         memberships: [
-          { organizationId: 'orgA', role: 'owner' },
-          { organizationId: 'orgB', role: 'member' }
+          { organizationId: 'orgA', role: 'responsable' },
+          { organizationId: 'orgB', role: 'participant' }
         ],
         activeOrganizationId: 'orgA'
       })
@@ -269,7 +226,7 @@ describe('decideTestMode', () => {
   it('refuse le responsable (un seul rôle par organisation)', () => {
     expect(
       decideTestMode({
-        memberships: [{ organizationId: 'orgA', role: 'owner' }],
+        memberships: [{ organizationId: 'orgA', role: 'responsable' }],
         activeOrganizationId: 'orgA'
       })
     ).toEqual({ mode: 'denied' });

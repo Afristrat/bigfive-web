@@ -97,16 +97,16 @@ export const siteConfig = {
       href: '/result'
     },
     {
-      label: 'compare',
-      href: '/compare'
-    },
-    {
       label: 'articles',
       href: '/articles'
     },
     {
       label: 'about',
       href: '/about'
+    },
+    {
+      label: 'account',
+      href: '/mon-compte'
     }
   ],
   navMenuItems: [
@@ -117,10 +117,6 @@ export const siteConfig = {
     {
       label: 'see_results',
       href: '/result'
-    },
-    {
-      label: 'compare_with',
-      href: '/compare'
     },
     {
       label: 'articles',
@@ -137,6 +133,10 @@ export const siteConfig = {
     {
       label: 'faq',
       href: '/faq'
+    },
+    {
+      label: 'account',
+      href: '/mon-compte'
     }
   ],
   footerLinks: [
@@ -159,6 +159,14 @@ export const siteConfig = {
     {
       label: 'faq',
       href: '/faq'
+    },
+    {
+      label: 'method',
+      href: '/methode'
+    },
+    {
+      label: 'presentation',
+      href: '/presentation'
     }
   ]
 };

@@ -10,9 +10,8 @@ import generateResult, {
   Domain
 } from '@bigfive-org/results';
 import { getItems } from '@bigfive-org/questions';
-import { sendEmailSchema, testId, testSchema } from '@/schemas';
+import { testId, testSchema } from '@/schemas';
 import { isRateLimited, limits } from '@/lib/rate-limit';
-import { basePath } from '@/config/site';
 import { QUESTIONNAIRE_VERSION } from '@/lib/question-overrides';
 
 const collectionName = process.env.DB_COLLECTION || 'results';
@@ -111,100 +110,5 @@ export async function saveTest(testResult: DbResult) {
       name: 'SavingError',
       message: 'Failed to save test result!'
     });
-  }
-}
-
-export type EmailState = {
-  message: string;
-  type: 'error' | 'success';
-};
-
-const escapeHtml = (value: string): string =>
-  value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-
-const emailFailed: EmailState = {
-  message: 'Error sending email!',
-  type: 'error'
-};
-
-const RESEND_TIMEOUT_MS = 8000;
-
-// Adresse ramenée à sa forme canonique pour le plafond par destinataire, afin
-// que les alias (« a+1@ », points Gmail) ne le contournent pas.
-const canonicalRecipient = (address: string): string => {
-  const [local, domain] = address.toLowerCase().split('@');
-  const base = local.split('+')[0];
-  const isGmail = domain === 'gmail.com' || domain === 'googlemail.com';
-  return `${isGmail ? base.replace(/\./g, '') : base}@${domain}`;
-};
-
-/**
- * Envoie le lien d'un résultat par e-mail via l'API Resend. Le client ne
- * fournit que `to` et `resultId` : sujet, texte et HTML sont construits ici.
- */
-export async function sendEmail(
-  _: EmailState,
-  formData: FormData
-): Promise<EmailState> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const parsed = sendEmailSchema.safeParse({
-    to: formData.get('to'),
-    resultId: formData.get('resultId')
-  });
-  if (!apiKey || !parsed.success) return emailFailed;
-
-  const { to, resultId } = parsed.data;
-  if (
-    (await isRateLimited('sendEmail', limits.sendEmailPerIp)) ||
-    (await isRateLimited(
-      'sendEmailTo',
-      limits.sendEmailPerRecipient,
-      canonicalRecipient(to)
-    )) ||
-    (await isRateLimited('sendEmailAll', limits.sendEmailGlobal, 'all'))
-  ) {
-    return emailFailed;
-  }
-
-  try {
-    const db = await connectToDatabase();
-    const exists = await db
-      .collection(collectionName)
-      .findOne({ _id: new ObjectId(resultId) }, { projection: { _id: 1 } });
-    if (!exists) return emailFailed;
-
-    const link = `${basePath}/result/${resultId}`;
-    const subject = 'Your Big Five personality test result';
-    const text = `Here is the link to your Big Five personality test result: ${link}`;
-    const html = `<p>Here is the link to your Big Five personality test result:</p><p><a href="${escapeHtml(link)}">${escapeHtml(link)}</a></p>`;
-
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      signal: AbortSignal.timeout(RESEND_TIMEOUT_MS),
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: process.env.EMAIL_FROM || 'Tenga <noreply@ai-mpower.com>',
-        to: [to],
-        subject,
-        html,
-        text
-      })
-    });
-    if (!res.ok) {
-      console.error(`Resend responded with HTTP ${res.status}`);
-      return emailFailed;
-    }
-    return { message: 'Sent successfully!', type: 'success' };
-  } catch (error) {
-    console.error(error);
-    return emailFailed;
   }
 }
