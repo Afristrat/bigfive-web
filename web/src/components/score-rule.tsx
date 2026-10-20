@@ -10,6 +10,9 @@ interface ScoreRuleProps {
   surMax: string; // « sur 120 », déjà traduit
   niveau: string; // « élevé », déjà traduit
   taille?: 'domaine' | 'facette';
+  // « ligne » : libellé, règle et valeur côte à côte dès sm ; « pile » : la règle
+  // passe sous le libellé, pour une colonne étroite (carte de l'accueil).
+  disposition?: 'ligne' | 'pile';
   anime?: boolean;
   rang?: number; // position dans la liste, pour le décalage du tracé
 }
@@ -34,13 +37,20 @@ export function ScoreRule({
   surMax,
   niveau,
   taille = 'domaine',
+  disposition = 'ligne',
   anime = false,
   rang = 0
 }: ScoreRuleProps) {
   const part = partDeRegle(score, min, max);
   const hauteur = taille === 'domaine' ? 'h-2' : 'h-1.5';
+  const enLigne = disposition === 'ligne';
   return (
-    <div className='grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-2 sm:grid-cols-[minmax(8rem,14rem)_1fr_auto]'>
+    <div
+      className={clsx(
+        'grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-2',
+        enLigne && 'sm:grid-cols-[minmax(8rem,14rem)_1fr_auto]'
+      )}
+    >
       <span className='text-corps font-medium text-encre'>
         {href ? (
           <a
@@ -56,7 +66,8 @@ export function ScoreRule({
       <span
         aria-hidden='true'
         className={clsx(
-          'regle-piste relative col-span-2 rounded-petit bg-creux ring-1 ring-inset ring-trait-fort sm:col-span-1 sm:col-start-2 sm:row-start-1',
+          'regle-piste relative col-span-2 rounded-petit bg-creux ring-1 ring-inset ring-trait-fort',
+          enLigne && 'sm:col-span-1 sm:col-start-2 sm:row-start-1',
           hauteur
         )}
       >
@@ -76,7 +87,12 @@ export function ScoreRule({
           style={{ insetInlineStart: `${MILIEU_DE_REGLE * 100}%` }}
         />
       </span>
-      <span className='col-start-2 row-start-1 whitespace-nowrap text-end sm:col-start-3'>
+      <span
+        className={clsx(
+          'col-start-2 row-start-1 whitespace-nowrap text-end',
+          enLigne && 'sm:col-start-3'
+        )}
+      >
         <span className='chiffres text-corps font-semibold text-encre'>
           {valeur}
         </span>{' '}

@@ -90,6 +90,7 @@ export default async function Home({ params }: HomeProps) {
                   surMax={surMax}
                   niveau={r(`level.${niveauDeScore(score, 24)}`)}
                   anime
+                  disposition='pile'
                   rang={index}
                 />
               </li>

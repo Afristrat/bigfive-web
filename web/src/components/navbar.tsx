@@ -90,7 +90,7 @@ export const Navbar = ({ navItems, navMenuItems, labels }: NavbarProps) => {
                       href={item.href}
                       aria-current={isActive ? 'page' : undefined}
                       className={clsx(
-                        'relative inline-flex min-h-6 items-center text-[0.9375rem] font-medium transition-colors duration-courte hover:text-encre',
+                        'relative inline-flex min-h-6 items-center whitespace-nowrap text-[0.9375rem] font-medium transition-colors duration-courte hover:text-encre',
                         isActive
                           ? 'text-encre after:absolute after:inset-x-0 after:-bottom-[21px] after:h-0.5 after:bg-accent'
                           : 'text-texte-2'
