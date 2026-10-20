@@ -37,6 +37,11 @@ sh supabase/scripts/test-sql.sh <tenga-sb|tenga-sb-preprod> [dossier]
 | `05_garde_ddl.sql` | vues sans `security_invoker`, vues matérialisées, tables étrangères, fonctions SECURITY DEFINER sans `search_path`, extensions : messages d'erreur exacts |
 | `06_proprietaire.sql` | attributs de `tenga_owner`, propriété des objets, comportement réel de anon, authenticated, tenga_owner |
 | `07_perimetre_api.sql` | aucune création d'objet par l'API ; schéma cron, `cron.schedule`, `unschedule`, `alter_job` fermés |
+| `08_socle_structure.sql` | lot 1 : listes figées (règles, droits sur les tables, fonctions exécutables), contraintes (identifiant d'URL, rôle unique par organisation), déclencheur de profil (dont sous `supabase_auth_admin`), cascade de suppression de compte, journal sans e-mail |
+| `09_socle_acces.sql` | lot 1 : accès par personnage (matrice), rôle réel plus jeton simulé ; les quatre verrous contre l'élévation de privilège éprouvés un à un (droit, règle, déclencheur, fonction réservée) |
+| `10_socle_fonctions.sql` | lot 1 : création d'organisation, attribution et retrait de rôle, lecture du journal, journal en ajout seul (UPDATE, TRUNCATE, DELETE récent refusés), profil |
+| `11_connexion.sql` | lot 1 : lien `/c/{jeton}` et code à 6 chiffres : empreintes seules, usage unique, expiration, plafond de 3 demandes et de 5 essais, réponse de même forme pour une adresse inconnue |
+| `12_purge.sql` | lot 1 : tâche pg_cron, purge des liens et du journal échus, trace chiffrée, règles `TO tenga_owner` qui contraignent la purge (vu rouge), point de santé |
 
 ## Constats sur les rôles de l'instance (lus en base)
 
@@ -63,7 +68,12 @@ Conséquences :
 - `tenga_owner` est soumis à la RLS forcée comme les autres : une fonction
   SECURITY DEFINER qui lui appartient ne lira une table que si une règle
   `TO tenga_owner` le permet (exemple : les règles de `private.settings`).
-  À prévoir au lot 1 pour les fonctions de lecture journalisée.
+  Le lot 1 applique ce principe table par table : chaque table n'ouvre à
+  `tenga_owner` que les opérations dont ses fonctions ont besoin (`08` fige la
+  liste, `12` retire des règles pour vérifier qu'elles contraignent vraiment).
+- La migration 0002 ajoute une règle de lecture `TO tenga_owner` sur
+  `auth.users` (table GoTrue à RLS activée sans règle) et des droits de colonne
+  (`id`, `email`, `banned_until`) : c'est l'unique ouverture sur le schéma auth.
 
 ## Limites connues
 
@@ -92,7 +102,7 @@ Matrice d'accès unique du plan § 7, écrite indépendamment des règles.
 | `personnages` | identités simulées (`id`, `description`) |
 | `operations` | opérations testées par objet |
 | `verdicts` | valeurs permises dans une cellule |
-| `objets` | à remplir au lot 1 |
+| `objets` | objets du lot 1 (tables, fonctions), avec une `note` libre ; une table sans cellule est fermée à tous |
 
 Forme prévue d'un objet :
 

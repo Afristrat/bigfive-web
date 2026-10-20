@@ -1,18 +1,285 @@
 {
-  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Squelette du lot 0 : les objets sont remplis au lot 1.",
-  "version": 1,
+  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 2 : objets du lot 1 (socle). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 transcrivent ces cellules (identités simulées, rôle réel).",
+  "version": 2,
   "personnages": [
-    { "id": "anonyme", "description": "Aucune identité (rôle anon)." },
-    { "id": "participant_a", "description": "Participant de l'organisation A, première personne." },
-    { "id": "participant_b", "description": "Participant de l'organisation A, seconde personne (ne doit rien voir de participant_a)." },
-    { "id": "responsable_a", "description": "Responsable de l'organisation A." },
-    { "id": "consultant_affecte_a", "description": "Consultant affecté à l'organisation A." },
-    { "id": "consultant_autre", "description": "Consultant affecté uniquement à une autre organisation." },
-    { "id": "responsable_b", "description": "Responsable d'une autre organisation B." },
-    { "id": "membre_a_et_b", "description": "Personne membre des deux organisations A et B." },
-    { "id": "admin_tenga", "description": "Administrateur Tenga (table private.tenga_admins)." }
+    {
+      "id": "anonyme",
+      "description": "Aucune identité (rôle anon)."
+    },
+    {
+      "id": "participant_a",
+      "description": "Participant de l'organisation A, première personne."
+    },
+    {
+      "id": "participant_b",
+      "description": "Participant de l'organisation A, seconde personne (ne doit rien voir de participant_a)."
+    },
+    {
+      "id": "responsable_a",
+      "description": "Responsable de l'organisation A."
+    },
+    {
+      "id": "consultant_affecte_a",
+      "description": "Consultant affecté à l'organisation A."
+    },
+    {
+      "id": "consultant_autre",
+      "description": "Consultant affecté uniquement à une autre organisation."
+    },
+    {
+      "id": "responsable_b",
+      "description": "Responsable d'une autre organisation B."
+    },
+    {
+      "id": "membre_a_et_b",
+      "description": "Personne membre des deux organisations A et B."
+    },
+    {
+      "id": "admin_tenga",
+      "description": "Administrateur Tenga (table private.tenga_admins)."
+    },
+    {
+      "id": "serveur",
+      "description": "Clé secrète du serveur Next.js (rôle service_role) : contourne la RLS, d'où l'absence de droit sur les tables et l'accès par fonctions seulement."
+    }
   ],
-  "operations": ["select", "insert", "update", "delete", "execute"],
-  "verdicts": ["autorise", "refuse", "propres_lignes", "organisation", "fonction_seule"],
-  "objets": []
+  "operations": [
+    "select",
+    "insert",
+    "update",
+    "delete",
+    "execute"
+  ],
+  "verdicts": [
+    "autorise",
+    "refuse",
+    "propres_lignes",
+    "organisation",
+    "fonction_seule"
+  ],
+  "objets": [
+    {
+      "objet": "app.profiles",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "participant_a": "propres_lignes",
+          "participant_b": "propres_lignes",
+          "responsable_a": "propres_lignes",
+          "consultant_affecte_a": "propres_lignes",
+          "consultant_autre": "propres_lignes",
+          "responsable_b": "propres_lignes",
+          "membre_a_et_b": "propres_lignes",
+          "admin_tenga": "propres_lignes"
+        },
+        "update": {
+          "participant_a": "fonction_seule",
+          "participant_b": "fonction_seule",
+          "responsable_a": "fonction_seule",
+          "consultant_affecte_a": "fonction_seule",
+          "consultant_autre": "fonction_seule",
+          "responsable_b": "fonction_seule",
+          "membre_a_et_b": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        }
+      },
+      "note": "Lecture de son propre profil. L'administrateur Tenga ne lit pas les autres profils (lots 3 et 4 : fonctions contrôlées). Écriture par app.mettre_a_jour_profil (champs nom et langue)."
+    },
+    {
+      "objet": "app.organizations",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "participant_a": "organisation",
+          "participant_b": "organisation",
+          "responsable_a": "organisation",
+          "consultant_affecte_a": "organisation",
+          "consultant_autre": "organisation",
+          "responsable_b": "organisation",
+          "membre_a_et_b": "organisation",
+          "admin_tenga": "autorise"
+        },
+        "insert": {
+          "admin_tenga": "fonction_seule"
+        }
+      },
+      "note": "Une personne voit les organisations dont elle est membre, quel que soit son rôle. Création par app.creer_organisation ; aucune modification ni suppression par l'API."
+    },
+    {
+      "objet": "app.memberships",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "participant_a": "propres_lignes",
+          "participant_b": "propres_lignes",
+          "responsable_a": "propres_lignes",
+          "consultant_affecte_a": "propres_lignes",
+          "consultant_autre": "propres_lignes",
+          "responsable_b": "propres_lignes",
+          "membre_a_et_b": "propres_lignes",
+          "admin_tenga": "autorise"
+        },
+        "insert": {
+          "admin_tenga": "fonction_seule"
+        },
+        "update": {
+          "admin_tenga": "fonction_seule"
+        },
+        "delete": {
+          "admin_tenga": "fonction_seule"
+        }
+      },
+      "note": "Un responsable ne lit que sa propre ligne : le détail de son organisation viendra par les participations (lot 2). Écriture par app.attribuer_role et app.retirer_role (verrous 1 à 4, plan § 3.3)."
+    },
+    {
+      "objet": "private.tenga_admins",
+      "type": "table",
+      "cellules": {},
+      "note": "Amorcée en SSH par script. Aucune écriture ni lecture par l'API."
+    },
+    {
+      "objet": "private.audit_log",
+      "type": "table",
+      "cellules": {},
+      "note": "Ajout seul. Lecture par app.lire_journal (administrateur Tenga)."
+    },
+    {
+      "objet": "private.liens_connexion",
+      "type": "table",
+      "cellules": {},
+      "note": "Empreintes seulement. Lue et écrite par les fonctions de connexion."
+    },
+    {
+      "objet": "private.settings",
+      "type": "table",
+      "cellules": {},
+      "note": "Réglages de conservation. Aucun accès par l'API."
+    },
+    {
+      "objet": "app.suis_admin_tenga",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "responsable_a": "autorise",
+          "consultant_affecte_a": "autorise",
+          "consultant_autre": "autorise",
+          "responsable_b": "autorise",
+          "membre_a_et_b": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Répond sur l'identité de l'appelant seulement."
+    },
+    {
+      "objet": "app.suis_membre",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "responsable_a": "autorise",
+          "consultant_affecte_a": "autorise",
+          "consultant_autre": "autorise",
+          "responsable_b": "autorise",
+          "membre_a_et_b": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Répond sur l'appartenance de l'appelant seulement."
+    },
+    {
+      "objet": "app.mettre_a_jour_profil",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "responsable_a": "autorise",
+          "consultant_affecte_a": "autorise",
+          "consultant_autre": "autorise",
+          "responsable_b": "autorise",
+          "membre_a_et_b": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Met à jour le profil de l'appelant."
+    },
+    {
+      "objet": "app.creer_organisation",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Exécutable par le rôle connecté, refusée à toute personne hors private.tenga_admins (42501)."
+    },
+    {
+      "objet": "app.attribuer_role",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Seule fonction qui crée des rôles au lot 1 (verrou 4)."
+    },
+    {
+      "objet": "app.retirer_role",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "admin_tenga": "autorise"
+        }
+      }
+    },
+    {
+      "objet": "app.lire_journal",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "admin_tenga": "autorise"
+        }
+      }
+    },
+    {
+      "objet": "app.demander_lien_connexion",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "serveur": "autorise"
+        }
+      }
+    },
+    {
+      "objet": "app.consommer_lien_connexion",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "serveur": "autorise"
+        }
+      }
+    },
+    {
+      "objet": "app.consommer_code_connexion",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "serveur": "autorise"
+        }
+      }
+    },
+    {
+      "objet": "app.derniere_purge",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "serveur": "autorise"
+        }
+      },
+      "note": "Point de santé de la purge."
+    }
+  ]
 }
