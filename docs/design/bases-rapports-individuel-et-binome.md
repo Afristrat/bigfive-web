@@ -226,34 +226,44 @@ et tout mot du lexique interdit. Rends un JSON ; ne réécris rien.
 
 ## 9. Décisions qui reviennent à Amine
 
-État au 20 octobre 2026 : Amine a tranché D3 (restitution par une IA sous la forme d'un avatar de Nezha Bentara, voir § 9 bis). Pour D1, D2, D4, D5 et D6, accord de principe donné pendant la lecture du document, à confirmer à la fin de cette lecture.
+État au 20 octobre 2026 : Amine a confirmé les six décisions D1 à D6, après lecture du document. D3 est précisée par deux packs (§ 9 bis). Les conventions de D4 restent à valider par un psychométricien : la confirmation vaut accord sur la démarche, pas validation des seuils.
 
 | N° | Décision | Recommandation | Raison |
 |---|---|---|---|
 | D1 | Motivations et styles comportementaux | Ne pas les produire avec le questionnaire actuel ; couvrir le besoin par les « situations de travail » (hypothèses dérivées des facettes). Instruire à part l'ajout d'un instrument de motivation (sources, droits d'usage, validation en arabe et en français) | Les inventer à partir de facettes serait de la fausse mesure ; l'ajout d'un instrument est une décision d'offre |
 | D2 | Consentement du binôme | Double consentement explicite, révocable, limité aux deux personnes et au consultant, sans copie à l'employeur, durée de conservation fixée | Cohérent avec la règle « l'employeur ne voit jamais un résultat individuel » ; à faire valider juridiquement (RGPD et CNDP) |
-| D3 | Qui conduit l'entretien de restitution | **Décidé par Amine le 20 octobre 2026** : un entretien conduit par une IA, sous la forme d'un avatar de Nezha Bentara. Cadrage recommandé au § 9 bis (quatre conditions à lever avant toute mise en service) | Le retour centré sur la personne est moins efficace sans cadrage (Kluger et DeNisi 1996). Le dossier de preuves ne contient aucune étude sur une restitution conduite par une IA : le bénéfice attendu (disponibilité, coût) est une hypothèse, à mesurer pendant un pilote |
+| D3 | Qui conduit l'entretien de restitution | **Décidé par Amine le 20 octobre 2026** : deux packs. Pack A : retour personnalisé de Nezha Bentara, préparé et assisté en arrière-plan par un avatar. Pack B : entretien conduit par l'avatar entraîné par Nezha. Cadrage au § 9 bis | Le retour centré sur la personne est moins efficace sans cadrage (Kluger et DeNisi 1996). Le dossier de preuves ne contient aucune étude sur une restitution conduite par une IA : le bénéfice attendu du pack B (disponibilité, coût) est une hypothèse, à mesurer pendant un pilote |
 | D4 | Conventions de niveaux et d'écarts | Les valider par un psychométricien, puis les recalibrer dès qu'une norme existe | Les seuils du § 7.2 sont des conventions, pas des résultats |
 | D5 | Place dans l'offre commerciale, prix, positionnement | Ne rien figer avant D1 à D3 | Décision d'Amine ; ce document ne la prend pas |
 | D6 | Noms des deux rapports | À proposer par Tenga Conseil | Identité de marque ; éviter tout rapprochement avec MyPrint |
 
 Ces rapports s'insèrent dans le plan existant comme une suite du lot 4 (groupes) et du lot 6 (rendu PDF), plus une migration de consentement propre au binôme. Leur numérotation reste à inscrire dans `plan-implementation-espace-prive.md` après vos décisions.
 
-## 9 bis. Restitution par un avatar de Nezha Bentara : cadrage
+## 9 bis. Restitution : deux packs et leur cadrage
 
-Décision d'Amine du 20 octobre 2026. Elle change trois textes déjà écrits et ouvre cinq conditions.
+Décision d'Amine du 20 octobre 2026.
 
-**Ce qui change.** Les textes réservés dans l'espace `upcoming` de `fr.js` (lignes 739, 749 et 761), puis de `en.js` et `ar.js`, promettent aujourd'hui « un entretien de restitution avec un consultant Tenga », « le consultant restitue, explique et recadre » et « Restituer : un consultant Tenga remet son profil ». Aucun n'est vrai tel quel avec un avatar. La garantie de tiers de confiance, qui reposait sur une personne, devient une garantie sur un système. L'annexe « guide d'entretien » du § 5 devient le scénario du dialogue.
-
-**Les cinq conditions.**
-
-| N° | Condition | Recommandation |
+| | Pack A : retour personnalisé de Nezha, assistée par l'avatar | Pack B : entretien par l'avatar entraîné par Nezha |
 |---|---|---|
-| C1 | Accord de Nezha | Consentement écrit et révocable pour son image, sa voix et sa manière de conduire un entretien, avec le périmètre (usages, durée). L'accord de Nezha n'est pas acquis par cette note : il reste à obtenir d'elle |
-| C2 | Transparence | La personne sait dès le premier écran qu'elle parle à une IA. Recommandation : l'étiqueter « Assistant Tenga, entraîné sur l'approche de Nezha Bentara » plutôt que la présenter comme Nezha elle-même. Sans cela, la personne croit confier ses résultats à une personne identifiée et le texte de confiance de la voix de marque cesse d'être exact |
-| C3 | Ancrage | Le dialogue ne parle qu'à partir des blocs du rapport et des faits calculés. Le même audit que pour les rapports (lexique interdit, chaque nombre présent dans les entrées, aucune comparaison avec une population) s'applique en temps réel. Aucune improvisation sur la santé, l'aptitude ou une décision d'emploi |
-| C4 | Passage à un humain | Bouton permanent, et déclenchement automatique sur des signaux de détresse, avec un consultant humain joignable dans un délai annoncé. Sans cela, la mention « ce n'est pas un diagnostic » ne suffit pas, en particulier pour le névrosisme |
-| C5 | Données | La voix, l'image et les transcriptions sont des données personnelles : hébergement auto-hébergé, durée de conservation fixée, suppression de la transcription possible par la personne. La plateforme voix de Dīwān permet de cloner une voix déposée sur Sawt, piste à instruire pour la voix. Aucune solution souveraine d'avatar animé n'a été inventoriée ici : elle est à inventorier avant de promettre une image |
+| Qui parle à la personne | Nezha Bentara elle-même | Un avatar, entraîné sur son approche |
+| Rôle de l'IA | Prépare le guide d'entretien, les tensions à explorer, les questions, un brouillon de compte rendu : l'annexe consultant du § 5, en arrière-plan | Conduit le dialogue, à partir du rapport |
+| Ce que la personne voit | Un entretien avec une consultante, et un compte rendu validé par elle | Un assistant conversationnel, étiqueté comme tel |
+| Capacité | Limitée par le temps de Nezha ; l'assistance réduit sa préparation, sans que ce document en chiffre le gain | Non limitée par une personne, limitée par la qualité du dialogue |
+| Textes `upcoming` (« un consultant Tenga ») | Restent exacts | À remplacer par une formulation propre au pack B |
+
+Le tarif, le nom et la présentation commerciale des deux packs relèvent de D5 et ne sont pas traités ici. Les deux packs doivent être présentés comme deux prestations différentes, sans suggérer que le pack B est un entretien avec Nezha.
+
+**Les cinq conditions.** Elles pèsent surtout sur le pack B ; le tableau indique ce qui s'applique au pack A.
+
+| N° | Condition | Recommandation | Pack A |
+|---|---|---|---|
+| C1 | Accord de Nezha | Consentement écrit et révocable pour son image, sa voix et sa manière de conduire un entretien, avec le périmètre (usages, durée). Il n'est pas acquis par la décision d'Amine : il reste à obtenir d'elle | Accord sur l'entraînement de l'assistant à partir de son approche |
+| C2 | Transparence | La personne sait dès le premier écran qu'elle parle à une IA. Recommandation : « Assistant Tenga, entraîné sur l'approche de Nezha Bentara » plutôt que « Nezha ». Sans cela, la personne croit confier ses résultats à une personne identifiée et le texte de confiance de la voix de marque cesse d'être exact | La personne est informée que l'IA a préparé l'entretien |
+| C3 | Ancrage | Le dialogue ne parle qu'à partir des blocs du rapport et des faits calculés. Le même audit que pour les rapports (lexique interdit, chaque nombre présent dans les entrées, aucune comparaison avec une population) s'applique en temps réel. Aucune improvisation sur la santé, l'aptitude ou une décision d'emploi | Le brouillon passe le même audit et Nezha le valide avant remise |
+| C4 | Passage à un humain | Bouton permanent, et déclenchement automatique sur des signaux de détresse, avec un consultant humain joignable dans un délai annoncé. La mention « ce n'est pas un diagnostic » ne suffit pas, en particulier pour le névrosisme | Acquis par construction |
+| C5 | Données | La voix, l'image et les transcriptions sont des données personnelles : hébergement auto-hébergé, durée de conservation fixée, suppression de la transcription possible par la personne. La plateforme voix de Dīwān permet de cloner une voix déposée sur Sawt, piste à instruire pour la voix. Aucune solution souveraine d'avatar animé n'a été inventoriée ici : elle est à inventorier avant de promettre une image | S'applique aux notes et brouillons conservés |
+
+**Ordre recommandé.** Le pack A n'a besoin que de l'annexe consultant et de C1 pour l'assistance : il peut précéder le pack B. Le pack B attend C1 à C5 et un pilote qui mesure la qualité du dialogue contre le pack A, puisque le dossier de preuves ne dit rien d'une restitution conduite par une IA.
 
 Ces conditions sont des recommandations d'encadrement, pas un avis juridique : le droit à l'image et à la voix, l'information de la personne sur l'usage d'une IA et la base légale du traitement sont à faire instruire par Tenga Conseil avant le pilote.
 
@@ -263,3 +273,4 @@ Ces conditions sont des recommandations d'encadrement, pas un avis juridique : l
 2. Construire le jeu d'évaluation : 12 profils synthétiques (extrêmes, milieu, tension interne, réponses manquantes, incohérence) et 6 binômes (proches, opposés, tous au milieu, un profil peu fiable).
 3. Écrire les contrôles déterministes de l'audit, puis les désactiver un à un pour vérifier qu'au moins un test échoue (la pratique « vu rouge » du plan).
 4. Choisir le modèle sur cette éval, pas sur sa réputation.
+5. Obtenir l'accord écrit de Nezha (C1), puis outiller le pack A (annexe consultant), avant d'ouvrir le chantier de l'avatar du pack B.
