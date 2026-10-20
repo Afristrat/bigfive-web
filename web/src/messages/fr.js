@@ -1,68 +1,93 @@
+// Espaces insécables (U+00A0) avant les signes doubles et dans les guillemets.
 const french = {
   language: {
-    label: 'French',
-    locale: 'fr'
+    label: 'Langue'
+  },
+  a11y: {
+    skip: 'Aller au contenu',
+    mainNav: 'Navigation principale',
+    footerNav: 'Liens du pied de page'
+  },
+  theme: {
+    toDark: 'Passer au thème sombre',
+    toLight: 'Passer au thème clair'
+  },
+  footer: {
+    service: 'Un service de Tenga Conseil'
+  },
+  home: {
+    specimen: 'Exemple de restitution, valeurs fictives'
   },
   seo: {
     keywords:
-      'big five personality test, big 5 personality test, b5 test, bigfive test, personality traits, bigfive, compare, free, jordan peterson'
+      'test de personnalité, questionnaire de personnalité, Big Five, cinq grands facteurs, IPIP-NEO-120, évaluation de la personnalité, Tenga Conseil, Maroc'
   },
   frontpage: {
     seo: {
-      title: 'Test de personnalité Big Five',
+      title: 'Test de personnalité Big Five | Tenga Assessments',
       description:
-        'Passez le test de personnalité Big Five : découvrez vos traits de personnalité et comparez-vous à vos collègues, à votre équipe ou à vos proches.'
+        'Questionnaire de personnalité fondé sur le modèle des cinq grands facteurs (Big Five), proposé par Tenga Conseil, cabinet de conseil marocain, aux organisations qu’il accompagne.',
+      image_alt: 'Tenga Assessments, questionnaire de personnalité'
     },
-    title: 'Test de personnalité Big Five',
-    call_to_action: 'Faites le test gratuit maintenant',
-    no_registration: '* Aucune inscription requise',
-    tests_taken: 'Plus de <green>{n}</green> personnes ont passé le test',
-    compare: {
-      title: 'Comparez-vous aux autres',
-      text1:
-        'Comparez-vous avec votre partenaire, vos collègues, vos amis ou votre famille.',
-      text2:
-        'Découvrez en quoi vous vous différenciez des autres dans les cinq domaines:',
-      action: 'Regardez-le en direct en action'
-    },
-    share: 'Partagez avec vos amis et découvrez votre compatibilité',
-    cards: {
-      open: {
-        title: 'Ouvert',
-        text: "Il s'agit d'un projet open source sous licence MIT."
-      },
-      free: {
-        title: 'Gratuit',
-        text: 'Le test est totalement gratuit'
-      },
-      scientific: {
-        title: 'Scientifique',
-        text: 'BigFive est un modèle psychologique scientifiquement validé et fiable.'
-      }
-    },
+    call_to_action: 'Commencer le questionnaire',
     description: {
-      top: 'Lgagnez à mieux vous connaître grâce à un test de personnalité <violet>gratuit</violet> et open source.',
-      subtop: 'The',
-      subtop2:
-        ' is the most scientifically validated and reliable psychological model to measure personality.',
-      reference: `Tests and evaluation for this site is gathered from
-  <a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-  inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
-      info: 'Le test suivant contient 120 questions qui devraient vous prendre environ 10 minutes.',
-      result:
-        'After you have completed the test you will receive a detailed personality report in the following domains:',
-      tests_taken: 'tests taken so far'
+      top: 'Mieux comprendre votre façon d’agir, pour <violet>mieux travailler ensemble</violet>.',
+      reference:
+        'Questions et calcul des scores : International Personality Item Pool (<ipip>ipip.ori.org</ipip>), questionnaire IPIP-NEO-120 de John A. Johnson (2014), placé dans le domaine public.',
+      info: 'Un questionnaire de 120 affirmations, proposé par Tenga Conseil aux organisations qu’il accompagne. Il n’y a ni bonne ni mauvaise réponse, et aucune limite de temps.'
+    },
+    posts: {
+      subtitle: 'Repères sur la personnalité et le travail en équipe',
+      all: 'Voir tous les articles'
     }
   },
   about: {
     seo: {
-      title: 'About and the big five team',
+      title: 'À propos de Tenga Assessments',
       description:
-        'BigFive has a very active and engaged team that is constantly striving to push BigFive forward.'
+        'Tenga Assessments est le service d’évaluation de la personnalité de Tenga Conseil, cabinet de conseil marocain.'
+    },
+    title: 'À propos',
+    p1: 'Tenga Assessments est le service d’évaluation de la personnalité de Tenga Conseil, cabinet de conseil marocain. Il est proposé aux organisations que le cabinet accompagne : directions, équipes de ressources humaines, consultants.',
+    p2: 'Le questionnaire décrit la personnalité selon les cinq grands facteurs : ouverture à l’expérience, conscienciosité, extraversion, agréabilité et névrosisme, détaillés en trente facettes. Il reprend l’IPIP-NEO-120 de John A. Johnson (2014), issu de l’International Personality Item Pool et placé dans le domaine public.',
+    p3: 'Il est proposé en français et en arabe. Quelques formulations ont été adaptées au contexte marocain ; chacune conserve la facette mesurée et le sens de cotation de la question d’origine.',
+    p4: 'Les résultats décrivent des tendances habituelles de comportement. Ils ne mesurent pas des compétences et ne constituent pas un diagnostic.',
+    contact_faq:
+      'Une question ? Consultez d’abord les <link>questions fréquentes</link>.',
+    contact_email: 'Si vous n’y trouvez pas la réponse, écrivez-nous à {email}.'
+  },
+  faq: {
+    title: 'Questions fréquentes',
+    error: {
+      question: 'Une erreur s’est affichée sur le site : que faire ?',
+      answer: 'Décrivez-nous ce qui s’est passé par e-mail à {email}.'
+    },
+    print: {
+      question: 'Comment imprimer mes résultats ?',
+      answer:
+        'Depuis la page de résultats, utilisez la fonction d’impression de votre navigateur, ou enregistrez la page au format PDF.'
+    },
+    source: {
+      question: 'D’où viennent les questions ?',
+      answer:
+        'Les questions et le calcul des scores proviennent de l’International Personality Item Pool (ipip.ori.org), placé dans le domaine public : il s’agit de l’IPIP-NEO-120 de John A. Johnson (2014). Tenga Conseil a adapté quelques formulations au contexte marocain, sans changer ce que mesure chaque question.'
+    },
+    answers: {
+      question: 'Y a-t-il de bonnes et de mauvaises réponses ?',
+      answer:
+        'Non. Chaque affirmation décrit une manière d’être. Répondez selon ce qui vous ressemble habituellement, pas selon ce que vous aimeriez être.'
+    },
+    diagnosis: {
+      question: 'Le questionnaire établit-il un diagnostic ?',
+      answer:
+        'Non. Il décrit des tendances de comportement d’après vos propres réponses. Il ne mesure ni vos compétences, ni votre intelligence, ni votre santé.'
     }
   },
   toolbar: {
     home: 'Accueil',
+    home_aria: 'Accueil de Tenga Assessments',
+    open_menu: 'Ouvrir le menu',
+    close_menu: 'Fermer le menu',
     result: 'Résultat',
     compare: 'Comparer',
     articles: 'Articles',
@@ -70,31 +95,12 @@ const french = {
     about: 'À propos',
     see_results: 'Voir vos résultats',
     compare_with: 'Comparez avec les autres',
-    faq: 'FAQ'
-  },
-  facets: {
-    openness_to_experience: {
-      title: "Ouverture à l 'experience"
-    },
-    conscientiousness: {
-      title: 'Conscience'
-    },
-    extraversion: {
-      title: 'Extraversion'
-    },
-    agreeableness: {
-      title: 'Agréable'
-    },
-    neuroticism: {
-      title: 'Névrosisme'
-    }
+    faq: 'Questions fréquentes'
   },
   common: {
     and: 'et',
-    pages: 'pages',
-    languages: 'langages',
-    save: 'Save',
-    close: 'Close'
+    save: 'Enregistrer',
+    close: 'Fermer'
   },
   form: {
     information: 'Information',
@@ -120,16 +126,24 @@ const french = {
     toTestButton: 'Alrighty, take me to the test'
   },
   test: {
+    heading: 'Questionnaire de personnalité',
+    instructions:
+      'Pour chaque affirmation, indiquez dans quelle mesure elle vous décrit tel que vous êtes habituellement, et non tel que vous aimeriez être. Répondez spontanément.',
+    noTimeLimit: 'Sans limite de temps',
+    progress: 'Question {current} sur {total}',
     next: 'Suivant',
-    back: 'Retour',
-    more: 'Plus',
-    seeResults: 'Voir les résultats',
-    restored: 'Vos réponses ont été restaurées. Cliquez ici pour',
-    newTest: 'recommencer le test',
-    saveFailedTitle: 'Résultat non enregistré',
+    back: 'Précédent',
+    seeResults: 'Voir mes résultats',
+    saving: 'Enregistrement…',
+    dismiss: 'Masquer ce message',
+    restored:
+      'Nous avons retrouvé vos réponses enregistrées sur cet appareil. Vous pouvez reprendre là où vous en étiez, ou',
+    newTest: 'recommencer depuis le début',
+    saveFailedTitle: 'Vos réponses ne sont pas encore enregistrées',
     saveFailedText:
-      'Votre résultat n’a pas pu être enregistré, souvent parce que le site a été mis à jour pendant votre test. Vos réponses sont conservées sur cet appareil : rechargez la page, puis cliquez de nouveau sur le bouton des résultats.',
-    reload: 'Recharger la page'
+      'L’enregistrement a échoué, le plus souvent parce que le site a été mis à jour pendant que vous répondiez. Vos réponses restent conservées sur cet appareil : rechargez la page, puis cliquez de nouveau sur « Voir mes résultats ».',
+    reload: 'Recharger la page',
+    nextHelp: 'Choisissez une réponse pour passer à la suite.'
   },
   big_five: {
     title: 'What are the big five?',
@@ -139,7 +153,7 @@ const french = {
     }
   },
   openness_to_experience: {
-    title: "Ouverture à l 'experience",
+    title: 'Ouverture à l’expérience',
     seo: {
       title: 'Overview of the domain Openness To Experience.',
       description:
@@ -147,7 +161,7 @@ const french = {
     }
   },
   conscientiousness: {
-    title: 'Conscience',
+    title: 'Conscienciosité',
     seo: {
       title: 'Overview of the domain Conscientiousness',
       description:
@@ -162,14 +176,14 @@ const french = {
     }
   },
   agreeableness: {
-    title: 'Agréable',
+    title: 'Agréabilité',
     seo: {
       title: 'Overview of the domain Agreeableness',
       description: 'Read more about the agreeableness domain in the b5 model'
     }
   },
   neuroticism: {
-    title: 'Neuroticism',
+    title: 'Névrosisme',
     seo: {
       title: 'Overview of the domain Neuroticism',
       description: 'Read more about the Neuroticism domain in the b5 model'
@@ -188,21 +202,62 @@ const french = {
     comparePeople: 'comparer les gens',
     nameOfPerson: 'Nom de cette personne',
     urlOrId: 'URL ou ID pour comparaison',
-    name: 'Nom'
+    name: 'Nom',
+    invalidId:
+      'Saisissez un identifiant valide, qui ne figure pas déjà dans la liste.'
   },
   results: {
-    theBigFive: 'Les cinq grands',
-    score: 'But',
-    important: 'Important!',
+    title: 'Votre profil de personnalité',
+    overview: 'Vos cinq dimensions',
+    intro:
+      'Ces résultats décrivent vos tendances habituelles, d’après vos propres réponses. Ils ne mesurent ni vos compétences ni votre valeur, et ne constituent pas un diagnostic.',
+    scaleNote:
+      'Le trait vertical marque le milieu de l’échelle de réponse (3 sur 5).',
+    outOf: 'sur {max}',
+    level: {
+      low: 'bas',
+      neutral: 'au milieu',
+      high: 'élevé'
+    },
+    facets: 'Facettes',
+    learnMore: 'En savoir plus sur cette dimension',
+    contents: 'Sommaire',
+    neuroticismGloss:
+      'Sensibilité aux émotions négatives et au stress ; ce n’est pas un diagnostic.',
+    print: 'Imprimer ou enregistrer en PDF',
+    copyId: 'Copier l’identifiant',
+    loading: 'Chargement',
+    important: 'Important !',
     saveResults:
       "Enregistrez l'ID suivant pour voir les résultats plus tard ou",
     compare: 'comparer',
     toOthers: 'toi-même aux autres',
     seo: {
-      title: 'My results from the BigFive personality test',
+      title: 'Mes résultats au questionnaire Big Five',
       description:
-        'See my personality and compare yourself in the following five domains: Neuroticism, Openness To Experience, Conscientiousness, Extraversion, Agreeableness'
+        'Profil de personnalité selon les cinq grands facteurs : ouverture à l’expérience, conscienciosité, extraversion, agréabilité et névrosisme.'
     }
+  },
+  articles: {
+    back: 'Retour aux articles',
+    readingTime: '{minutes} min de lecture',
+    empty: 'Aucun article n’est encore publié dans cette langue.'
+  },
+  share: {
+    facebook: 'Partager sur Facebook',
+    x: 'Partager sur X',
+    mail: 'Envoyer le lien par e-mail',
+    copy: 'Copier le lien'
+  },
+  notFound: {
+    title: 'Page introuvable',
+    text: 'L’adresse demandée n’existe pas ou n’est plus disponible.',
+    home: 'Retour à l’accueil'
+  },
+  error: {
+    title: 'Une erreur est survenue',
+    text: 'Réessayez dans un instant. Si l’erreur persiste, écrivez-nous.',
+    retry: 'Réessayer'
   },
   getResult: {
     result: 'Résultat',
@@ -218,7 +273,7 @@ const french = {
     shareFacebook: 'Partager sur Facebook',
     shareTwitter: 'Partager sur Twitter',
     copiedLink: 'Lien copié',
-    shareResults: 'Partagez vos résultats!'
+    shareResults: 'Partagez vos résultats !'
   }
 };
 

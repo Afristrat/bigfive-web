@@ -49,12 +49,27 @@ const overrides: Record<string, Override> = {
 
 export type Item = ReturnType<typeof getItems>[number];
 
+// Coquille du paquet (data/fr/choices.js) : « Plutot » sans accent. Une
+// correction orthographique ne change pas la question posée, d'où l'absence de
+// nouvelle QUESTIONNAIRE_VERSION. L'alignement des échelles FR et AR attend la
+// décision 12 de docs/design/voix-de-marque.md.
+const fixFrenchChoice = (text: string): string =>
+  text.replace(/\bPlutot\b/g, 'Plutôt');
+
 export function getLocalizedItems(locale: string): Item[] {
   return getItems(locale).map((item) => {
     const text =
       locale === 'fr' || locale === 'ar'
         ? overrides[item.id]?.[locale]
         : undefined;
-    return text ? { ...item, text } : item;
+    const localized = text ? { ...item, text } : item;
+    if (locale !== 'fr') return localized;
+    return {
+      ...localized,
+      choices: localized.choices.map((choice) => ({
+        ...choice,
+        text: fixFrenchChoice(choice.text)
+      }))
+    };
   });
 }

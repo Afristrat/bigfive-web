@@ -2,14 +2,13 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Bigfive web',
-    short_name: 'Bigfive',
-    description:
-      'Learn to know yourself better with a free, open-source personality test.',
+    name: 'Tenga Assessments',
+    short_name: 'Tenga',
+    description: 'Questionnaire de personnalité de Tenga Conseil',
     start_url: '/',
     display: 'standalone',
-    background_color: '#ffffff',
-    theme_color: '#ff1cf7',
+    background_color: '#F7F6F3',
+    theme_color: '#1D5446',
     icons: [
       {
         src: '/favicon.ico',
@@ -19,7 +18,7 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         src: '/favicon-16x16.png',
         sizes: '16x16',
-        type: 'image/x-icon'
+        type: 'image/png'
       },
       {
         src: '/icon-192x192.png',

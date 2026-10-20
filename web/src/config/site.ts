@@ -85,9 +85,8 @@ export const languages: Language[] = [
 export const locales = languages.map((lang) => lang.code) as string[];
 
 export const siteConfig = {
-  name: 'Big Five Personality Test',
-  description:
-    'Learn to know yourself better with a free, open-source personality test.',
+  name: 'Tenga Assessments',
+  description: 'Questionnaire de personnalité de Tenga Conseil',
   navItems: [
     {
       label: 'home',

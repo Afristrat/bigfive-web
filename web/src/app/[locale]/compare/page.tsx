@@ -24,6 +24,7 @@ export default async function ComparePage({ params, searchParams }: Props) {
         <ComparePeople
           addPersonText={t('addPerson')}
           comparePeopleText={t('comparePeople')}
+          invalidIdText={t('invalidId')}
           paramId={id}
           edit={edit}
         />

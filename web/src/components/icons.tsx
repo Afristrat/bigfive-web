@@ -1,30 +1,34 @@
-import * as React from 'react';
+import clsx from 'clsx';
 import { IconSvgProps } from '@/types';
 
-// https://icon-sets.iconify.design
+// Icônes SVG en ligne : 20 px et trait de 1,5 par défaut, masquées des
+// technologies d'assistance (le nom vient toujours du contrôle qui les porte).
 
-export const Logo = ({ size = 36, width, height, ...props }: IconSvgProps) => (
-  <svg
-    height={size || height}
-    viewBox='0 0 490 490'
-    width={size || width}
-    {...props}
-  >
-    <path
-      d='M470.025,244.991c12.987-16.198,18.582-37.435,14.796-58.317c-3.962-21.851-17.372-40.168-36.264-50.546 c6.181-21.546,2.122-45.188-11.654-63.562c-13.628-18.171-35.332-29.02-58.059-29.02c-3.224,0-6.431,0.215-9.607,0.642 C358.08,17.889,332.001,0,302.501,0c-23.396,0-44.237,11.137-57.502,28.389C231.734,11.137,210.893,0,187.497,0 c-29.513,0-55.602,17.905-66.751,44.224c-3.184-0.426-6.401-0.64-9.641-0.64c-23.068,0-44.221,10.571-58.034,29.006 c-13.766,18.374-17.82,42.014-11.641,63.557c-18.893,10.377-32.301,28.698-36.263,50.562c-3.777,20.877,1.822,42.106,14.806,58.3 C6.986,261.207,1.39,282.443,5.177,303.327c3.962,21.851,17.372,40.167,36.263,50.544c-6.181,21.547-2.122,45.189,11.654,63.563 c13.629,18.171,35.333,29.02,58.059,29.02c3.223,0,6.43-0.215,9.606-0.642c11.158,26.3,37.236,44.188,66.738,44.188 c23.395,0,44.236-11.137,57.502-28.389C258.264,478.863,279.105,490,302.501,490c29.514,0,55.603-17.905,66.751-44.224 c3.184,0.426,6.401,0.64,9.641,0.64c23.068,0,44.223-10.572,58.035-29.006c13.765-18.374,17.819-42.014,11.64-63.556 c18.894-10.378,32.301-28.699,36.265-50.563C488.608,282.414,483.009,261.185,470.025,244.991z M229.999,417.5 c0,23.435-19.067,42.5-42.502,42.5c-20.303,0-37.839-14.45-41.697-34.359l-0.204-1.052c-0.39-2.328-0.597-4.707-0.597-7.089 c0-6.921,1.652-13.585,4.753-19.555c11.278,6.928,24.273,10.643,37.843,10.642l-0.002-30c-11.353,0.001-22.026-4.42-30.054-12.448 c-8.026-8.026-12.447-18.697-12.448-30.049l-30,0.004c0.001,14.705,4.361,28.736,12.45,40.635 c-7.921,11.596-12.275,25.229-12.512,39.542c-1.286,0.119-2.578,0.183-3.875,0.183c-13.533,0-25.947-6.203-34.058-17.018 c-9.982-13.313-11.259-31.352-3.253-45.955l3.562-6.497l-6.065-13.821l-6.733-1.972c-15.561-4.557-27.021-17.284-29.91-33.216 c-2.529-13.949,2.101-28.156,12.13-37.975h69.731c2.855,13.641,9.588,26.178,19.671,36.263 c13.153,13.105,31.28,21.237,51.27,21.237h42.5V417.5z M229.999,287.5h-42.5c-22.631,0-41.183-17.782-42.429-40.108 c-0.004-0.074-0.012-0.147-0.016-0.222c-0.036-0.719-0.055-1.442-0.055-2.169c0-11.353,4.422-22.025,12.449-30.051l-21.212-21.215 C126.15,203.82,119.416,216.358,116.559,230h-69.75c-10.017-9.816-14.643-24.012-12.123-37.946 c2.889-15.94,14.35-28.672,29.91-33.227l6.735-1.971l6.063-13.821l-3.562-6.496c-8.005-14.603-6.731-32.644,3.246-45.96 c8.093-10.801,20.495-16.995,34.025-16.995c1.316,0,2.625,0.065,3.925,0.185c0.244,14.299,4.597,27.917,12.511,39.503 c-8.089,11.899-12.449,25.929-12.45,40.635l30,0.004c0.001-11.352,4.422-22.022,12.448-30.049 c8.028-8.027,18.7-12.448,30.051-12.448c0.003,0,0.005-30,0.005-30c-13.573,0-26.565,3.715-37.843,10.642 c-3.1-5.971-4.751-12.635-4.751-19.556c0-2.373,0.206-4.744,0.593-7.063l0.209-1.077C149.658,44.45,167.195,30,187.497,30 c23.435,0,42.502,19.065,42.502,42.5V287.5z M259.999,72.502c0-23.437,19.066-42.502,42.502-42.502 c20.303,0,37.839,14.45,41.698,34.36l0.201,1.039c0.391,2.332,0.599,4.715,0.599,7.101c0,6.921-1.651,13.585-4.753,19.555 c-11.278-6.927-24.273-10.643-37.843-10.642l0.002,30c11.353-0.001,22.025,4.42,30.054,12.449 c8.026,8.024,12.446,18.696,12.448,30.048l30-0.004c-0.002-14.706-4.362-28.737-12.45-40.635 c7.921-11.596,12.275-25.229,12.512-39.541c1.286-0.119,2.578-0.183,3.876-0.183c13.533,0,25.946,6.203,34.058,17.018 c9.981,13.313,11.259,31.352,3.253,45.955l-3.57,6.513l3.015,6.787l3.06,7.019l6.733,1.972 c15.561,4.557,27.021,17.284,29.909,33.217c2.53,13.948-2.1,28.156-12.131,37.974h-69.731 c-2.855-13.641-9.588-26.178-19.672-36.264c-13.154-13.104-31.28-21.236-51.27-21.236h-42.5V72.502z M455.311,297.945 c-2.89,15.941-14.35,28.673-29.909,33.228l-6.719,1.967l-6.072,13.841l3.553,6.48c8.006,14.603,6.731,32.644-3.245,45.96 c-8.094,10.802-20.495,16.996-34.026,16.995c-1.316,0-2.624-0.065-3.924-0.185c-0.244-14.298-4.598-27.917-12.511-39.502 c8.089-11.899,12.448-25.929,12.451-40.635l-30-0.004c-0.002,11.352-4.422,22.023-12.449,30.049 c-8.026,8.027-18.698,12.448-30.05,12.448c-0.003,0-0.005,30-0.005,30c13.573,0,26.566-3.715,37.843-10.642 c3.101,5.97,4.753,12.634,4.753,19.555c0,2.385-0.208,4.768-0.599,7.101l-0.202,1.041C340.34,445.55,322.803,460,302.501,460 c-23.436,0-42.502-19.065-42.502-42.5v-215h42.5c22.631,0,41.183,17.782,42.429,40.108c0.004,0.074,0.012,0.147,0.016,0.222 c0.036,0.719,0.055,1.442,0.055,2.169c0,11.353-4.421,22.025-12.449,30.051l21.211,21.215 c10.086-10.085,16.822-22.623,19.678-36.265h69.75C453.205,269.816,457.832,284.012,455.311,297.945z'
-      fill='currentColor'
-    />
-  </svg>
+// Mot-symbole provisoire en attendant le logo de Tenga Conseil (direction § 12, point 1).
+export const Wordmark = ({ className }: { className?: string }) => (
+  <span className={clsx('inline-flex items-baseline gap-2', className)}>
+    <bdi
+      dir='ltr'
+      className='text-[1.25rem] font-semibold tracking-[-0.01em] text-encre'
+    >
+      Tenga
+    </bdi>
+    <bdi dir='ltr' className='text-petit text-texte-3'>
+      Assessments
+    </bdi>
+  </span>
 );
 
 export const TwitterIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => {
   return (
     <svg
+      aria-hidden='true'
+      focusable='false'
       height={size || height}
       viewBox='0 0 24 24'
       width={size || width}
@@ -39,12 +43,14 @@ export const TwitterIcon = ({
 };
 
 export const LinkedInIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
     width={size || width}
     height={size || height}
     viewBox='0 0 24 24'
@@ -58,12 +64,14 @@ export const LinkedInIcon = ({
 );
 
 export const FacebookIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
     width={size || width}
     height={size || height}
     viewBox='0 0 24 24'
@@ -77,12 +85,14 @@ export const FacebookIcon = ({
 );
 
 export const MastadonIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
     width={size || width}
     height={size || height}
     viewBox='0 0 24 24'
@@ -96,7 +106,7 @@ export const MastadonIcon = ({
 );
 
 export const MoonFilledIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
@@ -105,7 +115,6 @@ export const MoonFilledIcon = ({
     aria-hidden='true'
     focusable='false'
     height={size || height}
-    role='presentation'
     viewBox='0 0 24 24'
     width={size || width}
     {...props}
@@ -118,7 +127,7 @@ export const MoonFilledIcon = ({
 );
 
 export const SunFilledIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
@@ -127,7 +136,6 @@ export const SunFilledIcon = ({
     aria-hidden='true'
     focusable='false'
     height={size || height}
-    role='presentation'
     viewBox='0 0 24 24'
     width={size || width}
     {...props}
@@ -140,19 +148,23 @@ export const SunFilledIcon = ({
 );
 
 export const ArrowRightIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
+  className,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
+    className={clsx('rtl:-scale-x-100', className)}
     xmlns='http://www.w3.org/2000/svg'
     width={size || width}
     height={size || height}
     viewBox='0 0 24 24'
     fill='none'
     stroke='currentColor'
-    strokeWidth='2'
+    strokeWidth='1.5'
     strokeLinecap='round'
     strokeLinejoin='round'
     {...props}
@@ -162,75 +174,15 @@ export const ArrowRightIcon = ({
   </svg>
 );
 
-export const LogosOpensource = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => {
-  return (
-    <svg
-      xmlns='http://www.w3.org/2000/svg'
-      width={size || width}
-      height={size || height}
-      viewBox='0 0 256 248'
-      {...props}
-    >
-      <path
-        fill='currentColor'
-        d='M143.337 167.832c22.063-8.473 33.082-33.231 24.612-55.301c-8.47-22.07-33.222-33.092-55.284-24.62c-22.063 8.473-33.081 33.232-24.612 55.302a42.796 42.796 0 0 0 24.612 24.619l-28.823 75.13C20.3 218.564-11.44 147.26 12.949 83.698c24.389-63.562 95.67-95.311 159.212-70.915c63.541 24.397 95.281 95.7 70.892 159.262a123.254 123.254 0 0 1-70.892 70.915z'
-      ></path>
-    </svg>
-  );
-};
-
-export const MoneyIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => (
-  <svg
-    xmlns='http://www.w3.org/2000/svg'
-    width={size || width}
-    height={size || height}
-    viewBox='0 0 56 56'
-    {...props}
-  >
-    <path
-      fill='currentColor'
-      d='M28 4c13.255 0 24 10.745 24 24S41.255 52 28 52S4 41.255 4 28S14.745 4 28 4m0 4C16.954 8 8 16.954 8 28s8.954 20 20 20s20-8.954 20-20S39.046 8 28 8m.573 6.286v2.687c3.976.319 6.855 2.704 6.982 6.314h-3.308c-.207-2.004-1.638-3.165-3.674-3.419V26.5l.764.19c4.183.971 6.473 2.689 6.473 6.076c0 3.897-3.181 6.107-7.237 6.394v2.671h-1.797V39.16c-4.04-.303-7.236-2.577-7.347-6.394h3.292c.286 1.861 1.495 3.229 4.055 3.5V29.33l-.652-.16c-4.04-.937-6.218-2.75-6.218-5.979c0-3.563 2.862-5.916 6.87-6.219v-2.687zm0 15.458v6.537c2.72-.207 3.865-1.495 3.865-3.197c0-1.638-.89-2.608-3.865-3.34m-1.797-9.876c-2.29.286-3.499 1.606-3.499 3.054c0 1.447.955 2.512 3.5 3.149z'
-    />
-  </svg>
-);
-
-export const ExperimentIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => (
-  <svg
-    xmlns='http://www.w3.org/2000/svg'
-    width={size || width}
-    height={size || height}
-    viewBox='0 0 24 24'
-    {...props}
-  >
-    <path
-      fill='currentColor'
-      d='M5 21q-1.275 0-1.812-1.137t.262-2.113L9 11V5H8q-.425 0-.712-.288T7 4q0-.425.288-.712T8 3h8q.425 0 .713.288T17 4q0 .425-.288.713T16 5h-1v6l5.55 6.75q.8.975.263 2.113T19 21zm2-3h10l-3.4-4h-3.2zm-2 1h14l-6-7.3V5h-2v6.7zm7-7'
-    />
-  </svg>
-);
-
 export const ResultIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
     width={size || width}
     height={size || height}
     viewBox='0 0 32 32'
@@ -248,12 +200,14 @@ export const ResultIcon = ({
 );
 
 export const PersonIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
     width={size || width}
     height={size || height}
     viewBox='0 0 24 24'
@@ -266,37 +220,19 @@ export const PersonIcon = ({
   </svg>
 );
 
-export const InfoIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => (
-  <svg
-    width={size || width}
-    height={size || height}
-    viewBox='0 0 24 24'
-    {...props}
-  >
-    <path
-      fill='currentColor'
-      d='M11 17h2v-6h-2zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22'
-    />
-  </svg>
-);
-
 export const ChevronRightLinearIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
+  className,
   ...props
 }: IconSvgProps) => (
   <svg
     aria-hidden='true'
-    fill='none'
     focusable='false'
+    className={clsx('rtl:-scale-x-100', className)}
+    fill='none'
     height={height || size}
-    role='presentation'
     viewBox='0 0 24 24'
     width={width || size}
     {...props}
@@ -312,42 +248,15 @@ export const ChevronRightLinearIcon = ({
   </svg>
 );
 
-export const PlusLinearIcon = ({
-  size = 24,
+export const EditIcon = ({
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
     aria-hidden='true'
-    fill='none'
     focusable='false'
-    height={size || height}
-    role='presentation'
-    viewBox='0 0 24 24'
-    width={size || width}
-    {...props}
-  >
-    <g
-      fill='none'
-      stroke='currentColor'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-      strokeWidth={1.5}
-    >
-      <path d='M6 12h12' />
-      <path d='M12 18V6' />
-    </g>
-  </svg>
-);
-
-export const EditIcon = ({
-  size = 24,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => (
-  <svg
     width={size || width}
     height={size || height}
     viewBox='0 0 24 24'
@@ -364,12 +273,14 @@ export const EditIcon = ({
 );
 
 export const DeleteIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
     width={size || width}
     height={size || height}
     viewBox='0 0 24 24'
@@ -383,17 +294,16 @@ export const DeleteIcon = ({
 );
 
 export const PDFIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
     aria-hidden='true'
-    fill='none'
     focusable='false'
+    fill='none'
     height={size || height}
-    role='presentation'
     viewBox='0 0 15 15'
     width={size || width}
     {...props}
@@ -406,18 +316,18 @@ export const PDFIcon = ({
 );
 
 export const CopyIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
     width={size || width}
     height={size || height}
     viewBox='0 0 24 24'
-    aria-hidden='true'
     fill='none'
-    focusable='false'
     {...props}
   >
     <g
@@ -425,7 +335,7 @@ export const CopyIcon = ({
       stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
-      strokeWidth='2'
+      strokeWidth='1.5'
     >
       <path d='M7 9.667A2.667 2.667 0 0 1 9.667 7h8.666A2.667 2.667 0 0 1 21 9.667v8.666A2.667 2.667 0 0 1 18.333 21H9.667A2.667 2.667 0 0 1 7 18.333z' />
       <path d='M4.012 16.737A2 2 0 0 1 3 15V5c0-1.1.9-2 2-2h10c.75 0 1.158.385 1.5 1' />
@@ -434,17 +344,17 @@ export const CopyIcon = ({
 );
 
 export const CloseIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
     width={size || width}
     height={size || height}
     viewBox='0 0 32 32'
-    aria-hidden='true'
-    focusable='false'
     {...props}
   >
     <path
@@ -455,17 +365,17 @@ export const CloseIcon = ({
 );
 
 export const MailIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
     width={size || width}
     height={size || height}
     viewBox='0 0 24 24'
-    aria-hidden='true'
-    focusable='false'
     {...props}
   >
     <path
@@ -476,17 +386,17 @@ export const MailIcon = ({
 );
 
 export const DotsIcon = ({
-  size = 24,
+  size = 20,
   width,
   height,
   ...props
 }: IconSvgProps) => (
   <svg
+    aria-hidden='true'
+    focusable='false'
     width={size || width}
     height={size || height}
     viewBox='0 0 20 20'
-    aria-hidden='true'
-    focusable='false'
     {...props}
   >
     <g fill='currentColor'>

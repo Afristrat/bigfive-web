@@ -9,9 +9,7 @@ test('la page d’accueil répond en 200', async ({ page }) => {
 test('/fr/test affiche la première question', async ({ page }) => {
   const response = await page.goto('/fr/test');
   expect(response?.status()).toBe(200);
-  await expect(
-    page.getByRole('progressbar')
-  ).toBeVisible();
+  await expect(page.getByRole('progressbar')).toBeVisible();
   const question = page.getByRole('heading', { level: 2 }).first();
   await expect(question).toBeVisible();
   await expect(question).not.toHaveText('');

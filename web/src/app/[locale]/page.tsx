@@ -1,31 +1,35 @@
-import { Link } from '@nextui-org/link';
-import { button as buttonStyles } from '@nextui-org/theme';
-import { title, subtitle } from '@/components/primitives';
-import clsx from 'clsx';
-import { FeaturesGrid } from '@/components/features-grid';
-import {
-  ExperimentIcon,
-  LogosOpensource,
-  MoneyIcon,
-  PlusLinearIcon
-} from '@/components/icons';
-import { ArrowRightIcon } from '@/components/icons';
-import { locales } from '@/config/site';
 import { compareDesc } from 'date-fns';
 import { allPosts } from 'contentlayer/generated';
-import { PostCard } from '@/components/post-card';
-import { SonarPulse } from '@/components/sonar-pulse';
-import { Button } from '@nextui-org/button';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Chip, Tooltip } from '@nextui-org/react';
-import NextLink from 'next/link';
-import { Translated } from '@/components/translated';
+import {
+  boutonPrincipal,
+  heading,
+  subtitle,
+  title
+} from '@/components/primitives';
+import { ArrowRightIcon } from '@/components/icons';
+import { PostListItem } from '@/components/post-list-item';
+import { ScoreRule } from '@/components/score-rule';
+import { Link } from '@/navigation';
 import { basePath } from '@/config/site';
-import { getTranslationLocale } from '@/lib/helpers';
+import { DomainCode, domainLabel } from '@/lib/domain-labels';
+import { formatNombre } from '@/lib/format';
+import { niveauDeScore } from '@/lib/niveau';
 
 interface HomeProps {
   params: Promise<{ locale: string }>;
 }
+
+const servedLocales = ['fr', 'ar', 'en'];
+
+// Valeurs d'exemple, affichées comme telles.
+const specimen: { code: DomainCode; score: number }[] = [
+  { code: 'N', score: 87 },
+  { code: 'E', score: 64 },
+  { code: 'O', score: 101 },
+  { code: 'A', score: 58 },
+  { code: 'C', score: 79 }
+];
 
 export async function generateMetadata({ params }: HomeProps) {
   const { locale } = await params;
@@ -33,7 +37,7 @@ export async function generateMetadata({ params }: HomeProps) {
   return {
     alternates: {
       canonical: basePath + localePath,
-      languages: locales.reduce(
+      languages: servedLocales.reduce(
         (a, v) => ({ ...a, [v]: `${basePath}/${v}` }),
         {}
       )
@@ -45,240 +49,93 @@ export default async function Home({ params }: HomeProps) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('frontpage');
-  const f = await getTranslations('facets');
+  const r = await getTranslations('results');
+  const h = await getTranslations('home');
+  const toolbar = await getTranslations('toolbar');
 
-  const translationLocale = getTranslationLocale(locale);
-
-  const localizedPosts = allPosts.filter(
-    (post) => post.locale === translationLocale
-  );
-
-  const posts = localizedPosts
+  // Articles seulement dans la langue exacte de la page (aucun en FR ni en AR).
+  const posts = allPosts
+    .filter((post) => post.locale === locale)
     .sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)))
     .slice(0, 3);
 
-  const features = [
-    {
-      title: t('cards.open.title'),
-      description: t('cards.open.text'),
-      icon: LogosOpensource({})
-    },
-    {
-      title: t('cards.free.title'),
-      description: t('cards.free.text'),
-      icon: MoneyIcon({})
-    },
-    {
-      title: t('cards.scientific.title'),
-      description: t('cards.scientific.text'),
-      icon: ExperimentIcon({})
-    }
-  ];
-
-  const titleDescription = t.rich('description.top', {
-    violet: (chunks) => (
-      <span className={title({ color: 'violet' })}>{chunks}</span>
-    )
-  });
+  const surMax = r('outOf', { max: formatNombre(120, locale) });
 
   return (
-    <section className='relative'>
-      <div>
-        <section className='flex flex-col items-center justify-center gap-4'>
-          <div className='flex relative z-20 flex-col gap-6 w-full lg:w-1/2 xl:mt-10'>
-            <div className='text-center justify-center mt-4 md:mt-10'>
-              <h1 className={title()}>{titleDescription}</h1>
-              <br />
-              <h2 className={subtitle({ class: 'mt-4' })}>
-                {t('description.info')}
-              </h2>
-            </div>
-
-            <div className='flex flex-col md:flex-row items-center gap-4 justify-center'>
-              <Link
-                href='/test'
-                className={clsx(
-                  buttonStyles({
-                    color: 'primary',
-                    radius: 'full',
-                    variant: 'shadow',
-                    size: 'lg',
-                    fullWidth: true
-                  }),
-                  'md:w-auto',
-                  'animate-shadow-pulse'
-                )}
-              >
-                {t('call_to_action')} <ArrowRightIcon />
-              </Link>
-            </div>
-          </div>
-
-          <div className='font-normal text-default-500 block max-w-full text-center underline md:mb-8'>
-            {t('no_registration')}
-          </div>
-        </section>
-
-        <div className='mt-20 mx-2'>
-          <FeaturesGrid features={features} />
-        </div>
-      </div>
-
-      <section className='border-t border-b border-divider px-8 mt-16 lg:mt-44 text-center'>
-        <div className='my-8'>
-        </div>
-      </section>
-
-      <div className='mt-20 text-center'>
-        <h1 className={title()}>{t('compare.title')}</h1>
-
-        <div className='mt-10'>
-          <div className='text-lg lg:text-xl font-normal text-default-500'>
-            {t('compare.text1')} {t('compare.text2')}
-          </div>
-        </div>
-      </div>
-
-      <div className='text-center h-64 md:h-80 mt-44 md:mt-56'>
-        <SonarPulse
-          color='#7928CA'
-          icon={
-            <Tooltip
-              showArrow
-              color='secondary'
-              content={t('call_to_action')}
-              offset={10}
-              radius='full'
-            >
-              <Button
-                isIconOnly
-                aria-label={t('call_to_action')}
-                className='z-50 w-auto h-auto bg-gradient-to-b from-[#FF1CF7] to-[#7928CA]'
-                radius='full'
-                as={Link}
-                href='/test'
-              >
-                <PlusLinearIcon
-                  className='flex items-center justify-center rounded-full text-white'
-                  size={54}
-                />
-              </Button>
-            </Tooltip>
-          }
-        >
-          <div
-            className='absolute rounded-full'
-            dir='ltr'
-            style={{
-              width: '130px',
-              top: 130 / 6,
-              left: -120
-            }}
-          >
-            {buildCircle([
-              {
-                name: f('openness_to_experience.title'),
-                href: '/articles/openness_to_experience'
-              },
-              {
-                name: f('conscientiousness.title'),
-                href: '/articles/conscientiousness'
-              },
-              { name: f('extraversion.title'), href: '/articles/extraversion' },
-              {
-                name: t('compare.action'),
-                href: '/compare'
-              },
-              {
-                name: f('agreeableness.title'),
-                href: '/articles/agreeableness'
-              },
-              { name: f('neuroticism.title'), href: '/articles/neuroticism' }
-            ]).map((e, idx) => (
-              <div key={idx}>
-                <Button
-                  key={idx}
-                  name={e.name}
-                  color='secondary'
-                  style={e.style}
-                  className='absolute hidden md:inline-flex'
-                  as={Link}
-                  variant='flat'
-                  radius='full'
-                  href={e.href}
-                  aria-label={e.name}
-                >
-                  {e.name}
-                </Button>
-                <Chip
-                  size='sm'
-                  color='secondary'
-                  variant='shadow'
-                  aria-label={e.name}
-                  classNames={{
-                    base: 'absolute md:hidden rounded-full left-[85px]',
-                    content: 'drop-shadow shadow-black text-white w-full w-36'
-                  }}
-                  style={e.smallStyle}
-                  as={Link}
-                  href={e.href}
-                >
-                  {e.name}
-                </Chip>
-              </div>
-            ))}
-          </div>
-        </SonarPulse>
-      </div>
-
-      <div className='text-center mx-2 mt-8'>
-        <Link href='/articles' color='foreground'>
-          <h1 className={title()}>Latest posts</h1>
-        </Link>
-        <h2 className={subtitle({ class: 'mt-4' })}>
-          All the latest and greatest news and articles on #personality
-        </h2>
-        <div className='mt-10 grid gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]'>
-          {posts.map((post, idx) => (
-            <PostCard key={idx} {...post} />
-          ))}
-        </div>
-        <div className='mt-10'>
-          <Link
-            isBlock
-            as={NextLink}
-            className='mb-8 -ml-3 text-default-500 hover:text-default-900 text-lg'
-            color='foreground'
-            href='/articles'
-            size='md'
-          >
-            Show all articles ...
+    <>
+      <section className='grid gap-12 pt-6 md:pt-12 lg:grid-cols-12 lg:items-center lg:gap-16'>
+        <div className='lg:col-span-7'>
+          <h1 className={title({ size: 'display' }) + ' [font-stretch:90%]'}>
+            {t.rich('description.top', { violet: (chunks) => chunks })}
+          </h1>
+          <p className={subtitle()}>{t('description.info')}</p>
+          <Link href='/test' className={boutonPrincipal({ class: 'mt-8' })}>
+            {t('call_to_action')}
+            <ArrowRightIcon />
           </Link>
         </div>
-      </div>
+        <figure
+          aria-describedby='specimen-legende'
+          className='rounded-panneau border border-trait bg-surface p-6 md:p-8 lg:col-span-5'
+        >
+          <ul className='flex flex-col gap-5'>
+            {specimen.map(({ code, score }, index) => (
+              <li key={code}>
+                <ScoreRule
+                  label={domainLabel(code, locale, 'short')}
+                  score={score}
+                  min={24}
+                  max={120}
+                  valeur={formatNombre(score, locale)}
+                  surMax={surMax}
+                  niveau={r(`level.${niveauDeScore(score, 24)}`)}
+                  anime
+                  rang={index}
+                />
+              </li>
+            ))}
+          </ul>
+          <figcaption
+            id='specimen-legende'
+            className='mt-6 text-legende text-texte-3'
+          >
+            {h('specimen')}
+          </figcaption>
+        </figure>
+      </section>
 
-      <Translated />
-    </section>
+      <section className='mt-24 border-t border-trait pt-12'>
+        <p className='colonne-lecture text-petit text-texte-2 [&_a]:text-accent [&_a]:underline'>
+          {t.rich('description.reference', {
+            ipip: (chunks) => (
+              <a
+                href='https://ipip.ori.org'
+                rel='noopener noreferrer'
+                target='_blank'
+              >
+                {chunks}
+              </a>
+            )
+          })}
+        </p>
+      </section>
+
+      {posts.length > 0 && (
+        <section className='mt-24'>
+          <h2 className={heading()}>{toolbar('articles')}</h2>
+          <ul className='mt-4 divide-y divide-trait'>
+            {posts.map((post) => (
+              <PostListItem key={post._id} post={post} locale={locale} />
+            ))}
+          </ul>
+          <Link
+            href='/articles'
+            className='mt-4 inline-flex text-petit font-medium text-accent hover:text-accent-survol hover:underline'
+          >
+            {t('posts.all')}
+          </Link>
+        </section>
+      )}
+    </>
   );
 }
-const buildCircle = (list: { name: string; href: string }[]) => {
-  const num = list.length; // Number of Avatars
-  const radius = 180; // Distance from center
-  const start = -90; // Shift start from 0
-  const slice = 360 / num;
-
-  return list.map((item, idx) => {
-    const rotate = slice * idx + start;
-    return {
-      name: item.name,
-      href: item.href,
-      style: {
-        transform: `rotate(${rotate}deg) translate(${radius - 20}px) rotate(${-rotate}deg)`,
-        width: '195px'
-      },
-      smallStyle: {
-        transform: `rotate(${rotate}deg) translate(${radius - 60}px) rotate(${-rotate}deg)`
-      }
-    };
-  });
-};

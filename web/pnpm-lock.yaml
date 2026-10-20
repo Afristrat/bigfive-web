@@ -33,21 +33,9 @@ importers:
       '@emotion/is-prop-valid':
         specifier: 1.2.2
         version: 1.2.2
-      '@nextui-org/accordion':
-        specifier: 2.2.7
-        version: 2.2.7(@nextui-org/system@2.4.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@nextui-org/avatar':
-        specifier: 2.2.6
-        version: 2.2.6(@nextui-org/system@2.4.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@nextui-org/button':
         specifier: 2.2.9
         version: 2.2.9(@nextui-org/system@2.4.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@nextui-org/card':
-        specifier: 2.2.9
-        version: 2.2.9(@nextui-org/system@2.4.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@nextui-org/code':
-        specifier: 2.2.6
-        version: 2.2.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@nextui-org/dropdown':
         specifier: 2.3.9
         version: 2.3.9(@nextui-org/system@2.4.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -78,18 +66,12 @@ importers:
       '@nextui-org/react':
         specifier: 2.6.11
         version: 2.6.11(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@types/react@19.3.0)(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@3.4.19)
-      '@nextui-org/select':
-        specifier: 2.4.9
-        version: 2.4.9(@nextui-org/system@2.4.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@nextui-org/snippet':
         specifier: 2.2.10
         version: 2.2.10(@nextui-org/system@2.4.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@nextui-org/spinner':
         specifier: 2.2.6
         version: 2.2.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@nextui-org/switch':
-        specifier: 2.2.8
-        version: 2.2.8(@nextui-org/system@2.4.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@nextui-org/system':
         specifier: 2.4.6
         version: 2.4.6(@nextui-org/theme@2.4.5(tailwindcss@3.4.19))(@react-spectrum/provider@3.11.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(framer-motion@11.18.2(@emotion/is-prop-valid@1.2.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -105,21 +87,12 @@ importers:
       '@react-aria/ssr':
         specifier: 3.9.4
         version: 3.9.4(react@19.3.1)
-      '@react-aria/visually-hidden':
-        specifier: 3.8.12
-        version: 3.8.12(react@19.3.1)
       apexcharts:
         specifier: 3.49.1
         version: 3.49.1
-      canvas-confetti:
-        specifier: 1.9.3
-        version: 1.9.3
       clsx:
         specifier: 2.1.1
         version: 2.1.1
-      color2k:
-        specifier: 2.0.3
-        version: 2.0.3
       date-fns:
         specifier: 3.6.0
         version: 3.6.0
@@ -163,9 +136,6 @@ importers:
       '@playwright/test':
         specifier: 1.63.0
         version: 1.63.0
-      '@types/canvas-confetti':
-        specifier: 1.6.4
-        version: 1.6.4
       '@types/node':
         specifier: 20.12.12
         version: 20.12.12
@@ -1758,11 +1728,6 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@react-aria/interactions@3.21.3':
-    resolution: {integrity: sha512-BWIuf4qCs5FreDJ9AguawLVS0lV9UU+sK4CCnbCNNmYqOWY+1+gRXCsnOM32K+oMESBxilAjdHW5n1hsMqYMpA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-
   '@react-aria/interactions@3.22.5':
     resolution: {integrity: sha512-kMwiAD9E0TQp+XNnOs13yVJghiy8ET8L0cbkeuTgNI96sOAp/63EJ1FSrDf17iD8sdjt41LafwX/dKXW9nCcLQ==}
     peerDependencies:
@@ -1946,20 +1911,10 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@react-aria/utils@3.24.1':
-    resolution: {integrity: sha512-O3s9qhPMd6n42x9sKeJ3lhu5V1Tlnzhu6Yk8QOvDuXf7UGuUjXf9mzfHJt1dYzID4l9Fwm8toczBzPM9t0jc8Q==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-
   '@react-aria/utils@3.26.0':
     resolution: {integrity: sha512-LkZouGSjjQ0rEqo4XJosS4L3YC/zzQkfRM3KoqK6fUOmUJ9t0jQ09WjiF+uOoG9u+p30AVg3TrZRUWmoTS+koQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
-  '@react-aria/visually-hidden@3.8.12':
-    resolution: {integrity: sha512-Bawm+2Cmw3Xrlr7ARzl2RLtKh0lNUdJ0eNqzWcyx4c0VHUAWtThmH5l+HRqFUGzzutFZVo89SAy40BAbd0gjVw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
 
   '@react-aria/visually-hidden@3.8.18':
     resolution: {integrity: sha512-l/0igp+uub/salP35SsNWq5mGmg3G5F5QMS1gDZ8p28n7CgjvzyiGhJbbca7Oxvaw1HRFzVl9ev+89I7moNnFQ==}
@@ -2190,11 +2145,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@react-stately/utils@3.10.1':
-    resolution: {integrity: sha512-VS/EHRyicef25zDZcM/ClpzYMC5i2YGN6uegOeQawmgfGjb02yaCX0F0zR69Pod9m2Hr3wunTbtpgVXvYbZItg==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
-
   '@react-stately/utils@3.10.5':
     resolution: {integrity: sha512-iMQSGcpaecghDIh3mZEpZfoFH3ExBwTtuBEcvZ2XnGzCgQjeYXcMdIUwAfVQLXFTdHUHGF6Gu6/dFrYsCzySBQ==}
     peerDependencies:
@@ -2334,11 +2284,6 @@ packages:
     resolution: {integrity: sha512-RGsYj2oFjXpLnfcvWMBQnkcDuKkwT43xwYWZGI214/gp/B64tJiIUgTM5wFTRAeGDX23EePkhCQF+9ctnqFd6g==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
-  '@react-types/shared@3.23.1':
-    resolution: {integrity: sha512-5d+3HbFDxGZjhbMBeFHRQhexMFt4pUce3okyRtUVKbbedQFUrtXSBg9VszgF2RTeQDKDkMCIQDtz5ccP/Lk1gw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
 
   '@react-types/shared@3.26.0':
     resolution: {integrity: sha512-6FuPqvhmjjlpEDLTiYx29IJCbCNWPlsyO+ZUmCUXzhUv2ttShOXfw8CmeHWHftT/b2KweAWuzqSlfeXPR76jpw==}
@@ -2517,9 +2462,6 @@ packages:
 
   '@tanstack/virtual-core@3.11.2':
     resolution: {integrity: sha512-vTtpNt7mKCiZ1pwU9hfKPhpdVO2sVzFQsxoVBGtOSHxlrRRzYr8iQ2TlwbAcRYCcEiZ9ECAM8kBzH0v2+VzfKw==}
-
-  '@types/canvas-confetti@1.6.4':
-    resolution: {integrity: sha512-fNyZ/Fdw/Y92X0vv7B+BD6ysHL4xVU5dJcgzgxLdGbn8O3PezZNIJpml44lKM0nsGur+o/6+NZbZeNTt00U1uA==}
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
@@ -2904,9 +2846,6 @@ packages:
 
   caniuse-lite@1.0.30001810:
     resolution: {integrity: sha512-TITQPUkaz+aVk5GL6NhOdwk1aEaNTSDPsGFWrTuhKGtjTF70jL/Oht2W4c6rXUe5fu7Ie19VIahAXHIIiWWNeg==}
-
-  canvas-confetti@1.9.3:
-    resolution: {integrity: sha512-rFfTURMvmVEX1gyXFgn5QMn81bYk70qa0HLzcIOSVEyl57n6o9ItHeBtUSWdvKAPY0xlvBHno4/v3QPrT83q9g==}
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -7527,14 +7466,6 @@ snapshots:
       react-aria: 3.53.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react-dom: 19.3.1(react@19.3.1)
 
-  '@react-aria/interactions@3.21.3(react@19.3.1)':
-    dependencies:
-      '@react-aria/ssr': 3.9.4(react@19.3.1)
-      '@react-aria/utils': 3.24.1(react@19.3.1)
-      '@react-types/shared': 3.23.1(react@19.3.1)
-      '@swc/helpers': 0.5.10
-      react: 19.3.1
-
   '@react-aria/interactions@3.22.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@react-aria/ssr': 3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -7873,15 +7804,6 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
 
-  '@react-aria/utils@3.24.1(react@19.3.1)':
-    dependencies:
-      '@react-aria/ssr': 3.9.4(react@19.3.1)
-      '@react-stately/utils': 3.10.1(react@19.3.1)
-      '@react-types/shared': 3.23.1(react@19.3.1)
-      '@swc/helpers': 0.5.10
-      clsx: 2.1.1
-      react: 19.3.1
-
   '@react-aria/utils@3.26.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@react-aria/ssr': 3.10.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -7892,14 +7814,6 @@ snapshots:
       react: 19.3.1
     transitivePeerDependencies:
       - react-dom
-
-  '@react-aria/visually-hidden@3.8.12(react@19.3.1)':
-    dependencies:
-      '@react-aria/interactions': 3.21.3(react@19.3.1)
-      '@react-aria/utils': 3.24.1(react@19.3.1)
-      '@react-types/shared': 3.23.1(react@19.3.1)
-      '@swc/helpers': 0.5.10
-      react: 19.3.1
 
   '@react-aria/visually-hidden@3.8.18(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
@@ -8251,11 +8165,6 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
 
-  '@react-stately/utils@3.10.1(react@19.3.1)':
-    dependencies:
-      '@swc/helpers': 0.5.10
-      react: 19.3.1
-
   '@react-stately/utils@3.10.5(react@19.3.1)':
     dependencies:
       '@swc/helpers': 0.5.15
@@ -8429,10 +8338,6 @@ snapshots:
       '@react-types/shared': 3.26.0(react@19.3.1)
       react: 19.3.1
 
-  '@react-types/shared@3.23.1(react@19.3.1)':
-    dependencies:
-      react: 19.3.1
-
   '@react-types/shared@3.26.0(react@19.3.1)':
     dependencies:
       react: 19.3.1
@@ -8563,8 +8468,6 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
 
   '@tanstack/virtual-core@3.11.2': {}
-
-  '@types/canvas-confetti@1.6.4': {}
 
   '@types/chai@5.2.3':
     dependencies:
@@ -9022,8 +8925,6 @@ snapshots:
   camelcase-css@2.0.1: {}
 
   caniuse-lite@1.0.30001810: {}
-
-  canvas-confetti@1.9.3: {}
 
   ccount@2.0.1: {}
 

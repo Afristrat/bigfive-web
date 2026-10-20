@@ -3,19 +3,24 @@ import { Report, getTestResult } from '@/actions';
 import { B5Error } from '@/types';
 import { Snippet } from '@nextui-org/snippet';
 import { useTranslations } from 'next-intl';
-import { title } from '@/components/primitives';
 import { getTranslations } from 'next-intl/server';
-import { BarChart } from '@/components/bar-chart';
-import { Link } from '@/navigation';
-import { basePath, locales } from '@/config/site';
+import { heading, title } from '@/components/primitives';
+import { Notice } from '@/components/notice';
+import { ScoreRule } from '@/components/score-rule';
 import ShareBar from '@/components/share-bar';
-import { DomainTabs } from './domain-tabs';
-import { Chip } from '@nextui-org/react';
+import { Link } from '@/navigation';
+import { basePath } from '@/config/site';
+import { domainLabel, isDomainCode } from '@/lib/domain-labels';
+import { formatDate, formatNombre } from '@/lib/format';
+import { PrintButton } from './print-button';
+import { ResultBody } from './result-body';
 
 interface ResultPageParams {
   params: Promise<{ id: string; locale: string }>;
   searchParams: Promise<{ showExpanded?: string }>;
 }
+
+const servedLocales = ['fr', 'ar', 'en'];
 
 export async function generateMetadata({ params }: ResultPageParams) {
   const { locale, id } = await params;
@@ -26,8 +31,8 @@ export async function generateMetadata({ params }: ResultPageParams) {
     description: t('seo.description'),
     alternates: {
       canonical: basePath + localePath + `/result/${id}`,
-      languages: locales.reduce(
-        (a, v) => ({ ...a, [v]: `${v}/result/${id}` }),
+      languages: servedLocales.reduce(
+        (a, v) => ({ ...a, [v]: `${basePath}/${v}/result/${id}` }),
         {}
       )
     }
@@ -52,57 +57,113 @@ export default async function ResultPage({
   // Le type de retour autorise undefined : on le traite comme une page introuvable.
   if (!report) notFound();
 
-  return <Results report={report} showExpanded={!!showExpanded} />;
+  return (
+    <Results report={report} locale={locale} showExpanded={!!showExpanded} />
+  );
 }
 
 interface ResultsProps {
   report: Report;
+  locale: string;
   showExpanded: boolean;
 }
 
-const Results = ({ report, showExpanded }: ResultsProps) => {
+const Results = ({ report, locale, showExpanded }: ResultsProps) => {
   const t = useTranslations('results');
   const link = `${basePath}/result/${report.id}`;
+  const level: Record<string, string> = {
+    low: t('level.low'),
+    neutral: t('level.neutral'),
+    high: t('level.high')
+  };
+  const domainOutOf = t('outOf', { max: formatNombre(120, locale) });
+  const domains = report.results.flatMap((domain) =>
+    isDomainCode(domain.domain) ? [{ code: domain.domain, domain }] : []
+  );
 
   return (
     <>
-      <div className='flex justify-end'>
-        <Chip>{new Date(report.timestamp).toLocaleDateString()}</Chip>
-      </div>
-      <div className='text-center mt-6'>
-        <span className='font-bold'>{t('important')}</span> &nbsp;
-        {t('saveResults')} &nbsp;
-        <Link href={`/compare/?id=${report.id}`} className='underline'>
-          {t('compare')}
-        </Link>{' '}
-        &nbsp;
-        {t('toOthers')}
-      </div>
-      <div className='flex mt-8'>
+      <header className='flex flex-col gap-4 md:flex-row md:items-end md:justify-between'>
+        <div className='flex flex-col gap-2'>
+          <h1 className={title()}>{t('title')}</h1>
+          <p className='text-petit text-texte-3'>
+            {formatDate(report.timestamp, locale)}
+          </p>
+        </div>
+        <PrintButton label={t('print')} />
+      </header>
+
+      <section aria-labelledby='vue-ensemble' className='mt-12'>
+        <h2 id='vue-ensemble' className={heading()}>
+          {t('overview')}
+        </h2>
+        <ul className='mt-6 flex flex-col gap-5'>
+          {domains.map(({ code, domain }, index) => (
+            <li key={code}>
+              <ScoreRule
+                label={domainLabel(code, locale, 'short')}
+                href={'#domaine-' + code}
+                score={domain.score}
+                min={24}
+                max={120}
+                valeur={formatNombre(domain.score, locale)}
+                surMax={domainOutOf}
+                niveau={level[domain.scoreText]}
+                anime
+                rang={index}
+              />
+            </li>
+          ))}
+        </ul>
+        <p className='mt-6 colonne-lecture text-texte-2'>{t('intro')}</p>
+        <p className='mt-2 colonne-lecture text-petit text-texte-3'>
+          {t('scaleNote')}
+        </p>
+      </section>
+
+      {/* Identifiant et partage : supprimés au lot 1, aucun soin supplémentaire. */}
+      <Notice ton='info' className='mt-10 print:hidden'>
+        <p>
+          <span className='font-semibold'>{t('important')}</span>{' '}
+          {t('saveResults')}{' '}
+          <Link href={`/compare/?id=${report.id}`} className='underline'>
+            {t('compare')}
+          </Link>{' '}
+          {t('toOthers')}
+        </p>
         <Snippet
           hideSymbol
-          color='danger'
-          className='w-full justify-center'
-          size='lg'
+          color='default'
+          variant='flat'
+          codeString={report.id}
+          className='w-full justify-between'
+          tooltipProps={{ content: t('copyId') }}
+          copyButtonProps={{ 'aria-label': t('copyId') }}
         >
-          {report.id}
+          <bdi dir='ltr'>{report.id}</bdi>
         </Snippet>
-      </div>
-      <div className='flex mt-8 justify-end w-full gap-x-1 print:hidden'>
-        <ShareBar
-          link={link}
-          description='Explore my personality traits'
-          resultId={report.id}
-        />
-      </div>
-      <div className='mt-10'>
-        <h1 className={title()}>{t('theBigFive')}</h1>
-      </div>
-      <BarChart max={120} results={report.results} />
-      <DomainTabs
+        <div className='flex gap-1'>
+          <ShareBar
+            link={link}
+            description={t('seo.title')}
+            resultId={report.id}
+          />
+        </div>
+      </Notice>
+
+      <ResultBody
         results={report.results}
+        locale={locale}
         showExpanded={showExpanded}
-        scoreText={t('score')}
+        labels={{
+          contents: t('contents'),
+          facets: t('facets'),
+          learnMore: t('learnMore'),
+          neuroticismGloss: t('neuroticismGloss'),
+          domainOutOf,
+          facetOutOf: t('outOf', { max: formatNombre(20, locale) }),
+          level
+        }}
       />
     </>
   );

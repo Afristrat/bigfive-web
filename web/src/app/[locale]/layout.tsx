@@ -1,6 +1,6 @@
 import '@/styles/globals.css';
 import { Metadata, Viewport } from 'next';
-import { fontSans } from '@/config/fonts';
+import { fontArabe, fontLatin } from '@/config/fonts';
 import { Providers } from '../providers';
 import { Navbar } from '@/components/navbar';
 import clsx from 'clsx';
@@ -8,7 +8,11 @@ import Footer from '@/components/footer';
 import { ThemeProviderProps } from 'next-themes/dist/types';
 import { basePath, getNavItems, locales } from '@/config/site';
 import { NextIntlClientProvider } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale
+} from 'next-intl/server';
 import { isRtlLang } from 'rtl-detect';
 
 export function generateStaticParams() {
@@ -46,7 +50,7 @@ export async function generateMetadata({
       description: t('seo.description'),
       images: {
         url: `${basePath}/og-image.png`,
-        alt: 'People comparing personality tests'
+        alt: t('seo.image_alt')
       }
     },
     twitter: {
@@ -56,19 +60,27 @@ export async function generateMetadata({
       site: basePath,
       images: {
         url: `${basePath}/og-image.png`,
-        alt: 'People comparing personality tests'
+        alt: t('seo.image_alt')
       }
     }
   };
 }
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' }
+    { media: '(prefers-color-scheme: light)', color: '#F7F6F3' },
+    { media: '(prefers-color-scheme: dark)', color: '#111413' }
   ]
+};
+
+const themeProps: Omit<ThemeProviderProps, 'children'> = {
+  attribute: 'class',
+  defaultTheme: 'system',
+  enableSystem: true,
+  disableTransitionOnChange: true
 };
 
 export default async function RootLayout({
@@ -83,31 +95,59 @@ export default async function RootLayout({
   const navMenuItems = await getNavItems({ locale, linkType: 'navMenuItems' });
   const footerLinks = await getNavItems({ locale, linkType: 'footerLinks' });
 
+  const t = await getTranslations({ locale });
+  const messages = await getMessages({ locale });
+
   return (
-    <html lang={locale} dir={direction} suppressHydrationWarning>
+    // Variables de police sur <html> : --font-texte est défini sur :root.
+    <html
+      lang={locale}
+      dir={direction}
+      className={clsx(fontLatin.variable, fontArabe.variable)}
+      suppressHydrationWarning
+    >
       <head />
-      <body
-        className={clsx(
-          'min-h-screen bg-background font-sans antialiased',
-          fontSans.variable
-        )}
-      >
-        {/* Les composants client n'ont besoin que de la locale, pas des messages. */}
-        <NextIntlClientProvider locale={locale} messages={{}}>
-          <Providers
-            themeProps={
-              {
-                attribute: 'class',
-                defaultTheme: 'light'
-              } as ThemeProviderProps
-            }
-          >
-            <div className='relative flex flex-col h-screen'>
-              <Navbar navItems={navItems} navMenuItems={navMenuItems} />
-              <main className='container mx-auto max-w-7xl pt-6 md:pt-16 px-6 flex-grow'>
+      <body>
+        {/* Seules les pages 404 et d'erreur, rendues côté client, lisent des messages. */}
+        <NextIntlClientProvider
+          locale={locale}
+          messages={{ notFound: messages.notFound, error: messages.error }}
+        >
+          <Providers locale={locale} themeProps={themeProps}>
+            <a
+              href='#contenu'
+              className='sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-fenetre focus:rounded-controle focus:bg-surface focus:px-4 focus:py-2 focus:shadow-flottant'
+            >
+              {t('a11y.skip')}
+            </a>
+            <div className='flex min-h-[100dvh] flex-col'>
+              <Navbar
+                navItems={navItems}
+                navMenuItems={navMenuItems}
+                labels={{
+                  home: t('toolbar.home_aria'),
+                  openMenu: t('toolbar.open_menu'),
+                  closeMenu: t('toolbar.close_menu'),
+                  mainNav: t('a11y.mainNav'),
+                  language: t('language.label'),
+                  toDark: t('theme.toDark'),
+                  toLight: t('theme.toLight')
+                }}
+              />
+              <main
+                id='contenu'
+                tabIndex={-1}
+                className='conteneur flex-grow pb-24 pt-10 md:pt-16 focus:outline-none'
+              >
                 {children}
               </main>
-              <Footer footerLinks={footerLinks} />
+              <Footer
+                footerLinks={footerLinks}
+                labels={{
+                  service: t('footer.service'),
+                  nav: t('a11y.footerNav')
+                }}
+              />
             </div>
           </Providers>
         </NextIntlClientProvider>

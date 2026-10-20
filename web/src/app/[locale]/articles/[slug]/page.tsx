@@ -1,16 +1,18 @@
-import { format, parseISO } from 'date-fns';
 import { allPosts } from 'contentlayer/generated';
-import { ChevronRightLinearIcon, InfoIcon } from '@/components/icons';
-import NextLink from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { User } from '@nextui-org/user';
-import { Chip, Divider, Link } from '@nextui-org/react';
+import { Chip, Divider } from '@nextui-org/react';
 import { Image } from '@nextui-org/image';
-import { calculateReadingTime, getTranslationLocale } from '@/lib/helpers';
-import { basePath } from '@/config/site';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { PostCard } from '@/components/post-card';
+import { ChevronRightLinearIcon } from '@/components/icons';
+import { title } from '@/components/primitives';
+import { PostListItem } from '@/components/post-list-item';
 import { ShareArticle } from '@/components/share-article';
+import { Link } from '@/navigation';
+import { calculateReadingTime, getTranslationLocale } from '@/lib/helpers';
+import { formatDate, formatNombre } from '@/lib/format';
+import { basePath } from '@/config/site';
 
 interface PostLayoutProps {
   params: Promise<{
@@ -70,101 +72,83 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
   );
 
   const currentPost = localizedPosts.find((post) => post.slug === slug);
-  const posts = allPosts.filter((aPost) => aPost._id !== currentPost?._id);
-
-  const currentTags = new Set(currentPost?.tags?.split(', '));
-  const relevantPosts = posts
-    .map((post) => {
-      const postTags = post.tags.split(', ');
-      let relevance = postTags.reduce(
-        (acc, tag) => acc + (currentTags.has(tag) ? 1 : 0),
-        0
-      );
-      return { ...post, relevance };
-    })
-    .sort((a, b) => b.relevance - a.relevance)
-    .slice(0, 3);
-
   if (!currentPost) notFound();
+
+  const t = await getTranslations('articles');
+  const currentTags = new Set(currentPost.tags.split(', '));
+  const relevantPosts = localizedPosts
+    .filter((post) => post._id !== currentPost._id)
+    .map((post) => ({
+      post,
+      relevance: post.tags
+        .split(', ')
+        .reduce((acc, tag) => acc + (currentTags.has(tag) ? 1 : 0), 0)
+    }))
+    .sort((a, b) => b.relevance - a.relevance)
+    .slice(0, 3)
+    .map(({ post }) => post);
+
   return (
-    <article className='w-full flex flex-col justify-start items-center prose prose-neutral'>
-      <div className='lg:max-w-screen-md m-auto'>
-        <div className='flex'>
-          <Link
-            isBlock
-            as={NextLink}
-            className='text-default-700 hover:text-default-900 justify-start mb-2'
-            color='foreground'
-            href='/articles'
-            size='md'
-          >
-            <ChevronRightLinearIcon
-              className='rotate-180 inline-block mr-1'
-              size={15}
-            />
-            Back to articles
-          </Link>
-          {!['en', 'no'].includes(translationLocale) && (
-            <div className='text-default-700 ml-auto'>
-              <InfoIcon size={20} className='inline-block mr-1' />
-              AI generated translation
-            </div>
-          )}
-        </div>
-        {currentPost.image && (
-          <div className='relative'>
-            <Image
-              src={currentPost.image}
-              alt={currentPost.title}
-              height={600}
-              width={1200}
-              removeWrapper
-              className='mb-4 w-full object-cover'
-            />
-            <div className='absolute inset-0 flex md:mt-8 mt-2 mx-2 md:mx-4'>
-              <div className='bg-foreground px-4 py-2 z-10 h-fit rounded'>
-                <h1 className='lg:text-5xl md:text-4xl text-xl font-bold z-20 text-background'>
-                  {currentPost.title}
-                </h1>
-              </div>
-            </div>
-          </div>
-        )}
-        <div className='flex justify-between text-small mb-2 text-default-500 w-full'>
-          <p>{calculateReadingTime(currentPost.body.raw)} min read</p>
-          <time dateTime={currentPost.date}>
-            {format(parseISO(currentPost.date), 'LLLL d, yyyy')}
-          </time>
-        </div>
-        <Divider className='mt-8' />
-        <div className='mt-4 flex w-full'>
-          <div className='flex w-full'>
-            <User
-              name={currentPost.author.name}
-              avatarProps={{ src: currentPost.author.avatar }}
-              description={currentPost.author?.username}
-            />
-          </div>
-          <ShareArticle slug={slug} />
-        </div>
-        <Divider className='mt-4' />
-        <div
-          className='[&>*]:mb-3 [&>*:last-child]:mb-0 articlePage mt-10'
-          dangerouslySetInnerHTML={{ __html: currentPost.body.html }}
+    <article className='mx-auto max-w-3xl'>
+      {/* Le chevron « suivant » retourné de 180 degrés pointe vers l'arrière ;
+          son retournement RTL par défaut le fait pointer à droite en arabe. */}
+      <Link
+        href='/articles'
+        className='inline-flex items-center gap-1 text-petit text-texte-2 hover:text-encre'
+      >
+        <ChevronRightLinearIcon className='rotate-180' size={16} />
+        {t('back')}
+      </Link>
+      <h1 className={title({ class: 'mt-6' })}>{currentPost.title}</h1>
+      <p className='mt-4 flex flex-wrap gap-x-4 text-petit text-texte-3'>
+        <time dateTime={currentPost.date}>
+          {formatDate(currentPost.date, locale)}
+        </time>
+        <span>
+          {t('readingTime', {
+            minutes: formatNombre(
+              calculateReadingTime(currentPost.body.raw),
+              locale
+            )
+          })}
+        </span>
+      </p>
+      {currentPost.image && (
+        <Image
+          src={currentPost.image}
+          alt={currentPost.title}
+          height={600}
+          width={1200}
+          removeWrapper
+          className='mt-8 aspect-video w-full rounded-panneau object-cover'
         />
-        <div className='flex gap-2 flex-wrap mt-4'>
-          {currentPost.tags.split(', ').map((tag: string, index: number) => (
-            <Chip key={index} variant='flat'>
-              {tag}
-            </Chip>
-          ))}
-        </div>
+      )}
+      <Divider className='mt-8 bg-trait' />
+      <div className='mt-4 flex w-full items-center justify-between gap-4'>
+        <User
+          name={currentPost.author.name}
+          avatarProps={{ src: currentPost.author.avatar }}
+          description={currentPost.author.username}
+        />
+        <ShareArticle slug={slug} />
       </div>
-      <div className='mt-10 grid gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]'>
-        {relevantPosts.map((post) => (
-          <PostCard key={post._id} {...post} />
+      <Divider className='mt-4 bg-trait' />
+      <div
+        className='texte-riche mt-10'
+        dangerouslySetInnerHTML={{ __html: currentPost.body.html }}
+      />
+      <div className='mt-8 flex flex-wrap gap-2'>
+        {currentPost.tags.split(', ').map((tag) => (
+          <Chip key={tag} variant='flat' radius='sm'>
+            {tag}
+          </Chip>
         ))}
       </div>
+      <ul className='mt-16 divide-y divide-trait border-t border-trait'>
+        {relevantPosts.map((post) => (
+          <PostListItem key={post._id} post={post} locale={locale} />
+        ))}
+      </ul>
     </article>
   );
 };

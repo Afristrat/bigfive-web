@@ -1,11 +1,17 @@
-import { Fira_Code as FontMono, Inter as FontSans } from 'next/font/google';
+import { IBM_Plex_Sans_Arabic, Instrument_Sans } from 'next/font/google';
 
-export const fontSans = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans'
+export const fontLatin = Instrument_Sans({
+  subsets: ['latin', 'latin-ext'],
+  axes: ['wdth'],
+  display: 'swap',
+  variable: '--font-latin'
 });
 
-export const fontMono = FontMono({
-  subsets: ['latin'],
-  variable: '--font-mono'
+// Téléchargée seulement quand un glyphe arabe est affiché.
+export const fontArabe = IBM_Plex_Sans_Arabic({
+  subsets: ['arabic'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+  preload: false,
+  variable: '--font-arabe'
 });

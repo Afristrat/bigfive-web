@@ -1,10 +1,9 @@
 'use client';
 
-import { Button } from '@nextui-org/button';
-import { Image } from '@nextui-org/image';
-import { useCallback, useEffect } from 'react';
-import { useRouter } from '@/navigation';
-import { title } from '@/components/primitives';
+import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/navigation';
+import { boutonPrincipal, subtitle, title } from '@/components/primitives';
 
 export default function Error({
   error,
@@ -13,32 +12,38 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const router = useRouter();
+  const t = useTranslations('error');
+  const n = useTranslations('notFound');
 
   useEffect(() => {
     console.error(error);
   }, [error]);
 
-  const onBackClick = useCallback(() => {
-    router.back();
-  }, [router]);
-
+  // Le message technique n'est jamais montré ; seul le digest aide le support.
   return (
-    <main className='flex h-full flex-col items-center justify-center'>
-      <h1 className={title()}>Error</h1>
-      <h2 className='text-center mt-4'>
-        {error ? error.message : 'Something went wrong!'}
-      </h2>
-      <div className='flex space-x-4'>
-        <Button color='danger' className='mt-4' onClick={() => onBackClick()}>
-          Go back
-        </Button>
-
-        <Button color='primary' className='mt-4' onClick={() => reset()}>
-          Try again
-        </Button>
+    <section className='colonne-lecture py-16'>
+      <h1 className={title()}>{t('title')}</h1>
+      <p className={subtitle()}>{t('text')}</p>
+      <div className='mt-8 flex flex-wrap items-center gap-4'>
+        <button
+          type='button'
+          onClick={() => reset()}
+          className={boutonPrincipal()}
+        >
+          {t('retry')}
+        </button>
+        <Link
+          href='/'
+          className='inline-flex min-h-11 items-center text-petit font-medium text-accent hover:text-accent-survol hover:underline'
+        >
+          {n('home')}
+        </Link>
       </div>
-      <Image src='/error.webp' alt='' className='mt-5' />
-    </main>
+      {error.digest && (
+        <p className='mt-4 text-legende text-texte-3 chiffres'>
+          <bdi dir='ltr'>{error.digest}</bdi>
+        </p>
+      )}
+    </section>
   );
 }

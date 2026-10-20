@@ -2,21 +2,190 @@
 @tailwind components;
 @tailwind utilities;
 
-h3 {
-  @apply text-xl;
-}
+@layer base {
+  :root {
+    --c-fond: 247 246 243;
+    --c-surface: 255 255 255;
+    --c-creux: 239 237 232;
+    --c-trait: 218 215 208;
+    --c-trait-fort: 126 131 127;
+    --c-encre: 26 28 27;
+    --c-texte-2: 77 83 80;
+    --c-texte-3: 99 105 101;
+    --c-accent: 29 84 70;
+    --c-accent-survol: 22 67 58;
+    --c-accent-doux: 227 237 233;
+    --c-sur-accent: 255 255 255;
+    --c-erreur: 168 38 27;
+    --c-erreur-doux: 251 234 231;
+    --c-avis: 122 75 0;
+    --c-avis-doux: 251 241 222;
+    --font-texte: var(--font-latin), system-ui, sans-serif;
+    color-scheme: light;
+  }
 
-.articlePage blockquote {
-  @apply p-4 my-4 border-s-4 border-secondary bg-gray-100 dark:bg-gray-800;
-  p {
-    @apply text-xl italic leading-relaxed;
+  .dark {
+    --c-fond: 17 20 19;
+    --c-surface: 24 28 27;
+    --c-creux: 32 37 35;
+    --c-trait: 44 50 48;
+    --c-trait-fort: 110 117 113;
+    --c-encre: 236 237 233;
+    --c-texte-2: 183 189 185;
+    --c-texte-3: 148 154 150;
+    --c-accent: 124 194 173;
+    --c-accent-survol: 154 211 193;
+    --c-accent-doux: 27 46 40;
+    --c-sur-accent: 15 31 26;
+    --c-erreur: 242 151 140;
+    --c-erreur-doux: 58 30 26;
+    --c-avis: 240 201 135;
+    --c-avis-doux: 42 34 20;
+    color-scheme: dark;
+  }
+
+  :root:lang(ar) {
+    --font-texte: var(--font-arabe), var(--font-latin), system-ui, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  /* Pages du test : l'en-tête de progression collant s'ajoute à la barre du
+     site ; sans lui (écran bas), le décalage d'origine suffit. */
+  html:has([data-question]) {
+    scroll-padding-top: 8.5rem;
+  }
+  @media (max-height: 480px) {
+    html:has([data-question]) {
+      scroll-padding-top: 5rem;
+    }
+  }
+
+  body {
+    @apply bg-fond text-encre font-sans antialiased text-corps;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
+  }
+
+  /* Arabe : interlignage majoré, aucune approche négative, corps légèrement plus grand. */
+  :lang(ar) body {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+  :lang(ar) h1,
+  :lang(ar) h2,
+  :lang(ar) h3,
+  :lang(ar) .texte-riche h2,
+  :lang(ar) .texte-riche h3,
+  :lang(ar) .text-display {
+    letter-spacing: 0;
+    line-height: 1.45;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-accent));
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-.articlePage a {
-  @apply underline;
-}
+@layer components {
+  .conteneur {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
 
-.articlePage ul {
-  @apply list-disc pl-6;
+  .colonne-lecture {
+    @apply max-w-[68ch];
+  }
+  :lang(ar) .colonne-lecture {
+    max-width: 60ch;
+  }
+
+  .chiffres {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .texte-riche > * + * {
+    @apply mt-4;
+  }
+  .texte-riche h2 {
+    @apply mt-10 text-titre-2 text-encre;
+  }
+  .texte-riche h3 {
+    @apply mt-8 text-titre-3 text-encre;
+  }
+  .texte-riche p,
+  .texte-riche li {
+    @apply text-texte-2;
+  }
+  .texte-riche ul {
+    @apply list-disc ps-6;
+  }
+  .texte-riche ol {
+    @apply list-decimal ps-6;
+  }
+  .texte-riche a {
+    @apply text-accent underline underline-offset-2 hover:text-accent-survol;
+  }
+  .texte-riche blockquote {
+    @apply border-s-2 border-accent ps-4 text-chapo text-encre;
+  }
+
+  /* Règles graduées : visibles en couleurs forcées et à l'impression. */
+  .regle-piste,
+  .regle-trait {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  @media (forced-colors: active) {
+    .regle-piste {
+      forced-color-adjust: none;
+      background: Canvas;
+      outline: 1px solid CanvasText;
+    }
+    .regle-trait {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+  }
+
+  /* L'en-tête du site porte print:hidden : un sélecteur header masquerait aussi
+     l'en-tête de la page de résultat. */
+  @media print {
+    footer,
+    nav,
+    .print\:hidden {
+      display: none !important;
+    }
+    main {
+      padding: 0 !important;
+    }
+    section[id^='domaine-'] {
+      break-before: auto;
+    }
+  }
 }

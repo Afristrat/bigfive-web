@@ -1,51 +1,56 @@
 import { compareDesc } from 'date-fns';
 import { allPosts } from 'contentlayer/generated';
-import { PostCard } from '@/components/post-card';
-import { setRequestLocale } from 'next-intl/server';
-import { supportEmail } from '@/config/site';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { subtitle, title } from '@/components/primitives';
+import { PostListItem } from '@/components/post-list-item';
+import { Link } from '@/navigation';
 import { getTranslationLocale } from '@/lib/helpers';
 
 interface ArticlesProps {
   params: Promise<{ locale: string }>;
 }
 
+export async function generateMetadata({ params }: ArticlesProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'toolbar' });
+  return { title: t('articles') };
+}
+
 export default async function ArticlesPage({ params }: ArticlesProps) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const toolbar = await getTranslations('toolbar');
+  const frontpage = await getTranslations('frontpage');
+  const articles = await getTranslations('articles');
+  const notFound = await getTranslations('notFound');
 
+  // Repli sur l'anglais conservé : la liste n'est vide que si l'anglais l'est aussi.
   const translationLocale = getTranslationLocale(locale);
-
-  const localizedPosts = allPosts.filter(
-    (post) => post.locale === translationLocale
-  );
-
-  const posts = localizedPosts.sort((a, b) =>
-    compareDesc(new Date(a.date), new Date(b.date))
-  );
+  const posts = allPosts
+    .filter((post) => post.locale === translationLocale)
+    .sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)));
 
   return (
-    <div className='w-full lg:px-16 mt-12'>
-      <div className='text-center mt-8'>
-        <h1 className='mb-2 font-bold text-4xl'>Personality articles</h1>
-        <h5 className='text-default-500 text-lg'>
-          All the latest and greatest news and articles on Personality.
-          {supportEmail && (
-            <>
-              <br />
-              Interested in writing for us? Get in touch{' '}
-              <a href={`mailto:${supportEmail}`} className='underline'>
-                here
-              </a>
-              .
-            </>
-          )}
-        </h5>
-      </div>
-      <div className='mt-2 grid gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]'>
-        {posts.map((post, idx) => (
-          <PostCard key={idx} {...post} />
-        ))}
-      </div>
+    <div>
+      <h1 className={title()}>{toolbar('articles')}</h1>
+      <p className={subtitle()}>{frontpage('posts.subtitle')}</p>
+      {posts.length > 0 ? (
+        <ul className='mt-8 divide-y divide-trait'>
+          {posts.map((post) => (
+            <PostListItem key={post._id} post={post} locale={locale} />
+          ))}
+        </ul>
+      ) : (
+        <div className='mt-8 colonne-lecture'>
+          <p className='text-texte-2'>{articles('empty')}</p>
+          <Link
+            href='/'
+            className='mt-4 inline-flex text-petit font-medium text-accent hover:text-accent-survol hover:underline'
+          >
+            {notFound('home')}
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

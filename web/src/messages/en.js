@@ -1,68 +1,93 @@
 const english = {
   language: {
-    label: 'English',
-    locale: 'en'
+    label: 'Language'
+  },
+  a11y: {
+    skip: 'Skip to content',
+    mainNav: 'Main navigation',
+    footerNav: 'Footer links'
+  },
+  theme: {
+    toDark: 'Switch to dark theme',
+    toLight: 'Switch to light theme'
+  },
+  footer: {
+    service: 'A Tenga Conseil service'
+  },
+  home: {
+    specimen: 'Sample report, fictitious values'
   },
   seo: {
     keywords:
-      'big five personality test, big 5 personality test, b5 test, bigfive test, personality traits, bigfive, compare, free, jordan peterson'
+      'personality test, personality questionnaire, Big Five, five-factor model, IPIP-NEO-120, personality assessment, Tenga Conseil, Morocco'
   },
   frontpage: {
     seo: {
-      title: 'Big Five personality test',
+      title: 'Big Five personality test | Tenga Assessments',
       description:
-        'Take the Big Five personality test. Learn to know your personality traits and compare yourself with your partner, colleagues, friends or family.'
+        'Personality questionnaire based on the five-factor model (Big Five), offered by Tenga Conseil, a Moroccan consulting firm, to the organisations it supports.',
+      image_alt: 'Tenga Assessments, personality questionnaire'
     },
-    title: 'Big Five Personality Test',
-    call_to_action: 'Take the free test now',
-    no_registration: '* No registration required',
-    // do not translate <green>, {n}, and </green> tags
-    tests_taken: 'Over <green>{n}</green> people have taken the test',
-    compare: {
-      title: 'Compare yourself to others',
-      text1:
-        'Compare yourself with your partner, colleagues, friends or family.',
-      text2: 'Learn how you differ from other people in the five domains:',
-      action: 'See it live in action'
-    },
-    share: 'Share with your friends and find out how compatible you are',
-    cards: {
-      open: {
-        title: 'Open',
-        text: 'This is an open source project under MIT-license.'
-      },
-      free: {
-        title: 'Free',
-        text: 'The test is completely free'
-      },
-      scientific: {
-        title: 'Scientific',
-        text: 'BigFive is a scientifically validated and reliable psychological model.'
-      }
-    },
+    call_to_action: 'Start the questionnaire',
     description: {
-      top: 'Learn to know yourself better with a <violet>free</violet>, open-source personality test.',
-      subtop: 'The',
-      subtop2:
-        ' is the most scientifically validated and reliable psychological model to measure personality.',
-      reference: `Tests and evaluation for this site is gathered from
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
-      info: 'The following test contains 120 questions which is estimated to take you about 10 minutes to complete.',
-      result:
-        'After you have completed the test you will receive a detailed personality report in the following domains:',
-      tests_taken: 'tests taken so far'
+      top: 'Better understand the way you act, to <violet>work better together</violet>.',
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
+      info: 'A questionnaire of 120 statements, offered by Tenga Conseil to the organisations it supports. There are no right or wrong answers, and no time limit.'
+    },
+    posts: {
+      subtitle: 'Insights on personality and teamwork',
+      all: 'See all articles'
     }
   },
   about: {
     seo: {
-      title: 'About and the big five team',
+      title: 'About Tenga Assessments',
       description:
-        'BigFive has a very active and engaged team that is constantly striving to push BigFive forward.'
+        'Tenga Assessments is the personality assessment service of Tenga Conseil, a Moroccan consulting firm.'
+    },
+    title: 'About',
+    p1: 'Tenga Assessments is the personality assessment service of Tenga Conseil, a Moroccan consulting firm. It is offered to the organisations the firm supports: executive teams, human resources teams, consultants.',
+    p2: 'The questionnaire describes personality according to the five-factor model: openness to experience, conscientiousness, extraversion, agreeableness and neuroticism, detailed in thirty facets. It uses the IPIP-NEO-120 by John A. Johnson (2014), drawn from the International Personality Item Pool and placed in the public domain.',
+    p3: 'It is available in French and Arabic. A few statements have been adapted to the Moroccan context; each one keeps the facet measured and the scoring direction of the original question.',
+    p4: 'The results describe habitual behavioural tendencies. They do not measure skills and are not a diagnosis.',
+    contact_faq:
+      'A question? Please read the <link>frequently asked questions</link> first.',
+    contact_email:
+      'If you cannot find the answer there, write to us at {email}.'
+  },
+  faq: {
+    title: 'Frequently asked questions',
+    error: {
+      question: 'An error appeared on the site: what should I do?',
+      answer: 'Describe what happened by email to {email}.'
+    },
+    print: {
+      question: 'How do I print my results?',
+      answer:
+        'From the results page, use your browser’s print function, or save the page as a PDF.'
+    },
+    source: {
+      question: 'Where do the questions come from?',
+      answer:
+        'The questions and the scoring come from the International Personality Item Pool (ipip.ori.org), in the public domain: the IPIP-NEO-120 by John A. Johnson (2014). Tenga Conseil adapted a few statements to the Moroccan context, without changing what each question measures.'
+    },
+    answers: {
+      question: 'Are there right and wrong answers?',
+      answer:
+        'No. Each statement describes a way of being. Answer according to how you usually are, not how you would like to be.'
+    },
+    diagnosis: {
+      question: 'Does the questionnaire make a diagnosis?',
+      answer:
+        'No. It describes behavioural tendencies based on your own answers. It measures neither your skills, nor your intelligence, nor your health.'
     }
   },
   toolbar: {
     home: 'Home',
+    home_aria: 'Tenga Assessments home page',
+    open_menu: 'Open menu',
+    close_menu: 'Close menu',
     result: 'Result',
     compare: 'Compare',
     articles: 'Articles',
@@ -70,29 +95,10 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     about: 'About',
     see_results: 'See your results',
     compare_with: 'Compare with others',
-    faq: 'FAQ'
-  },
-  facets: {
-    openness_to_experience: {
-      title: 'Openness to experience'
-    },
-    conscientiousness: {
-      title: 'Conscientiousness'
-    },
-    extraversion: {
-      title: 'Extraversion'
-    },
-    agreeableness: {
-      title: 'Agreeableness'
-    },
-    neuroticism: {
-      title: 'Neuroticism'
-    }
+    faq: 'Frequently asked questions'
   },
   common: {
     and: 'and',
-    pages: 'pages',
-    languages: 'languages',
     save: 'Save',
     close: 'Close'
   },
@@ -120,17 +126,24 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     toTestButton: 'Alrighty, take me to the test'
   },
   test: {
-    next: 'next',
-    back: 'back',
-    more: 'more',
-    seeResults: 'see results',
-    restored: 'Your answers have been restored. Click here to',
-    newTest: 'start a new test',
-    saveFailedTitle: 'Result not saved',
+    heading: 'Personality questionnaire',
+    instructions:
+      'For each statement, indicate how well it describes you as you usually are, not as you would like to be. Answer spontaneously.',
+    noTimeLimit: 'No time limit',
+    progress: 'Question {current} of {total}',
+    next: 'Next',
+    back: 'Previous',
+    seeResults: 'See my results',
+    saving: 'Saving…',
+    dismiss: 'Dismiss this message',
+    restored:
+      'We found your answers saved on this device. You can pick up where you left off, or',
+    newTest: 'start again from the beginning',
+    saveFailedTitle: 'Your answers are not saved yet',
     saveFailedText:
-      'Your result could not be saved, often because the site was updated while you were taking the test. Your answers are kept on this device: reload the page, then click the results button again.',
+      'Saving failed, most often because the site was updated while you were answering. Your answers are still kept on this device: reload the page, then click “See my results” again.',
     reload: 'Reload the page',
-    surveyLanguage: 'Survey language'
+    nextHelp: 'Choose an answer to continue.'
   },
   big_five: {
     title: 'What are the big five?',
@@ -189,29 +202,59 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     nameOfPerson: 'Name of this person',
     urlOrId: 'URL or ID for comparison',
     name: 'Name',
-    onlyLetters: 'Only letters allowed. Min 2 and max 30 characters.',
-    validId: 'Please enter a valid ID and not a duplicate.',
-    noRows: 'No rows to display.',
-    editPerson: 'Edit person',
-    close: 'Close',
-    save: 'Save',
-    overview: 'Overview',
-    editComparison: 'Edit Comparison'
+    invalidId: 'Please enter a valid ID that is not already in the list.'
   },
   results: {
-    theBigFive: 'The Big Five',
-    score: 'score',
+    title: 'Your personality profile',
+    overview: 'Your five dimensions',
+    intro:
+      'These results describe your habitual tendencies, based on your own answers. They measure neither your skills nor your worth, and are not a diagnosis.',
+    scaleNote:
+      'The vertical mark is the middle of the answer scale (3 out of 5).',
+    outOf: 'out of {max}',
+    level: {
+      low: 'low',
+      neutral: 'in the middle',
+      high: 'high'
+    },
+    facets: 'Facets',
+    learnMore: 'Learn more about this dimension',
+    contents: 'Contents',
+    neuroticismGloss:
+      'Sensitivity to negative emotions and stress; this is not a diagnosis.',
+    print: 'Print or save as PDF',
+    copyId: 'Copy ID',
+    loading: 'Loading',
     important: 'Important!',
     saveResults: 'Save the following ID to see the results later or ',
     compare: 'compare',
     toOthers: 'yourself to others',
-    retriveReportError: 'Could not retrieve report',
-    reportLanguage: 'Report language',
     seo: {
-      title: 'My results from the BigFive personality test',
+      title: 'My Big Five questionnaire results',
       description:
-        'See my personality and compare yourself in the following five domains: Neuroticism, Openness To Experience, Conscientiousness, Extraversion, Agreeableness'
+        'Personality profile according to the five-factor model: openness to experience, conscientiousness, extraversion, agreeableness and neuroticism.'
     }
+  },
+  articles: {
+    back: 'Back to articles',
+    readingTime: '{minutes} min read',
+    empty: 'No article has been published in this language yet.'
+  },
+  share: {
+    facebook: 'Share on Facebook',
+    x: 'Share on X',
+    mail: 'Email the link',
+    copy: 'Copy link'
+  },
+  notFound: {
+    title: 'Page not found',
+    text: 'The requested address does not exist or is no longer available.',
+    home: 'Back to the home page'
+  },
+  error: {
+    title: 'An error occurred',
+    text: 'Please try again in a moment. If the error persists, write to us.',
+    retry: 'Try again'
   },
   getResult: {
     result: 'Result',
@@ -220,8 +263,7 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     idInput: 'in the ID-input field',
     urlOrId: 'URL or ID of your result',
     getResult: 'Get result',
-    viewPrevious: 'View Previous Result',
-    validIdError: 'Please enter a valid ID'
+    viewPrevious: 'View Previous Result'
   },
   shareLinks: {
     copyLink: 'Copy link to clipboard',
@@ -229,16 +271,6 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     shareTwitter: 'Share on Twitter',
     copiedLink: 'Copied link',
     shareResults: 'Share your results!'
-  },
-  articles: {
-    title: 'Personality articles',
-    description: 'All the latest and greatest news and articles on Personality',
-    back: 'Back to articles',
-    minRead: '{n} min read',
-    seo: {
-      title: 'Articles about personality and psychology',
-      description: 'Read articles about personality and psychology'
-    }
   }
 };
 

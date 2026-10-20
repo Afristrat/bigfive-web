@@ -1,99 +1,106 @@
+// Boutons et intitulés au nom verbal (مصدر), jamais à l'impératif genré.
 const arabic = {
-  language: 'Arabic',
   language: {
-    label: 'Arabic',
-    locale: 'ar'
+    label: 'اللغة'
+  },
+  a11y: {
+    skip: 'الانتقال إلى المحتوى',
+    mainNav: 'التنقل الرئيسي',
+    footerNav: 'روابط تذييل الصفحة'
+  },
+  theme: {
+    toDark: 'التبديل إلى الوضع الداكن',
+    toLight: 'التبديل إلى الوضع الفاتح'
+  },
+  footer: {
+    service: 'خدمة من Tenga Conseil'
+  },
+  home: {
+    specimen: 'مثال على التقرير، بقيم افتراضية'
   },
   seo: {
     keywords:
-      'اختبار الشخصية الخمسة الكبار، اختبار الخمس الكبار للشخصية، اختبار بي 5، اختبار بيغفايف، صفات الشخصية، بيغفايف، مقارنة، مجاني، جوردان بيترسون'
+      'اختبار الشخصية، استبيان الشخصية، العوامل الخمسة الكبرى، تقييم الشخصية، IPIP-NEO-120، Tenga Conseil، المغرب'
   },
   frontpage: {
     seo: {
-      title: 'Free open-source BigFive personality traits test',
+      title: 'اختبار الشخصية وفق العوامل الخمسة الكبرى | Tenga Assessments',
       description:
-        'Take a free, open-source Big Five personality test. Learn to know your personality traits and compare yourself with your partner, colleagues, friends or family.'
+        'استبيان للشخصية قائم على نموذج العوامل الخمسة الكبرى، يقدّمه مكتب الاستشارات المغربي Tenga Conseil للمؤسسات التي يرافقها.',
+      image_alt: 'Tenga Assessments، استبيان الشخصية'
     },
-    title: 'اختبار السمات الخمسة الكبرى للشخصية',
-    call_to_action: 'ابدأ الاختبار الآن مجاناً',
-    no_registration: '* لا يتطلب التسجيل',
-    tests_taken: 'أكثر من <green>{n}</green> أخذوا الاختبار',
-    compare: {
-      title: 'قارن شخصيتك بشخصية غيرك',
-      text1: 'قارن شخصيتك بشخصية شريكك أو زميلك أو صديقك',
-      text2: 'اعرف ما يميّزك عن غيرك في السمات الخمسة',
-      action: 'شاهد عينة'
-    },
-    share: 'شاركها مع أصدقائك واكتشف مدى التوافق بينكم',
-    cards: {
-      open: {
-        title: 'مفتوح',
-        text: 'MIT هذا مشروع مفتوح المصدر تحت ترخيص'
-      },
-      free: {
-        title: 'مجاني',
-        text: 'الاختبار مجاني تماماً'
-      },
-      scientific: {
-        title: 'علمي',
-        text: 'نموذج السمات الخمسة في علم النفس هو نموذج علمي محقّق وموثوق'
-      }
-    },
+    call_to_action: 'بدء الاستبيان',
     description: {
-      top: 'تعرّف على نفسك أكثر عن طريق هذا الاختبار <violet>المجاني</violet> ومفتوح المصدر',
-      subtop: 'The',
-      subtop2:
-        ' is the most scientifically validated and reliable psychological model to measure personality.',
-      reference: `Tests and evaluation for this site is gathered from
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
-      info: 'الاختبار يحتوي على ١٢٠ سؤال وسيستغرق منك إتمامه حوالي ١٠ دقائق',
-      result:
-        'After you have completed the test you will receive a detailed personality report in the following domains:',
-      tests_taken: 'tests taken so far'
+      top: 'فهمٌ أدقّ لأسلوبك في العمل، من أجل <violet>تعاون أفضل</violet> داخل الفريق.',
+      reference:
+        'الأسئلة وطريقة احتساب النتائج: المجمع الدولي لعبارات الشخصية (<ipip>ipip.ori.org</ipip>)، استبيان IPIP-NEO-120 لجون أ. جونسون (2014)، وهو ملك عام.',
+      info: 'استبيان من 120 عبارة يقدّمه مكتب Tenga Conseil للمؤسسات التي يرافقها. لا توجد فيه إجابات صحيحة وأخرى خاطئة، ولا يتقيّد بوقت محدّد.'
+    },
+    posts: {
+      subtitle: 'مفاتيح لفهم الشخصية والعمل الجماعي',
+      all: 'عرض جميع المقالات'
     }
   },
   about: {
     seo: {
-      title: 'About and the big five team',
+      title: 'تعريف بـ Tenga Assessments',
       description:
-        'BigFive has a very active and engaged team that is constantly striving to push BigFive forward.'
+        'Tenga Assessments هي خدمة تقييم الشخصية التابعة لمكتب الاستشارات المغربي Tenga Conseil.'
+    },
+    title: 'من نحن',
+    p1: 'Tenga Assessments هي خدمة تقييم الشخصية التابعة لمكتب الاستشارات المغربي Tenga Conseil، ويقدّمها المكتب للمؤسسات التي يرافقها: الإدارات العامة، وفرق الموارد البشرية، والمستشارين.',
+    p2: 'يصف الاستبيان الشخصية وفق العوامل الخمسة الكبرى: الانفتاح على الخبرة، ويقظة الضمير، والانبساطية، والمقبولية، والعُصابية، مفصَّلةً في ثلاثين سمة فرعية. ويستند إلى استبيان IPIP-NEO-120 الذي وضعه جون أ. جونسون (2014) انطلاقًا من المجمع الدولي لعبارات الشخصية، وهو ملك عام.',
+    p3: 'يُقدَّم الاستبيان بالعربية والفرنسية، وقد كُيِّفت بعض صياغاته مع السياق المغربي، مع الحفاظ في كل منها على السمة المقيسة وعلى اتجاه التنقيط في العبارة الأصلية.',
+    p4: 'تصف النتائج ميولًا سلوكية معتادة، ولا تقيس الكفاءات ولا تُعدّ تشخيصًا.',
+    contact_faq:
+      'لديك سؤال؟ يمكنك الاطلاع أولًا على <link>الأسئلة الشائعة</link>.',
+    contact_email: 'وإن لم تجد الجواب هناك، يمكنك مراسلتنا على {email}.'
+  },
+  faq: {
+    title: 'أسئلة شائعة',
+    error: {
+      question: 'ظهر خطأ في الموقع، فما العمل؟',
+      answer: 'يُرجى وصف ما حدث في رسالة إلى {email}.'
+    },
+    print: {
+      question: 'كيف أطبع نتائجي؟',
+      answer:
+        'من صفحة النتائج، يمكن استعمال خاصية الطباعة في المتصفح، أو حفظ الصفحة بصيغة PDF.'
+    },
+    source: {
+      question: 'من أين أُخذت الأسئلة؟',
+      answer:
+        'الأسئلة وطريقة احتساب النتائج مأخوذة من المجمع الدولي لعبارات الشخصية (ipip.ori.org)، وهو ملك عام، وتحديدًا من استبيان IPIP-NEO-120 لجون أ. جونسون (2014). وقد كيّف مكتب Tenga Conseil بعض الصياغات مع السياق المغربي دون تغيير ما تقيسه كل عبارة.'
+    },
+    answers: {
+      question: 'هل توجد إجابات صحيحة وأخرى خاطئة؟',
+      answer:
+        'لا. كل عبارة تصف طريقة في السلوك، والمطلوب هو الإجابة بحسب ما يشبهك في العادة، لا بحسب ما تودّ أن تكون.'
+    },
+    diagnosis: {
+      question: 'هل يقدّم الاستبيان تشخيصًا؟',
+      answer:
+        'لا. فهو يصف ميولًا سلوكية انطلاقًا من إجاباتك، ولا يقيس كفاءاتك ولا ذكاءك ولا حالتك الصحية.'
     }
   },
   toolbar: {
-    home: 'Home',
+    home: 'الرئيسية',
+    home_aria: 'الصفحة الرئيسية لـ Tenga Assessments',
+    open_menu: 'فتح القائمة',
+    close_menu: 'إغلاق القائمة',
     result: 'النتيجة',
     compare: 'قارن',
     articles: 'مقالات',
     privacy: 'الخصوصية',
-    about: 'عنّا',
+    about: 'من نحن',
     see_results: 'شاهد نتيجتك',
     compare_with: 'قارن مع غيرك',
-    faq: 'FAQ'
-  },
-  facets: {
-    openness_to_experience: {
-      title: 'الانفتاح'
-    },
-    conscientiousness: {
-      title: 'اليقظة/التفاني'
-    },
-    extraversion: {
-      title: 'الانبساطية'
-    },
-    agreeableness: {
-      title: 'المسايرة/الطيبة'
-    },
-    neuroticism: {
-      title: 'العُصابية'
-    }
+    faq: 'أسئلة شائعة'
   },
   common: {
     and: 'و',
-    pages: 'صفحات',
-    languages: 'اللغات',
-    save: 'محل',
-    close: 'يغلق'
+    save: 'حفظ',
+    close: 'إغلاق'
   },
   form: {
     information: 'Information',
@@ -119,16 +126,24 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     toTestButton: 'Alrighty, take me to the test'
   },
   test: {
+    heading: 'استبيان الشخصية',
+    instructions:
+      'يُرجى تحديد مدى انطباق كل عبارة عليك كما أنت في العادة، لا كما تودّ أن تكون، والإجابة بعفوية.',
+    noTimeLimit: 'دون تقيّد بوقت محدّد',
+    progress: 'السؤال {current} من {total}',
     next: 'التالي',
     back: 'السابق',
-    more: 'أكثر',
-    seeResults: 'شاهد النتيجة',
-    restored: 'تمت استعادة إجاباتك. انقر هنا من أجل',
-    newTest: 'بدء اختبار جديد',
-    saveFailedTitle: 'لم يتم حفظ النتيجة',
+    seeResults: 'عرض نتائجي',
+    saving: 'جارٍ الحفظ…',
+    dismiss: 'إخفاء هذه الرسالة',
+    restored:
+      'استعدنا إجاباتك المحفوظة على هذا الجهاز. يمكنك المتابعة من حيث توقفت، أو',
+    newTest: 'البدء من جديد',
+    saveFailedTitle: 'لم تُحفظ إجاباتك بعد',
     saveFailedText:
-      'تعذّر حفظ نتيجتك، وغالبًا ما يكون السبب تحديث الموقع أثناء إجرائك للاختبار. إجاباتك محفوظة على هذا الجهاز: أعد تحميل الصفحة ثم انقر مرة أخرى على زر النتائج.',
-    reload: 'إعادة تحميل الصفحة'
+      'تعذّر الحفظ، وغالبًا ما يحدث ذلك عند تحديث الموقع أثناء الإجابة. إجاباتك ما تزال محفوظة على هذا الجهاز، ويكفي إعادة تحميل الصفحة ثم النقر من جديد على «عرض نتائجي».',
+    reload: 'إعادة تحميل الصفحة',
+    nextHelp: 'اختر إجابة للمتابعة.'
   },
   big_five: {
     title: 'What are the big five?',
@@ -138,7 +153,7 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     }
   },
   openness_to_experience: {
-    title: 'الانفتاحية',
+    title: 'الانفتاح على الخبرة',
     seo: {
       title: 'Overview of the domain Openness To Experience.',
       description:
@@ -146,7 +161,7 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     }
   },
   conscientiousness: {
-    title: 'اليقظة/التفاني',
+    title: 'يقظة الضمير',
     seo: {
       title: 'Overview of the domain Conscientiousness',
       description:
@@ -161,7 +176,7 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     }
   },
   agreeableness: {
-    title: 'المسايرة/الطيبة',
+    title: 'المقبولية',
     seo: {
       title: 'Overview of the domain Agreeableness',
       description: 'Read more about the agreeableness domain in the b5 model'
@@ -186,21 +201,59 @@ inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
     comparePeople: 'قارن',
     nameOfPerson: 'اسم الشخص',
     urlOrId: 'رابط أو رمز النتيجة',
-    name: 'الاسم'
+    name: 'الاسم',
+    invalidId: 'أدخل رمزًا صحيحًا غير مكرر.'
   },
   results: {
-    theBigFive: 'السمات الخمسة الكبرى',
-    score: 'الدرجة',
+    title: 'ملف شخصيتك',
+    overview: 'أبعادك الخمسة',
+    intro:
+      'تصف هذه النتائج ميولك المعتادة كما تظهر من إجاباتك. وهي لا تقيس كفاءاتك ولا قيمتك، ولا تُعدّ تشخيصًا.',
+    scaleNote: 'يشير الخط العمودي إلى منتصف سلّم الإجابة (3 من 5).',
+    outOf: 'من {max}',
+    level: {
+      low: 'منخفض',
+      neutral: 'في المنتصف',
+      high: 'مرتفع'
+    },
+    facets: 'السمات الفرعية',
+    learnMore: 'مزيد من المعلومات عن هذا البعد',
+    contents: 'المحتويات',
+    neuroticismGloss: 'الحساسية تجاه المشاعر السلبية والضغط، وليست تشخيصًا.',
+    print: 'طباعة أو حفظ بصيغة PDF',
+    copyId: 'نسخ الرمز',
+    loading: 'جارٍ التحميل',
     important: '!مهم',
     saveResults:
       'احفط الرمز التالي لتتمكن من رؤية نتيجتك في وقت لاحق أو لتتمكن من ',
     compare: 'مقارنة ',
     toOthers: 'نتيجتك بغيرك ',
     seo: {
-      title: 'My results from the BigFive personality test',
+      title: 'نتائجي في استبيان العوامل الخمسة الكبرى',
       description:
-        'See my personality and compare yourself in the following five domains: Neuroticism, Openness To Experience, Conscientiousness, Extraversion, Agreeableness'
+        'الملف الشخصي وفق العوامل الخمسة الكبرى: الانفتاح على الخبرة، ويقظة الضمير، والانبساطية، والمقبولية، والعُصابية.'
     }
+  },
+  articles: {
+    back: 'العودة إلى المقالات',
+    readingTime: '{minutes} د للقراءة',
+    empty: 'لم يُنشر أي مقال بهذه اللغة بعد.'
+  },
+  share: {
+    facebook: 'المشاركة على فيسبوك',
+    x: 'المشاركة على X',
+    mail: 'إرسال الرابط بالبريد الإلكتروني',
+    copy: 'نسخ الرابط'
+  },
+  notFound: {
+    title: 'الصفحة غير موجودة',
+    text: 'العنوان المطلوب غير موجود أو لم يعد متاحًا.',
+    home: 'العودة إلى الصفحة الرئيسية'
+  },
+  error: {
+    title: 'حدث خطأ',
+    text: 'يُرجى إعادة المحاولة بعد لحظات، وإن استمر الخطأ يُرجى مراسلتنا.',
+    retry: 'إعادة المحاولة'
   },
   getResult: {
     result: 'النتيجة',

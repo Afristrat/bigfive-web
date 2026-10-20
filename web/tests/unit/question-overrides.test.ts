@@ -38,6 +38,20 @@ describe('getLocalizedItems', () => {
     expect(changed.length).toBeGreaterThan(0);
   });
 
+  it('corrige « Plutot » en « Plutôt » sans toucher aux scores', () => {
+    const base = byId(getItems('fr'));
+    const localized = getLocalizedItems('fr');
+    const texts = localized.flatMap((item) => item.choices.map((c) => c.text));
+    expect(texts.some((text) => text.includes('Plutot'))).toBe(false);
+    expect(texts.some((text) => text.includes('Plutôt'))).toBe(true);
+    for (const item of localized) {
+      const original = base.get(item.id);
+      expect(item.choices.map((c) => c.score)).toEqual(
+        original?.choices.map((c) => c.score)
+      );
+    }
+  });
+
   it('laisse les autres langues strictement inchangées', () => {
     expect(getLocalizedItems('en')).toEqual(getItems('en'));
     expect(getLocalizedItems('de')).toEqual(getItems('de'));

@@ -39,6 +39,7 @@ import {
 interface CompareProps {
   addPersonText: string;
   comparePeopleText: string;
+  invalidIdText: string;
   paramId?: string;
   edit?: string;
 }
@@ -46,6 +47,7 @@ interface CompareProps {
 export const ComparePeople = ({
   addPersonText,
   comparePeopleText,
+  invalidIdText,
   paramId,
   edit
 }: CompareProps) => {
@@ -197,9 +199,7 @@ export const ComparePeople = ({
           value={id}
           onValueChange={setId}
           isInvalid={isInvalidId}
-          errorMessage={
-            isInvalidId && 'Please enter a valid ID and not a duplicate.'
-          }
+          errorMessage={isInvalidId && invalidIdText}
         />
         <div className='flex-grow h-16 place-content-end'>
           <Button

@@ -1,34 +1,40 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
-import { RadioGroup, Radio } from '@nextui-org/radio';
-import { Progress } from '@nextui-org/progress';
-import confetti from 'canvas-confetti';
 import { useRouter } from '@/navigation';
 
-import { CloseIcon, InfoIcon } from '@/components/icons';
+import { CloseIcon } from '@/components/icons';
+import { Notice } from '@/components/notice';
+import { ProgressHeader } from '@/components/questionnaire/progress-header';
+import { QuestionBlock } from '@/components/questionnaire/question-block';
+import { SurveyNav } from '@/components/questionnaire/survey-nav';
 import { type Question } from '@bigfive-org/questions';
-import { sleep, formatTimer, isDev } from '@/lib/helpers';
+import { isDev } from '@/lib/helpers';
+import { formatNombre } from '@/lib/format';
 import useWindowDimensions from '@/hooks/useWindowDimensions';
 import useTimer from '@/hooks/useTimer';
 import { type Answer, type DbResult } from '@/types';
-import { Card, CardHeader } from '@nextui-org/card';
-import { Alert } from '@/components/alert';
 
 export type SurveyLabels = {
+  next: string;
+  prev: string;
+  results: string;
+  progress: string; // gabarit « Question {current} sur {total} »
+  saving: string;
+  dismiss: string;
+  instructions: string;
+  noTimeLimit: string;
   restored: string;
   newTest: string;
   saveFailedTitle: string;
   saveFailedText: string;
   reload: string;
+  nextHelp: string;
 };
 
 interface SurveyProps {
   questions: Question[];
-  nextText: string;
-  prevText: string;
-  resultsText: string;
   labels: SurveyLabels;
   saveTest: (result: DbResult) => Promise<{ id: string }>;
   locale: string;
@@ -36,9 +42,6 @@ interface SurveyProps {
 
 export const Survey = ({
   questions,
-  nextText,
-  prevText,
-  resultsText,
   labels,
   saveTest,
   locale: language
@@ -50,9 +53,12 @@ export const Survey = ({
   const [loading, setLoading] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [restored, setRestored] = useState(false);
-  const [inProgress, setInProgress] = useState(false);
   const { width } = useWindowDimensions();
   const seconds = useTimer();
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  // Vrai uniquement après un clic sur Suivant ou Précédent : ni la restauration
+  // d'une sauvegarde ni le premier rendu ne déplacent le focus.
+  const shouldFocusHeading = useRef(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -74,14 +80,25 @@ export const Survey = ({
   }, [answers, currentQuestionIndex]);
 
   useEffect(() => {
-    const restoreData = () => {
-      if (dataInLocalStorage()) {
-        console.log('Restoring data from local storage');
-        restoreDataFromLocalStorage();
-      }
-    };
-    restoreData();
+    if (dataInLocalStorage()) restoreDataFromLocalStorage();
   }, []);
+
+  // Navigation par Suivant ou Précédent : le focus va au titre de la première
+  // nouvelle question, puis la page défile jusqu'à elle (sans animation si le
+  // mouvement est réduit).
+  useEffect(() => {
+    if (!shouldFocusHeading.current) return;
+    shouldFocusHeading.current = false;
+    const heading = headingRef.current;
+    if (!heading) return;
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView({
+      block: 'start',
+      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto'
+        : 'smooth'
+    });
+  }, [currentQuestionIndex]);
 
   const currentQuestions = useMemo(
     () =>
@@ -93,11 +110,10 @@ export const Survey = ({
   );
 
   const isTestDone = questions.length === answers.length;
-
-  const progress = Math.round((answers.length / questions.length) * 100);
+  const isLastPage =
+    currentQuestionIndex + questionsPerPage >= questions.length;
 
   const nextButtonDisabled =
-    inProgress ||
     currentQuestionIndex + questionsPerPage > answers.length ||
     (isTestDone &&
       currentQuestionIndex === questions.length - questionsPerPage) ||
@@ -105,7 +121,13 @@ export const Survey = ({
 
   const backButtonDisabled = currentQuestionIndex === 0 || loading;
 
-  async function handleAnswer(id: string, value: string) {
+  const total = questions.length;
+  const current = Math.min(currentQuestionIndex + 1, total);
+  const progressLabel = labels.progress
+    .replace('{current}', formatNombre(current, language))
+    .replace('{total}', formatNombre(total, language));
+
+  function handleAnswer(id: string, value: string) {
     const question = questions.find((question) => question.id === id);
     if (!question) return;
 
@@ -120,31 +142,16 @@ export const Survey = ({
       ...prevAnswers.filter((a) => a.id !== id),
       newAnswer
     ]);
-
-    const latestAnswerId = answers.slice(-1)[0]?.id;
-
-    if (
-      questionsPerPage === 1 &&
-      questions.length !== answers.length + 1 &&
-      id !== latestAnswerId
-    ) {
-      setInProgress(true);
-      await sleep(700);
-      setCurrentQuestionIndex((prev) => prev + 1);
-      window.scrollTo(0, 0);
-      setInProgress(false);
-    }
   }
 
   function handlePreviousQuestions() {
+    shouldFocusHeading.current = true;
     setCurrentQuestionIndex((prev) => prev - questionsPerPage);
-    window.scrollTo(0, 0);
   }
 
   function handleNextQuestions() {
-    if (inProgress) return;
+    shouldFocusHeading.current = true;
     setCurrentQuestionIndex((prev) => prev + questionsPerPage);
-    window.scrollTo(0, 0);
     if (restored) setRestored(false);
   }
 
@@ -174,7 +181,6 @@ export const Survey = ({
         dateStamp: new Date(),
         answers
       });
-      confetti({});
       localStorage.removeItem('inProgress');
       localStorage.removeItem('b5data');
       localStorage.setItem('resultId', result.id);
@@ -202,125 +208,95 @@ export const Survey = ({
   }
 
   function clearDataInLocalStorage() {
-    console.log('Clearing data from local storage');
     localStorage.removeItem('inProgress');
     localStorage.removeItem('b5data');
     location.reload();
   }
 
   return (
-    <div className='mt-2'>
-      <Progress
-        aria-label='Progress bar'
-        value={progress}
-        className='max-w'
-        showValueLabel={true}
-        label={formatTimer(seconds)}
-        minValue={0}
-        maxValue={100}
-        size='lg'
-        color='secondary'
+    <div>
+      <ProgressHeader
+        answered={answers.length}
+        total={total}
+        current={current}
+        label={progressLabel}
       />
-      {restored && (
-        <Card className='mt-4 bg-warning/20 text-warning-600 dark:text-warning'>
-          <CardHeader className='justify-between'>
-            <Button isIconOnly variant='light' color='warning'>
-              <InfoIcon />
-            </Button>
-            <p>
-              {labels.restored}&nbsp;
-              <a
-                className='underline cursor-pointer'
-                onClick={clearDataInLocalStorage}
-                aria-label='Clear data'
-              >
-                {labels.newTest}
-              </a>
-              .
-            </p>
-            <Button
-              isIconOnly
-              variant='light'
-              color='warning'
-              onClick={() => setRestored(false)}
-            >
-              <CloseIcon />
-            </Button>
-          </CardHeader>
-        </Card>
-      )}
-      {currentQuestions.map((question) => (
-        <div key={'q' + question.num}>
-          <h2 className='text-2xl my-4'>{question.text}</h2>
-          <div>
-            <RadioGroup
-              onValueChange={(value) => handleAnswer(question.id, value)}
-              value={answers
-                .find((answer) => answer.id === question.id)
-                ?.score.toString()}
-              color='secondary'
-              isDisabled={inProgress}
-            >
-              {question.choices.map((choice, index) => (
-                <Radio
-                  key={index + question.id}
-                  value={choice.score.toString()}
-                >
-                  {choice.text}
-                </Radio>
-              ))}
-            </RadioGroup>
-          </div>
+      {currentQuestionIndex === 0 && (
+        <div className='mt-6'>
+          <p className='mb-2 text-petit text-texte-2'>{labels.instructions}</p>
+          <p className='text-petit text-texte-3'>{labels.noTimeLimit}</p>
         </div>
+      )}
+      {restored && (
+        <Notice ton='avis' className='mt-6'>
+          <p className='min-w-0 flex-1'>
+            {labels.restored}{' '}
+            <Button
+              variant='light'
+              size='sm'
+              className='h-auto min-w-0 px-1 py-0 align-baseline text-petit text-accent underline'
+              onPress={clearDataInLocalStorage}
+            >
+              {labels.newTest}
+            </Button>
+          </p>
+          <Button
+            isIconOnly
+            variant='light'
+            size='md'
+            aria-label={labels.dismiss}
+            className='text-avis'
+            onPress={() => setRestored(false)}
+          >
+            <CloseIcon />
+          </Button>
+        </Notice>
+      )}
+      {currentQuestions.map((question, index) => (
+        <QuestionBlock
+          key={question.id}
+          question={question}
+          number={currentQuestionIndex + index + 1}
+          value={answers
+            .find((answer) => answer.id === question.id)
+            ?.score.toString()}
+          onChange={(value) => handleAnswer(question.id, value)}
+          headingRef={index === 0 ? headingRef : undefined}
+        />
       ))}
       {saveFailed && (
-        <div className='mt-4'>
-          <Alert title={labels.saveFailedTitle}>
-            <p>{labels.saveFailedText}</p>
-            <Button
-              className='mt-3'
-              color='primary'
-              onClick={() => location.reload()}
-            >
-              {labels.reload}
-            </Button>
-          </Alert>
-        </div>
-      )}
-      <div className='my-12 space-x-4 inline-flex'>
-        <Button
-          color='primary'
-          isDisabled={backButtonDisabled}
-          onClick={handlePreviousQuestions}
-        >
-          {prevText.toUpperCase()}
-        </Button>
-
-        <Button
-          color='primary'
-          isDisabled={nextButtonDisabled}
-          onClick={handleNextQuestions}
-        >
-          {nextText.toUpperCase()}
-        </Button>
-
-        {isTestDone && (
+        <Notice ton='erreur' titre={labels.saveFailedTitle} className='mt-6'>
+          <p>{labels.saveFailedText}</p>
           <Button
-            color='secondary'
-            onClick={submitTest}
-            disabled={loading}
-            isLoading={loading}
+            variant='bordered'
+            className='h-auto min-h-11 border-trait-fort py-2 text-encre data-[hover=true]:bg-creux'
+            onPress={() => location.reload()}
           >
-            {resultsText.toUpperCase()}
+            {labels.reload}
           </Button>
-        )}
-
-        {isDev && !isTestDone && (
-          <Button color='primary' onClick={skipToEnd}>
-            Skip to end (dev)
-          </Button>
-        )}
-      </div>
+        </Notice>
+      )}
+      <SurveyNav
+        onPrev={handlePreviousQuestions}
+        onNext={handleNextQuestions}
+        onSubmit={submitTest}
+        prevDisabled={backButtonDisabled}
+        nextDisabled={isLastPage ? !isTestDone || loading : nextButtonDisabled}
+        isLast={isLastPage}
+        isLoading={loading}
+        labels={{
+          prev: labels.prev,
+          next: labels.next,
+          submit: labels.results,
+          saving: labels.saving,
+          nextHelp: labels.nextHelp
+        }}
+      />
+      {isDev && !isTestDone && (
+        <Button variant='flat' className='mt-4' onPress={skipToEnd}>
+          Skip to end (dev)
+        </Button>
+      )}
     </div>
   );
 };

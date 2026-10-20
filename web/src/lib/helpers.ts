@@ -15,16 +15,6 @@ export const formatAndValidateId = (id: string): boolean => {
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export function formatTimer(seconds: number): string {
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
-
-  const formattedMinutes = minutes.toString().padStart(2, '0');
-  const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
-
-  return `${formattedMinutes}:${formattedSeconds}`;
-}
-
 export const isDev: boolean = process.env.NEXT_PUBLIC_ENV === 'development';
 
 const unescape = (str: string) =>
@@ -69,9 +59,8 @@ export function calculateReadingTime(content: string) {
 
 const translatedLanguages = ['no'];
 
-export function getTranslationLocale(locale: string) {
-  // if (spanishLanguages.includes(locale)) {
-  //   return 'es';
-  // }
+// Langue des articles : seul le norvégien a ses propres articles en plus de
+// l'anglais, qui sert de repli.
+export function getTranslationLocale(locale: string): string {
   return translatedLanguages.includes(locale) ? locale : 'en';
 }

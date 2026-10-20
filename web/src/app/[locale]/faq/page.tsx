@@ -1,54 +1,65 @@
-'use client';
 import { title } from '@/components/primitives';
-import { Accordion, AccordionItem } from '@nextui-org/accordion';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { supportEmail } from '@/config/site';
+import { isoler } from '@/lib/format';
 
-export default function FaqPage() {
-  const faq = [
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'faq' });
+  return { title: t('title') };
+}
+
+export default async function FaqPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations('faq');
+  const about = await getTranslations('about');
+  const email = isoler(supportEmail);
+
+  // Toutes les réponses restent visibles : cinq questions ne justifient pas un accordéon.
+  const entries = [
     ...(supportEmail
       ? [
           {
-            question: 'I got an error on this website',
-            answer: `Tell us what happened by e-mail at ${supportEmail}.`
+            key: 'error',
+            question: t('error.question'),
+            answer: t('error.answer', { email })
           }
         ]
       : []),
-    {
-      question: 'How do I print my test results?',
-      answer:
-        'Try to print the results-page from your browser or save it as a PDF-document and print that instead.'
-    },
-    {
-      question:
-        'Where can I find more information about the questions and the evaluation?',
-      answer: 'See the IPIP Website for more information.'
-    },
-    {
-      question: 'Where do the questions come from?',
-      answer:
-        'The questions and the scoring are taken from the public domain International Personality Item Pool (ipip.ori.org).'
-    }
+    ...(['print', 'source', 'answers', 'diagnosis'] as const).map((key) => ({
+      key,
+      question: t(`${key}.question`),
+      answer: t(`${key}.answer`)
+    }))
   ];
+
   return (
-    <div>
-      <h1 className={title()}>Frequently asked questions.</h1>
-      <Accordion className='mt-10'>
-        {faq.map((item, index) => (
-          <AccordionItem
-            key={index}
-            textValue={item.question}
-            title={
-              <span className='text-foreground text-large font-medium'>
-                {item.question}
-              </span>
-            }
-          >
-            <div className='py-2 pt-0 pb-6 text-base text-default-500'>
-              {item.answer}
-            </div>
-          </AccordionItem>
+    <div className='grid gap-10 lg:grid-cols-12'>
+      <div className='lg:col-span-4'>
+        <h1 className={title()}>{t('title')}</h1>
+        {supportEmail && (
+          <p className='mt-4 text-texte-2'>
+            {about('contact_email', { email })}
+          </p>
+        )}
+      </div>
+      <dl className='divide-y divide-trait lg:col-span-8'>
+        {entries.map((entry) => (
+          <div key={entry.key} className='py-6 first:pt-0'>
+            <dt>
+              <h2 className='text-titre-3 text-encre'>{entry.question}</h2>
+            </dt>
+            <dd className='mt-2 colonne-lecture text-texte-2'>
+              {entry.answer}
+            </dd>
+          </div>
         ))}
-      </Accordion>
+      </dl>
     </div>
   );
 }
