@@ -49,6 +49,9 @@ sh supabase/scripts/test-sql.sh <tenga-sb|tenga-sb-preprod> [dossier]
 | `17_passation.sql` | lots 2 et 3 : progression avec contrôle de révision (conflit 40001), validation des réponses, soumission unique, lecture individuelle par le consultant affecté ou l'administrateur (journal écrit avant le résultat, refus sans trace) |
 | `18_mes_donnees.sql` | lot 3 : mes résultats, export JSON, suppression de compte en cascade (journal pseudonymisé), rejeu d'un effacement par le serveur, information du responsable sans identité |
 | `19_purge_lots_2_3.sql` | lots 2 et 3 : purge des invitations, tentatives, résultats et comptes vides, traces chiffrées, règles de suppression qui contraignent la purge (vu rouge), durées lues dans `private.settings` |
+| `20_connexion_plafond_compte.sql` | migration 0004 : plafond de 5 échecs de code PAR COMPTE qui survit aux nouveaux liens, fenêtre d'une heure, verrou consultatif par compte, budget du lien sans effet collatéral, plafond de demandes compté à part, journal `connexion.echec` et `connexion.plafond` sans adresse |
+| `21_connexion_empreinte_leurre.sql` | migration 0004 : code haché par HMAC-SHA256 (secret `p_pepper` de l'application, sinon clé de repli de `private.settings`), anciennes signatures retirées, travail équivalent pour une adresse inconnue (lignes de leurre), purge des leurres et compteurs |
+| `22_durcissement_instance.sql` | migration 0004 : index partiel d'adresse (`is_sso_user = false`), purge à 01:00 locale et fuseau `cron.timezone`, purge de l'historique pg_cron, schéma vault et pg_stat_statements fermés, `(SELECT app.suis_admin_tenga())` dans les règles |
 
 ## Mutations (contrôle « vu rouge », plan § 7)
 
@@ -119,8 +122,12 @@ Conséquences :
 - Convention d'écriture des migrations : dans un corps plpgsql, écrire `END`
   sans point-virgule final (un `END;` isolé est pris pour la fin d'une
   transaction et refusé).
-- Droits par défaut non retirés dans les schémas du gabarit `storage`,
-  `graphql`, `graphql_public`, `realtime` : inutilisés par cette instance.
+- Droits par défaut : retirés dans `storage`, `graphql`, `graphql_public` par la
+  migration 0004 (`03_defaults.sql` le garde) ; les objets DÉJÀ présents de ces
+  schémas gardent leurs droits d'origine (inutilisés par cette instance).
+- Concurrence : pgTAP ne simule pas deux sessions. `scripts/concurrence-code.sh
+  <tenga-sb-preprod> [--sans-verrou]` lance des essais de code parallèles réels
+  (préproduction seulement) ; `--sans-verrou` prouve le rouge.
 - Les tâches pg_cron s'exécuteront avec les droits de leur propriétaire : au
   lot 1, les planifier sous un rôle sans BYPASSRLS qui appelle des fonctions
   de `private`.

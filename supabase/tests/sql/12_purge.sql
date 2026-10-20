@@ -4,12 +4,15 @@
 -- en retirant la règle de suppression).
 -- (Enveloppé dans une transaction annulée par scripts/test-sql.sh.)
 SET LOCAL search_path TO tests, pg_catalog, public;
-SELECT plan(15);
+SELECT plan(17);
 
 -- Tâche planifiée
 SELECT is(
   (SELECT schedule || '|' || command || '|' || active::text FROM cron.job WHERE jobname = 'tenga-purge-quotidienne'),
-  '0 0 * * *|SELECT private.purger_quotidien()|true', 'la tâche tenga-purge-quotidienne est planifiée à 00:00 UTC et active');
+  '0 1 * * *|SELECT private.purger_quotidien()|true', 'la tâche tenga-purge-quotidienne est planifiée à 01:00 (heure locale de cron.timezone) et active');
+-- pg_cron 1.6 lit l'horaire dans cron.timezone : « 0 1 » ne vaut 01:00 à Casablanca que dans ce fuseau.
+SELECT is(current_setting('cron.timezone'), 'Africa/Casablanca', 'cron.timezone vaut Africa/Casablanca : l''horaire de la tâche est en heure locale');
+SELECT is((SELECT schedule FROM cron.job WHERE jobname = 'tenga-purge-quotidienne'), '0 1 * * *', 'le champ schedule vaut 0 1 * * * (01:00 locale, pas 00:00)');
 SELECT is((SELECT count(*)::int FROM cron.job WHERE jobname = 'tenga-purge-quotidienne'), 1, 'une seule tâche de purge');
 SELECT ok(
   (SELECT p.prosecdef AND p.proowner = 'tenga_owner'::regrole FROM pg_proc p WHERE p.oid = 'private.purger_quotidien()'::regprocedure),

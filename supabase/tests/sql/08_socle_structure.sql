@@ -50,6 +50,16 @@ app.results|results_suppression_owner|DELETE|tenga_owner
 private.audit_log|audit_insertion_owner|INSERT|tenga_owner
 private.audit_log|audit_lecture_owner|SELECT|tenga_owner
 private.audit_log|audit_suppression_owner|DELETE|tenga_owner
+private.demandes_lien|demandes_insertion_owner|INSERT|tenga_owner
+private.demandes_lien|demandes_lecture_owner|SELECT|tenga_owner
+private.demandes_lien|demandes_suppression_owner|DELETE|tenga_owner
+private.echecs_code|echecs_insertion_owner|INSERT|tenga_owner
+private.echecs_code|echecs_lecture_owner|SELECT|tenga_owner
+private.echecs_code|echecs_modification_owner|UPDATE|tenga_owner
+private.echecs_code|echecs_suppression_owner|DELETE|tenga_owner
+private.leurre_connexion|leurre_insertion_owner|INSERT|tenga_owner
+private.leurre_connexion|leurre_lecture_owner|SELECT|tenga_owner
+private.leurre_connexion|leurre_suppression_owner|DELETE|tenga_owner
 private.liens_connexion|liens_insertion_owner|INSERT|tenga_owner
 private.liens_connexion|liens_lecture_owner|SELECT|tenga_owner
 private.liens_connexion|liens_modification_owner|UPDATE|tenga_owner
