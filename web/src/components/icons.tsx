@@ -203,7 +203,7 @@ export const ArrowRightIcon = ({
   <svg
     aria-hidden='true'
     focusable='false'
-    className={clsx('rtl:-scale-x-100', className)}
+    className={clsx('shrink-0 rtl:-scale-x-100', className)}
     xmlns='http://www.w3.org/2000/svg'
     width={size || width}
     height={size || height}
