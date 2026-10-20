@@ -103,6 +103,8 @@ SELECT matches(pg_temp.demander('inconnu@example.test', 'trop-court'), '^ERR:220
 SELECT matches(pg_temp.code('deux@example.test', '123456', ''), '^ERR:22023:', 'un p_pepper vide est refusé aussi');
 
 -- ===== M2 : travail équivalent pour une adresse inconnue =====
+-- L'instance peut porter de vraies lignes de leurre : l'état de départ est vidé dans cette transaction annulée.
+DELETE FROM private.leurre_connexion;
 SELECT is((SELECT count(*)::int FROM private.leurre_connexion), 0, 'avant : aucune ligne de leurre');
 SELECT is(pg_temp.demander('inconnu@example.test'), 'false - - -', 'demande, adresse inconnue : réponse neutre');
 SELECT is((SELECT count(*)::int FROM private.leurre_connexion), 2, 'demande, adresse inconnue : deux lignes factices écrites');

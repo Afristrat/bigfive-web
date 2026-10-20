@@ -142,7 +142,7 @@ SELECT is(
 SELECT is(
   (SELECT string_agg(policyname, ',' ORDER BY policyname) FROM pg_policies
     WHERE schemaname = 'app' AND qual ~ 'SELECT app\.suis_admin_tenga'),
-  'campaigns_lecture,memberships_lecture,organizations_lecture', 'organizations_lecture, memberships_lecture (et campaigns_lecture) enveloppent la fonction');
+  'campaigns_lecture,group_aggregates_lecture,group_members_lecture,groups_lecture,memberships_lecture,organizations_lecture', 'organizations_lecture, memberships_lecture, campaigns_lecture et les trois règles de lecture des groupes enveloppent la fonction');
 
 INSERT INTO app.organizations (id, slug, nom) VALUES
   ('d1000000-0000-4000-8000-00000000000a', 'org-a', 'Organisation A'),

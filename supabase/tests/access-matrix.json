@@ -1,6 +1,6 @@
 {
-  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 3 : objets des lots 1 (socle), 2 (campagnes, invitations, passation) et 3 (mes résultats). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 (lot 1) et 14 à 19 (lots 2 et 3) transcrivent ces cellules (identités simulées, rôle réel).",
-  "version": 3,
+  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 4 : objets des lots 1 (socle), 2 (campagnes, invitations, passation), 3 (mes résultats) et 4 (groupes, composition, agrégats photographiés). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 (lot 1), 14 à 19 (lots 2 et 3) et 24 à 26 (lot 4) transcrivent ces cellules (identités simulées, rôle réel).",
+  "version": 4,
   "personnages": [
     {
       "id": "anonyme",
@@ -449,7 +449,7 @@
           "admin_tenga": "autorise"
         }
       },
-      "note": "Ouverte vers close, irréversible ; efface les invitations sans réponse ; journalisée avec le nombre de participations terminées."
+      "note": "Ouverte vers close, irréversible ; efface les invitations sans réponse ; pose la photographie des agrégats dans la même transaction (private.poser_agregats, une seule fois, journalisée « agregats.poser » avec le nombre de lignes) ; journalisée avec le nombre de participations terminées."
     },
     {
       "objet": "app.inviter",
@@ -495,7 +495,7 @@
           "admin_tenga": "autorise"
         }
       },
-      "note": "Consultant de l'organisation du résultat ou administrateur Tenga. Écrit la ligne de journal PUIS renvoie le résultat ; aucun refus ne laisse de trace ; aucune identité renvoyée."
+      "note": "Consultant affecté (rôle consultant dans l'organisation du résultat) ou administrateur Tenga. Écrit la ligne de journal PUIS renvoie le résultat ; aucun refus ne laisse de trace ; aucune identité renvoyée. Le responsable, un consultant d'une autre organisation et le participant sont refusés. Valable après la clôture comme avant."
     },
     {
       "objet": "app.mes_resultats",
@@ -588,6 +588,143 @@
         }
       },
       "note": "Même effacement que app.supprimer_mon_compte, pour le rejeu du registre des effacements après restauration ; faux si le compte n'existe plus."
+    },
+    {
+      "objet": "app.groups",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "responsable_a": "organisation",
+          "consultant_affecte_a": "organisation",
+          "consultant_autre": "organisation",
+          "responsable_b": "organisation",
+          "admin_tenga": "autorise"
+        },
+        "insert": {
+          "responsable_a": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        },
+        "update": {
+          "responsable_a": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        },
+        "delete": {
+          "responsable_a": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        }
+      },
+      "note": "Groupes d'une campagne. Lus par le responsable et le consultant de l'organisation et par l'administrateur Tenga ; un participant ne lit rien. Écriture par app.creer_groupe, app.renommer_groupe et app.supprimer_groupe, tant que la campagne est en brouillon : composition gelée dès l'ouverture, même pour le superutilisateur (déclencheur), sauf effacement en cascade."
+    },
+    {
+      "objet": "app.group_members",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "responsable_a": "organisation",
+          "consultant_affecte_a": "refuse",
+          "consultant_autre": "refuse",
+          "responsable_b": "organisation",
+          "admin_tenga": "autorise"
+        },
+        "insert": {
+          "responsable_a": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        },
+        "delete": {
+          "responsable_a": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        }
+      },
+      "note": "Composition des groupes : qui est dans quel groupe (identifiant de participation, jamais de nom ni d'adresse). Lue par le responsable de l'organisation et l'administrateur Tenga ; le consultant et le participant ne la lisent pas. Une personne dans un seul groupe par campagne (clé primaire). Écriture par app.affecter_membre et app.retirer_membre, campagne en brouillon seulement."
+    },
+    {
+      "objet": "app.group_aggregates",
+      "type": "table",
+      "cellules": {
+        "select": {
+          "responsable_a": "organisation",
+          "consultant_affecte_a": "organisation",
+          "consultant_autre": "organisation",
+          "responsable_b": "organisation",
+          "admin_tenga": "autorise"
+        },
+        "insert": {
+          "responsable_a": "fonction_seule",
+          "admin_tenga": "fonction_seule"
+        },
+        "update": {
+          "responsable_a": "refuse",
+          "admin_tenga": "refuse",
+          "serveur": "refuse"
+        },
+        "delete": {
+          "responsable_a": "refuse",
+          "admin_tenga": "refuse",
+          "serveur": "refuse"
+        }
+      },
+      "note": "Photographie posée UNE SEULE FOIS à la clôture, dans la transaction de app.clore_campagne (insertion indirecte : le responsable ou l'administrateur clôt, la fonction pose). Par groupe et par domaine : effectif, moyenne, écart type de population (jamais de minimum ni de maximum). Un groupe n'est publié qu'avec au moins private.settings.seuil_anonymat résultats (5 au moins, aussi imposé par une contrainte) ; son complément seulement s'il compte 0 ou au moins le seuil et si ce qui reste hors de tous les groupes publiés compte aussi 0 ou au moins le seuil. Lecture seule pour tous, aucune modification ni suppression. Lue par le responsable, le consultant de l'organisation et l'administrateur Tenga ; jamais par un participant."
+    },
+    {
+      "objet": "private.agregats_poses",
+      "type": "table",
+      "cellules": {},
+      "note": "Marqueur de pose de la photographie (une ligne par campagne, clé primaire). Aucun accès par l'API."
+    },
+    {
+      "objet": "app.creer_groupe",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "responsable_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Responsable de l'organisation ou administrateur Tenga, campagne en brouillon seulement ; refus identique pour une campagne inexistante ; journalisée (groupe.creer)."
+    },
+    {
+      "objet": "app.renommer_groupe",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "responsable_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Renomme et réordonne un groupe, campagne en brouillon seulement ; journalisée (groupe.renommer)."
+    },
+    {
+      "objet": "app.supprimer_groupe",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "responsable_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Supprime un groupe et sa composition, campagne en brouillon seulement ; journalisée (groupe.supprimer)."
+    },
+    {
+      "objet": "app.affecter_membre",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "responsable_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Affecte une participation de la campagne à un groupe ; une personne dans un seul groupe par campagne (23505) ; campagne en brouillon seulement ; journalisée (groupe.affecter)."
+    },
+    {
+      "objet": "app.retirer_membre",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "responsable_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Retire une participation de son groupe (renvoie faux si elle n'y était pas) ; campagne en brouillon seulement ; journalisée seulement si un retrait a eu lieu (groupe.retirer)."
     }
   ]
 }

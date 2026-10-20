@@ -10,7 +10,8 @@
 # verify-instance.sh (plafonds, exposition, certification des clés).
 # Les mutations « vu rouge » (mutate-sql.sh) se lancent à part, en préproduction :
 #   ssh ... "sh /home/serveuria/tenga-sb-preprod/scripts/mutate-sql.sh tenga-sb-preprod"
-# et l'essai de concurrence du code (deux sessions réelles) : scripts/concurrence-code.sh tenga-sb-preprod
+# et les essais de concurrence (deux sessions réelles) : scripts/concurrence-code.sh tenga-sb-preprod
+# (code de connexion) et scripts/concurrence-cloture.sh tenga-sb-preprod (clôture contre soumission)
 
 set -eu
 
@@ -27,7 +28,7 @@ ssh_run() { ssh -i "$key" -o BatchMode=yes "$host" "$@"; }
 
 ssh_run "mkdir -p $remote/db $remote/scripts $remote/volumes/db/data"
 tar -C "$here" -cf - compose/docker-compose.yml compose/kong.yml compose/kong-entrypoint.sh compose/db/roles.sql compose/db/schemas.sql \
-    scripts/init-env.sh scripts/verify-instance.sh scripts/migrate.sh scripts/test-sql.sh scripts/mutate-sql.sh scripts/concurrence-code.sh \
+    scripts/init-env.sh scripts/verify-instance.sh scripts/migrate.sh scripts/test-sql.sh scripts/mutate-sql.sh scripts/concurrence-code.sh scripts/concurrence-cloture.sh \
     migrations tests \
     | ssh_run "tar -xf - -C $remote --transform 's,^compose/,,'"
 

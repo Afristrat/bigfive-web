@@ -51,6 +51,8 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated',
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated', $q$select app.consommer_code_connexion('un@example.test', '123456')::text$q$), 'ERR:42501:permission denied for function consommer_code_connexion', 'consommer code : réservé au serveur');
 
 -- ===== Demande =====
+-- L'instance peut porter de vrais liens (sessions d'essai sur la préproduction) : l'état de départ est vidé dans cette transaction annulée.
+DELETE FROM private.liens_connexion;
 SELECT matches(set_config('zz.l1', pg_temp.demander('un@example.test'), true), '^true [A-Za-z0-9_-]{43} [0-9]{6} fr$', 'demander : adresse connue, jeton de 43 caractères base64url, code à 6 chiffres, langue du profil');
 SELECT matches(set_config('zz.l1b', pg_temp.demander('  UN@Example.TEST '), true), '^true [A-Za-z0-9_-]{43} [0-9]{6} fr$', 'demander : adresse normalisée (casse et espaces)');
 SELECT isnt(split_part(current_setting('zz.l1'), ' ', 2), split_part(current_setting('zz.l1b'), ' ', 2), 'deux demandes donnent deux jetons différents');

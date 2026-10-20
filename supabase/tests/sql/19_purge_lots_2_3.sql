@@ -76,7 +76,7 @@ SELECT private.purger_quotidien();
 SELECT is((SELECT count(*)::int FROM app.invitations), 3, 'sans règle de suppression, la purge n''efface aucune invitation (la RLS la contraint)');
 SELECT is((SELECT count(*)::int FROM app.attempts), 2, 'sans règle de suppression, la purge n''efface aucune tentative');
 SELECT is((SELECT count(*)::int FROM app.results), 3, 'sans règle de suppression, la purge n''efface aucun résultat');
-SELECT is((SELECT count(*)::int FROM auth.users), 11, 'sans règle de suppression sur auth.users, la purge n''efface aucun compte');
+SELECT is((SELECT count(*)::int FROM auth.users WHERE email LIKE '%@example.test'), 11, 'sans règle de suppression sur auth.users, la purge n''efface aucun compte');
 SELECT is((SELECT quantite FROM private.audit_log WHERE action = 'purge.comptes' ORDER BY id DESC LIMIT 1), 0, 'la trace chiffrée dit alors 0 compte effacé');
 CREATE POLICY invitations_suppression_owner ON app.invitations FOR DELETE TO tenga_owner USING (true);
 CREATE POLICY attempts_suppression_owner ON app.attempts FOR DELETE TO tenga_owner USING (true);
@@ -93,7 +93,7 @@ SELECT is((SELECT statut FROM app.participations WHERE id = 'd0000000-0000-4000-
 SELECT is((SELECT string_agg(participation_id::text, ',' ORDER BY participation_id) FROM app.results),
   'd0000000-0000-4000-8000-000000000003,d0000000-0000-4000-8000-000000000008', 'résultats : celui de 40 mois est effacé, ceux de 1 et 14 mois restent');
 SELECT is((SELECT statut FROM app.participations WHERE id = 'd0000000-0000-4000-8000-000000000009'), 'terminee', 'la participation du résultat effacé reste (terminée)');
-SELECT is((SELECT string_agg(email, ',' ORDER BY email) FROM auth.users),
+SELECT is((SELECT string_agg(email, ',' ORDER BY email) FROM auth.users WHERE email LIKE '%@example.test'),
   'u10@example.test,u11@example.test,u3@example.test,u4@example.test,u5@example.test,u6@example.test,u7@example.test,u8@example.test,u9@example.test',
   'comptes : les deux comptes vides inactifs depuis plus d''un an sont effacés, tous les autres restent (résultat, responsable, consultant, administrateur, récents)');
 SELECT is((SELECT count(*)::int FROM app.profiles WHERE user_id IN ('a0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000002'))
@@ -114,7 +114,7 @@ SELECT is((SELECT quantite || ',' FROM private.audit_log WHERE action = 'purge.i
        || (SELECT quantite || ',' FROM private.audit_log WHERE action = 'purge.tentatives' ORDER BY id DESC LIMIT 1)
        || (SELECT quantite || ',' FROM private.audit_log WHERE action = 'purge.resultats' ORDER BY id DESC LIMIT 1)
        || (SELECT quantite::text FROM private.audit_log WHERE action = 'purge.comptes' ORDER BY id DESC LIMIT 1), '0,0,0,0', 'une seconde passe n''efface plus rien et le dit (traces à 0)');
-SELECT is((SELECT count(*)::int FROM auth.users), 9, 'la seconde passe garde les neuf comptes');
+SELECT is((SELECT count(*)::int FROM auth.users WHERE email LIKE '%@example.test'), 9, 'la seconde passe garde les neuf comptes');
 
 -- ===== Les durées viennent de private.settings =====
 UPDATE private.settings SET conservation_resultats_mois = 12, conservation_comptes_vides_mois = 6;

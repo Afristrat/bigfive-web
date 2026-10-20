@@ -52,6 +52,10 @@ sh supabase/scripts/test-sql.sh <tenga-sb|tenga-sb-preprod> [dossier]
 | `20_connexion_plafond_compte.sql` | migration 0004 : plafond de 5 échecs de code PAR COMPTE qui survit aux nouveaux liens, fenêtre d'une heure, verrou consultatif par compte, budget du lien sans effet collatéral, plafond de demandes compté à part, journal `connexion.echec` et `connexion.plafond` sans adresse |
 | `21_connexion_empreinte_leurre.sql` | migration 0004 : code haché par HMAC-SHA256 (secret `p_pepper` de l'application, sinon clé de repli de `private.settings`), anciennes signatures retirées, travail équivalent pour une adresse inconnue (lignes de leurre), purge des leurres et compteurs |
 | `22_durcissement_instance.sql` | migration 0004 : index partiel d'adresse (`is_sso_user = false`), purge à 01:00 locale et fuseau `cron.timezone`, purge de l'historique pg_cron, schéma vault et pg_stat_statements fermés, `(SELECT app.suis_admin_tenga())` dans les règles |
+| `23_groupes_structure.sql` | lot 4 (migration 0005) : quatre tables protégées (RLS forcée, anonyme et `service_role` sans droit, écriture fermée), fonctions exécutables figées, liste des règles et des déclencheurs figée (le verrou de l'API se déclenche avant le gel), colonnes figées (aucun minimum ni maximum, aucune identité), une personne dans un seul groupe par campagne, composition GELÉE dès l'ouverture (même pour le superutilisateur, sauf l'effacement en cascade d'un compte), plancher d'effectif de 5 inscrit dans la table, photographie en lecture seule (ni modification, ni effacement, ni vidage), une seule pose, verrou partagé de la clôture |
+| `24_groupes_acces.sql` | lot 4 : accès par personnage aux groupes, à la composition et aux agrégats (matrice), étanchéité entre organisations avec identifiants forgés, le responsable (et le consultant, et l'administrateur) ne lit RIEN dans `attempts` ni `results` même par jointure avec les groupes, écritures directes refusées, verrous 2 et 3 éprouvés un à un sur les trois nouvelles tables |
+| `25_groupes_fonctions.sql` | lot 4 : créer, renommer, supprimer un groupe, affecter, retirer un membre : droits par rôle, refus sans fuite d'existence, journal de chaque geste et aucune trace des refus, brouillon seulement, gel après `ouvrir_campagne`, effacement de compte après la clôture jamais bloqué |
+| `26_agregats_cloture.sql` | lot 4 : photographie posée par `app.clore_campagne` : moyenne et écart type EXACTS sur un jeu connu (valeurs calculées à part), seuil (4 : rien ; 5 : publié ; seuil relevé à 6), complément (1 à 4 : non publié ; 0 ou 5 : publié ; durcissement contre la différence avec les personnes hors groupe ou un petit groupe), un seul passage, atomicité de la clôture, campagne close sans passation, lecture des agrégats par rôle, vue individuelle du consultant affecté journalisée et refus du consultant non affecté |
 
 ## Mutations (contrôle « vu rouge », plan § 7)
 
@@ -68,6 +72,16 @@ erreur) ; une mutation qui ne s'applique pas seule est INVALIDE (c'est le cas d'
 SECURITY` seul : le garde-fou DDL le refuse, la mutation désactive donc d'abord le garde-fou). Au moins 12
 mutations sont exigées. Le script refuse la production. `TENGA_MUTATION_TOUT=1` rejoue tous les fichiers
 pour chaque mutation au lieu de s'arrêter au premier rouge.
+
+Les mutations 47 à 74 couvrent le lot 4 : seuil d'anonymat retiré (de la fonction seule, puis de la fonction et de la
+table), plancher d'effectif retiré, complément non contrôlé (en entier, puis seulement le contrôle contre la
+différence), gel retiré (sur les groupes, sur les membres, fonction neutralisée), effacement en cascade bloqué par le
+gel, unicité de groupe retirée, photographie réécrite à chaque appel, agrégats modifiables ou posés hors clôture, règle de
+lecture ouverte (agrégats, composition), droit d'écriture ouvert, déclencheur de l'API supprimé, journalisation retirée
+(affectation, pose), clôture sans photographie, gestion des groupes sans contrôle du droit ou du brouillon, lecture
+individuelle ouverte à tout consultant, agrégats de plusieurs campagnes mélangés, écart type d'échantillon, moyenne
+arrondie à l'unité, verrou de course de la clôture retiré. Une mutation de fonction se fait par `pg_get_functiondef` et
+`replace` dans un bloc `DO` (échec si le texte n'a pas changé : une mutation sans effet est INVALIDE, jamais verte par erreur).
 
 ## Constats sur les rôles de l'instance (lus en base)
 
@@ -110,6 +124,33 @@ Conséquences :
   `15_campagnes_fonctions.sql` et `17_passation.sql` l'éprouvent (responsable
   d'une autre organisation).
 
+## Lot 4 : groupes et agrégats (migration 0005)
+
+- Tables : `app.groups`, `app.group_members` (clé primaire sur campagne et participation : UNE personne dans un seul
+  groupe par campagne), `app.group_aggregates`, `private.agregats_poses` (marqueur : une seule pose par campagne, y
+  compris quand rien n'a été publié). Aucune vue.
+- Gel : un déclencheur (`private.geler_composition`) refuse toute écriture sur groupes et membres d'une campagne qui n'est
+  plus en brouillon, superutilisateur compris. Seul l'effacement en cascade passe (la campagne ou la participation
+  parente a disparu) : un effacement de compte n'est jamais bloqué. Les fonctions de gestion répondent d'abord par un
+  message précis (« Groupes modifiables en brouillon seulement »).
+- Photographie : `app.clore_campagne` (signature inchangée) appelle `private.poser_agregats` dans sa transaction. Si la pose
+  échoue, la campagne reste ouverte. Par groupe et par domaine (O, C, E, A, N) : effectif, moyenne, écart type de
+  population, arrondis à 2 décimales. Format de score lu : un nombre, ou un objet portant un nombre dans `score`.
+- Publication : groupe publié si son effectif atteint `private.settings.seuil_anonymat` (5 au moins). Complément publié si
+  il compte 0 ou au moins le seuil ET si ce qui reste hors de TOUS les groupes publiés (personnes sans groupe, petits
+  groupes) compte aussi 0 ou au moins le seuil : sans cette seconde condition, le complément du groupe A, la moyenne du
+  groupe B et les effectifs permettent de retrouver le score d'une personne hors groupe (attaque par différence, test 26,
+  scénarios 7 et 9). Un complément vide est publié avec l'effectif 0 et aucune statistique.
+- Une campagne close n'accepte plus de passation, sans course : le contrôle `private.exiger_campagne_ouverte` prend un
+  verrou partagé sur la ligne de campagne que la clôture tient. Preuve avec deux sessions réelles :
+  `scripts/concurrence-cloture.sh <tenga-sb-preprod> [--sans-verrou]`.
+- Vue individuelle du consultant : `app.lire_resultat_individuel` (lot 3) couvre déjà le consultant affecté
+  (rôle `consultant` dans l'organisation) et l'administrateur ; aucune affectation par campagne n'existe dans le plan.
+  Elle est inchangée.
+- Les tests supposent que les tables applicatives de l'instance sont vides (les comptes réels sont tolérés depuis que
+  les tests 18 et 19 ne comptent que les adresses `@example.test`). Des organisations ou campagnes réelles en
+  préproduction fausseraient les comptes absolus de plusieurs fichiers.
+
 ## Limites connues
 
 - Un superutilisateur (`supabase_admin`) peut désactiver ou supprimer le
@@ -127,7 +168,8 @@ Conséquences :
   schémas gardent leurs droits d'origine (inutilisés par cette instance).
 - Concurrence : pgTAP ne simule pas deux sessions. `scripts/concurrence-code.sh
   <tenga-sb-preprod> [--sans-verrou]` lance des essais de code parallèles réels
-  (préproduction seulement) ; `--sans-verrou` prouve le rouge.
+  (préproduction seulement) ; `--sans-verrou` prouve le rouge. Même principe pour la course clôture contre soumission
+  de résultat : `scripts/concurrence-cloture.sh <tenga-sb-preprod> [--sans-verrou]`.
 - Les tâches pg_cron s'exécuteront avec les droits de leur propriétaire : au
   lot 1, les planifier sous un rôle sans BYPASSRLS qui appelle des fonctions
   de `private`.
@@ -141,7 +183,7 @@ Matrice d'accès unique du plan § 7, écrite indépendamment des règles.
 | `personnages` | identités simulées (`id`, `description`) |
 | `operations` | opérations testées par objet |
 | `verdicts` | valeurs permises dans une cellule |
-| `objets` | objets des lots 1 à 3 (tables, fonctions), avec une `note` libre ; une table sans cellule est fermée à tous |
+| `objets` | objets des lots 1 à 4 (tables, fonctions), avec une `note` libre ; une table sans cellule est fermée à tous |
 
 Forme prévue d'un objet :
 

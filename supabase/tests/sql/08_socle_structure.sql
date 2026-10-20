@@ -20,6 +20,18 @@ app.campaigns|campaigns_insertion_owner|INSERT|tenga_owner
 app.campaigns|campaigns_lecture|SELECT|authenticated
 app.campaigns|campaigns_lecture_owner|SELECT|tenga_owner
 app.campaigns|campaigns_modification_owner|UPDATE|tenga_owner
+app.group_aggregates|group_aggregates_insertion_owner|INSERT|tenga_owner
+app.group_aggregates|group_aggregates_lecture|SELECT|authenticated
+app.group_aggregates|group_aggregates_lecture_owner|SELECT|tenga_owner
+app.group_members|group_members_insertion_owner|INSERT|tenga_owner
+app.group_members|group_members_lecture|SELECT|authenticated
+app.group_members|group_members_lecture_owner|SELECT|tenga_owner
+app.group_members|group_members_suppression_owner|DELETE|tenga_owner
+app.groups|groups_insertion_owner|INSERT|tenga_owner
+app.groups|groups_lecture|SELECT|authenticated
+app.groups|groups_lecture_owner|SELECT|tenga_owner
+app.groups|groups_modification_owner|UPDATE|tenga_owner
+app.groups|groups_suppression_owner|DELETE|tenga_owner
 app.invitations|invitations_insertion_owner|INSERT|tenga_owner
 app.invitations|invitations_lecture_owner|SELECT|tenga_owner
 app.invitations|invitations_lecture_responsable|SELECT|authenticated
@@ -47,6 +59,8 @@ app.results|results_insertion_owner|INSERT|tenga_owner
 app.results|results_lecture_owner|SELECT|tenga_owner
 app.results|results_lecture_proprietaire|SELECT|authenticated
 app.results|results_suppression_owner|DELETE|tenga_owner
+private.agregats_poses|agregats_poses_insertion_owner|INSERT|tenga_owner
+private.agregats_poses|agregats_poses_lecture_owner|SELECT|tenga_owner
 private.audit_log|audit_insertion_owner|INSERT|tenga_owner
 private.audit_log|audit_lecture_owner|SELECT|tenga_owner
 private.audit_log|audit_suppression_owner|DELETE|tenga_owner
@@ -74,7 +88,7 @@ SELECT is(
       AND NOT (roles = ARRAY['tenga_owner']::name[])),
   0, 'aucune règle d''écriture pour un autre rôle que tenga_owner (verrou 2)');
 
--- Droits figés sur les tables : le rôle connecté lit huit tables, en lecture seule, rien d'autre
+-- Droits figés sur les tables : le rôle connecté lit onze tables, en lecture seule, rien d'autre
 SELECT is(
   (SELECT string_agg(n.nspname || '.' || c.relname || '>' || r.rol || '>' || x.privs, E'\n' ORDER BY n.nspname, c.relname, r.rol)
      FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
@@ -85,13 +99,16 @@ SELECT is(
     WHERE n.nspname IN ('app', 'private') AND c.relkind IN ('r', 'p', 'v') AND x.privs IS NOT NULL),
   $f$app.attempts>authenticated>SELECT
 app.campaigns>authenticated>SELECT
+app.group_aggregates>authenticated>SELECT
+app.group_members>authenticated>SELECT
+app.groups>authenticated>SELECT
 app.invitations>authenticated>SELECT
 app.memberships>authenticated>SELECT
 app.organizations>authenticated>SELECT
 app.participations>authenticated>SELECT
 app.profiles>authenticated>SELECT
 app.results>authenticated>SELECT$f$,
-  'droits figés : authenticated lit huit tables (SELECT seul) ; anon et service_role n''ont aucun droit sur les tables');
+  'droits figés : authenticated lit onze tables (SELECT seul) ; anon et service_role n''ont aucun droit sur les tables');
 
 -- Fonctions exécutables par l'API, figées
 SELECT is(
@@ -100,12 +117,14 @@ SELECT is(
      CROSS JOIN unnest(ARRAY['anon', 'authenticated', 'service_role']) AS r(rol)
     WHERE n.nspname IN ('app', 'private') AND has_function_privilege(r.rol, p.oid, 'EXECUTE')),
   $f$app.accepter_invitation>service_role
+app.affecter_membre>authenticated
 app.attribuer_role>authenticated
 app.clore_campagne>authenticated
 app.consommer_code_connexion>service_role
 app.consommer_lien_connexion>service_role
 app.consulter_invitation>service_role
 app.creer_campagne>authenticated
+app.creer_groupe>authenticated
 app.creer_organisation>authenticated
 app.demander_lien_connexion>service_role
 app.derniere_purge>service_role
@@ -120,10 +139,13 @@ app.mes_resultats>authenticated
 app.mettre_a_jour_profil>authenticated
 app.mon_role>authenticated
 app.ouvrir_campagne>authenticated
+app.renommer_groupe>authenticated
+app.retirer_membre>authenticated
 app.retirer_role>authenticated
 app.soumettre_resultat>authenticated
 app.suis_admin_tenga>authenticated
 app.suis_membre>authenticated
+app.supprimer_groupe>authenticated
 app.supprimer_mon_compte>authenticated$f$,
   'liste figée des fonctions exécutables par l''API');
 

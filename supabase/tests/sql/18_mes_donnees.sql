@@ -127,7 +127,7 @@ SELECT is((pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated'
 SELECT is(pg_temp.comme(NULL, 'anon', 'select app.supprimer_mon_compte()::text'), 'ERR:42501:permission denied for schema app', 'supprimer_mon_compte, anonyme : refusé');
 SELECT is(pg_temp.comme(NULL, 'service_role', 'select app.supprimer_mon_compte()::text'), 'ERR:42501:permission denied for function supprimer_mon_compte', 'supprimer_mon_compte, service_role : aucun droit d''exécution (le serveur passe par effacer_compte)');
 SELECT is(pg_temp.comme(NULL, 'authenticated', 'select app.supprimer_mon_compte()::text'), 'ERR:42501:Connexion requise', 'supprimer_mon_compte, rôle connecté sans identité : refusé');
-SELECT is((SELECT count(*)::int FROM auth.users), 6, 'ces refus n''ont supprimé aucun compte');
+SELECT is((SELECT count(*)::int FROM auth.users WHERE email LIKE '%@example.test'), 6, 'ces refus n''ont supprimé aucun compte');
 
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated', 'select app.supprimer_mon_compte()::text'), '', 'supprimer_mon_compte : pa supprime son compte');
 SELECT is((SELECT count(*)::int FROM auth.users WHERE id = 'a0000000-0000-4000-8000-000000000001'), 0, 'le compte n''existe plus');

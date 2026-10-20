@@ -84,11 +84,19 @@ $$;
 
 SELECT lower(:'email') AS adresse \gset
 
+-- GoTrue lit ces colonnes comme des chaînes non nulles : un NULL fait échouer
+-- toute l'API d'administration (« converting NULL to string is unsupported »,
+-- erreur 500 sur /admin/users). On les pose donc à la chaîne vide, comme le fait
+-- GoTrue lui-même pour un compte créé par son API.
 INSERT INTO auth.users
-  (instance_id, id, aud, role, email, email_confirmed_at,
+  (instance_id, id, aud, role, email, email_confirmed_at, encrypted_password,
+   confirmation_token, recovery_token, email_change_token_new, email_change,
+   email_change_token_current, phone_change, phone_change_token,
+   reauthentication_token,
    raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
 SELECT '00000000-0000-0000-0000-000000000000', gen_random_uuid(),
-       'authenticated', 'authenticated', :'adresse', now(),
+       'authenticated', 'authenticated', :'adresse', now(), '',
+       '', '', '', '', '', '', '', '',
        '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM auth.users WHERE email = :'adresse');
 
