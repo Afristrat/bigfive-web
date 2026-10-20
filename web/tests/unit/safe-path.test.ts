@@ -34,6 +34,17 @@ describe('safeInternalPath', () => {
     }
   });
 
+  it('refuse les chemins qui se normalisent en « // »', () => {
+    for (const v of [
+      '/.//exemple.org',
+      '/a/..//exemple.org',
+      '/./\\exemple.org'
+    ]) {
+      expect(safeInternalPath(v, '/x')).toBe('/x');
+    }
+    expect(safeInternalPath('/a/../b')).toBe('/b');
+  });
+
   it('refuse tout ce qui n’est pas une chaîne', () => {
     expect(safeInternalPath(undefined)).toBe('/');
     expect(safeInternalPath(null)).toBe('/');

@@ -13,8 +13,11 @@ export function safeInternalPath(value: unknown, fallback = '/'): string {
   try {
     const base = 'http://internal.invalid';
     const url = new URL(value, base);
-    return url.origin === base
-      ? url.pathname + url.search + url.hash
+    const out = url.pathname + url.search + url.hash;
+    // La normalisation peut recréer « // » (« /.//x » devient « //x ») : on
+    // revalide donc le résultat, pas seulement l'entrée.
+    return url.origin === base && out.startsWith('/') && !out.startsWith('//')
+      ? out
       : fallback;
   } catch {
     return fallback;
