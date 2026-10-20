@@ -77,7 +77,7 @@ Hors périmètre de ce document : le retrait de MongoDB (lot 2 applicatif comple
 
 ## 5. Contrainte posée par Amine le 20/10
 
-Amine ne veut **pas de conteneur de préproduction séparé** : tout est dans `tenga.ai-mpower.com`. La préproduction (application et pile `tenga-sb-preprod`) est arrêtée mais non supprimée. La migration `0007` touche les droits d'accès : elle doit être éprouvée avant production, par `test-sql.sh` sur une instance jetable (conteneur Postgres éphémère sur serveuria, détruit après le test), jamais directement sur `tenga-sb`. À valider avec Amine si l'instance éphémère lui convient ou s'il préfère rallumer la pile de préproduction le temps du lot.
+Amine ne veut **plus d'environnement de préproduction** : « je ne veux plus de production et de pré-production alignées, supprime la pré-production ». Elle est supprimée (application Coolify, pile `tenga-sb-preprod`, DNS, tâches planifiées). Il n'existe qu'un seul environnement, `tenga.ai-mpower.com`. La migration `0007` touche les droits d'accès : elle s'éprouve par `test-sql.sh` sur une **instance Postgres jetable** créée sur serveuria et détruite après le test, puis s'applique à `tenga-sb` (sauvegarde chiffrée vérifiée juste avant, SOP-026). Le parcours de bout en bout se vérifie en production avec un compte de test créé puis supprimé.
 
 ## 6. Ce qui reste à décider par Amine
 
