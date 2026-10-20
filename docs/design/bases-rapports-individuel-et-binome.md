@@ -226,7 +226,7 @@ et tout mot du lexique interdit. Rends un JSON ; ne réécris rien.
 
 ## 9. Décisions qui reviennent à Amine
 
-État au 20 octobre 2026 : Amine a confirmé les six décisions D1 à D6, après lecture du document. D3 est précisée par deux packs (§ 9 bis). Les conventions de D4 restent à valider par un psychométricien : la confirmation vaut accord sur la démarche, pas validation des seuils.
+État au 20 octobre 2026 : Amine a confirmé les six décisions D1 à D6, après lecture du document. D7, apparue pendant la rédaction de la bibliothèque, est ouverte. D3 est précisée par deux packs (§ 9 bis). Les conventions de D4 restent à valider par un psychométricien : la confirmation vaut accord sur la démarche, pas validation des seuils.
 
 | N° | Décision | Recommandation | Raison |
 |---|---|---|---|
@@ -236,6 +236,7 @@ et tout mot du lexique interdit. Rends un JSON ; ne réécris rien.
 | D4 | Conventions de niveaux et d'écarts | Les valider par un psychométricien, puis les recalibrer dès qu'une norme existe | Les seuils du § 7.2 sont des conventions, pas des résultats |
 | D5 | Place dans l'offre commerciale, prix, positionnement | Ne rien figer avant D1 à D3 | Décision d'Amine ; ce document ne la prend pas |
 | D6 | Noms des deux rapports | À proposer par Tenga Conseil | Identité de marque ; éviter tout rapprochement avec MyPrint |
+| D7 | Libellé de la facette A4 « Coopération » | Garder le libellé tant que l'avertissement de la bibliothèque est affiché, puis décider d'un renommage avec Tenga Conseil | Les quatre affirmations de la facette (« J'adore une bonne dispute », « Je crie sur les gens », « J'insulte les gens », « Je me venge », toutes inversées) mesurent la confrontation ouverte : un résultat haut décrit l'absence d'hostilité, pas la qualité de la coopération. Le libellé figure aussi sur la page « Méthode et références » |
 
 Ces rapports s'insèrent dans le plan existant comme une suite du lot 4 (groupes) et du lot 6 (rendu PDF), plus une migration de consentement propre au binôme. Leur numérotation reste à inscrire dans `plan-implementation-espace-prive.md` après vos décisions.
 
@@ -269,7 +270,7 @@ Ces conditions sont des recommandations d'encadrement, pas un avis juridique : l
 
 ## 10. Étapes suivantes sans rien décider
 
-1. Rédiger la bibliothèque de textes pour une seule facette par domaine (5 facettes) et la faire relire, pour tester le gabarit avant de produire les 30.
+1. **Fait le 20 octobre 2026** : bibliothèque de textes de cinq facettes (N6 Vulnérabilité au stress, E3 Affirmation de soi, O5 Curiosité intellectuelle, A4 Coopération, C5 Autodiscipline), cinq niveaux, français et arabe, dans `docs/design/bibliotheque-textes/`. Reste : relecture humaine (Nezha pour le français, un arabophone natif pour l'arabe) avant d'étendre aux 30 facettes.
 2. Construire le jeu d'évaluation : 12 profils synthétiques (extrêmes, milieu, tension interne, réponses manquantes, incohérence) et 6 binômes (proches, opposés, tous au milieu, un profil peu fiable).
 3. Écrire les contrôles déterministes de l'audit, puis les désactiver un à un pour vérifier qu'au moins un test échoue (la pratique « vu rouge » du plan).
 4. Choisir le modèle sur cette éval, pas sur sa réputation.
