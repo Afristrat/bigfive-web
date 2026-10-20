@@ -1,22 +1,13 @@
 'use client';
 
-import {
-  Navbar as NextUINavbar,
-  NavbarContent,
-  NavbarMenu,
-  NavbarMenuToggle,
-  NavbarBrand,
-  NavbarItem,
-  NavbarMenuItem
-} from '@nextui-org/navbar';
+import { ReactElement, useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 
 import { LanguageMenu } from '@/components/language-menu';
 import { ThemeSwitch } from '@/components/theme-switch';
-import { Wordmark } from '@/components/icons';
+import { MenuIcon, Wordmark } from '@/components/icons';
 import { Link as NextLink } from '../navigation';
 
 export type NavbarLabels = {
@@ -35,11 +26,33 @@ interface NavbarProps {
   labels: NavbarLabels;
 }
 
-export const Navbar = ({ navItems, navMenuItems, labels }: NavbarProps) => {
+// Page courante : fond teinté, couleur d'accent et trait souligné, pour que la
+// couleur ne soit jamais le seul signal.
+const lienActif =
+  'bg-accent-doux text-accent after:absolute after:inset-x-3.5 after:bottom-1.5 after:h-0.5 after:rounded-full after:bg-accent';
+const lienInactif = 'text-texte-2 hover:bg-creux hover:text-encre';
+
+export const Navbar = ({
+  navItems,
+  navMenuItems,
+  labels
+}: NavbarProps): ReactElement => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
   const pathname = usePathname();
   const locale = useLocale();
+
+  // Le menu natif se referme à chaque navigation et sur Échap.
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setIsMenuOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isMenuOpen]);
 
   const isCurrentPath = (link: string): boolean => {
     if (link === '/') {
@@ -48,115 +61,82 @@ export const Navbar = ({ navItems, navMenuItems, labels }: NavbarProps) => {
     return pathname.includes(link);
   };
 
-  const themeLabels = { toDark: labels.toDark, toLight: labels.toLight };
-
   return (
-    <NextUINavbar
-      as='header'
-      position='sticky'
-      isBordered={false}
-      isBlurred
-      shouldHideOnScroll={false}
-      onScrollPositionChange={(position) => setHasScrolled(position > 0)}
-      isMenuOpen={isMenuOpen}
-      onMenuOpenChange={setIsMenuOpen}
-      classNames={{
-        base: clsx(
-          'border-b bg-fond/90 backdrop-blur-sm data-[menu-open=true]:bg-fond print:hidden',
-          hasScrolled ? 'border-trait' : 'border-transparent'
-        ),
-        wrapper: 'conteneur max-w-6xl h-16 px-5 sm:px-8',
-        item: 'data-[active=true]:text-encre'
-      }}
-    >
-      <NavbarContent className='basis-1/5 sm:basis-full' justify='start'>
-        <NavbarBrand as='li' className='max-w-fit'>
-          <NextLink
-            className='flex items-center rounded-petit'
-            href='/'
-            aria-label={labels.home}
-          >
-            <Wordmark />
-          </NextLink>
-        </NavbarBrand>
-        <li className='hidden md:flex'>
-          <nav aria-label={labels.mainNav} className='ms-8'>
-            <ul className='flex gap-6'>
-              {navItems.map((item) => {
-                const isActive = isCurrentPath(item.href);
-                return (
-                  <li key={item.href}>
-                    <NextLink
-                      href={item.href}
-                      aria-current={isActive ? 'page' : undefined}
-                      className={clsx(
-                        'relative inline-flex min-h-6 items-center whitespace-nowrap text-[0.9375rem] font-medium transition-colors duration-courte hover:text-encre',
-                        isActive
-                          ? 'text-encre after:absolute after:inset-x-0 after:-bottom-[21px] after:h-0.5 after:bg-accent'
-                          : 'text-texte-2'
-                      )}
-                    >
-                      {item.label}
-                    </NextLink>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        </li>
-      </NavbarContent>
-
-      <NavbarContent
-        className='hidden basis-1/5 gap-2 sm:basis-full md:flex'
-        justify='end'
-      >
-        <NavbarItem>
-          <LanguageMenu label={labels.language} />
-        </NavbarItem>
-        <NavbarItem>
-          <ThemeSwitch labels={themeLabels} />
-        </NavbarItem>
-        {/* Lot 1 : connexion ou menu du compte. */}
-      </NavbarContent>
-
-      <NavbarContent className='basis-1 gap-1 ps-4 md:hidden' justify='end'>
-        <NavbarItem>
-          <LanguageMenu label={labels.language} />
-        </NavbarItem>
-        <NavbarItem>
-          <ThemeSwitch labels={themeLabels} />
-        </NavbarItem>
-        <NavbarItem className='h-full w-10'>
-          <NavbarMenuToggle
+    <header className='sticky top-0 z-entete border-b border-trait bg-fond/85 backdrop-blur-md backdrop-saturate-150 print:hidden'>
+      <div className='conteneur flex min-h-16 items-center gap-2.5 max-[440px]:px-3.5'>
+        <NextLink
+          className='flex items-center rounded-petit'
+          href='/'
+          aria-label={labels.home}
+        >
+          <Wordmark />
+        </NextLink>
+        <nav
+          aria-label={labels.mainNav}
+          className='ms-[18px] hidden min-[1240px]:block'
+        >
+          <ul className='flex gap-1'>
+            {navItems.map((item) => {
+              const isActive = isCurrentPath(item.href);
+              return (
+                <li key={item.href}>
+                  <NextLink
+                    href={item.href}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={clsx(
+                      'relative inline-flex min-h-11 items-center whitespace-nowrap rounded-[12px] px-3.5 text-petit font-semibold transition-colors duration-normale',
+                      isActive ? lienActif : lienInactif
+                    )}
+                  >
+                    {item.label}
+                  </NextLink>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+        <span className='flex-1' />
+        <LanguageMenu label={labels.language} />
+        <ThemeSwitch
+          labels={{ toDark: labels.toDark, toLight: labels.toLight }}
+        />
+        <details
+          className='relative min-[1240px]:hidden'
+          open={isMenuOpen}
+          onToggle={(event) => setIsMenuOpen(event.currentTarget.open)}
+        >
+          <summary
             aria-label={isMenuOpen ? labels.closeMenu : labels.openMenu}
-          />
-        </NavbarItem>
-      </NavbarContent>
-
-      <NavbarMenu className='bg-fond'>
-        <div className='mt-2 flex flex-col'>
-          {navMenuItems.map((item) => {
-            const isActive = isCurrentPath(item.href);
-            return (
-              <NavbarMenuItem key={item.href}>
+            className='grid size-12 cursor-pointer list-none place-items-center rounded-[14px] border border-trait bg-surface text-encre transition hover:bg-creux [&::-webkit-details-marker]:hidden'
+          >
+            <MenuIcon />
+          </summary>
+          <nav
+            aria-label={labels.mainNav}
+            className='absolute end-0 top-14 z-menu grid w-[min(300px,calc(100vw-32px))] gap-0.5 rounded-[20px] border border-trait bg-surface p-2.5 shadow-carte'
+          >
+            {navMenuItems.map((item) => {
+              const isActive = isCurrentPath(item.href);
+              return (
                 <NextLink
-                  onClick={() => setIsMenuOpen(false)}
+                  key={item.href}
                   href={item.href}
                   aria-current={isActive ? 'page' : undefined}
+                  onClick={() => setIsMenuOpen(false)}
                   className={clsx(
-                    'block border-s-2 py-3 text-titre-3',
+                    'relative flex min-h-12 items-center rounded-[12px] px-3.5 font-semibold',
                     isActive
-                      ? 'border-accent ps-3 font-semibold text-accent'
-                      : 'border-transparent ps-3 text-encre'
+                      ? 'bg-accent-doux text-accent after:absolute after:inset-y-3 after:start-0 after:w-0.5 after:rounded-full after:bg-accent'
+                      : 'text-encre hover:bg-creux'
                   )}
                 >
                   {item.label}
                 </NextLink>
-              </NavbarMenuItem>
-            );
-          })}
-        </div>
-      </NavbarMenu>
-    </NextUINavbar>
+              );
+            })}
+          </nav>
+        </details>
+      </div>
+    </header>
   );
 };

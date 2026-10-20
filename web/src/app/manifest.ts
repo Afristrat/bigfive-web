@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Questionnaire de personnalité de Tenga Conseil',
     start_url: '/',
     display: 'standalone',
-    background_color: '#F7F6F3',
-    theme_color: '#1D5446',
+    background_color: '#F6F6FA',
+    theme_color: '#3730A3',
     icons: [
       {
         src: '/favicon.ico',

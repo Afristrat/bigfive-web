@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@nextui-org/button';
+import { ArrowRightIcon } from '@/components/icons';
 
 export type SurveyNavLabels = {
   prev: string;
@@ -20,6 +21,9 @@ interface SurveyNavProps {
   isLoading: boolean;
   labels: SurveyNavLabels;
 }
+
+const baseStyle =
+  'h-auto min-h-[52px] min-w-[140px] rounded-controle px-[26px] py-2 text-base font-bold rtl:font-semibold';
 
 const disabledStyle =
   'data-[disabled=true]:bg-creux data-[disabled=true]:text-texte-3 data-[disabled=true]:opacity-100';
@@ -42,12 +46,13 @@ export function SurveyNav({
   const showHelp = nextDisabled && !isLoading;
   return (
     <>
-      <div className='mt-10 grid grid-cols-2 gap-3 sm:flex sm:justify-between'>
+      <div className='mt-7 flex justify-between gap-3'>
         <Button
           variant='bordered'
           isDisabled={prevDisabled}
           onPress={onPrev}
-          className={`h-auto min-h-11 border-trait-fort py-2 text-encre data-[hover=true]:bg-creux ${disabledStyle}`}
+          startContent={<ArrowRightIcon className='rotate-180' />}
+          className={`${baseStyle} border-trait-fort text-encre data-[hover=true]:bg-creux ${disabledStyle}`}
         >
           {labels.prev}
         </Button>
@@ -57,13 +62,14 @@ export function SurveyNav({
           aria-describedby={showHelp ? 'aide-suivant' : undefined}
           isLoading={isLoading}
           onPress={nextDisabled ? undefined : isLast ? onSubmit : onNext}
-          className={`h-auto min-h-11 px-5 py-2 font-medium data-[pressed=true]:translate-y-px ${disabledStyle} ${ariaDisabledStyle}`}
+          endContent={isLoading ? undefined : <ArrowRightIcon />}
+          className={`${baseStyle} data-[pressed=true]:translate-y-px motion-reduce:transition-none ${disabledStyle} ${ariaDisabledStyle}`}
         >
           {isLoading ? labels.saving : isLast ? labels.submit : labels.next}
         </Button>
       </div>
       {showHelp && (
-        <p id='aide-suivant' className='mt-3 text-petit text-texte-3'>
+        <p id='aide-suivant' className='mt-3 text-end text-petit text-texte-2'>
           {labels.nextHelp}
         </p>
       )}

@@ -1,20 +1,15 @@
 'use client';
 
+import { ReactElement } from 'react';
+import clsx from 'clsx';
 import { useLocale } from 'next-intl';
-import { Button } from '@nextui-org/button';
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger
-} from '@nextui-org/dropdown';
-import { useRouter, usePathname } from '@/navigation';
+import { Link, usePathname } from '@/navigation';
 
 // Langues proposées dans le sélecteur ; les autres restent routables par leur
 // adresse (direction § 12, point 4). Noms écrits dans leur propre langue.
 const menuLanguages = [
   { code: 'fr', name: 'Français', short: 'FR', dir: 'ltr' },
-  { code: 'ar', name: 'العربية', short: 'ع', dir: 'rtl' },
+  { code: 'ar', name: 'العربية', short: 'AR', dir: 'rtl' },
   { code: 'en', name: 'English', short: 'EN', dir: 'ltr' }
 ] as const;
 
@@ -22,56 +17,57 @@ interface LanguageMenuProps {
   label: string;
 }
 
-export function LanguageMenu({ label }: LanguageMenuProps) {
+const item =
+  'grid min-h-11 min-w-[38px] place-items-center rounded-[11px] px-2 text-[0.875rem] font-bold min-[441px]:min-w-[42px]';
+
+// Sélecteur segmenté de la direction B2. Le texte visible (« FR ») fait partie
+// du nom accessible, que complète le nom de la langue (critère 2.5.3) ; la
+// langue courante est signalée par aria-current et par son fond plein.
+export function LanguageMenu({ label }: LanguageMenuProps): ReactElement {
   const locale = useLocale();
-  const router = useRouter();
   const pathname = usePathname();
-  const current = menuLanguages.find((language) => language.code === locale);
 
   return (
-    <Dropdown
-      placement='bottom-end'
-      classNames={{
-        content:
-          'rounded-panneau bg-surface shadow-flottant dark:shadow-flottant-sombre'
-      }}
+    <div
+      role='group'
+      aria-label={label}
+      className='flex flex-none rounded-[14px] border border-trait bg-surface p-[3px]'
     >
-      <DropdownTrigger>
-        <Button
-          variant='light'
-          size='sm'
-          className='h-10 min-w-10 px-3 text-[0.9375rem] font-medium text-texte-2 data-[hover=true]:bg-creux data-[hover=true]:text-encre'
-        >
-          {/* Le nom visible fait partie du nom accessible (critère 2.5.3). */}
-          <span className='sr-only'>{label}</span>{' '}
-          {current ? (
-            <span lang={current.code} dir={current.dir}>
-              <span className='md:hidden'>{current.short}</span>
-              <span className='max-md:sr-only'>{current.name}</span>
+      {menuLanguages.map((language) => {
+        const contenu = (
+          <>
+            <span aria-hidden='true'>{language.short}</span>
+            <span className='sr-only'>
+              {language.short} {language.name}
             </span>
-          ) : (
-            <span lang={locale}>{locale}</span>
-          )}
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu
-        aria-label={label}
-        selectionMode='single'
-        disallowEmptySelection
-        selectedKeys={current ? [current.code] : []}
-        onAction={(key) => router.replace(pathname, { locale: String(key) })}
-      >
-        {menuLanguages.map((language) => (
-          <DropdownItem
+          </>
+        );
+        return language.code === locale ? (
+          <span
             key={language.code}
-            textValue={language.name}
             lang={language.code}
             dir={language.dir}
+            aria-current='true'
+            className={clsx(item, 'bg-accent text-sur-accent')}
           >
-            {language.name}
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
-    </Dropdown>
+            {contenu}
+          </span>
+        ) : (
+          <Link
+            key={language.code}
+            href={pathname}
+            locale={language.code}
+            lang={language.code}
+            dir={language.dir}
+            className={clsx(
+              item,
+              'text-texte-2 transition-colors duration-normale hover:text-encre'
+            )}
+          >
+            {contenu}
+          </Link>
+        );
+      })}
+    </div>
   );
 }

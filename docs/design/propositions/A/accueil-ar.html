@@ -1,0 +1,261 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>اختبار الشخصية وفق العوامل الخمسة الكبرى | Tenga Assessments</title><meta name="description" content="استبيان للشخصية قائم على نموذج العوامل الخمسة الكبرى، يقدّمه مكتب الاستشارات المغربي Tenga Conseil."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@500..700&display=swap" rel="stylesheet"><style>
+:root{
+  --creme:#FBF4E8; --creme-2:#F3E7D3; --sable:#E8D5B7;
+  --encre:#2B2118; --encre-2:#5A4A3C;
+  --terre:#A63D22; --terre-hover:#8C3019;
+  --vert:#1F4D3F; --vert-2:#2A6350;
+  --n:#B4472A; --e:#BF7A12; --o:#7B4B94; --a:#2E7D5B; --c:#2F6490;
+  --serif:'Fraunces','Georgia',serif; --sans:'Figtree','Segoe UI',system-ui,sans-serif;
+  --pad:clamp(16px,5vw,56px);
+}
+:lang(ar){--serif:'Noto Naskh Arabic','Fraunces',serif; --sans:'IBM Plex Sans Arabic','Figtree',system-ui,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--creme);color:var(--encre);font-family:var(--sans);font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--vert);outline-offset:3px;border-radius:6px}
+.on-dark :focus-visible,.dark :focus-visible{outline-color:var(--creme)}
+.wrap{max-inline-size:1240px;margin-inline:auto;padding-inline:var(--pad)}
+.skip{position:absolute;inset-inline-start:-999px;background:var(--encre);color:var(--creme);padding:12px 18px;z-index:99}
+.skip:focus{inset-inline-start:12px;inset-block-start:12px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.08;letter-spacing:-.015em;margin:0;text-wrap:balance}
+:lang(ar) h1,:lang(ar) h2,:lang(ar) h3{line-height:1.35;letter-spacing:0;font-weight:700}
+p{margin:0;text-wrap:pretty}
+.eyebrow{font-weight:700;font-size:.8125rem;letter-spacing:.14em;text-transform:uppercase;color:var(--terre);display:flex;align-items:center;gap:.7em}
+.eyebrow::before{content:"";inline-size:28px;block-size:2px;background:currentColor}
+:lang(ar) .eyebrow{letter-spacing:0;font-size:.95rem;text-transform:none}
+
+/* header */
+.top{position:sticky;inset-block-start:0;z-index:20;background:color-mix(in srgb,var(--creme) 92%,transparent);backdrop-filter:blur(8px);border-block-end:1px solid var(--sable)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-block-size:72px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;min-block-size:44px}
+.brand svg{inline-size:40px;block-size:40px;flex:none}
+.brand b{font-family:var(--serif);font-size:1.45rem;font-weight:700;display:block;line-height:1}
+.brand small{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--encre-2);font-weight:600;margin-block-start:3px}
+:lang(ar) .brand small{letter-spacing:0;font-size:.8rem;text-transform:none}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a{display:inline-flex;align-items:center;min-block-size:44px;padding-inline:14px;text-decoration:none;font-weight:600;font-size:.97rem;border-radius:999px}
+.nav a:hover{background:var(--creme-2)}
+.nav a[aria-current]{background:var(--creme-2)}
+.lang{display:flex;border:1.5px solid var(--encre);border-radius:999px;padding:3px;gap:2px}
+.lang a{min-block-size:38px;min-inline-size:44px;justify-content:center;padding-inline:10px;font-size:.9rem}
+.lang a[aria-current]{background:var(--encre);color:var(--creme)}
+@media (max-width:820px){.nav .lk{display:none}}
+@media (max-width:420px){.brand small{display:none}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6em;min-block-size:56px;padding-inline:30px;border-radius:999px;background:var(--terre);color:var(--creme);font-weight:700;font-size:1.0625rem;text-decoration:none;border:0;cursor:pointer;font-family:inherit;box-shadow:0 6px 0 var(--terre-hover);transition:transform .15s,box-shadow .15s,background .15s}
+.btn:hover{background:var(--terre-hover);transform:translateY(2px);box-shadow:0 4px 0 #6f2713}
+.btn:active{transform:translateY(5px);box-shadow:0 1px 0 #6f2713}
+.btn.ghost{background:transparent;color:var(--encre);box-shadow:inset 0 0 0 2px var(--encre)}
+.btn.ghost:hover{background:var(--creme-2)}
+.btn svg{inline-size:20px;block-size:20px}
+:lang(ar) .btn .arr{transform:scaleX(-1)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding-block:clamp(40px,7vw,96px) clamp(56px,8vw,120px)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,5vw,72px);align-items:center}
+.hero h1{font-size:clamp(2.6rem,5.6vw,5rem);margin-block:22px 28px;font-variation-settings:"opsz" 144,"SOFT" 50}
+:lang(ar) .hero h1{font-size:clamp(2.3rem,5.4vw,4.4rem)}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--terre)}
+.hero h1 .u{position:relative;white-space:nowrap}
+:lang(ar) .hero h1 em{font-style:normal}
+.hero h1 .u svg{position:absolute;inset-inline:0;inset-block-end:-.28em;inline-size:100%;block-size:.34em}
+.lede{font-size:clamp(1.1rem,1.8vw,1.3rem);color:var(--encre-2);max-inline-size:34em}
+.cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:20px 28px;margin-block-start:36px}
+.note{font-size:.95rem;color:var(--encre-2);max-inline-size:30em}
+.hero-art{position:relative;aspect-ratio:1;max-inline-size:540px;justify-self:center;inline-size:100%;min-inline-size:260px}
+.hero-art svg{position:absolute;inset:0;inline-size:100%;block-size:100%;overflow:visible}
+.petal{mix-blend-mode:multiply}
+.float{position:absolute;background:var(--creme);border:2px solid var(--encre);border-radius:18px;padding:12px 16px;font-size:.92rem;font-weight:600;box-shadow:6px 6px 0 var(--encre);max-inline-size:230px;line-height:1.35}
+.float small{display:block;font-weight:600;color:var(--terre);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;margin-block-end:2px}
+:lang(ar) .float small{letter-spacing:0;font-size:.85rem;text-transform:none}
+.float.f1{inset-block-start:2%;inset-inline-start:-4%}
+.float.f2{inset-block-end:4%;inset-inline-end:-2%}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}.hero-art{max-inline-size:380px;order:-1}.float.f1{inset-inline-start:0}.float.f2{inset-inline-end:0}}
+@media (max-width:520px){.float{font-size:.82rem;padding:9px 12px;max-inline-size:170px;box-shadow:4px 4px 0 var(--encre)}}
+
+/* marquee-like facts */
+.facts{border-block:2px solid var(--encre);background:var(--sable)}
+.facts .wrap{display:grid;grid-template-columns:repeat(3,1fr)}
+.facts div{padding:22px 24px;display:flex;align-items:baseline;gap:14px;border-inline-start:2px solid var(--encre)}
+.facts div:first-child{border-inline-start:0}
+.facts strong{font-family:var(--serif);font-size:2.6rem;line-height:1;font-weight:700}
+.facts span{font-weight:600;line-height:1.3}
+@media (max-width:720px){.facts .wrap{grid-template-columns:1fr}.facts div{border-inline-start:0;border-block-start:2px solid var(--encre);padding:16px 4px}.facts div:first-child{border-block-start:0}}
+
+/* sections */
+section.s{padding-block:clamp(56px,9vw,128px)}
+.s-head{max-inline-size:760px;margin-block-end:clamp(32px,5vw,64px)}
+.s-head h2{font-size:clamp(2rem,4.4vw,3.6rem);margin-block:16px 16px}
+:lang(ar) .s-head h2{font-size:clamp(1.8rem,3.8vw,3rem)}
+.s-head p{color:var(--encre-2);font-size:1.15rem}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,3vw,40px);counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{position:relative;padding-block-start:24px;border-block-start:2px solid var(--encre)}
+.steps li::before{counter-increment:s;content:counter(s);font-family:var(--serif);font-size:5.5rem;line-height:.9;font-weight:700;color:var(--terre);display:block;margin-block-end:12px}
+.steps h3{font-size:1.5rem;margin-block-end:8px}
+.steps p{color:var(--encre-2)}
+@media (max-width:760px){.steps{grid-template-columns:1fr}.steps li::before{font-size:4rem}}
+
+.traits{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.tr{grid-column:span 2;border-radius:28px;padding:28px 26px 30px;border:2px solid var(--encre);background:var(--creme);display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden}
+.tr:nth-child(4){grid-column:2 / span 2}
+.tr:nth-child(5){grid-column:4 / span 2}
+.tr svg{inline-size:64px;block-size:64px}
+.tr h3{font-size:1.55rem}
+.tr p{color:var(--encre-2);font-size:1rem}
+.tr .bar{position:absolute;inset-inline:0;inset-block-start:0;block-size:10px}
+@media (max-width:900px){.traits{grid-template-columns:1fr 1fr}.tr,.tr:nth-child(4),.tr:nth-child(5){grid-column:auto}.tr:nth-child(5){grid-column:1 / -1}}
+@media (max-width:560px){.traits{grid-template-columns:1fr}.tr:nth-child(5){grid-column:auto}}
+
+.dark{background:var(--vert);color:var(--creme)}
+.dark .eyebrow{color:#F2C9A8}
+.dark .s-head p,.dark p{color:#E6EFE9}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,48px)}
+.pillars article{border-block-start:2px solid #8FB5A5;padding-block-start:22px}
+.pillars h3{font-size:1.5rem;margin-block-end:10px}
+@media (max-width:820px){.pillars{grid-template-columns:1fr}}
+.invite{margin-block-start:clamp(40px,6vw,72px);display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;background:var(--creme);color:var(--encre);border-radius:28px;padding:28px 32px}
+.invite p{color:var(--encre)!important}
+.invite svg{inline-size:56px;block-size:56px}
+@media (max-width:560px){.invite{grid-template-columns:1fr;padding:22px}}
+
+/* footer */
+.foot{background:var(--encre);color:var(--creme)}
+.foot .wrap{padding-block:56px 36px;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px}
+.foot .brand b,.foot .brand small{color:var(--creme)}
+.foot h4{margin:0 0 10px;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:#E8C9A8}
+:lang(ar) .foot h4{letter-spacing:0;font-size:.95rem;text-transform:none}
+.foot ul{list-style:none;margin:0;padding:0}
+.foot li a{display:inline-flex;align-items:center;min-block-size:44px;text-decoration:none}
+.foot li a:hover{text-decoration:underline}
+.foot p{color:#E5DBCB;font-size:.95rem;max-inline-size:34em}
+.foot a{color:var(--creme)}
+.foot .legal{grid-column:1/-1;border-block-start:1px solid #5b4b3d;padding-block-start:22px;font-size:.9rem;color:#E5DBCB}
+.foot :focus-visible{outline-color:var(--creme)}
+@media (max-width:760px){.foot .wrap{grid-template-columns:1fr}}
+
+/* questionnaire */
+.q-top{background:var(--creme);border-block-end:1px solid var(--sable)}
+.prog{padding-block:18px 22px}
+.prog-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-block-end:10px;flex-wrap:wrap}
+.prog-row b{font-family:var(--serif);font-size:1.35rem}
+.prog-row span{color:var(--encre-2);font-size:.95rem;font-weight:500}
+.track{block-size:14px;border-radius:99px;background:var(--sable);position:relative}
+.track i{position:absolute;inset-block:0;inset-inline-start:0;inline-size:.83%;min-inline-size:14px;background:var(--terre);border-radius:99px}
+.track i::after{content:"";position:absolute;inset-inline-end:-6px;inset-block-start:-5px;inline-size:24px;block-size:24px;border-radius:50%;background:var(--creme);border:4px solid var(--terre)}
+.ticks{display:flex;justify-content:space-between;font-size:.8rem;color:var(--encre-2);margin-block-start:14px;font-weight:600}
+.qwrap{padding-block:clamp(32px,6vw,80px)}
+.qcard{background:#FFFBF3;border:2px solid var(--encre);border-radius:36px;padding:clamp(24px,5vw,64px);box-shadow:10px 10px 0 var(--sable);position:relative}
+.qcard .tag{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terre);margin-block-end:20px}
+.qcard .tag i{inline-size:12px;block-size:12px;border-radius:50%;background:currentColor}
+.qcard .stem{font-size:1rem;color:var(--encre-2);margin-block-end:10px;font-weight:500}
+.qcard h2{font-size:clamp(2rem,5vw,4rem);font-weight:500;font-variation-settings:"opsz" 144,"SOFT" 60;margin-block-end:clamp(28px,5vw,52px)}
+fieldset{border:0;padding:0;margin:0;min-inline-size:0}
+.likert{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.ch{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:20px 8px 18px;border-radius:24px;border:2px solid transparent;cursor:pointer;min-block-size:44px;font-weight:600;line-height:1.3;font-size:1rem}
+.ch:hover{background:var(--creme-2)}
+.ch input{position:absolute;opacity:0;inset:0;inline-size:100%;block-size:100%;margin:0;cursor:pointer}
+.dot{display:grid;place-items:center;border-radius:50%;border:3px solid var(--vert);background:var(--creme);transition:background .15s,transform .15s}
+.ch:nth-child(1) .dot,.ch:nth-child(2) .dot{border-color:var(--terre)}
+.ch:nth-child(3) .dot{border-color:var(--encre-2)}
+.ch:nth-child(1) .dot,.ch:nth-child(5) .dot{inline-size:64px;block-size:64px}
+.ch:nth-child(2) .dot,.ch:nth-child(4) .dot{inline-size:52px;block-size:52px}
+.ch:nth-child(3) .dot{inline-size:42px;block-size:42px}
+.dot svg{inline-size:55%;block-size:55%;opacity:0;stroke:var(--creme)}
+.ch input:checked ~ .dot{background:var(--vert);transform:scale(1.06)}
+.ch:nth-child(1) input:checked ~ .dot,.ch:nth-child(2) input:checked ~ .dot{background:var(--terre)}
+.ch:nth-child(3) input:checked ~ .dot{background:var(--encre-2)}
+.ch input:checked ~ .dot svg{opacity:1}
+.ch:has(input:checked){background:var(--creme-2);border-color:var(--encre)}
+.ch:has(input:focus-visible){outline:3px solid var(--vert);outline-offset:2px}
+.axis{display:flex;justify-content:space-between;margin-block-start:10px;font-size:.85rem;color:var(--encre-2);font-weight:600}
+.qnav{display:flex;justify-content:space-between;gap:16px;margin-block-start:clamp(28px,4vw,48px);flex-wrap:wrap;align-items:center}
+.reassure{margin-block-start:28px;color:var(--encre-2);font-size:.97rem;display:flex;gap:10px;align-items:center}
+.reassure svg{inline-size:22px;block-size:22px;flex:none}
+.mini-h{margin-block:clamp(48px,7vw,88px) 20px}
+.mini-h h2{font-size:1.6rem}
+.mini-h p{color:var(--encre-2)}
+@media (max-width:760px){
+  .likert{grid-template-columns:1fr;gap:8px}
+  .ch{flex-direction:row;justify-content:flex-start;text-align:start;padding:10px 16px;min-block-size:64px;gap:16px}
+  .ch .dot,.ch:nth-child(n) .dot{inline-size:36px;block-size:36px;flex:none}
+  .axis{display:none}
+}
+
+/* result */
+.rhead{padding-block:clamp(36px,6vw,80px) clamp(24px,4vw,40px)}
+.rhead h1{font-size:clamp(2.4rem,6vw,5rem);margin-block:16px 20px;font-variation-settings:"opsz" 144,"SOFT" 50}
+:lang(ar) .rhead h1{font-size:clamp(2.2rem,5vw,4rem)}
+.sample{display:inline-flex;align-items:center;gap:10px;background:#FFE9A8;color:#3a2a00;border:2px dashed #3a2a00;border-radius:999px;padding:8px 18px;font-weight:700;font-size:.95rem;min-block-size:44px}
+.chart-sec{padding-block:clamp(16px,3vw,32px) clamp(48px,7vw,96px)}
+.chart-grid{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:clamp(24px,4vw,56px);align-items:center}
+.ring-card{background:var(--creme-2);border:2px solid var(--encre);border-radius:40px;padding:clamp(16px,3vw,40px);box-shadow:10px 10px 0 var(--sable)}
+.ring-card svg{inline-size:100%;block-size:auto;display:block}
+.tlist{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.tlist li{display:grid;grid-template-columns:auto 1fr auto;gap:6px 16px;align-items:center;padding:18px 20px;background:#FFFBF3;border:2px solid var(--encre);border-radius:22px}
+.tlist .sw{inline-size:22px;block-size:22px;border-radius:50%}
+.tlist h3{font-size:1.3rem}
+.tlist .sc{font-family:var(--serif);font-size:2rem;font-weight:700;line-height:1;white-space:nowrap}
+.tlist .sc small{font-family:var(--sans);font-size:.85rem;font-weight:600;color:var(--encre-2)}
+.tlist p{grid-column:2 / -1;color:var(--encre-2);font-size:.97rem;line-height:1.5}
+.tlist .g{grid-column:2 / -1;block-size:10px;border-radius:99px;background:var(--sable);overflow:hidden}
+.tlist .g i{display:block;block-size:100%;border-radius:99px}
+@media (max-width:900px){.chart-grid{grid-template-columns:1fr}}
+.intro-r{max-inline-size:44em;color:var(--encre-2);font-size:1.15rem}
+
+.detail{padding-block:clamp(48px,7vw,96px);background:var(--sable);border-block:2px solid var(--encre)}
+.dbox{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,5vw,72px);align-items:start}
+.dbox h2{font-size:clamp(2rem,4.4vw,3.6rem);margin-block:16px}
+.dbox .big{font-family:var(--serif);font-size:clamp(4rem,10vw,7rem);font-weight:700;line-height:1;color:var(--e);margin-block:12px}
+.dbox .big small{font-family:var(--sans);font-size:1.1rem;color:var(--encre-2);font-weight:600}
+.facets{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.facets li{background:#FFFBF3;border:2px solid var(--encre);border-radius:20px;padding:16px 20px;display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:center}
+.facets b{font-size:1.1rem}
+.facets .v{font-family:var(--serif);font-weight:700;font-size:1.3rem}
+.facets .v small{font-family:var(--sans);font-size:.82rem;color:var(--encre-2)}
+.seg{grid-column:1/-1;display:grid;grid-template-columns:repeat(16,1fr);gap:3px}
+.seg i{block-size:14px;border-radius:4px;background:var(--creme-2);border:1px solid #cdb996}
+.seg i.on{background:var(--e);border-color:var(--e)}
+@media (max-width:860px){.dbox{grid-template-columns:1fr}}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-block-start:22px}
+.tabs a{display:inline-flex;align-items:center;gap:8px;min-block-size:44px;padding-inline:16px;border-radius:99px;border:2px solid var(--encre);text-decoration:none;font-weight:600;font-size:.95rem;background:#FFFBF3}
+.tabs a[aria-current]{background:var(--encre);color:var(--creme)}
+.tabs a i{inline-size:12px;block-size:12px;border-radius:50%}
+.endnote{padding-block:clamp(40px,6vw,80px)}
+.endnote .wrap{display:flex;flex-wrap:wrap;gap:24px 40px;align-items:center;justify-content:space-between}
+.endnote p{max-inline-size:40em;color:var(--encre-2)}
+</style></head><body><a class="skip" href="#main">انتقل إلى المحتوى</a><header class="top"><div class="wrap">
+  <a class="brand" href="accueil-ar.html" aria-label="Tenga Assessments"><svg viewBox="0 0 48 48" aria-hidden="true"><g style="mix-blend-mode:multiply"><circle cx="24.0" cy="14.0" r="11" fill="#B4472A" opacity=".88"/><circle cx="33.5" cy="20.9" r="11" fill="#BF7A12" opacity=".88"/><circle cx="29.9" cy="32.1" r="11" fill="#7B4B94" opacity=".88"/><circle cx="18.1" cy="32.1" r="11" fill="#2E7D5B" opacity=".88"/><circle cx="14.5" cy="20.9" r="11" fill="#2F6490" opacity=".88"/></g><circle cx="24" cy="24" r="4" fill="#FBF4E8"/></svg><span><b>Tenga</b><small>Assessments</small></span></a>
+  <nav class="nav" aria-label="التنقل الرئيسي"><a class="lk" href="accueil-ar.html" aria-current="page">الرئيسية</a><a class="lk" href="resultat-ar.html">نتائجي</a><a class="lk" href="#">من نحن</a><a class="lk" href="#">أسئلة شائعة</a><span class="lang" role="group" aria-label="اللغة">
+  <a href="accueil.html" lang="fr">FR</a><a href="accueil-ar.html" lang="ar" aria-current="true">عربي</a><a href="#" lang="en">EN</a></span></nav></div></header><main id="main">
+<section class="hero"><div class="wrap">
+ <div><p class="eyebrow">استبيان الشخصية · العوامل الخمسة الكبرى</p><h1>فهمٌ أدقّ لأسلوبك في العمل، من أجل <em>تعاون أفضل</em> داخل الفريق.</h1><p class="lede">استبيان من 120 عبارة يقدّمه مكتب Tenga Conseil للمؤسسات التي يرافقها. لا توجد فيه إجابات صحيحة وأخرى خاطئة، ولا يتقيّد بوقت محدّد.</p>
+ <div class="cta-row"><a class="btn" href="questionnaire.html">بدء الاستبيان <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+ <p class="note" style="margin-block-start:24px">يُتاح الاستبيان بدعوة شخصية من مؤسستك. إن وصلتك رسالة بالبريد الإلكتروني، فيكفي فتح الرابط الوارد فيها.</p></div>
+ <div class="hero-art"><svg viewBox="0 0 500 500" role="img" aria-label="زهرة بخمس بتلات بألوان مختلفة، لكل عامل من عوامل الشخصية لون">
+  <circle cx="250" cy="250" r="236" fill="#F3E7D3"/>
+  <circle cx="250" cy="250" r="236" fill="none" stroke="#2B2118" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
+  <ellipse class="petal" cx="250" cy="130" rx="76" ry="112" fill="#B4472A" opacity=".9" transform="rotate(0 250 250)"/><ellipse class="petal" cx="250" cy="130" rx="76" ry="112" fill="#BF7A12" opacity=".9" transform="rotate(72 250 250)"/><ellipse class="petal" cx="250" cy="130" rx="76" ry="112" fill="#7B4B94" opacity=".9" transform="rotate(144 250 250)"/><ellipse class="petal" cx="250" cy="130" rx="76" ry="112" fill="#2E7D5B" opacity=".9" transform="rotate(216 250 250)"/><ellipse class="petal" cx="250" cy="130" rx="76" ry="112" fill="#2F6490" opacity=".9" transform="rotate(288 250 250)"/>
+  <circle cx="250" cy="250" r="52" fill="#FBF4E8" stroke="#2B2118" stroke-width="3"/>
+  <circle cx="250" cy="250" r="18" fill="#2B2118"/>
+  <circle cx="64" cy="394" r="9" fill="#2B2118"/><circle cx="446" cy="110" r="7" fill="#A63D22"/><circle cx="452" cy="380" r="11" fill="#1F4D3F"/>
+</svg>
+  <div class="float f1"><small>عبارة رقم 12</small>أكوّن الصداقات بسهولة</div><div class="float f2"><small>بلا حدّ للوقت</small>أجب بالإيقاع الذي يناسبك</div></div>
+</div></section>
+<div class="facts"><div class="wrap"><div><strong>120</strong><span>عبارة يُجاب عنها بخمسة اختيارات</span></div><div><strong>5</strong><span>عوامل كبرى لقراءة الشخصية</span></div><div><strong>30</strong><span>سمة فرعية تُفصَّل في النتائج</span></div></div></div>
+<section class="s"><div class="wrap"><div class="s-head"><p class="eyebrow">كيف يجري الاستبيان</p><h2>ثلاث خطوات، دون ضغط</h2><p>تقرأ العبارة وتختار ما يصفك أكثر. لا يوجد جواب جيّد وآخر سيّئ.</p></div>
+<ol class="steps"><li><h3>اقرأ العبارة</h3><p>تظهر عبارة واحدة في كل مرة، بحجم مريح للقراءة على الهاتف.</p></li><li><h3>اختر ما يصفك</h3><p>خمسة اختيارات من «لا تنطبق عليّ إطلاقًا» إلى «تنطبق عليّ تمامًا».</p></li><li><h3>اطّلع على نتائجك</h3><p>ملف شخصي من خمسة عوامل، تتبعه تفاصيل ثلاثين سمة فرعية.</p></li></ol></div></section>
+<section class="s" style="background:var(--creme-2);border-block:2px solid var(--encre)"><div class="wrap"><div class="s-head"><p class="eyebrow">العوامل الخمسة الكبرى</p><h2>خمس طرق لوصف أسلوبك</h2><p>لكل عامل لونه وشكله في هذا التصميم، وهو يعود في صفحة النتائج.</p></div>
+<div class="traits"><article class="tr"><span class="bar" style="background:#B4472A"></span><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 40 Q20 10 32 32 T56 24" fill="none" stroke="#B4472A" stroke-width="7" stroke-linecap="round"/><circle cx="14" cy="50" r="5" fill="#B4472A"/><circle cx="50" cy="48" r="5" fill="#B4472A"/></svg><h3>العُصابية</h3><p>الحساسية تجاه المشاعر الصعبة كالقلق والغضب والإحباط. كلما ارتفعت الدرجة زاد الشعور بها تكرارًا أو شدّة.</p></article><article class="tr"><span class="bar" style="background:#BF7A12"></span><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="11" fill="#BF7A12"/><line x1="50" y1="32" x2="59" y2="32" stroke="#BF7A12" stroke-width="5" stroke-linecap="round"/><line x1="44.72792206135786" y1="44.72792206135786" x2="51.09188309203678" y2="51.09188309203678" stroke="#BF7A12" stroke-width="5" stroke-linecap="round"/><line x1="32" y1="50" x2="32" y2="59" stroke="#BF7A12" stroke-width="5" stroke-linecap="round"/><line x1="19.272077938642145" y1="44.72792206135786" x2="12.908116907963219" y2="51.09188309203678" stroke="#BF7A12" stroke-width="5" stroke-linecap="round"/><line x1="14" y1="32" x2="5" y2="32" stroke="#BF7A12" stroke-width="5" stroke-linecap="round"/><line x1="19.27207793864214" y1="19.272077938642145" x2="12.908116907963212" y2="12.908116907963219" stroke="#BF7A12" stroke-width="5" stroke-linecap="round"/><line x1="31.999999999999996" y1="14" x2="31.999999999999996" y2="5" stroke="#BF7A12" stroke-width="5" stroke-linecap="round"/><line x1="44.72792206135785" y1="19.27207793864214" x2="51.09188309203678" y2="12.908116907963212" stroke="#BF7A12" stroke-width="5" stroke-linecap="round"/></svg><h3>الانبساطية</h3><p>الميل إلى صحبة الآخرين والنشاط والمشاعر الإيجابية. طاقة موجَّهة نحو الخارج.</p></article><article class="tr"><span class="bar" style="background:#7B4B94"></span><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6 L38 26 L58 32 L38 38 L32 58 L26 38 L6 32 L26 26 Z" fill="#7B4B94"/></svg><h3>الانفتاح على الخبرة</h3><p>الفضول والخيال والاهتمام بالأفكار والتجارب الجديدة.</p></article><article class="tr"><span class="bar" style="background:#2E7D5B"></span><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="24" cy="32" r="17" fill="#2E7D5B" opacity=".9"/><circle cx="40" cy="32" r="17" fill="#2E7D5B" opacity=".55"/></svg><h3>المقبولية</h3><p>الاهتمام بالآخرين: الثقة والتعاون والقدرة على التوافق.</p></article><article class="tr"><span class="bar" style="background:#2F6490"></span><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="38" width="14" height="18" rx="3" fill="#2F6490"/><rect x="25" y="26" width="14" height="30" rx="3" fill="#2F6490"/><rect x="42" y="12" width="14" height="44" rx="3" fill="#2F6490"/></svg><h3>يقظة الضمير</h3><p>التنظيم والمثابرة والإحساس بالواجب والمنهجية.</p></article></div></div></section>
+<section class="s dark"><div class="wrap"><div class="s-head"><p class="eyebrow">ما يميّز هذا الاستبيان</p><h2>ثلاثة أمور قبل أن تبدأ</h2></div>
+<div class="pillars"><article><h3>مكيَّف مع السياق المغربي</h3><p>متاح بالعربية والفرنسية، بصياغات ملائمة للسياق المغربي تقيس السمة نفسها التي تقيسها العبارات الأصلية.</p></article><article><h3>قائم على البحث</h3><p>يعتمد الاستبيان على نموذج العوامل الخمسة الكبرى، الشائع الاستعمال في علم نفس الشخصية، ويستند إلى استبيان IPIP-NEO-120 لجون أ. جونسون (2014).</p></article><article><h3>بلا إجابات صحيحة أو خاطئة</h3><p>تصف النتائج ميولك المعتادة. وهي لا تقيس كفاءاتك ولا قيمتك، ولا تُعدّ تشخيصًا.</p></article></div>
+<div class="invite"><svg viewBox="0 0 56 56" aria-hidden="true"><rect x="4" y="12" width="48" height="34" rx="6" fill="#BF7A12"/><path d="M6 16 L28 32 L50 16" fill="none" stroke="#FBF4E8" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/></svg><div><p>يُتاح الاستبيان بدعوة شخصية من مؤسستك. إن وصلتك رسالة بالبريد الإلكتروني، فيكفي فتح الرابط الوارد فيها.</p></div></div></div></section>
+</main><footer class="foot"><div class="wrap">
+  <div><a class="brand" href="accueil-ar.html"><svg viewBox="0 0 48 48" aria-hidden="true"><g style="mix-blend-mode:multiply"><circle cx="24.0" cy="14.0" r="11" fill="#B4472A" opacity=".88"/><circle cx="33.5" cy="20.9" r="11" fill="#BF7A12" opacity=".88"/><circle cx="29.9" cy="32.1" r="11" fill="#7B4B94" opacity=".88"/><circle cx="18.1" cy="32.1" r="11" fill="#2E7D5B" opacity=".88"/><circle cx="14.5" cy="20.9" r="11" fill="#2F6490" opacity=".88"/></g><circle cx="24" cy="24" r="4" fill="#FBF4E8"/></svg><span><b>Tenga</b><small>Assessments</small></span></a><p style="margin-block-start:18px">Tenga Assessments هي خدمة تقييم الشخصية التابعة لمكتب الاستشارات المغربي Tenga Conseil.</p></div>
+  <div><h4>الصفحات</h4><ul><li><a href="accueil-ar.html">الرئيسية</a></li><li><a href="resultat-ar.html">نتائجي</a></li><li><a href="#">من نحن</a></li><li><a href="#">أسئلة شائعة</a></li></ul></div>
+  <div><h4>المرجع</h4><p>الأسئلة وطريقة احتساب النتائج: المجمع الدولي لعبارات الشخصية (<a href="https://ipip.ori.org" rel="noopener">ipip.ori.org</a>)، استبيان IPIP-NEO-120 لجون أ. جونسون (2014)، وهو في الملك العام.</p></div>
+  <p class="legal">© 2026 Tenga Conseil</p></div></footer></body></html>

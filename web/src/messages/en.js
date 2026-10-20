@@ -11,11 +11,42 @@ const english = {
     toDark: 'Switch to dark theme',
     toLight: 'Switch to light theme'
   },
-  footer: {
-    service: 'A Tenga Conseil service'
-  },
   home: {
-    specimen: 'Sample report, fictitious values'
+    specimenTag: 'Sample, fictitious values',
+    chip: 'Personality questionnaire, five-factor model',
+    title: 'Your personality, read in five dimensions.',
+    lead: 'A questionnaire of 120 statements, with no time limit. There are no right or wrong answers.',
+    stats: {
+      statements: 'statements',
+      domains: 'domains',
+      facets: 'facets',
+      languages: 'languages'
+    },
+    factors: {
+      title: 'The five major personality factors',
+      intro:
+        'Five dimensions, each described as a tendency and not as a judgement.',
+      facets: 'Six facets',
+      N: 'Sensitivity to negative emotions and stress; not a diagnosis.',
+      E: 'Enjoyment of company, energy in action, expression of positive emotions.',
+      O: 'Curiosity, imagination, interest in ideas and new experiences.',
+      A: 'Cooperation, trust, concern for others in relationships.',
+      C: 'Organisation, sense of duty, perseverance in what one undertakes.'
+    },
+    languages: {
+      title: 'Three languages',
+      text: 'Available in French, Arabic and English.'
+    },
+    reference: {
+      title: 'Reference',
+      text: 'The questionnaire uses the IPIP-NEO-120 by John A. Johnson (2014), placed in the public domain.'
+    }
+  },
+  radar: {
+    title: 'Radar chart of the five major factors',
+    summary: 'Radar chart with five axes, from {min} to {max}.',
+    domain: 'Domain',
+    score: 'Score'
   },
   seo: {
     keywords:
@@ -25,15 +56,13 @@ const english = {
     seo: {
       title: 'Big Five personality test | Tenga Assessments',
       description:
-        'Personality questionnaire based on the five-factor model (Big Five), offered by Tenga Conseil, a Moroccan consulting firm, to the organisations it supports.',
+        'Personality questionnaire of 120 statements, based on the five-factor model (Big Five), offered by Tenga Conseil.',
       image_alt: 'Tenga Assessments, personality questionnaire'
     },
     call_to_action: 'Start the questionnaire',
     description: {
-      top: 'Better understand the way you act, to <violet>work better together</violet>.',
       reference:
-        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
-      info: 'A questionnaire of 120 statements, offered by Tenga Conseil to the organisations it supports. There are no right or wrong answers, and no time limit.'
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.'
     },
     posts: {
       subtitle: 'Insights on personality and teamwork',
@@ -49,7 +78,7 @@ const english = {
     title: 'About',
     p1: 'Tenga Assessments is the personality assessment service of Tenga Conseil, a Moroccan consulting firm. It is offered to the organisations the firm supports: executive teams, human resources teams, consultants.',
     p2: 'The questionnaire describes personality according to the five-factor model: openness to experience, conscientiousness, extraversion, agreeableness and neuroticism, detailed in thirty facets. It uses the IPIP-NEO-120 by John A. Johnson (2014), drawn from the International Personality Item Pool and placed in the public domain.',
-    p3: 'It is available in French and Arabic. A few statements have been adapted to the Moroccan context; each one keeps the facet measured and the scoring direction of the original question.',
+    p3: 'It is available in French, Arabic and English. A few statements have been adapted to the Moroccan context; each one keeps the facet measured and the scoring direction of the original question.',
     p4: 'The results describe habitual behavioural tendencies. They do not measure skills and are not a diagnosis.',
     contact_faq:
       'A question? Please read the <link>frequently asked questions</link> first.',
@@ -128,8 +157,11 @@ const english = {
   test: {
     heading: 'Personality questionnaire',
     instructions:
-      'For each statement, indicate how well it describes you as you usually are, not as you would like to be. Answer spontaneously.',
+      'For each statement, indicate how well it describes you as you usually are, not as you would like to be. Answer spontaneously. The 1 to 5 keys on your keyboard let you choose.',
     noTimeLimit: 'No time limit',
+    progressBar: 'Progress through the questionnaire',
+    statement: 'Statement {number}',
+    prompt: 'Does this statement usually describe you?',
     progress: 'Question {current} of {total}',
     next: 'Next',
     back: 'Previous',
@@ -205,12 +237,24 @@ const english = {
     invalidId: 'Please enter a valid ID that is not already in the list.'
   },
   results: {
-    title: 'Your personality profile',
-    overview: 'Your five dimensions',
+    title: 'Your profile across the five major factors',
+    factorsTitle: 'The five major factors',
+    radar: {
+      title: 'Five-factor radar chart',
+      summary: 'Radar chart with five axes, from {min} to {max}.',
+      domain: 'Domain',
+      score: 'Score'
+    },
+    scales:
+      'Domain scale: {domainMin} to {domainMax}. Facet scale: {facetMin} to {facetMax}.',
+    detailTitle: 'Detail by domain',
+    detailHint: 'Choose a domain to see its six facets.',
+    idLabel: 'Result ID',
+    idHint: 'Keep it to find this result again later.',
+    copied: 'ID copied',
+    backHome: 'Back to home',
     intro:
       'These results describe your habitual tendencies, based on your own answers. They measure neither your skills nor your worth, and are not a diagnosis.',
-    scaleNote:
-      'The vertical mark is the middle of the answer scale (3 out of 5).',
     outOf: 'out of {max}',
     level: {
       low: 'low',
@@ -219,16 +263,11 @@ const english = {
     },
     facets: 'Facets',
     learnMore: 'Learn more about this dimension',
-    contents: 'Contents',
     neuroticismGloss:
       'Sensitivity to negative emotions and stress; this is not a diagnosis.',
     print: 'Print or save as PDF',
     copyId: 'Copy ID',
     loading: 'Loading',
-    important: 'Important!',
-    saveResults: 'Save the following ID to see the results later or ',
-    compare: 'compare',
-    toOthers: 'yourself to others',
     seo: {
       title: 'My Big Five questionnaire results',
       description:

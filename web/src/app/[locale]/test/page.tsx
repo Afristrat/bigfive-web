@@ -15,7 +15,7 @@ export default async function TestPage({ params }: Props) {
   return (
     <>
       <h1 className='sr-only'>{t('heading')}</h1>
-      <div className='mx-auto max-w-[44rem]'>
+      <div className='mx-auto max-w-[56.25rem]'>
         <Survey
           questions={questions}
           labels={{
@@ -27,6 +27,9 @@ export default async function TestPage({ params }: Props) {
             dismiss: t('dismiss'),
             instructions: t('instructions'),
             noTimeLimit: t('noTimeLimit'),
+            progressBar: t('progressBar'),
+            statement: String(t.raw('statement')),
+            prompt: t('prompt'),
             restored: t('restored'),
             newTest: t('newTest'),
             saveFailedTitle: t('saveFailedTitle'),

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>نتائجي في استبيان العوامل الخمسة الكبرى | Tenga Assessments</title><meta name="color-scheme" content="light dark"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
+:root{--bg:#F5F5FB;--surface:#FFFFFF;--surface2:#F0F1FF;--ink:#14152B;--muted:#4E516D;--line:#DEDFF0;--brand:#4338CA;--btn:#4F52E3;--coral:#FF6B57;--coral-ink:#B5361E;--soft:#EEF0FF;--soft2:#FFEFEC;--shadow:0 1px 2px rgba(20,21,43,.06),0 12px 32px -16px rgba(67,56,202,.25);--blob1:rgba(79,82,227,.22);--blob2:rgba(255,107,87,.20);--d-n:#8B5CF6;--d-e:#FF6B57;--d-o:#4F52E3;--d-a:#14B8A6;--d-c:#F59E0B;--ring:#4338CA}
+:root[data-theme=dark]{--bg:#0C0D1E;--surface:#16172D;--surface2:#1D1F3C;--ink:#F2F2FF;--muted:#AEB1D0;--line:#2B2D4D;--brand:#A9ACFF;--coral-ink:#FF9C8D;--soft:#22244A;--soft2:#3A2230;--shadow:0 1px 2px rgba(0,0,0,.4),0 16px 36px -18px rgba(0,0,0,.7);--blob1:rgba(110,114,255,.24);--blob2:rgba(255,107,87,.16);--ring:#C7C9FF}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+:lang(ar){font-family:"IBM Plex Sans Arabic","Plus Jakarta Sans",system-ui,"Segoe UI",Tahoma,sans-serif;line-height:1.85}
+main{overflow-x:clip}
+h1,h2,h3,p{margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ring);outline-offset:3px;border-radius:10px}
+.sr{position:absolute;inline-size:1px;block-size:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;inset-inline-start:12px;inset-block-start:-60px;background:var(--btn);color:#fff;padding:10px 16px;border-radius:12px;z-index:50;text-decoration:none}
+.skip:focus{inset-block-start:12px}
+.wrap{inline-size:100%;max-inline-size:1180px;margin-inline:auto;padding-inline:20px}
+.hdr{position:sticky;inset-block-start:0;z-index:30;backdrop-filter:saturate(1.4) blur(14px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-block-end:1px solid var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:10px;min-block-size:68px}
+.logo{white-space:nowrap;display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:17px;letter-spacing:-.02em;min-block-size:44px}
+.logo .mk{inline-size:34px;block-size:34px;border-radius:11px;background:linear-gradient(135deg,#4F52E3,#FF6B57);display:grid;place-items:center;flex:none}
+.logo small{font-weight:500;color:var(--muted);font-size:inherit;margin-inline-start:2px}
+.nav{display:none;gap:4px;margin-inline-start:18px}
+.nav a{white-space:nowrap;display:inline-flex;align-items:center;min-block-size:44px;padding-inline:14px;border-radius:12px;text-decoration:none;color:var(--muted);font-weight:600;font-size:15px;transition:background .2s,color .2s}
+.nav a:hover,.nav a[aria-current]{background:var(--soft);color:var(--ink)}
+.sp{flex:1}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:2px}
+.seg a{display:inline-grid;place-items:center;min-inline-size:44px;min-block-size:42px;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;color:var(--muted);transition:background .2s,color .2s}
+.seg a:hover{color:var(--ink)}
+.seg a[aria-current]{background:var(--btn);color:#fff}
+.ib{inline-size:46px;block-size:46px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:transform .2s,background .2s}
+.ib:hover{background:var(--soft);transform:translateY(-1px)}
+.ib .moon{display:none}:root[data-theme=dark] .ib .moon{display:block}:root[data-theme=dark] .ib .sun{display:none}
+.btn{white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-block-size:52px;padding-inline:26px;border-radius:16px;font-weight:700;font-size:16px;text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:transform .2s,box-shadow .2s,background .2s}
+.btn.p{background:var(--btn);color:#fff;box-shadow:0 10px 24px -10px rgba(79,82,227,.8)}
+.btn.p:hover{transform:translateY(-2px);box-shadow:0 16px 28px -12px rgba(79,82,227,.9)}
+.btn.g{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.g:hover{background:var(--soft);transform:translateY(-2px)}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+[dir=rtl] .flip{transform:scaleX(-1)}
+.hcta{display:none}
+.hero{position:relative;padding-block:40px 52px}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0}
+.hero::before{inline-size:520px;block-size:520px;background:var(--blob1);inset-block-start:-180px;inset-inline-start:-140px}
+.hero::after{inline-size:460px;block-size:460px;background:var(--blob2);inset-block-end:-200px;inset-inline-end:-120px}
+.hero .wrap{position:relative;z-index:1;display:grid;gap:36px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:var(--soft);color:var(--brand);font-weight:700;font-size:14px;border:1px solid var(--line)}
+.pill i{inline-size:8px;block-size:8px;border-radius:50%;background:var(--coral)}
+h1{font-size:clamp(34px,5.4vw,56px);line-height:1.06;letter-spacing:-.035em;font-weight:800;margin-block:18px 18px;text-wrap:balance}
+:lang(ar) h1{line-height:1.35;letter-spacing:0}
+h1 em{font-style:normal;background:linear-gradient(100deg,#4F52E3 0%,#C13CB0 55%,#E8503B 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-inline:.02em}
+:root[data-theme=dark] h1 em{background:linear-gradient(100deg,#9EA1FF 0%,#E58BDA 55%,#FF9C8D 100%);-webkit-background-clip:text;background-clip:text}
+.lead{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-inline-size:34em}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-block:28px 18px}
+.note{font-size:15px;color:var(--muted);max-inline-size:34em;display:flex;gap:10px}
+.note svg{flex:none;margin-block-start:4px;color:var(--brand)}
+.card{background:linear-gradient(150deg,var(--surface) 55%,var(--surface2));border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);padding:26px;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.card.hv:hover{transform:translateY(-4px)}
+.radarcard{padding:18px 14px 22px;text-align:center}
+.radarcard .tag{position:absolute;inset-block-start:16px;inset-inline-start:16px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13.5px;font-weight:700;color:var(--ink)}
+.chip.warn{background:var(--soft2);color:var(--coral-ink);border-color:transparent}
+.radar{inline-size:100%;max-inline-size:520px;block-size:auto;display:block;margin-inline:auto;direction:ltr}
+.radar .grid{fill:none;stroke:var(--line);stroke-width:1.2}
+.radar .ax{stroke:var(--line);stroke-width:1.2;stroke-dasharray:3 5}
+.radar .shape{fill:url(#rg);stroke:var(--btn);stroke-width:3;stroke-linejoin:round;transform-origin:center;transform-box:fill-box}
+:root[data-theme=dark] .radar .shape{stroke:#A9ACFF}
+.radar .dot{fill:var(--surface);stroke:var(--coral);stroke-width:3.5}
+.radar .bd{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.radar .bt{font:800 14px "Plus Jakarta Sans",sans-serif;fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.radar .glow{filter:blur(14px);opacity:.5}
+.sec{padding-block:40px}
+.sec h2{font-size:clamp(26px,4vw,40px);letter-spacing:-.03em;line-height:1.15;font-weight:800;text-wrap:balance}
+:lang(ar) .sec h2{letter-spacing:0;line-height:1.4}
+.sec .sub{color:var(--muted);margin-block-start:10px;max-inline-size:40em}
+.bento{display:grid;gap:16px;margin-block-start:28px}
+.bento h3{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.25;margin-block:14px 8px}
+:lang(ar) .bento h3{letter-spacing:0}
+.bento p{color:var(--muted);font-size:16px}
+.ico{inline-size:48px;block-size:48px;border-radius:16px;display:grid;place-items:center;background:var(--soft);color:var(--brand)}
+.ico.c{background:var(--soft2);color:var(--coral-ink)}
+.big{font-size:clamp(76px,11vw,120px);font-weight:800;letter-spacing:-.06em;line-height:.95;color:#fff}
+.doms{display:flex;flex-wrap:wrap;gap:8px;margin-block-start:16px}
+.dc{display:inline-flex;align-items:center;gap:8px;min-block-size:40px;padding-inline:14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:700;font-size:14.5px}
+.dc b{inline-size:10px;block-size:10px;border-radius:50%;background:var(--c)}
+.langs{display:flex;gap:10px;flex-wrap:wrap}
+.langs span{padding:10px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-weight:800;font-size:18px}
+.five{display:grid;gap:14px;margin-block-start:28px}
+.dm{border-radius:24px;padding:22px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-block-start:5px solid var(--c);transition:transform .25s}
+.dm:hover{transform:translateY(-4px)}
+.cd{display:inline-grid;place-items:center;inline-size:36px;block-size:36px;border-radius:12px;background:var(--c);color:#14152B;font-weight:800;font-size:15px;flex:none}
+.dm h3{font-size:19px;margin-block:12px 6px;font-weight:800}
+.dm p{font-size:15.5px;color:var(--muted);line-height:1.55}
+.ref{margin-block-start:26px;font-size:14.5px;color:var(--muted);max-inline-size:56em}
+.ref a{color:var(--brand);font-weight:600}
+.ftr{margin-block-start:auto;border-block-start:1px solid var(--line);background:var(--surface);padding-block:30px}
+.ftr .wrap{display:flex;flex-direction:column;gap:18px}
+.ftr nav{display:flex;flex-wrap:wrap;gap:4px 8px}
+.ftr nav a{display:inline-flex;align-items:center;min-block-size:44px;padding-inline:12px;color:var(--muted);text-decoration:none;font-weight:600;font-size:15px;border-radius:10px}
+.ftr nav a:hover{color:var(--ink);background:var(--soft)}
+.ftr p{color:var(--muted);font-size:14.5px}
+.qtop{position:sticky;inset-block-start:68px;z-index:20;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);padding-block:14px 12px}
+.qinfo{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:700;font-size:15px}
+.qinfo span:last-child{color:var(--muted);font-weight:600}
+.bar{block-size:10px;border-radius:999px;background:var(--line);overflow:hidden;margin-block-start:10px}
+.bar>i{display:block;block-size:100%;border-radius:inherit;background:linear-gradient(90deg,#4F52E3,#FF6B57);transform-origin:left;transition:inline-size .4s}
+.qwrap{max-inline-size:860px;margin-inline:auto;padding-block:20px 56px}
+.instr{display:flex;gap:12px;padding:16px 18px;border-radius:20px;background:var(--soft);color:var(--ink);font-size:15.5px;margin-block-end:20px;border:1px solid var(--line)}
+.instr svg{flex:none;color:var(--brand);margin-block-start:3px}
+.qcard{padding:28px 22px 26px}
+.qn{display:inline-flex;gap:8px;align-items:center;color:var(--brand);font-weight:800;font-size:14px;letter-spacing:.04em;text-transform:uppercase;padding:0}
+.qt{font-size:clamp(26px,4.6vw,40px);line-height:1.2;font-weight:800;letter-spacing:-.03em;margin-block:12px 6px;text-wrap:balance}
+.qh{color:var(--muted);font-size:15px;margin-block-end:22px}
+fieldset{border:0;margin:0;padding:0;min-inline-size:0}
+.opts{display:grid;gap:10px}
+.opt{position:relative;display:flex}
+.opt input{position:absolute;opacity:0;inset:0;inline-size:100%;block-size:100%;margin:0;cursor:pointer;z-index:1}
+.opt label{flex:1;display:flex;align-items:center;gap:16px;min-block-size:64px;padding:10px 20px;border-radius:20px;background:var(--surface);border:2px solid var(--line);font-weight:700;font-size:17px;transition:transform .18s,border-color .18s,background .18s,box-shadow .18s}
+.opt .dotc{flex:none;inline-size:var(--sz);block-size:var(--sz);border-radius:50%;border:3px solid var(--k);background:transparent;transition:background .18s;display:grid;place-items:center}
+.opt .dotc svg{opacity:0;color:#fff;transition:opacity .18s;inline-size:60%;block-size:60%}
+.opt:hover label{transform:translateY(-2px);border-color:var(--k);box-shadow:0 10px 20px -14px var(--k)}
+.opt input:focus-visible+label{outline:3px solid var(--ring);outline-offset:3px}
+.opt input:checked+label{border-color:var(--k);background:color-mix(in srgb,var(--k) 12%,var(--surface));box-shadow:0 12px 24px -14px var(--k)}
+.opt input:checked+label .dotc{background:var(--k)}
+.opt input:checked+label .dotc svg{opacity:1}
+.o1{--k:#D6432B;--sz:44px}.o2{--k:#E8742F;--sz:34px}.o3{--k:#7A7D9C;--sz:26px}.o4{--k:#5E62E8;--sz:34px}.o5{--k:#4338CA;--sz:44px}
+:root[data-theme=dark] .o1{--k:#FF8A75}:root[data-theme=dark] .o2{--k:#FFA25F}:root[data-theme=dark] .o3{--k:#A0A3C4}:root[data-theme=dark] .o4{--k:#9A9DFF}:root[data-theme=dark] .o5{--k:#B3B6FF}
+:root[data-theme=dark] .opt .dotc svg{color:#14152B}
+.qnav{display:flex;justify-content:space-between;gap:12px;margin-block-start:26px}
+.qnav .btn{flex:1;max-inline-size:220px;min-inline-size:0;padding-inline:14px}
+.rtitle{padding-block:30px 8px}
+.rtitle h1{font-size:clamp(30px,5vw,48px);margin-block:14px 10px}
+.rgrid{display:grid;gap:16px;margin-block-start:22px}
+.list{display:grid;gap:20px}
+.row{display:grid;gap:8px}
+.row .rh{display:flex;align-items:center;gap:12px}
+.row .nm{font-weight:800;font-size:18px;flex:1}
+.row .vl{font-weight:800;font-size:18px;white-space:nowrap}
+.row .vl small,.fc small{color:var(--muted);font-weight:600;font-size:14px}
+.trk{block-size:12px;border-radius:999px;background:var(--line);overflow:hidden}
+.trk>i{display:block;block-size:100%;border-radius:inherit;background:var(--c);inline-size:var(--w);transform-origin:left}
+[dir=rtl] .trk>i,[dir=rtl] .bar>i{transform-origin:right}
+.row p{font-size:15px;color:var(--muted);line-height:1.5}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-block:18px 22px}
+.tab{min-block-size:46px;padding-inline:18px;border-radius:999px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .2s,border-color .2s,transform .2s}
+.tab:hover{transform:translateY(-1px);border-color:var(--c)}
+.tab b{inline-size:10px;block-size:10px;border-radius:50%;background:var(--c)}
+.tab[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.facets{display:grid;gap:12px}
+.facets[hidden]{display:none}
+.fc{padding:16px 18px;border-radius:20px;background:var(--surface);border:1px solid var(--line);display:grid;gap:8px}
+.fc .fh{display:flex;justify-content:space-between;gap:10px;font-weight:700}
+.fc .fh>span:last-child{white-space:nowrap}
+.fc .trk{block-size:10px}
+.pr{display:flex;flex-wrap:wrap;gap:12px;margin-block-start:24px}
+.disc{font-size:15px;color:var(--muted)}
+@media (min-width:700px){
+ .opts{grid-template-columns:repeat(5,1fr);gap:12px}
+ .opt label{flex-direction:column;justify-content:center;text-align:center;min-block-size:150px;gap:14px;padding:18px 8px;font-size:15.5px;line-height:1.3}
+ .five{grid-template-columns:repeat(5,1fr)}
+ .facets{grid-template-columns:1fr 1fr}
+ .qcard{padding:40px 40px 34px}
+ .ftr .wrap{flex-direction:row;justify-content:space-between;align-items:center}
+}
+@media (min-width:1240px){.nav{display:flex}.hcta{display:inline-flex}}
+@media (min-width:1000px){
+ .hero{padding-block:72px 84px}
+ .hero .wrap{grid-template-columns:1fr 1fr;gap:40px}
+ .bento{grid-template-columns:repeat(6,1fr)}
+ .b-a{grid-column:span 4}.b-b{grid-column:span 2}.b-c{grid-column:span 3}.b-d{grid-column:span 3}.b-e{grid-column:span 6}
+ .rgrid{grid-template-columns:7fr 5fr}
+ .card{padding:32px}
+}
+@media (max-width:430px){.logo .mk{display:none}.wrap{padding-inline:16px}}
+@media (prefers-reduced-motion:no-preference){
+ @keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+ @keyframes pop{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
+ @keyframes gw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+ @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+ .rv{animation:up .7s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0s)}
+ .radar .shape{animation:pop .9s cubic-bezier(.2,.8,.2,1) .25s both}
+ .radar .dot{animation:pop .5s ease .9s both;transform-origin:center;transform-box:fill-box}
+ .trk>i,.bar>i{animation:gw 1s cubic-bezier(.2,.7,.2,1) .3s both}
+ .float{animation:fl 6s ease-in-out infinite}
+}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}html{scroll-behavior:auto}}
+@media print{.hdr,.ftr,.pr,.tabs,.hero::before,.hero::after{display:none!important}body{background:#fff}}
+</style><script>(function(){var r=document.documentElement,k='tenga-theme',s=null;try{s=localStorage.getItem(k)}catch(e){}var d=s||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');r.setAttribute('data-theme',d);window.addEventListener('DOMContentLoaded',function(){var b=document.getElementById('tg');if(b)b.addEventListener('click',function(){var n=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem(k,n)}catch(e){}})})})();</script></head>
+<body>
+<a class="skip" href="#main">انتقل إلى المحتوى</a>
+<header class="hdr"><div class="wrap">
+<a class="logo" href="accueil-ar.html" aria-label="Tenga Assessments"><span class="mk" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"><path d="M12 3l8.6 6.3-3.3 10.1H6.7L3.4 9.3z"/></svg></span><span>Tenga <small>Assessments</small></span></a>
+<nav class="nav" aria-label="التنقل الرئيسي"><a href="accueil-ar.html" >الرئيسية</a><a href="accueil-ar.html#facteurs" >العوامل الخمسة</a><a href="resultat-ar.html" aria-current="page">مثال على النتائج</a><a href="questionnaire.html" >الاستبيان</a></nav><span class="sp"></span>
+<div class="seg" role="group" aria-label="اللغة"><a href="accueil.html" lang="fr">FR</a><a aria-current="true" lang="ar">AR</a><a href="#" lang="en">EN</a></div>
+<button class="ib" id="tg" type="button" aria-label="التبديل بين السمة الفاتحة والداكنة"><svg class="sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+<a class="btn p hcta" href="questionnaire.html" style="min-block-size:46px;padding-inline:18px;font-size:15px">الدخول إلى حسابي</a>
+</div></header>
+<main id="main">
+<div class="wrap">
+<section class="rtitle"><span class="chip warn rv"><svg  width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5M12 7.6v.1"/></svg>مثال على النتائج، قيم وهمية</span><h1 class="rv" style="--d:.05s">ملفك الشخصي وفق <em>العوامل الخمسة الكبرى</em></h1><p class="lead rv" style="--d:.1s">تصف هذه النتائج ميولك المعتادة كما تظهر من إجاباتك. وهي لا تقيس كفاءاتك ولا قيمتك، ولا تُعدّ تشخيصًا.</p></section>
+<div class="rgrid">
+ <section class="card radarcard rv" style="--d:.1s;padding-block-start:26px" aria-labelledby="rh"><h2 id="rh" style="font-size:22px;font-weight:800;margin-block-end:8px">العوامل الخمسة الكبرى</h2><svg class="radar" viewBox="0 0 420 408" role="img" aria-labelledby="rt rd"><title id="rt">رسم رادار للعوامل الخمسة الكبرى</title><desc id="rd">مثال على النتائج بقيم وهمية: العُصابية 62، الانبساطية 88، الانفتاح على الخبرة 97، المقبولية 79، يقظة الضمير 91، على مقياس من 24 إلى 120.</desc><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4F52E3" stop-opacity=".55"/><stop offset="1" stop-color="#FF6B57" stop-opacity=".5"/></linearGradient></defs><polygon class="grid" points="210.0,169.5 242.8,193.3 230.3,231.9 189.7,231.9 177.2,193.3"/><polygon class="grid" points="210.0,135.0 275.6,182.7 250.6,259.8 169.4,259.8 144.4,182.7"/><polygon class="grid" points="210.0,100.5 308.4,172.0 270.8,287.7 149.2,287.7 111.6,172.0"/><polygon class="grid" points="210.0,66.0 341.2,161.4 291.1,315.6 128.9,315.6 78.8,161.4"/><line class="ax" x1="210" y1="204" x2="210.0" y2="66.0"/><line class="ax" x1="210" y1="204" x2="341.2" y2="161.4"/><line class="ax" x1="210" y1="204" x2="291.1" y2="315.6"/><line class="ax" x1="210" y1="204" x2="128.9" y2="315.6"/><line class="ax" x1="210" y1="204" x2="78.8" y2="161.4"/><polygon class="glow" points="210.0,149.4 297.5,175.6 271.7,288.9 163.5,268.0 118.4,174.2" fill="#4F52E3"/><polygon class="shape" points="210.0,149.4 297.5,175.6 271.7,288.9 163.5,268.0 118.4,174.2"/><circle class="dot" cx="210.0" cy="149.4" r="6.5"/><circle class="dot" cx="297.5" cy="175.6" r="6.5"/><circle class="dot" cx="271.7" cy="288.9" r="6.5"/><circle class="dot" cx="163.5" cy="268.0" r="6.5"/><circle class="dot" cx="118.4" cy="174.2" r="6.5"/><circle class="bd" cx="210.0" cy="32.0" r="19"/><text class="bt" x="210.0" y="32.0">N</text><circle class="bd" cx="373.6" cy="150.8" r="19"/><text class="bt" x="373.6" y="150.8">E</text><circle class="bd" cx="311.1" cy="343.2" r="19"/><text class="bt" x="311.1" y="343.2">O</text><circle class="bd" cx="108.9" cy="343.2" r="19"/><text class="bt" x="108.9" y="343.2">A</text><circle class="bd" cx="46.4" cy="150.8" r="19"/><text class="bt" x="46.4" y="150.8">C</text></svg><p class="disc" style="margin-block-start:6px">مقياس العوامل: من 24 إلى 120. مقياس السمات الفرعية: من 4 إلى 20.</p></section>
+ <section class="card rv" style="--d:.18s" aria-label="العوامل الخمسة الكبرى"><div class="list"><div class="row" style="--c:var(--d-n);--w:39.6%"><div class="rh"><span class="cd" dir="ltr">N</span><span class="nm">العُصابية</span><span class="vl"><span class="sr">الدرجة </span><span dir="ltr">62 <small>/ 120</small></span></span></div><div class="trk" role="presentation"><i></i></div><p>الحساسية تجاه المشاعر السلبية والضغط؛ وليست تشخيصًا.</p></div><div class="row" style="--c:var(--d-e);--w:66.7%"><div class="rh"><span class="cd" dir="ltr">E</span><span class="nm">الانبساطية</span><span class="vl"><span class="sr">الدرجة </span><span dir="ltr">88 <small>/ 120</small></span></span></div><div class="trk" role="presentation"><i></i></div><p>حب الصحبة، والطاقة في العمل، والتعبير عن المشاعر الإيجابية.</p></div><div class="row" style="--c:var(--d-o);--w:76.0%"><div class="rh"><span class="cd" dir="ltr">O</span><span class="nm">الانفتاح على الخبرة</span><span class="vl"><span class="sr">الدرجة </span><span dir="ltr">97 <small>/ 120</small></span></span></div><div class="trk" role="presentation"><i></i></div><p>الفضول والخيال والاهتمام بالأفكار والتجارب الجديدة.</p></div><div class="row" style="--c:var(--d-a);--w:57.3%"><div class="rh"><span class="cd" dir="ltr">A</span><span class="nm">المقبولية</span><span class="vl"><span class="sr">الدرجة </span><span dir="ltr">79 <small>/ 120</small></span></span></div><div class="trk" role="presentation"><i></i></div><p>التعاون والثقة والاهتمام بالآخرين في العلاقات.</p></div><div class="row" style="--c:var(--d-c);--w:69.8%"><div class="rh"><span class="cd" dir="ltr">C</span><span class="nm">يقظة الضمير</span><span class="vl"><span class="sr">الدرجة </span><span dir="ltr">91 <small>/ 120</small></span></span></div><div class="trk" role="presentation"><i></i></div><p>التنظيم والشعور بالواجب والمثابرة فيما يُنجَز.</p></div></div></section>
+</div>
+<section class="card rv" style="margin-block:16px 0;--d:.2s" aria-labelledby="dh"><h2 id="dh" style="font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-.02em">التفصيل حسب العامل</h2><p class="disc" style="margin-block-start:6px">اختر عاملًا لعرض سماته الفرعية الست.</p>
+<div class="tabs" role="group" aria-label="التفصيل حسب العامل"><button type="button" class="tab" data-i="0" style="--c:var(--d-n)" aria-pressed="false"><b></b>العُصابية</button><button type="button" class="tab" data-i="1" style="--c:var(--d-e)" aria-pressed="true"><b></b>الانبساطية</button><button type="button" class="tab" data-i="2" style="--c:var(--d-o)" aria-pressed="false"><b></b>الانفتاح على الخبرة</button><button type="button" class="tab" data-i="3" style="--c:var(--d-a)" aria-pressed="false"><b></b>المقبولية</button><button type="button" class="tab" data-i="4" style="--c:var(--d-c)" aria-pressed="false"><b></b>يقظة الضمير</button></div><div class="facets" data-p="0" hidden><div class="fc" style="--c:var(--d-n);--w:50.0%"><div class="fh"><span>القلق</span><span><span class="sr">الدرجة </span><span dir="ltr">12 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-n);--w:31.3%"><div class="fh"><span>الغضب</span><span><span class="sr">الدرجة </span><span dir="ltr">9 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-n);--w:37.5%"><div class="fh"><span>المزاج الاكتئابي</span><span><span class="sr">الدرجة </span><span dir="ltr">10 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-n);--w:56.3%"><div class="fh"><span>الحرج الاجتماعي</span><span><span class="sr">الدرجة </span><span dir="ltr">13 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-n);--w:25.0%"><div class="fh"><span>الاندفاعية</span><span><span class="sr">الدرجة </span><span dir="ltr">8 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-n);--w:37.5%"><div class="fh"><span>الهشاشة أمام الضغط</span><span><span class="sr">الدرجة </span><span dir="ltr">10 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div></div><div class="facets" data-p="1" ><div class="fc" style="--c:var(--d-e);--w:81.3%"><div class="fh"><span>الودّ</span><span><span class="sr">الدرجة </span><span dir="ltr">17 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-e);--w:68.8%"><div class="fh"><span>الاجتماعية</span><span><span class="sr">الدرجة </span><span dir="ltr">15 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-e);--w:62.5%"><div class="fh"><span>توكيد الذات</span><span><span class="sr">الدرجة </span><span dir="ltr">14 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-e);--w:75.0%"><div class="fh"><span>مستوى النشاط</span><span><span class="sr">الدرجة </span><span dir="ltr">16 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-e);--w:50.0%"><div class="fh"><span>البحث عن الإثارة</span><span><span class="sr">الدرجة </span><span dir="ltr">12 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-e);--w:62.5%"><div class="fh"><span>البهجة</span><span><span class="sr">الدرجة </span><span dir="ltr">14 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div></div><div class="facets" data-p="2" hidden><div class="fc" style="--c:var(--d-o);--w:75.0%"><div class="fh"><span>الخيال</span><span><span class="sr">الدرجة </span><span dir="ltr">16 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-o);--w:68.8%"><div class="fh"><span>الاهتمامات الفنية</span><span><span class="sr">الدرجة </span><span dir="ltr">15 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-o);--w:81.3%"><div class="fh"><span>الانفتاح على المشاعر</span><span><span class="sr">الدرجة </span><span dir="ltr">17 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-o);--w:75.0%"><div class="fh"><span>حبّ التجديد</span><span><span class="sr">الدرجة </span><span dir="ltr">16 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-o);--w:87.5%"><div class="fh"><span>الفضول الفكري</span><span><span class="sr">الدرجة </span><span dir="ltr">18 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-o);--w:68.8%"><div class="fh"><span>الانفتاح على القيم</span><span><span class="sr">الدرجة </span><span dir="ltr">15 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div></div><div class="facets" data-p="3" hidden><div class="fc" style="--c:var(--d-a);--w:62.5%"><div class="fh"><span>الثقة</span><span><span class="sr">الدرجة </span><span dir="ltr">14 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-a);--w:56.3%"><div class="fh"><span>الصراحة</span><span><span class="sr">الدرجة </span><span dir="ltr">13 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-a);--w:68.8%"><div class="fh"><span>الإيثار</span><span><span class="sr">الدرجة </span><span dir="ltr">15 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-a);--w:56.3%"><div class="fh"><span>التعاون</span><span><span class="sr">الدرجة </span><span dir="ltr">13 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-a);--w:37.5%"><div class="fh"><span>التواضع</span><span><span class="sr">الدرجة </span><span dir="ltr">10 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-a);--w:62.5%"><div class="fh"><span>التعاطف</span><span><span class="sr">الدرجة </span><span dir="ltr">14 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div></div><div class="facets" data-p="4" hidden><div class="fc" style="--c:var(--d-c);--w:68.8%"><div class="fh"><span>الإحساس بالكفاءة</span><span><span class="sr">الدرجة </span><span dir="ltr">15 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-c);--w:62.5%"><div class="fh"><span>التنظيم</span><span><span class="sr">الدرجة </span><span dir="ltr">14 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-c);--w:81.3%"><div class="fh"><span>الشعور بالواجب</span><span><span class="sr">الدرجة </span><span dir="ltr">17 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-c);--w:75.0%"><div class="fh"><span>السعي إلى الإنجاز</span><span><span class="sr">الدرجة </span><span dir="ltr">16 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-c);--w:56.3%"><div class="fh"><span>الانضباط الذاتي</span><span><span class="sr">الدرجة </span><span dir="ltr">13 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div><div class="fc" style="--c:var(--d-c);--w:75.0%"><div class="fh"><span>الحذر</span><span><span class="sr">الدرجة </span><span dir="ltr">16 <small>/ 20</small></span></span></div><div class="trk" role="presentation"><i></i></div></div></div>
+<div class="pr"><button class="btn p" type="button" onclick="window.print()">طباعة أو حفظ بصيغة PDF</button><a class="btn g" href="accueil-ar.html">العودة إلى الرئيسية</a></div></section>
+</div><div style="block-size:48px"></div></main>
+<footer class="ftr"><div class="wrap"><nav aria-label="Pied de page"><a href="#">الخصوصية</a><a href="#">حول الخدمة</a><a href="#">الأسئلة الشائعة</a></nav><p><bdi>© 2026 Tenga Conseil</bdi></p></div></footer>
+<script>(function(){var T=document.querySelectorAll('.tab'),P=document.querySelectorAll('[data-p]');T.forEach(function(b){b.addEventListener('click',function(){T.forEach(function(x){x.setAttribute('aria-pressed',x===b)});P.forEach(function(p){p.hidden=p.getAttribute('data-p')!==b.getAttribute('data-i')})})})})();</script>
+</body></html>

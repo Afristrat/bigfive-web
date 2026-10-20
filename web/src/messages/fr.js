@@ -12,11 +12,42 @@ const french = {
     toDark: 'Passer au thème sombre',
     toLight: 'Passer au thème clair'
   },
-  footer: {
-    service: 'Un service de Tenga Conseil'
-  },
   home: {
-    specimen: 'Exemple de restitution, valeurs fictives'
+    specimenTag: 'Exemple, valeurs fictives',
+    chip: 'Questionnaire de personnalité, cinq grands facteurs',
+    title: 'Votre personnalité, lue en cinq dimensions.',
+    lead: 'Un questionnaire de 120 affirmations, sans limite de temps. Il n’y a ni bonne ni mauvaise réponse.',
+    stats: {
+      statements: 'affirmations',
+      domains: 'domaines',
+      facets: 'facettes',
+      languages: 'langues'
+    },
+    factors: {
+      title: 'Les cinq grands facteurs de la personnalité',
+      intro:
+        'Cinq dimensions, chacune décrite comme une tendance et non comme un jugement.',
+      facets: 'Six facettes',
+      N: 'Sensibilité aux émotions négatives et au stress ; ce n’est pas un diagnostic.',
+      E: 'Goût de la compagnie, énergie dans l’action, expression des émotions positives.',
+      O: 'Curiosité, imagination, intérêt pour les idées et les expériences nouvelles.',
+      A: 'Coopération, confiance, souci d’autrui dans les relations.',
+      C: 'Organisation, sens du devoir, persévérance dans ce que l’on entreprend.'
+    },
+    languages: {
+      title: 'Trois langues',
+      text: 'Disponible en français, en arabe et en anglais.'
+    },
+    reference: {
+      title: 'Référence',
+      text: 'Le questionnaire reprend l’IPIP-NEO-120 de John A. Johnson (2014), placé dans le domaine public.'
+    }
+  },
+  radar: {
+    title: 'Radar des cinq grands facteurs',
+    summary: 'Graphique en radar à cinq axes, de {min} à {max}.',
+    domain: 'Domaine',
+    score: 'Score'
   },
   seo: {
     keywords:
@@ -26,15 +57,13 @@ const french = {
     seo: {
       title: 'Test de personnalité Big Five | Tenga Assessments',
       description:
-        'Questionnaire de personnalité fondé sur le modèle des cinq grands facteurs (Big Five), proposé par Tenga Conseil, cabinet de conseil marocain, aux organisations qu’il accompagne.',
+        'Questionnaire de personnalité de 120 affirmations, fondé sur le modèle des cinq grands facteurs (Big Five), proposé par Tenga Conseil.',
       image_alt: 'Tenga Assessments, questionnaire de personnalité'
     },
     call_to_action: 'Commencer le questionnaire',
     description: {
-      top: 'Mieux comprendre votre façon d’agir, pour <violet>mieux travailler ensemble</violet>.',
       reference:
-        'Questions et calcul des scores : International Personality Item Pool (<ipip>ipip.ori.org</ipip>), questionnaire IPIP-NEO-120 de John A. Johnson (2014), placé dans le domaine public.',
-      info: 'Un questionnaire de 120 affirmations, proposé par Tenga Conseil aux organisations qu’il accompagne. Il n’y a ni bonne ni mauvaise réponse, et aucune limite de temps.'
+        'Questions et calcul des scores : International Personality Item Pool (<ipip>ipip.ori.org</ipip>), questionnaire IPIP-NEO-120 de John A. Johnson (2014), placé dans le domaine public.'
     },
     posts: {
       subtitle: 'Repères sur la personnalité et le travail en équipe',
@@ -50,7 +79,7 @@ const french = {
     title: 'À propos',
     p1: 'Tenga Assessments est le service d’évaluation de la personnalité de Tenga Conseil, cabinet de conseil marocain. Il est proposé aux organisations que le cabinet accompagne : directions, équipes de ressources humaines, consultants.',
     p2: 'Le questionnaire décrit la personnalité selon les cinq grands facteurs : ouverture à l’expérience, conscienciosité, extraversion, agréabilité et névrosisme, détaillés en trente facettes. Il reprend l’IPIP-NEO-120 de John A. Johnson (2014), issu de l’International Personality Item Pool et placé dans le domaine public.',
-    p3: 'Il est proposé en français et en arabe. Quelques formulations ont été adaptées au contexte marocain ; chacune conserve la facette mesurée et le sens de cotation de la question d’origine.',
+    p3: 'Il est proposé en français, en arabe et en anglais. Quelques formulations ont été adaptées au contexte marocain ; chacune conserve la facette mesurée et le sens de cotation de la question d’origine.',
     p4: 'Les résultats décrivent des tendances habituelles de comportement. Ils ne mesurent pas des compétences et ne constituent pas un diagnostic.',
     contact_faq:
       'Une question ? Consultez d’abord les <link>questions fréquentes</link>.',
@@ -128,8 +157,11 @@ const french = {
   test: {
     heading: 'Questionnaire de personnalité',
     instructions:
-      'Pour chaque affirmation, indiquez dans quelle mesure elle vous décrit tel que vous êtes habituellement, et non tel que vous aimeriez être. Répondez spontanément.',
-    noTimeLimit: 'Sans limite de temps',
+      'Pour chaque affirmation, indiquez dans quelle mesure elle vous décrit tel que vous êtes habituellement, et non tel que vous aimeriez être. Répondez spontanément. Les touches 1 à 5 du clavier permettent de choisir.',
+    noTimeLimit: 'Aucune limite de temps',
+    progressBar: 'Progression dans le questionnaire',
+    statement: 'Affirmation {number}',
+    prompt: 'Cette affirmation vous décrit-elle habituellement ?',
     progress: 'Question {current} sur {total}',
     next: 'Suivant',
     back: 'Précédent',
@@ -207,12 +239,24 @@ const french = {
       'Saisissez un identifiant valide, qui ne figure pas déjà dans la liste.'
   },
   results: {
-    title: 'Votre profil de personnalité',
-    overview: 'Vos cinq dimensions',
+    title: 'Votre profil selon les cinq grands facteurs',
+    factorsTitle: 'Les cinq grands facteurs',
+    radar: {
+      title: 'Radar des cinq grands facteurs',
+      summary: 'Graphique en radar à cinq axes, de {min} à {max}.',
+      domain: 'Domaine',
+      score: 'Score'
+    },
+    scales:
+      'Échelle des domaines : {domainMin} à {domainMax}. Échelle des facettes : {facetMin} à {facetMax}.',
+    detailTitle: 'Détail par domaine',
+    detailHint: 'Choisissez un domaine pour voir ses six facettes.',
+    idLabel: 'Identifiant de ce résultat',
+    idHint: 'Conservez-le pour retrouver ce résultat plus tard.',
+    copied: 'Identifiant copié',
+    backHome: 'Retour à l’accueil',
     intro:
       'Ces résultats décrivent vos tendances habituelles, d’après vos propres réponses. Ils ne mesurent ni vos compétences ni votre valeur, et ne constituent pas un diagnostic.',
-    scaleNote:
-      'Le trait vertical marque le milieu de l’échelle de réponse (3 sur 5).',
     outOf: 'sur {max}',
     level: {
       low: 'bas',
@@ -221,17 +265,11 @@ const french = {
     },
     facets: 'Facettes',
     learnMore: 'En savoir plus sur cette dimension',
-    contents: 'Sommaire',
     neuroticismGloss:
       'Sensibilité aux émotions négatives et au stress ; ce n’est pas un diagnostic.',
     print: 'Imprimer ou enregistrer en PDF',
     copyId: 'Copier l’identifiant',
     loading: 'Chargement',
-    important: 'Important !',
-    saveResults:
-      "Enregistrez l'ID suivant pour voir les résultats plus tard ou",
-    compare: 'comparer',
-    toOthers: 'toi-même aux autres',
     seo: {
       title: 'Mes résultats au questionnaire Big Five',
       description:

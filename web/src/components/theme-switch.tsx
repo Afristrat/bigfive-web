@@ -1,10 +1,10 @@
 'use client';
 
-import { Button } from '@nextui-org/button';
+import { ReactElement } from 'react';
 import { useTheme } from 'next-themes';
 import { useIsSSR } from '@react-aria/ssr';
 
-import { SunFilledIcon, MoonFilledIcon } from '@/components/icons';
+import { MoonIcon, SunIcon } from '@/components/icons';
 
 export type ThemeSwitchLabels = {
   toDark: string;
@@ -15,22 +15,24 @@ interface ThemeSwitchProps {
   labels: ThemeSwitchLabels;
 }
 
-export const ThemeSwitch = ({ labels }: ThemeSwitchProps) => {
+// Bouton carré de la direction B2. Le pictogramme montre le thème courant
+// (soleil en clair, lune en sombre) par CSS, donc sans clignotement au
+// chargement ; le nom accessible dit l'action.
+export const ThemeSwitch = ({ labels }: ThemeSwitchProps): ReactElement => {
   const { resolvedTheme, setTheme } = useTheme();
   const isSSR = useIsSSR();
   // Le thème par défaut suit le système : seul le thème résolu dit ce qui est affiché.
   const isDark = !isSSR && resolvedTheme === 'dark';
 
   return (
-    <Button
-      isIconOnly
-      variant='light'
-      size='md'
+    <button
+      type='button'
       aria-label={isDark ? labels.toLight : labels.toDark}
-      className='text-texte-2 data-[hover=true]:bg-creux data-[hover=true]:text-encre'
-      onPress={() => setTheme(isDark ? 'light' : 'dark')}
+      className='grid size-12 flex-none cursor-pointer place-items-center rounded-[14px] border border-trait bg-surface text-encre transition duration-normale ease-tenga hover:bg-creux active:scale-95'
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
     >
-      {isDark ? <SunFilledIcon /> : <MoonFilledIcon />}
-    </Button>
+      <SunIcon className='dark:hidden' />
+      <MoonIcon className='hidden dark:block' />
+    </button>
   );
 };

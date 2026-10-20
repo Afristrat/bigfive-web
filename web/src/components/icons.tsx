@@ -4,17 +4,37 @@ import { IconSvgProps } from '@/types';
 // Icônes SVG en ligne : 20 px et trait de 1,5 par défaut, masquées des
 // technologies d'assistance (le nom vient toujours du contrôle qui les porte).
 
-// Mot-symbole provisoire en attendant le logo de Tenga Conseil (direction § 12, point 1).
+// Mot-symbole provisoire en attendant le logo de Tenga Conseil (direction § 12,
+// point 1) : pastille de marque (pentagone) et nom, comme dans la direction B2.
 export const Wordmark = ({ className }: { className?: string }) => (
-  <span className={clsx('inline-flex items-baseline gap-2', className)}>
-    <bdi
-      dir='ltr'
-      className='text-[1.25rem] font-semibold tracking-[-0.01em] text-encre'
+  <span className={clsx('inline-flex items-center gap-2.5', className)}>
+    <span
+      aria-hidden='true'
+      className='grid size-[38px] flex-none place-items-center rounded-[12px] bg-accent text-sur-accent'
     >
-      Tenga
-    </bdi>
-    <bdi dir='ltr' className='text-petit text-texte-3'>
-      Assessments
+      <svg
+        width={22}
+        height={22}
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth={2.2}
+        strokeLinejoin='round'
+        focusable='false'
+      >
+        <path d='M12 2.8l8.6 6.3-3.3 10.1H6.7L3.4 9.1z' />
+        <path
+          d='M12 8.5l4 2.9-1.5 4.6H9.5L8 11.4z'
+          fill='currentColor'
+          fillOpacity={0.35}
+        />
+      </svg>
+    </span>
+    <bdi dir='ltr' className='whitespace-nowrap text-[1.125rem] font-extrabold'>
+      Tenga{' '}
+      <span className='font-medium text-texte-2 max-[440px]:hidden'>
+        Assessments
+      </span>
     </bdi>
   </span>
 );
@@ -105,8 +125,8 @@ export const MastadonIcon = ({
   </svg>
 );
 
-export const MoonFilledIcon = ({
-  size = 20,
+export const MoonIcon = ({
+  size = 22,
   width,
   height,
   ...props
@@ -117,17 +137,19 @@ export const MoonFilledIcon = ({
     height={size || height}
     viewBox='0 0 24 24'
     width={size || width}
+    fill='none'
+    stroke='currentColor'
+    strokeWidth={2}
+    strokeLinecap='round'
+    strokeLinejoin='round'
     {...props}
   >
-    <path
-      d='M21.53 15.93c-.16-.27-.61-.69-1.73-.49a8.46 8.46 0 01-1.88.13 8.409 8.409 0 01-5.91-2.82 8.068 8.068 0 01-1.44-8.66c.44-1.01.13-1.54-.09-1.76s-.77-.55-1.83-.11a10.318 10.318 0 00-6.32 10.21 10.475 10.475 0 007.04 8.99 10 10 0 002.89.55c.16.01.32.02.48.02a10.5 10.5 0 008.47-4.27c.67-.93.49-1.519.32-1.79z'
-      fill='currentColor'
-    />
+    <path d='M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z' />
   </svg>
 );
 
-export const SunFilledIcon = ({
-  size = 20,
+export const SunIcon = ({
+  size = 22,
   width,
   height,
   ...props
@@ -138,12 +160,36 @@ export const SunFilledIcon = ({
     height={size || height}
     viewBox='0 0 24 24'
     width={size || width}
+    fill='none'
+    stroke='currentColor'
+    strokeWidth={2}
+    strokeLinecap='round'
     {...props}
   >
-    <g fill='currentColor'>
-      <path d='M19 12a7 7 0 11-7-7 7 7 0 017 7z' />
-      <path d='M12 22.96a.969.969 0 01-1-.96v-.08a1 1 0 012 0 1.038 1.038 0 01-1 1.04zm7.14-2.82a1.024 1.024 0 01-.71-.29l-.13-.13a1 1 0 011.41-1.41l.13.13a1 1 0 010 1.41.984.984 0 01-.7.29zm-14.28 0a1.024 1.024 0 01-.71-.29 1 1 0 010-1.41l.13-.13a1 1 0 011.41 1.41l-.13.13a1 1 0 01-.7.29zM22 13h-.08a1 1 0 010-2 1.038 1.038 0 011.04 1 .969.969 0 01-.96 1zM2.08 13H2a1 1 0 010-2 1.038 1.038 0 011.04 1 .969.969 0 01-.96 1zm16.93-7.01a1.024 1.024 0 01-.71-.29 1 1 0 010-1.41l.13-.13a1 1 0 011.41 1.41l-.13.13a.984.984 0 01-.7.29zm-14.02 0a1.024 1.024 0 01-.71-.29l-.13-.14a1 1 0 011.41-1.41l.13.13a1 1 0 010 1.41.97.97 0 01-.7.3zM12 3.04a.969.969 0 01-1-.96V2a1 1 0 012 0 1.038 1.038 0 01-1 1.04z' />
-    </g>
+    <circle cx='12' cy='12' r='4' />
+    <path d='M12 2.5v2.2M12 19.3v2.2M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6' />
+  </svg>
+);
+
+export const MenuIcon = ({
+  size = 22,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
+  <svg
+    aria-hidden='true'
+    focusable='false'
+    height={size || height}
+    viewBox='0 0 24 24'
+    width={size || width}
+    fill='none'
+    stroke='currentColor'
+    strokeWidth={2.2}
+    strokeLinecap='round'
+    {...props}
+  >
+    <path d='M4 7h16M4 12h16M4 17h16' />
   </svg>
 );
 
@@ -164,7 +210,7 @@ export const ArrowRightIcon = ({
     viewBox='0 0 24 24'
     fill='none'
     stroke='currentColor'
-    strokeWidth='1.5'
+    strokeWidth='2.2'
     strokeLinecap='round'
     strokeLinejoin='round'
     {...props}

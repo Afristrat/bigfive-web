@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { useRouter } from '@/navigation';
 
@@ -12,7 +12,7 @@ import { SurveyNav } from '@/components/questionnaire/survey-nav';
 import { type Question } from '@bigfive-org/questions';
 import { isDev } from '@/lib/helpers';
 import { formatNombre } from '@/lib/format';
-import useWindowDimensions from '@/hooks/useWindowDimensions';
+import { scoreForKey } from '@/lib/questionnaire-keys';
 import useTimer from '@/hooks/useTimer';
 import { type Answer, type DbResult } from '@/types';
 
@@ -25,6 +25,9 @@ export type SurveyLabels = {
   dismiss: string;
   instructions: string;
   noTimeLimit: string;
+  progressBar: string;
+  statement: string; // gabarit « Affirmation {number} »
+  prompt: string;
   restored: string;
   newTest: string;
   saveFailedTitle: string;
@@ -48,24 +51,15 @@ export const Survey = ({
 }: SurveyProps) => {
   const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [questionsPerPage, setQuestionsPerPage] = useState(1);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [loading, setLoading] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [restored, setRestored] = useState(false);
-  const { width } = useWindowDimensions();
   const seconds = useTimer();
   const headingRef = useRef<HTMLHeadingElement>(null);
   // Vrai uniquement après un clic sur Suivant ou Précédent : ni la restauration
   // d'une sauvegarde ni le premier rendu ne déplacent le focus.
   const shouldFocusHeading = useRef(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setQuestionsPerPage(window.innerWidth > 768 ? 3 : 1);
-    };
-    handleResize();
-  }, [width]);
 
   // Sauvegarde locale après chaque changement d'état, pour que la dernière
   // réponse donnée soit toujours incluse. Rien n'est écrit tant qu'aucune
@@ -100,24 +94,17 @@ export const Survey = ({
     });
   }, [currentQuestionIndex]);
 
-  const currentQuestions = useMemo(
-    () =>
-      questions.slice(
-        currentQuestionIndex,
-        currentQuestionIndex + questionsPerPage
-      ),
-    [currentQuestionIndex, questions, questionsPerPage]
-  );
+  // Une question par écran : « Question n sur 120 » et les touches 1 à 5
+  // désignent sans ambiguïté la question affichée.
+  const question: Question | undefined = questions[currentQuestionIndex];
+  const currentAnswer = question
+    ? answers.find((answer) => answer.id === question.id)
+    : undefined;
 
   const isTestDone = questions.length === answers.length;
-  const isLastPage =
-    currentQuestionIndex + questionsPerPage >= questions.length;
+  const isLastPage = currentQuestionIndex + 1 >= questions.length;
 
-  const nextButtonDisabled =
-    currentQuestionIndex + questionsPerPage > answers.length ||
-    (isTestDone &&
-      currentQuestionIndex === questions.length - questionsPerPage) ||
-    loading;
+  const nextButtonDisabled = !currentAnswer || loading;
 
   const backButtonDisabled = currentQuestionIndex === 0 || loading;
 
@@ -128,14 +115,14 @@ export const Survey = ({
     .replace('{total}', formatNombre(total, language));
 
   function handleAnswer(id: string, value: string) {
-    const question = questions.find((question) => question.id === id);
-    if (!question) return;
+    const target = questions.find((item) => item.id === id);
+    if (!target) return;
 
     const newAnswer: Answer = {
       id,
       score: Number(value),
-      domain: question.domain,
-      facet: question.facet
+      domain: target.domain,
+      facet: target.facet
     };
 
     setAnswers((prevAnswers) => [
@@ -144,14 +131,32 @@ export const Survey = ({
     ]);
   }
 
+  // Touches 1 à 5 : choisissent la réponse sans avancer ni déplacer le focus.
+  // Les flèches sont celles, natives, du groupe de boutons radio.
+  useEffect(() => {
+    if (!question || loading) return;
+    const scores = question.choices.map((choice) => choice.score);
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      const score = scoreForKey(event.key, scores, target, event);
+      if (score === null) return;
+      event.preventDefault();
+      handleAnswer(question.id, score.toString());
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+    // handleAnswer ne dépend que de questions, stable pour la page.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question, loading]);
+
   function handlePreviousQuestions() {
     shouldFocusHeading.current = true;
-    setCurrentQuestionIndex((prev) => prev - questionsPerPage);
+    setCurrentQuestionIndex((prev) => Math.max(0, prev - 1));
   }
 
   function handleNextQuestions() {
     shouldFocusHeading.current = true;
-    setCurrentQuestionIndex((prev) => prev + questionsPerPage);
+    setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1));
     if (restored) setRestored(false);
   }
 
@@ -216,19 +221,34 @@ export const Survey = ({
   return (
     <div>
       <ProgressHeader
-        answered={answers.length}
         total={total}
         current={current}
         label={progressLabel}
+        noTimeLimit={labels.noTimeLimit}
+        barLabel={labels.progressBar}
       />
       {currentQuestionIndex === 0 && (
-        <div className='mt-6'>
-          <p className='mb-2 text-petit text-texte-2'>{labels.instructions}</p>
-          <p className='text-petit text-texte-3'>{labels.noTimeLimit}</p>
-        </div>
+        <p className='mt-5 flex items-start gap-3 rounded-[20px] bg-accent-doux px-5 py-4 text-[0.97rem] text-encre'>
+          <svg
+            aria-hidden='true'
+            focusable='false'
+            width='20'
+            height='20'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='2'
+            strokeLinecap='round'
+            className='mt-[3px] flex-none text-accent'
+          >
+            <circle cx='12' cy='12' r='9.5' />
+            <path d='M12 11v5.5M12 7.6v.1' />
+          </svg>
+          <span>{labels.instructions}</span>
+        </p>
       )}
       {restored && (
-        <Notice ton='avis' className='mt-6'>
+        <Notice ton='avis' className='mt-5'>
           <p className='min-w-0 flex-1'>
             {labels.restored}{' '}
             <Button
@@ -252,18 +272,42 @@ export const Survey = ({
           </Button>
         </Notice>
       )}
-      {currentQuestions.map((question, index) => (
-        <QuestionBlock
-          key={question.id}
-          question={question}
-          number={currentQuestionIndex + index + 1}
-          value={answers
-            .find((answer) => answer.id === question.id)
-            ?.score.toString()}
-          onChange={(value) => handleAnswer(question.id, value)}
-          headingRef={index === 0 ? headingRef : undefined}
+      <form
+        onSubmit={(event) => event.preventDefault()}
+        className='mt-4 rounded-panneau border border-trait bg-surface p-[clamp(22px,3vw,36px)] shadow-carte'
+      >
+        {question && (
+          <QuestionBlock
+            key={question.id}
+            question={question}
+            number={currentQuestionIndex + 1}
+            statementLabel={labels.statement}
+            prompt={labels.prompt}
+            locale={language}
+            value={currentAnswer?.score.toString()}
+            onChange={(value) => handleAnswer(question.id, value)}
+            headingRef={headingRef}
+          />
+        )}
+        <SurveyNav
+          onPrev={handlePreviousQuestions}
+          onNext={handleNextQuestions}
+          onSubmit={submitTest}
+          prevDisabled={backButtonDisabled}
+          nextDisabled={
+            isLastPage ? !isTestDone || loading : nextButtonDisabled
+          }
+          isLast={isLastPage}
+          isLoading={loading}
+          labels={{
+            prev: labels.prev,
+            next: labels.next,
+            submit: labels.results,
+            saving: labels.saving,
+            nextHelp: labels.nextHelp
+          }}
         />
-      ))}
+      </form>
       {saveFailed && (
         <Notice ton='erreur' titre={labels.saveFailedTitle} className='mt-6'>
           <p>{labels.saveFailedText}</p>
@@ -276,22 +320,6 @@ export const Survey = ({
           </Button>
         </Notice>
       )}
-      <SurveyNav
-        onPrev={handlePreviousQuestions}
-        onNext={handleNextQuestions}
-        onSubmit={submitTest}
-        prevDisabled={backButtonDisabled}
-        nextDisabled={isLastPage ? !isTestDone || loading : nextButtonDisabled}
-        isLast={isLastPage}
-        isLoading={loading}
-        labels={{
-          prev: labels.prev,
-          next: labels.next,
-          submit: labels.results,
-          saving: labels.saving,
-          nextHelp: labels.nextHelp
-        }}
-      />
       {isDev && !isTestDone && (
         <Button variant='flat' className='mt-4' onPress={skipToEnd}>
           Skip to end (dev)

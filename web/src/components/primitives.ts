@@ -4,8 +4,9 @@ export const title = tv({
   base: 'text-encre',
   variants: {
     size: {
-      display: 'text-[2.25rem] leading-[1.1] md:text-display font-semibold',
-      lg: 'text-[1.875rem] md:text-titre-1 font-semibold',
+      display: 'text-display',
+      lg: 'text-titre-1',
+      section: 'text-titre-section',
       md: 'text-titre-2',
       sm: 'text-titre-3'
     }
@@ -23,5 +24,5 @@ export const heading = tv({
 
 // Lien stylé en bouton principal (accueil, pages 404 et erreur).
 export const boutonPrincipal = tv({
-  base: 'inline-flex h-11 items-center gap-2 rounded-controle bg-accent px-5 font-medium text-sur-accent transition-colors duration-courte hover:bg-accent-survol active:translate-y-px'
+  base: 'inline-flex min-h-[52px] items-center justify-center gap-2.5 whitespace-nowrap rounded-controle border-[1.5px] border-transparent bg-accent px-[26px] font-bold leading-tight text-sur-accent shadow-[0_8px_20px_-10px_rgb(var(--c-accent))] transition duration-normale ease-tenga hover:-translate-y-px hover:bg-accent-survol active:translate-y-px'
 });

@@ -1,8 +1,9 @@
-import { IBM_Plex_Sans_Arabic, Instrument_Sans } from 'next/font/google';
+import { IBM_Plex_Sans_Arabic, Plus_Jakarta_Sans } from 'next/font/google';
 
-export const fontLatin = Instrument_Sans({
+// Direction B2 : Plus Jakarta Sans pour le latin (graisses 400 à 800), IBM Plex
+// Sans Arabic pour l'arabe (400 à 700).
+export const fontLatin = Plus_Jakarta_Sans({
   subsets: ['latin', 'latin-ext'],
-  axes: ['wdth'],
   display: 'swap',
   variable: '--font-latin'
 });
@@ -10,7 +11,7 @@ export const fontLatin = Instrument_Sans({
 // Téléchargée seulement quand un glyphe arabe est affiché.
 export const fontArabe = IBM_Plex_Sans_Arabic({
   subsets: ['arabic'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
   preload: false,
   variable: '--font-arabe'

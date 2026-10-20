@@ -71,8 +71,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F7F6F3' },
-    { media: '(prefers-color-scheme: dark)', color: '#111413' }
+    { media: '(prefers-color-scheme: light)', color: '#F6F6FA' },
+    { media: '(prefers-color-scheme: dark)', color: '#0C0D1B' }
   ]
 };
 
@@ -116,7 +116,7 @@ export default async function RootLayout({
           <Providers locale={locale} themeProps={themeProps}>
             <a
               href='#contenu'
-              className='sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-fenetre focus:rounded-controle focus:bg-surface focus:px-4 focus:py-2 focus:shadow-flottant'
+              className='sr-only focus:not-sr-only focus:fixed focus:start-3 focus:top-3 focus:z-fenetre focus:rounded-[12px] focus:bg-accent focus:px-[18px] focus:py-3 focus:font-bold focus:text-sur-accent focus:no-underline'
             >
               {t('a11y.skip')}
             </a>
@@ -143,10 +143,7 @@ export default async function RootLayout({
               </main>
               <Footer
                 footerLinks={footerLinks}
-                labels={{
-                  service: t('footer.service'),
-                  nav: t('a11y.footerNav')
-                }}
+                labels={{ nav: t('a11y.footerNav') }}
               />
             </div>
           </Providers>
