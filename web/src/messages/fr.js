@@ -543,13 +543,13 @@ const french = {
         'L’instrument, les cinq domaines et les trente facettes, et les références de la recherche, avec leurs chiffres exacts et leurs limites.'
     },
     title: 'Méthode et références',
-    lead: 'Une méthode publiée, des sources citées, des limites dites.',
+    lead: 'Un instrument ouvert, des travaux de recherche publiés, des chiffres que vous pouvez vérifier vous-même.',
     toc: 'Sur cette page',
     verified:
-      'Sources consultées le 20 octobre 2026. Les citations sont traduites de l’anglais par nos soins. Plusieurs articles n’ont pu être lus qu’en résumé : chaque fiche indique ce qui a été lu.',
+      'Chaque référence a été consultée le 20 octobre 2026. Les citations sont traduites de l’anglais par nos soins, et chaque fiche indique ce qui a été lu : texte intégral, résumé de l’éditeur ou page web.',
     labels: {
       finding: 'Ce que la source établit',
-      limit: 'Limites',
+      limit: 'À garder en tête',
       evidence: 'Niveau de preuve',
       reading: {
         full: 'Texte intégral lu',
@@ -561,20 +561,20 @@ const french = {
     instrument: {
       title: 'L’instrument',
       intro:
-        'Le questionnaire reprend l’IPIP-NEO-120 de John A. Johnson, publié en 2014 dans le Journal of Research in Personality. Avec 120 affirmations, il mesure les cinq grands facteurs de la personnalité et leurs trente facettes. Il est construit à partir de l’International Personality Item Pool, une banque d’affirmations que son site officiel déclare placée dans le domaine public.',
+        'Le questionnaire s’appuie sur l’IPIP-NEO-120 de John A. Johnson, publié en 2014 dans le Journal of Research in Personality. Ses 120 affirmations éclairent les cinq grands facteurs de la personnalité et leurs trente facettes, pour une lecture fine plutôt qu’une simple étiquette. Il puise dans l’International Personality Item Pool, une banque d’affirmations que son site officiel déclare placée dans le domaine public : un instrument ouvert, dont chaque question peut être lue et examinée.',
       notNeo:
         'Il mesure des facettes proches de celles du NEO PI-R, un instrument commercial distinct, sans être celui-ci.'
     },
     domains: {
       title: 'Ce que mesurent les cinq domaines et les trente facettes',
       intro:
-        'Chaque domaine décrit une tendance, jamais une qualité ni un défaut. Chacun se décompose en six facettes, décrites séparément.',
+        'Chaque domaine décrit une tendance, jamais une qualité ni un défaut : une manière d’aborder le monde, avec ses forces propres. Chacun se décline en six facettes, décrites une à une.',
       facets: 'Les six facettes'
     },
     research: {
       title: 'Ce que dit la recherche',
       intro:
-        'Chaque fiche donne les auteurs, l’année, la revue, l’ordre de grandeur lu dans la source et ses limites. Nous ne retenons que des travaux dont le niveau de preuve est fort ou partiel, et nous disons lequel.',
+        'Seize références, chacune présentée avec ses auteurs, son année, sa revue, les chiffres exacts lus dans la source et son niveau de preuve. Nous retenons les travaux dont le niveau de preuve est fort ou partiel, et nous disons lequel : vous savez toujours sur quoi vous vous appuyez.',
       reading: {
         title: 'Comment lire les chiffres',
         text: 'Une corrélation va de 0 à 1 : plus elle est proche de 1, plus deux mesures évoluent ensemble. Son carré donne la part de variance partagée : une corrélation de 0,19 correspond à environ 3,6 % (calcul de notre dossier de preuves). Une moyenne cache des écarts entre études, et une association n’est pas une cause.'
@@ -590,9 +590,9 @@ const french = {
       }
     },
     gaps: {
-      title: 'Ce que nous n’avons pas trouvé',
+      title: 'Les questions que la recherche laisse ouvertes',
       intro:
-        'Une absence de preuve trouvée n’est pas une preuve d’absence : notre recherche n’est pas exhaustive. Mais autant le dire.',
+        'Une recherche n’est jamais exhaustive, et une étude introuvable ne prouve pas qu’elle n’existe pas. Voici, en toute transparence, ce que la littérature consultée n’établit pas encore.',
       morocco:
         'Aucune étude d’invariance de mesure de l’IPIP-NEO-120 entre le Maroc et un autre pays, ni entre l’arabe ou le français marocains et l’anglais.',
       team: 'Aucune étude qui compare des personnes recevant un rapport de personnalité à un groupe témoin, sur des critères de leadership.',

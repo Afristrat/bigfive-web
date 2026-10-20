@@ -540,13 +540,13 @@ const english = {
         'The instrument, the five domains and thirty facets, and the research references, with their exact figures and their limits.'
     },
     title: 'Method and references',
-    lead: 'A published method, cited sources, stated limits.',
+    lead: 'An open instrument, published research, figures you can check for yourself.',
     toc: 'On this page',
     verified:
-      'Sources consulted on 20 October 2026. Quotations are our own translation from the original. Several articles could only be read in abstract: each entry says what was read.',
+      'Each reference was consulted on 20 October 2026. Quotations are our own translation from the original, and each entry says what was read: full text, publisher’s abstract or web page.',
     labels: {
       finding: 'What the source establishes',
-      limit: 'Limits',
+      limit: 'Worth keeping in mind',
       evidence: 'Strength of evidence',
       reading: {
         full: 'Full text read',
@@ -558,20 +558,20 @@ const english = {
     instrument: {
       title: 'The instrument',
       intro:
-        'The questionnaire uses the IPIP-NEO-120 by John A. Johnson, published in 2014 in the Journal of Research in Personality. With 120 statements, it measures the five major personality factors and their thirty facets. It is built from the International Personality Item Pool, a bank of statements that its official website declares to be in the public domain.',
+        'The questionnaire uses the IPIP-NEO-120 by John A. Johnson, published in 2014 in the Journal of Research in Personality. Its 120 statements shed light on the five major personality factors and their thirty facets, for a fine-grained reading rather than a simple label. It draws on the International Personality Item Pool, a bank of statements that its official website declares to be in the public domain: an open instrument, whose every question can be read and examined.',
       notNeo:
         'It measures facets close to those of the NEO PI-R, a separate commercial instrument, without being that instrument.'
     },
     domains: {
       title: 'What the five domains and thirty facets measure',
       intro:
-        'Each domain describes a tendency, never a quality or a flaw. Each breaks down into six facets, described separately.',
+        'Each domain describes a tendency, never a quality or a flaw: a way of approaching the world, with its own strengths. Each breaks down into six facets, described one by one.',
       facets: 'The six facets'
     },
     research: {
       title: 'What the research says',
       intro:
-        'Each entry gives the authors, the year, the journal, the order of magnitude read in the source and its limits. We keep only work whose strength of evidence is strong or partial, and we say which.',
+        'Sixteen references, each presented with its authors, year, journal, the exact figures read in the source and its strength of evidence. We keep work whose strength of evidence is strong or partial, and we say which: you always know what you are relying on.',
       reading: {
         title: 'How to read the figures',
         text: 'A correlation runs from 0 to 1: the closer to 1, the more two measures move together. Its square gives the share of shared variance: a correlation of 0.19 corresponds to about 3.6% (a calculation from our evidence file). An average hides differences between studies, and an association is not a cause.'
@@ -587,9 +587,9 @@ const english = {
       }
     },
     gaps: {
-      title: 'What we did not find',
+      title: 'The questions research leaves open',
       intro:
-        'Finding no evidence is not evidence of absence: our search is not exhaustive. But it is better said.',
+        'Research is never exhaustive, and a study we could not find does not prove that none exists. Here, in full transparency, is what the literature consulted does not yet establish.',
       morocco:
         'No study of measurement invariance of the IPIP-NEO-120 between Morocco and another country, or between Moroccan Arabic or French and English.',
       team: 'No study comparing people who receive a personality report with a control group, on leadership criteria.',
