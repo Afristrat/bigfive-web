@@ -4,6 +4,7 @@ import { title } from '@/components/primitives';
 import { loadJournal, loadOrganizations } from '@/lib/admin-data';
 import { formatDate, formatDateHeure } from '@/lib/format';
 import { requireAdmin } from '@/lib/session';
+import { Link } from '@/navigation';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -43,6 +44,14 @@ export default async function AdminPage({ params }: Props) {
         <h1 className={title()}>{t('title')}</h1>
         <p className='mt-4 colonne-lecture text-chapo text-texte-2'>
           {t('intro')}
+        </p>
+        <p className='mt-4'>
+          <Link
+            href='/admin/apercu-rapport'
+            className='underline underline-offset-4'
+          >
+            Aperçu des rapports comparatifs
+          </Link>
         </p>
       </header>
 

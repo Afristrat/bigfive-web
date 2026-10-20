@@ -17,6 +17,7 @@ const results = require('@bigfive-org/results');
 const here = path.dirname(fileURLToPath(import.meta.url));
 const lib = JSON.parse(fs.readFileSync(path.join(here, '..', 'bibliotheque-textes', 'facettes-pilote.json'), 'utf-8'));
 
+const MODE = process.env.MODE || 'html'; // 'docx' : variante pour pandoc (avatars en PNG, sans barres)
 const DOMAINES = ['N', 'E', 'O', 'A', 'C'];
 const NOM_DOMAINE = { N: 'Névrosisme', E: 'Extraversion', O: 'Ouverture', A: 'Agréabilité', C: 'Conscience' };
 const items = getItems('fr');
@@ -87,6 +88,7 @@ const bloc = (code, m) => { const f = facettePilote[code]; if (!f) return null; 
 
 // ---------- Avatars dessinés (SVG) ----------
 function avatar(p, taille = 96, badge = true) {
+  if (MODE === 'docx') return `<img src="avatars/${p.code}.png" alt="Avatar de ${esc(p.nom)}, initiales ${p.code}" width="${Math.round(taille * 0.75)}" />`;
   const h = p.sexe === 'h';
   const cheveuxHaut = p.style === 'court'
     ? `<path d="M30 46 C30 24 70 24 70 46 C66 36 34 36 30 46 Z" fill="${p.cheveux}"/>`
@@ -109,7 +111,7 @@ function avatar(p, taille = 96, badge = true) {
 }
 
 // ---------- Éléments de rendu ----------
-const barre = (m, couleur, etiquette) => `<div class="barre" title="${esc(etiquette)}"><span style="width:${((m - 1) / 4 * 100).toFixed(1)}%;background:${couleur}"></span></div>`;
+const barre = (m, couleur, etiquette) => MODE === 'docx' ? '' : `<div class="barre" title="${esc(etiquette)}"><span style="width:${((m - 1) / 4 * 100).toFixed(1)}%;background:${couleur}"></span></div>`;
 function carteDomaines(p) {
   return `<table class="dom">${DOMAINES.map((d) => `<tr><th>${NOM_DOMAINE[d]}</th><td>${barre(p.domMoy[d], p.couleur, NOM_DOMAINE[d])}</td><td class="n">${p.domaine[d]}</td><td>${NIV_FR[niveau(p.domMoy[d])]}</td></tr>`).join('')}</table>`;
 }
@@ -196,7 +198,7 @@ function rapportEquipe(ps) {
 const paires = [];
 for (let i = 0; i < PROFILS.length; i++) for (let j = i + 1; j < PROFILS.length; j++) paires.push([PROFILS[i], PROFILS[j]]);
 const cartes = PROFILS.map((p) => `<article class="carte" style="--c:${p.couleur}"><div class="tete">${avatar(p, 96)}<div><h3>${esc(p.nom)}</h3><span class="etiq ${p.fictif ? 'fic' : 'est'}">${p.fictif ? 'Profil fictif' : 'Estimation, pas une mesure'}</span></div></div><p class="muet">${esc(p.note)}</p>${carteDomaines(p)}</article>`).join('');
-const toc = `<nav class="toc"><a href="#profils">Profils</a>${paires.map(([a, b]) => `<a href="#b-${a.code}-${b.code}">${a.code} × ${b.code}</a>`).join('')}<a href="#equipe">Équipe</a></nav>`;
+const toc = MODE === 'docx' ? '' : `<nav class="toc"><a href="#profils">Profils</a>${paires.map(([a, b]) => `<a href="#b-${a.code}-${b.code}">${a.code} × ${b.code}</a>`).join('')}<a href="#equipe">Équipe</a></nav>`;
 const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rapports comparatifs Big Five, démonstration</title>
 <style>
 :root{--bg:#f7f6f2;--fg:#1d1f21;--mut:#5d636b;--card:#fff;--ln:#dedbd2;--ok:#1f7a4d;--mid:#9a6b00;--no:#a8321f}
@@ -239,7 +241,20 @@ ${toc}
 <h2>Rapports de binôme, un à un</h2>${paires.map(([a, b]) => rapportBinome(a, b)).join('')}
 <h2>Rapport d'équipe</h2>${rapportEquipe(PROFILS)}
 </main></body></html>`;
-fs.writeFileSync(path.join(here, 'rapport-comparatif.html'), html, 'utf-8');
-fs.writeFileSync(path.join(here, 'profils.json'), JSON.stringify(PROFILS.map((p) => ({ code: p.code, nom: p.nom, fictif: p.fictif, sexe: p.sexe, domaine: p.domaine, facette: p.facette })), null, 2), 'utf-8');
+// Variante Word : les barres n'existent pas, on retire la colonne vide et son en-tête de légende.
+const htmlSortie = MODE === 'docx'
+  ? html.replace(/<td><\/td>/g, '').replace(/<th><span class="leg"[^>]*><\/span>[^<]*(?:<span class="leg"[^>]*><\/span>[^<]*)*<\/th>/g, '')
+  : html;
+fs.writeFileSync(path.join(here, MODE === 'docx' ? 'rapport-comparatif.docx.html' : 'rapport-comparatif.html'), htmlSortie, 'utf-8');
+// Aperçu dans la plateforme : la page /admin/apercu-rapport affiche ce HTML dans un iframe isolé.
+if (MODE !== 'docx') {
+  const cible = path.resolve(here, '..', '..', '..', 'web', 'src', 'data');
+  fs.mkdirSync(cible, { recursive: true });
+  const NL = String.fromCharCode(10);
+  const entete = ['// Généré par docs/design/profils-fictifs/generer.mjs : ne pas éditer à la main.',
+    '// Profils FICTIFS (KB, SR, HT) et profil ESTIMÉ (AM), aucune donnée de personne réelle.'].join(NL);
+  fs.writeFileSync(path.join(cible, 'rapport-apercu-html.ts'), entete + NL + 'export const rapportApercuHtml: string =' + NL + '  ' + JSON.stringify(html) + ';' + NL, 'utf-8');
+}
+if (MODE !== 'docx') fs.writeFileSync(path.join(here, 'profils.json'), JSON.stringify(PROFILS.map((p) => ({ code: p.code, nom: p.nom, fictif: p.fictif, sexe: p.sexe, domaine: p.domaine, facette: p.facette })), null, 2), 'utf-8');
 console.log('ok', html.length, 'octets,', paires.length, 'binômes');
 for (const p of PROFILS) console.log(p.code, JSON.stringify(p.domaine));
