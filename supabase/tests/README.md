@@ -56,6 +56,11 @@ sh supabase/scripts/test-sql.sh <tenga-sb|tenga-sb-preprod> [dossier]
 | `24_groupes_acces.sql` | lot 4 : accès par personnage aux groupes, à la composition et aux agrégats (matrice), étanchéité entre organisations avec identifiants forgés, le responsable (et le consultant, et l'administrateur) ne lit RIEN dans `attempts` ni `results` même par jointure avec les groupes, écritures directes refusées, verrous 2 et 3 éprouvés un à un sur les trois nouvelles tables |
 | `25_groupes_fonctions.sql` | lot 4 : créer, renommer, supprimer un groupe, affecter, retirer un membre : droits par rôle, refus sans fuite d'existence, journal de chaque geste et aucune trace des refus, brouillon seulement, gel après `ouvrir_campagne`, effacement de compte après la clôture jamais bloqué |
 | `26_agregats_cloture.sql` | lot 4 : photographie posée par `app.clore_campagne` : moyenne et écart type EXACTS sur un jeu connu (valeurs calculées à part), seuil (4 : rien ; 5 : publié ; seuil relevé à 6), complément (1 à 4 : non publié ; 0 ou 5 : publié ; durcissement contre la différence avec les personnes hors groupe ou un petit groupe), un seul passage, atomicité de la clôture, campagne close sans passation, lecture des agrégats par rôle, vue individuelle du consultant affecté journalisée et refus du consultant non affecté |
+| `27_groupe_invitation_structure.sql` | migration 0006 : colonne `app.invitations.group_id` (clé étrangère COMPOSITE avec la campagne, nullable, effacée à l'acceptation par contrainte), immuable (déclencheur, même pour le superutilisateur, seule exception : l'effacement à l'acceptation), signatures figées d'`app.inviter` (six paramètres, une seule signature) et d'`app.accepter_invitation` (inchangée), droits d'exécution, seules deux fonctions écrivent dans `app.group_members`, le gel ne lit aucun drapeau de session (passage lu dans les données), règle de lecture de la composition réduite à l'administrateur Tenga, passage unique du gel éprouvé (autre groupe, participation sans invitation, modification, retrait, campagne close refusés), cascade campagne et organisation |
+| `28_groupe_invitation_inviter.sql` | migration 0006 : `app.inviter(…, p_groupe)` : appels à cinq arguments inchangés, groupe de la campagne accepté, groupe d'une autre campagne ou d'une autre organisation ou inexistant refusé (même message), droit contrôlé AVANT le groupe (un refus ne révèle pas l'existence du groupe), l'invitation ne crée jamais de groupe, réinvitation d'une adresse en attente à groupe identique seulement, journal sans adresse ni groupe |
+| `29_groupe_invitation_acceptation.sql` | migration 0006 : `app.accepter_invitation` écrit la participation ET la composition dans une transaction (échec d'une moitié = rollback de l'autre, éprouvé par deux déclencheurs d'échec), groupe, adresse et prénom effacés de l'invitation, usage unique, écriture unique (réinvitation : composition inchangée), aucune affectation libre en campagne ouverte (fonctions et écriture directe), campagne sans groupe inchangée, refus (autre compte, autre rôle, campagne close) sans écriture, effacement de compte non bloqué |
+| `30_groupe_invitation_lecture.sql` | migration 0006 : le responsable ne lit aucune composition nominative (ni filtre, ni jointure avec les participations ou les invitations), aucun résultat, aucune tentative ; l'invitation en attente montre ce qu'il a lui-même saisi, l'acceptée plus rien ; consultant, participant, responsable étranger, anonyme, serveur : rien ; administrateur Tenga : la composition seule |
+| `31_groupe_invitation_agregats.sql` | migration 0006 : seuil d'anonymat de 0005 après affectations par invitation : 4 dans un groupe ne publient rien, 5 publient (moyenne 30,00 et écart type de population 14,14 calculés à part), complément retenu quand il resterait moins de 5 personnes, compte effacé avant la clôture (5 devient 4, rien ne se publie), campagne sans groupe, deux groupes de 5 |
 
 ## Mutations (contrôle « vu rouge », plan § 7)
 
@@ -80,7 +85,7 @@ gel, unicité de groupe retirée, photographie réécrite à chaque appel, agré
 lecture ouverte (agrégats, composition), droit d'écriture ouvert, déclencheur de l'API supprimé, journalisation retirée
 (affectation, pose), clôture sans photographie, gestion des groupes sans contrôle du droit ou du brouillon, lecture
 individuelle ouverte à tout consultant, agrégats de plusieurs campagnes mélangés, écart type d'échantillon, moyenne
-arrondie à l'unité, verrou de course de la clôture retiré. Une mutation de fonction se fait par `pg_get_functiondef` et
+arrondie à l'unité, verrou de course de la clôture retiré. Les mutations 75 à 91 couvrent la migration 0006 : verrou d'immutabilité du groupe retiré (puis rendu permissif), clé composite remplacée par une clé simple (groupe d'une autre campagne accepté), groupe d'une autre campagne non vérifié par `app.inviter`, gel qui laisse passer toute insertion de membre en campagne ouverte (affectation libre) ou un autre groupe que celui de l'invitation ou un drapeau de session, acceptation qui garde le groupe sur l'invitation (avec et sans la contrainte), échec de la composition avalé (rollback partiel), lecture nominative rouverte au responsable, participations lisibles par le consultant, `app.inviter` sans contrôle du droit ou qui crée le groupe inconnu, réinvitation qui change le groupe, composition jamais écrite ou écrite pour une participation existante. Une mutation de fonction se fait par `pg_get_functiondef` et
 `replace` dans un bloc `DO` (échec si le texte n'a pas changé : une mutation sans effet est INVALIDE, jamais verte par erreur).
 
 ## Constats sur les rôles de l'instance (lus en base)
@@ -150,6 +155,30 @@ Conséquences :
 - Les tests supposent que les tables applicatives de l'instance sont vides (les comptes réels sont tolérés depuis que
   les tests 18 et 19 ne comptent que les adresses `@example.test`). Des organisations ou campagnes réelles en
   préproduction fausseraient les comptes absolus de plusieurs fichiers.
+
+## Migration 0006 : groupe porté par l'invitation
+
+Décision du client : le groupe d'une personne est porté par l'invitation et écrit UNE SEULE FOIS, à l'acceptation. Elle lève
+le blocage de 0005 (une participation naît à l'acceptation, campagne ouverte, alors que la composition est gelée à l'ouverture).
+
+- `app.inviter(p_campagne, p_email, p_prenom, p_message, p_langue, p_groupe uuid DEFAULT NULL)` : la signature à cinq
+  paramètres est remplacée (une seule signature, les appels à cinq arguments restent valables). Le groupe doit appartenir à la
+  campagne ; le droit (responsable ou administrateur Tenga) est contrôlé avant. L'invitation ne crée aucun groupe.
+- `app.invitations.group_id` : clé composite (groupe, campagne), nullable, immuable, effacée à l'acceptation avec l'adresse et le
+  prénom (contrainte) : aucun lien de l'invitation vers l'identité et le groupe ne survit.
+- `app.accepter_invitation(p_jeton, p_utilisateur)` : signature inchangée ; écrit la participation et la ligne de
+  `app.group_members` dans la même transaction. Une participation déjà existante (personne réinvitée) garde sa composition.
+- Gel : `private.geler_composition` laisse passer UNE seule écriture en campagne ouverte, l'insertion d'un membre dont la
+  participation est reliée à une invitation encore en attente qui porte exactement ce groupe. Le passage se lit dans les données,
+  jamais dans un drapeau de session. Ni modification, ni retrait, ni affectation libre.
+- Lecture : la règle `group_members_lecture` est réduite à l'administrateur Tenga. Choix documenté : le responsable lit déjà
+  `app.participations` (donc des personnes identifiables) ; lui laisser la composition révélerait qui est dans quel groupe. Il lit
+  les effectifs par groupe dans `app.group_aggregates` (seuil de 5, complément retenu, photographie unique à la clôture). Avant
+  l'acceptation il voit sur l'invitation en attente l'adresse et le groupe qu'il a lui-même saisis : la base n'ajoute aucune
+  information. Le journal ne contient jamais le groupe. Les tests 24 (comptes du responsable à 0) et 13 (liste des colonnes de
+  `app.invitations`) ont été ajustés, sans changer leur nombre de tests.
+- Les tests 27 à 31 ne comptent aucune table de données réelle : ils créent leurs propres lignes (adresses `@example.test`) dans
+  une transaction annulée ; les comptes réels de la préproduction (essais de connexion) ne sont ni lus globalement ni modifiés.
 
 ## Limites connues
 

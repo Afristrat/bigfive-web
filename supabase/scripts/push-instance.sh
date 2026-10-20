@@ -28,7 +28,7 @@ ssh_run() { ssh -i "$key" -o BatchMode=yes "$host" "$@"; }
 
 ssh_run "mkdir -p $remote/db $remote/scripts $remote/volumes/db/data"
 tar -C "$here" -cf - compose/docker-compose.yml compose/kong.yml compose/kong-entrypoint.sh compose/db/roles.sql compose/db/schemas.sql \
-    scripts/init-env.sh scripts/verify-instance.sh scripts/migrate.sh scripts/test-sql.sh scripts/mutate-sql.sh scripts/concurrence-code.sh scripts/concurrence-cloture.sh \
+    scripts/init-env.sh scripts/verify-instance.sh scripts/migrate.sh scripts/test-sql.sh scripts/seed-admin.sh scripts/mutate-sql.sh scripts/concurrence-code.sh scripts/concurrence-cloture.sh \
     migrations tests \
     | ssh_run "tar -xf - -C $remote --transform 's,^compose/,,'"
 

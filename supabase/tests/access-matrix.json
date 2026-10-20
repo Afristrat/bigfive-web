@@ -1,6 +1,6 @@
 {
-  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 4 : objets des lots 1 (socle), 2 (campagnes, invitations, passation), 3 (mes résultats) et 4 (groupes, composition, agrégats photographiés). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 (lot 1), 14 à 19 (lots 2 et 3) et 24 à 26 (lot 4) transcrivent ces cellules (identités simulées, rôle réel).",
-  "version": 4,
+  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 5 : objets des lots 1 (socle), 2 (campagnes, invitations, passation), 3 (mes résultats) et 4 (groupes, composition, agrégats photographiés). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 (lot 1), 14 à 19 (lots 2 et 3), 24 à 26 (lot 4) et 27 à 31 (migration 0006 : groupe porté par l'invitation) transcrivent ces cellules (identités simulées, rôle réel).",
+  "version": 5,
   "personnages": [
     {
       "id": "anonyme",
@@ -324,7 +324,7 @@
           "admin_tenga": "fonction_seule"
         }
       },
-      "note": "Aucune colonne de rôle. Jeton haché (32 octets), expiration 14 jours, adresse et prénom effacés à l'acceptation (contrainte). Lecture par le responsable de l'organisation seulement ; création par app.inviter ; acceptation par app.accepter_invitation (serveur seul)."
+      "note": "Aucune colonne de rôle. Jeton haché (32 octets), expiration 14 jours, adresse, prénom et groupe effacés à l'acceptation (contraintes). Colonne group_id (migration 0006) : groupe de la campagne choisi par le responsable en invitant, clé composite avec la campagne, nullable, immuable (déclencheur), effacée à l'acceptation : aucun lien invitation vers groupe ne survit. Lecture par le responsable de l'organisation seulement ; création par app.inviter ; acceptation par app.accepter_invitation (serveur seul)."
     },
     {
       "objet": "app.participations",
@@ -460,7 +460,7 @@
           "admin_tenga": "autorise"
         }
       },
-      "note": "Campagne ouverte seulement. Renvoie le jeton en clair une seule fois ; réinviter une adresse renouvelle le jeton ; journalisée sans adresse."
+      "note": "Campagne ouverte seulement. Paramètre facultatif p_groupe (dernier, défaut NULL, les appels à cinq arguments restent valables) : le groupe doit appartenir à la campagne, le droit est contrôlé avant le groupe, l'invitation ne crée aucun groupe ; réinviter une adresse en attente exige le même groupe. Renvoie le jeton en clair une seule fois ; réinviter une adresse renouvelle le jeton ; journalisée sans adresse."
     },
     {
       "objet": "app.enregistrer_progression",
@@ -577,7 +577,7 @@
           "serveur": "autorise"
         }
       },
-      "note": "Une transaction : rôle de participant seul, participation ouverte, adresse et prénom effacés, journalisée. Refuse un compte d'une autre adresse et un rôle déjà tenu dans l'organisation."
+      "note": "Une transaction : rôle de participant seul, participation ouverte, adresse, prénom et groupe effacés, journalisée. Si l'invitation porte un groupe, écrit la ligne de app.group_members dans la même transaction que la participation (seul chemin d'écriture de la composition en campagne ouverte, une seule fois ; une participation déjà existante garde sa composition). Refuse un compte d'une autre adresse et un rôle déjà tenu dans l'organisation."
     },
     {
       "objet": "app.effacer_compte",
@@ -620,10 +620,10 @@
       "type": "table",
       "cellules": {
         "select": {
-          "responsable_a": "organisation",
+          "responsable_a": "refuse",
           "consultant_affecte_a": "refuse",
           "consultant_autre": "refuse",
-          "responsable_b": "organisation",
+          "responsable_b": "refuse",
           "admin_tenga": "autorise"
         },
         "insert": {
@@ -635,7 +635,7 @@
           "admin_tenga": "fonction_seule"
         }
       },
-      "note": "Composition des groupes : qui est dans quel groupe (identifiant de participation, jamais de nom ni d'adresse). Lue par le responsable de l'organisation et l'administrateur Tenga ; le consultant et le participant ne la lisent pas. Une personne dans un seul groupe par campagne (clé primaire). Écriture par app.affecter_membre et app.retirer_membre, campagne en brouillon seulement."
+      "note": "Composition des groupes : qui est dans quel groupe (identifiant de participation, jamais de nom ni d'adresse). Lue par l'administrateur Tenga SEUL (migration 0006) : le responsable ne voit pas qui est dans quel groupe, il lit les effectifs dans app.group_aggregates ; le consultant et le participant ne la lisent pas. Une personne dans un seul groupe par campagne (clé primaire). Écriture par app.affecter_membre et app.retirer_membre, campagne en brouillon seulement, ou par app.accepter_invitation (composition portée par l'invitation, campagne ouverte)."
     },
     {
       "objet": "app.group_aggregates",

@@ -108,13 +108,13 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000005', 'authenticated',
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-0000000000ee', 'authenticated', 'select count(*) from app.groups'), '0', 'groups, identité sans appartenance : rien');
 SELECT is(pg_temp.comme(NULL, 'authenticated', 'select count(*) from app.groups'), '0', 'groups, rôle connecté sans identité : rien');
 
--- ===== Lecture : app.group_members (responsable de l'organisation et administrateur Tenga seulement) =====
+-- ===== Lecture : app.group_members (administrateur Tenga seulement : migration 0006, le responsable ne voit pas qui est dans quel groupe) =====
 SELECT is(pg_temp.comme(NULL, 'anon', 'select count(*) from app.group_members'), 'ERR:42501:permission denied for schema app', 'group_members, anonyme : refusé');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated', 'select count(*) from app.group_members'), '0', 'group_members, participant A : aucun (pas même sa propre ligne)');
-SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', 'select count(*) from app.group_members'), '4', 'group_members, responsable A : la composition de A');
+SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', 'select count(*) from app.group_members'), '0', 'group_members, responsable A : aucune (la composition nominative ne se lit pas, effectifs par les agrégats seulement)');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000004', 'authenticated', 'select count(*) from app.group_members'), '0', 'group_members, consultant affecté A : aucune (la composition ne mène pas aux personnes)');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000005', 'authenticated', 'select count(*) from app.group_members'), '0', 'group_members, consultant d''une autre organisation : aucune');
-SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000006', 'authenticated', 'select count(*) from app.group_members'), '1', 'group_members, responsable B : celle de B');
+SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000006', 'authenticated', 'select count(*) from app.group_members'), '0', 'group_members, responsable B : aucune (même règle)');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000007', 'authenticated', 'select count(*) from app.group_members'), '0', 'group_members, participant de A et B : aucune');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', 'select count(*) from app.group_members'), '5', 'group_members, administrateur Tenga : toute la composition');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000006', 'authenticated', 'select count(*) from app.group_members where campaign_id = ''c0000000-0000-4000-8000-0000000000a1'''), '0', 'group_members, responsable B : composition de A invisible (filtre forgé)');

@@ -124,7 +124,7 @@ SELECT is(
 SELECT is(
   (SELECT string_agg(a.attname, ',' ORDER BY a.attnum) FROM pg_attribute a
     WHERE a.attrelid = 'app.invitations'::regclass AND a.attnum > 0 AND NOT a.attisdropped),
-  'id,campaign_id,organization_id,email,prenom,invitant_id,message,langue,jeton_hash,cree_le,expire_le,acceptee_le,acceptee_par',
+  'id,campaign_id,organization_id,email,prenom,invitant_id,message,langue,jeton_hash,cree_le,expire_le,acceptee_le,acceptee_par,group_id',
   'colonnes de app.invitations, figées');
 SELECT is(
   (SELECT count(*)::int FROM pg_attribute a
