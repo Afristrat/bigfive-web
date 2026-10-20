@@ -1,0 +1,459 @@
+{
+ "facettes": [
+  {
+   "code": "E1",
+   "domaine": "E",
+   "libelle": {"fr": "Aisance à nouer des liens"},
+   "libelle_plateforme": "Bienveillance",
+   "affirmations_fr": [
+    {"texte": "Je me fais des amis facilement", "cotation": "directe"},
+    {"texte": "Je me sens confortable avec les gens", "cotation": "directe"},
+    {"texte": "J'évite le contact avec les autres", "cotation": "inversée"},
+    {"texte": "Je garde les autres à distance", "cotation": "inversée"}
+   ],
+   "definition": {"fr": "Cette facette porte sur la facilité à nouer des contacts et à vous sentir à l’aise avec les autres."},
+   "avertissement": {"fr": "Le titre « Bienveillance » est plus large que ce que mesurent les quatre affirmations : elles portent sur la facilité à nouer des liens et à se sentir à l’aise avec les gens, non sur la bienveillance. Ce résultat ne dit rien de votre attitude envers autrui."},
+   "niveaux": {
+    "bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous évitez souvent le contact, que vous gardez volontiers les autres à distance et que vous nouez rarement des amitiés facilement.",
+      "Cela décrit une manière d’aborder les contacts, non un manque d’attention pour les autres."
+     ],
+     "apport": [
+      "Vous pouvez choisir avec soin les personnes auxquelles vous vous attachez.",
+      "Votre réserve peut laisser aux autres le temps de s’exprimer, et à vous celui d’observer."
+     ],
+     "cout": [
+      "Il se peut que de nouveaux interlocuteurs ne perçoivent pas votre intérêt pour eux.",
+      "Dans un nouvel environnement, vous pouvez mettre longtemps à constituer un réseau d’appui."
+     ],
+     "question": "Dans quels cadres vous est-il le plus facile d’entrer en relation, et qu’est-ce qui les distingue ?"
+    }},
+    "plutot_bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que nouer des liens demande le plus souvent du temps ou un effort, avec des situations où le contact vous vient naturellement.",
+      "Le cadre et les personnes présentes semblent compter dans votre aisance."
+     ],
+     "apport": [
+      "Vous pouvez construire des relations durables à partir de quelques échanges choisis.",
+      "Votre prudence au premier contact peut vous aider à observer avant de vous engager."
+     ],
+     "cout": [
+      "Il se peut que des occasions de rencontre passent parce que vous attendez de vous sentir à l’aise.",
+      "Votre entourage peut interpréter votre réserve initiale comme du désintérêt."
+     ],
+     "question": "Qu’est-ce qui vous met à l’aise avec une personne que vous ne connaissez pas encore ?"
+    }},
+    "milieu": {"fr": {
+     "description": [
+      "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers l’aisance dans les contacts ni vers la distance.",
+      "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+     ],
+     "apport": [
+      "Vous pouvez aller vers les autres ou rester en retrait selon ce que la situation demande.",
+      "Vous pouvez vous adapter à des groupes dont les habitudes de contact diffèrent."
+     ],
+     "cout": [
+      "Votre entourage peut avoir du mal à prévoir si vous irez vers lui.",
+      "Vous pouvez hésiter sur la bonne distance à adopter avec des personnes nouvelles."
+     ],
+     "question": "Dans quelles situations allez-vous spontanément vers les autres, et dans lesquelles préférez-vous attendre ?"
+    }},
+    "plutot_haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous vous sentez le plus souvent à l’aise avec les gens et que les liens se nouent assez naturellement pour vous.",
+      "Il existe pourtant des situations où vous préférez garder vos distances."
+     ],
+     "apport": [
+      "Vous pouvez mettre un groupe à l’aise et faciliter les premiers échanges.",
+      "Votre aisance peut vous aider à constituer un réseau de contacts utiles."
+     ],
+     "cout": [
+      "Il se peut que des relations nombreuses vous laissent moins de temps pour entretenir les plus proches.",
+      "Votre naturel peut conduire certains à attendre de vous une disponibilité constante."
+     ],
+     "question": "Comment choisissez-vous les relations que vous entretenez dans la durée ?"
+    }},
+    "haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous vous faites des amis très facilement, que vous vous sentez à l’aise avec presque tout le monde et que vous gardez rarement les autres à distance.",
+      "Cela décrit une aisance dans le contact, non la qualité des liens ni votre attitude envers les autres."
+     ],
+     "apport": [
+      "Vous pouvez créer rapidement un climat de confiance dans un groupe nouvellement formé.",
+      "Vous pouvez servir de point de jonction entre des personnes qui ne se connaissent pas."
+     ],
+     "cout": [
+      "Il se peut que l’on vous sollicite de toutes parts, au détriment de votre temps de récupération.",
+      "Votre aisance peut vous faire sous-estimer le temps qu’exige une relation de confiance."
+     ],
+     "question": "Parmi vos nombreux contacts, lesquels comptent le plus pour vous, et comment les entretenez-vous ?"
+    }}
+   }
+  },
+  {
+   "code": "E2",
+   "domaine": "E",
+   "libelle": {"fr": "Goût de la compagnie et des foules"},
+   "libelle_plateforme": "Conformisme",
+   "affirmations_fr": [
+    {"texte": "J'adore les grandes fêtes", "cotation": "directe"},
+    {"texte": "Je parle à beaucoup de personnes dans les fêtes", "cotation": "directe"},
+    {"texte": "Je préfère être seul", "cotation": "inversée"},
+    {"texte": "J'évite les foules", "cotation": "inversée"}
+   ],
+   "definition": {"fr": "Cette facette porte sur le goût pour la compagnie nombreuse, les rassemblements et les foules."},
+   "avertissement": {"fr": "Le titre « Conformisme » ne correspond pas à ce que mesurent les quatre affirmations : elles portent sur le goût de la compagnie, des fêtes et des foules, non sur la tendance à se conformer aux usages ou aux autres. Ce résultat ne dit rien de votre rapport aux règles ni à l’opinion des autres."},
+   "niveaux": {
+    "bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous préférez le plus souvent la solitude, que vous évitez les foules et que les grandes fêtes vous attirent peu.",
+      "Cela décrit un goût pour la solitude ou les petits cercles, non un refus des autres."
+     ],
+     "apport": [
+      "Vous pouvez trouver dans les moments de solitude une ressource pour réfléchir et récupérer.",
+      "Vous pouvez concentrer votre énergie sur des échanges en petit nombre et en profondeur."
+     ],
+     "cout": [
+      "Il se peut que des rassemblements où se jouent des décisions informelles se déroulent sans vous.",
+      "Un cadre de travail très collectif peut vous coûter beaucoup d’énergie."
+     ],
+     "question": "Quels formats de rencontre vous conviennent, et lesquels vous demandent le plus d’énergie ?"
+    }},
+    "plutot_bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent une préférence pour les petits groupes et les moments au calme, avec des occasions où une fête ou une foule vous plaît.",
+      "L’occasion et les personnes présentes semblent compter."
+     ],
+     "apport": [
+      "Vous pouvez profiter d’un événement collectif choisi tout en gardant des temps de retrait.",
+      "Vous pouvez avoir des échanges plus suivis en petit comité."
+     ],
+     "cout": [
+      "Il se peut que vous quittiez un grand rassemblement plus tôt que vos proches ne l’espéraient.",
+      "Votre préférence pour le calme peut passer pour de la distance auprès de ceux qui aiment la foule."
+     ],
+     "question": "Qu’est-ce qui fait d’un grand rassemblement un moment que vous appréciez, quand c’est le cas ?"
+    }},
+    "milieu": {"fr": {
+     "description": [
+      "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers le goût des foules ni vers celui de la solitude.",
+      "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+     ],
+     "apport": [
+      "Vous pouvez apprécier un grand événement un jour et un moment au calme le lendemain.",
+      "Vous pouvez vous adapter à des organisations du travail plus ou moins collectives."
+     ],
+     "cout": [
+      "Vos proches peuvent ne pas savoir s’ils doivent vous proposer une sortie à plusieurs ou un moment à deux.",
+      "Vous pouvez hésiter entre rejoindre un rassemblement et garder du temps pour vous."
+     ],
+     "question": "Qu’est-ce qui vous fait préférer la compagnie nombreuse un jour et le calme un autre ?"
+    }},
+    "plutot_haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous aimez le plus souvent les fêtes et les rassemblements, et que vous parlez volontiers à de nombreuses personnes.",
+      "Il existe toutefois des situations où vous préférez le calme."
+     ],
+     "apport": [
+      "Vous pouvez entretenir de l’énergie dans un événement collectif.",
+      "Vous pouvez faire circuler l’information entre des personnes qui ne se côtoient pas."
+     ],
+     "cout": [
+      "Il se peut que de longues périodes de travail isolé vous pèsent.",
+      "Vous pouvez accepter plus d’invitations que votre temps ne le permet."
+     ],
+     "question": "Comment répartissez-vous votre temps entre rencontres nombreuses et moments de calme ?"
+    }},
+    "haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous adorez les grandes fêtes, que vous parlez à beaucoup de monde et que vous évitez rarement les foules.",
+      "Cela décrit un goût pour la compagnie nombreuse, non un jugement sur vos relations."
+     ],
+     "apport": [
+      "Vous pouvez trouver votre énergie dans un cadre animé et la transmettre à ceux qui vous entourent.",
+      "Vous pouvez aisément prendre la parole devant une assemblée nombreuse."
+     ],
+     "cout": [
+      "Il se peut que le travail en solitude ou le silence vous paraisse long.",
+      "Votre goût pour l’animation peut sembler envahissant à ceux qui préfèrent le calme."
+     ],
+     "question": "Comment vivez-vous les périodes où vous avez peu de monde autour de vous ?"
+    }}
+   }
+  },
+  {
+   "code": "E4",
+   "domaine": "E",
+   "libelle": {"fr": "Niveau d’activité"},
+   "libelle_plateforme": "Activité",
+   "affirmations_fr": [
+    {"texte": "Je suis toujours occupé", "cotation": "directe"},
+    {"texte": "Je suis toujours en mouvement", "cotation": "directe"},
+    {"texte": "Je fais beaucoup de choses pendant mon temps libre", "cotation": "directe"},
+    {"texte": "J'aime prendre ça mollo", "cotation": "inversée"}
+   ],
+   "definition": {"fr": "Cette facette porte sur le rythme et la quantité d’activités que vous menez, au travail comme pendant votre temps libre."},
+   "avertissement": null,
+   "niveaux": {
+    "bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous aimez prendre les choses à un rythme tranquille et que vous remplissez peu votre temps libre d’activités.",
+      "Cela décrit un rythme préféré, non un manque d’énergie ni de motivation."
+     ],
+     "apport": [
+      "Vous pouvez prendre le temps de la réflexion avant de vous engager dans l’action.",
+      "Vous pouvez préserver vos ressources en limitant le nombre de projets menés de front."
+     ],
+     "cout": [
+      "Il se peut que votre rythme paraisse lent dans un environnement où tout s’accélère.",
+      "Vous pouvez laisser passer des occasions qui demandent de se mobiliser vite."
+     ],
+     "question": "Quel rythme de travail et de repos vous convient le plus naturellement, et pourquoi ?"
+    }},
+    "plutot_bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous préférez un rythme plutôt tranquille, avec des périodes d’intense activité quand la situation le demande.",
+      "Votre temps libre comporte aussi bien des moments de repos que des activités."
+     ],
+     "apport": [
+      "Vous pouvez alterner effort soutenu et récupération sans vous épuiser.",
+      "Vous pouvez accepter un surcroît de travail ponctuel tout en protégeant vos temps de repos."
+     ],
+     "cout": [
+      "Un rythme soutenu qui se prolonge peut vous demander un effort d’adaptation important.",
+      "Votre entourage plus actif peut vous trouver peu disponible pour des projets supplémentaires."
+     ],
+     "question": "Qu’est-ce qui vous pousse à accélérer le rythme quand vous le faites ?"
+    }},
+    "milieu": {"fr": {
+     "description": [
+      "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers un emploi du temps très rempli ni vers un rythme tranquille.",
+      "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+     ],
+     "apport": [
+      "Vous pouvez tenir un emploi du temps chargé ou un rythme calme selon les périodes.",
+      "Vous pouvez vous ajuster au rythme de l’équipe avec laquelle vous travaillez."
+     ],
+     "cout": [
+      "Votre rythme peut paraître irrégulier à ceux qui attendent une cadence constante.",
+      "Vous pouvez hésiter sur le nombre d’engagements à accepter."
+     ],
+     "question": "Qu’est-ce qui détermine, selon les périodes, si vous remplissez votre emploi du temps ou si vous le laissez respirer ?"
+    }},
+    "plutot_haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous avez le plus souvent un emploi du temps bien rempli et que vous aimez faire beaucoup de choses pendant votre temps libre.",
+      "Vous avez toutefois des moments où vous préférez ralentir."
+     ],
+     "apport": [
+      "Vous pouvez mener plusieurs tâches de front quand la charge augmente.",
+      "Votre énergie peut entraîner d’autres personnes dans l’action."
+     ],
+     "cout": [
+      "Il se peut que vos temps de récupération soient réduits quand l’agenda se remplit.",
+      "Vous pouvez avoir tendance à ajouter des engagements avant d’avoir terminé les précédents."
+     ],
+     "question": "Comment décidez-vous de ce que vous acceptez ou refusez quand votre agenda est déjà chargé ?"
+    }},
+    "haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous avez presque toujours quelque chose à faire, que vous restez en mouvement et que vous aimez peu ralentir.",
+      "Cela décrit un rythme d’activité, non une quantité de travail utile ni la qualité de ce qui est accompli."
+     ],
+     "apport": [
+      "Vous pouvez avancer sur de nombreux sujets en parallèle et maintenir une cadence soutenue.",
+      "Vous pouvez donner de l’élan à une équipe qui manque d’entrain."
+     ],
+     "cout": [
+      "Il se peut que le repos vous paraisse difficile, même quand il serait utile.",
+      "Votre rythme peut fatiguer ceux qui ne peuvent pas le suivre."
+     ],
+     "question": "Que se passe-t-il pour vous quand vous devez ralentir ou attendre sans rien faire ?"
+    }}
+   }
+  },
+  {
+   "code": "E5",
+   "domaine": "E",
+   "libelle": {"fr": "Goût de l’aventure et du risque"},
+   "libelle_plateforme": "Enthousiasme",
+   "affirmations_fr": [
+    {"texte": "J'adore les sensations fortes", "cotation": "directe"},
+    {"texte": "Je recherche l'aventure", "cotation": "directe"},
+    {"texte": "J'aime être téméraire", "cotation": "directe"},
+    {"texte": "J'agis de façon téméraire", "cotation": "directe"}
+   ],
+   "definition": {"fr": "Cette facette porte sur l’attrait pour les sensations intenses, l’aventure et la prise de risque."},
+   "avertissement": {"fr": "Le titre « Enthousiasme » est plus large que ce que mesurent les quatre affirmations : elles portent sur le goût des sensations intenses, de l’aventure et de la témérité, non sur l’entrain ou la motivation. Ce résultat ne dit rien de votre implication dans votre travail."},
+   "niveaux": {
+    "bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que les sensations intenses, l’aventure et les gestes téméraires vous attirent peu.",
+      "Cela décrit un attrait, non une absence de courage."
+     ],
+     "apport": [
+      "Vous pouvez mesurer les risques avant de vous engager dans une situation incertaine.",
+      "Votre goût pour la stabilité peut rassurer un groupe qui doit tenir sur la durée."
+     ],
+     "cout": [
+      "Il se peut que vous laissiez passer des occasions qui demandaient d’accepter une part d’incertitude.",
+      "Vous pouvez trouver déroutante une personne qui propose sans cesse des projets audacieux."
+     ],
+     "question": "Quelle part d’incertitude vous convient dans votre travail et dans vos loisirs ?"
+    }},
+    "plutot_bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que l’aventure vous attire peu en général, avec quelques situations où vous aimez les sensations intenses.",
+      "Le contexte et le niveau de risque semblent compter."
+     ],
+     "apport": [
+      "Vous pouvez saisir une occasion inhabituelle quand elle vous paraît maîtrisable.",
+      "Vous pouvez goûter une expérience nouvelle sans en faire une recherche permanente."
+     ],
+     "cout": [
+      "Il se peut que votre entourage ne sache pas quand vous accepterez une proposition audacieuse.",
+      "Vous pouvez regretter, après coup, d’avoir décliné une occasion qui vous tentait."
+     ],
+     "question": "Dans quelles circonstances une expérience intense ou aventureuse vous a-t-elle tenté ?"
+    }},
+    "milieu": {"fr": {
+     "description": [
+      "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers le goût du risque ni vers la recherche de stabilité.",
+      "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+     ],
+     "apport": [
+      "Vous pouvez choisir de prendre un risque ou de l’éviter selon l’enjeu.",
+      "Vous pouvez comprendre à la fois ceux qui cherchent l’aventure et ceux qui la redoutent."
+     ],
+     "cout": [
+      "Votre entourage peut ne pas savoir à quel type de proposition vous répondrez favorablement.",
+      "Vous pouvez hésiter devant une décision qui comporte une part de risque."
+     ],
+     "question": "Selon quels critères décidez-vous qu’une prise de risque en vaut la peine ?"
+    }},
+    "plutot_haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous aimez assez volontiers les sensations intenses et l’aventure.",
+      "Il s’agit d’un attrait pour l’intensité, qui ne dit rien de la manière dont vous évaluez les risques."
+     ],
+     "apport": [
+      "Vous pouvez proposer une voie nouvelle quand un groupe tourne en rond.",
+      "Vous pouvez rester à l’aise dans une situation incertaine."
+     ],
+     "cout": [
+      "Il se peut que vos interlocuteurs jugent vos propositions plus audacieuses qu’ils ne le souhaitent.",
+      "Vous pouvez vous lasser d’un environnement très stable."
+     ],
+     "question": "Comment évaluez-vous les conséquences possibles avant de vous lancer dans une expérience intense ?"
+    }},
+    "haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous adorez les sensations intenses, que vous cherchez l’aventure et que vous aimez agir de façon téméraire.",
+      "Cela décrit un attrait pour l’intensité et le risque, non un jugement sur votre façon de vivre."
+     ],
+     "apport": [
+      "Vous pouvez entrer dans une situation inconnue sans attendre que tout soit certain.",
+      "Vous pouvez entraîner un groupe vers des projets qui sortent de l’ordinaire."
+     ],
+     "cout": [
+      "Il se peut que des risques soient pris plus vite que votre entourage ne le souhaiterait.",
+      "Un environnement très cadré ou très routinier peut vous peser."
+     ],
+     "question": "Comment décidez-vous de vous lancer ou non quand une situation vous attire par son intensité ?"
+    }}
+   }
+  },
+  {
+   "code": "E6",
+   "domaine": "E",
+   "libelle": {"fr": "Joie de vivre et regard positif"},
+   "libelle_plateforme": "Gaieté",
+   "affirmations_fr": [
+    {"texte": "Je rayonne de joie", "cotation": "directe"},
+    {"texte": "J'ai beaucoup de plaisir", "cotation": "directe"},
+    {"texte": "J'adore la vie", "cotation": "directe"},
+    {"texte": "Je regarde le bon côté de la vie", "cotation": "directe"}
+   ],
+   "definition": {"fr": "Cette facette porte sur la joie de vivre, le plaisir ressenti au quotidien et le regard porté sur le bon côté des choses."},
+   "avertissement": null,
+   "niveaux": {
+    "bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que la joie et le plaisir se manifestent peu souvent dans votre quotidien et que vous cherchez peu le bon côté des choses.",
+      "Cela décrit un ressenti déclaré à un moment donné, qui peut varier selon la période de vie ; ce n’est pas un diagnostic."
+     ],
+     "apport": [
+      "Vous pouvez porter un regard réaliste sur une situation sans l’enjoliver.",
+      "Vous pouvez remarquer ce qui ne va pas avant que l’entrain collectif ne le masque."
+     ],
+     "cout": [
+      "Il se peut que peu de moments de la journée vous apportent du plaisir.",
+      "Votre entourage peut interpréter votre réserve comme un manque d’adhésion."
+     ],
+     "question": "Quels moments ou quelles activités vous apportent du plaisir, même discret ?"
+    }},
+    "plutot_bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que la joie et le plaisir sont présents par moments dans votre quotidien, sans en être la tonalité dominante.",
+      "Vous gardez un regard plutôt nuancé sur les choses."
+     ],
+     "apport": [
+      "Vous pouvez apprécier les bons moments avec mesure et sans excès d’enthousiasme.",
+      "Votre regard nuancé peut aider à peser le pour et le contre."
+     ],
+     "cout": [
+      "Il se peut que des moments agréables passent sans que vous les remarquiez.",
+      "Vous pouvez avoir du mal à partager l’élan d’un groupe très enthousiaste."
+     ],
+     "question": "Dans quelles circonstances ressentez-vous le plus de plaisir ou de légèreté ?"
+    }},
+    "milieu": {"fr": {
+     "description": [
+      "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers une joie très présente ni vers une tonalité plus réservée.",
+      "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+     ],
+     "apport": [
+      "Vous pouvez partager la bonne humeur d’un groupe comme prendre du recul quand la situation l’exige.",
+      "Vous pouvez voir à la fois ce qui va bien et ce qui pose problème."
+     ],
+     "cout": [
+      "Votre entourage peut avoir du mal à lire votre humeur.",
+      "Vous pouvez hésiter à exprimer votre joie ou vos réserves devant un groupe dont l’humeur est très marquée."
+     ],
+     "question": "Qu’est-ce qui fait pencher votre humeur du côté du plaisir ou de la réserve selon les jours ?"
+    }},
+    "plutot_haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous ressentez le plus souvent du plaisir et de la joie, et que vous regardez volontiers le bon côté des choses.",
+      "Il y a des moments où ce regard cède la place à plus de réserve."
+     ],
+     "apport": [
+      "Vous pouvez donner de l’élan à un groupe par votre bonne humeur.",
+      "Vous pouvez trouver une ressource dans les aspects positifs d’une situation difficile."
+     ],
+     "cout": [
+      "Il se peut que votre entrain prête à confusion quand vous traversez une période pénible.",
+      "Vous pouvez minimiser, sans le vouloir, une difficulté que d’autres jugent sérieuse."
+     ],
+     "question": "Comment tenez-vous compte de ce qui va mal, quand votre regard se porte d’abord sur ce qui va bien ?"
+    }},
+    "haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous rayonnez de joie, que vous avez beaucoup de plaisir et que vous adorez la vie.",
+      "Cela décrit un ressenti déclaré, qui ne dit rien de la justesse du regard porté sur les situations."
+     ],
+     "apport": [
+      "Vous pouvez soutenir l’énergie et la motivation d’un groupe dans une période exigeante.",
+      "Votre goût de la vie peut rendre les échanges avec vous agréables."
+     ],
+     "cout": [
+      "Il se peut que votre bonne humeur paraisse déplacée à certains quand la situation est grave.",
+      "Vous pouvez avoir du mal à entendre ou à exprimer des préoccupations qui contrastent avec l’ambiance."
+     ],
+     "question": "Comment réagissez-vous quand votre entourage ne partage pas votre humeur du moment ?"
+    }}
+   }
+  }
+ ]
+}

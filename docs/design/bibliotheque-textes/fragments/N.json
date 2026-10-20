@@ -1,0 +1,459 @@
+{
+ "facettes": [
+  {
+   "code": "N1",
+   "domaine": "N",
+   "libelle": {"fr": "Inquiétude et appréhension"},
+   "libelle_plateforme": "Anxiété",
+   "affirmations_fr": [
+    {"texte": "Je m'inquiète à propos des choses", "cotation": "directe"},
+    {"texte": "Je crains le pire", "cotation": "directe"},
+    {"texte": "J'ai peur de beaucoup de choses", "cotation": "directe"},
+    {"texte": "Je deviens stressé facilement", "cotation": "directe"}
+   ],
+   "definition": {"fr": "Cette facette porte sur la tendance à s’inquiéter, à envisager des issues défavorables et à ressentir de l’appréhension."},
+   "avertissement": {"fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la tendance déclarée à s’inquiéter. Elle ne mesure ni ne dit rien de votre état de santé et n’est pas un diagnostic."},
+   "niveaux": {
+    "bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous vous inquiétez rarement et que vous envisagez peu les issues défavorables.",
+      "Cette lecture porte sur ce que vous déclarez, non sur ce que vous ressentez dans chaque situation."
+     ],
+     "apport": [
+      "Votre sérénité face à l’incertitude peut aider un groupe à avancer sans s’attarder sur les scénarios sombres.",
+      "Vous pouvez rassurer des interlocuteurs qui s’inquiètent davantage que vous."
+     ],
+     "cout": [
+      "Il se peut que vous sous-estimiez des risques que d’autres voient clairement.",
+      "Votre apparente sérénité peut aussi donner l’impression que vous prenez à la légère des préoccupations légitimes."
+     ],
+     "question": "Dans quelles circonstances vous arrive-t-il de ressentir de l’appréhension, et comment la repérez-vous ?"
+    }},
+    "plutot_bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que l’inquiétude vous visite peu, avec quelques situations où l’appréhension apparaît.",
+      "Elle semble liée à des circonstances précises plutôt qu’à un climat habituel."
+     ],
+     "apport": [
+      "Vous pouvez aborder la plupart des situations sans que l’inquiétude vous ralentisse.",
+      "Votre appréhension occasionnelle peut vous servir de signal pour préparer ce qui compte vraiment."
+     ],
+     "cout": [
+      "Il se peut qu’une inquiétude inhabituelle vous prenne au dépourvu, justement parce qu’elle est rare.",
+      "Vous pouvez tarder à demander du soutien quand une préoccupation s’installe."
+     ],
+     "question": "Quelles situations réveillent votre appréhension, et que faites-vous alors ?"
+    }},
+    "milieu": {"fr": {
+     "description": [
+      "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers la sérénité ni vers l’inquiétude.",
+      "Votre appréhension semble varier selon les enjeux et les périodes, ce que l’entretien de restitution permet de préciser."
+     ],
+     "apport": [
+      "Vous pouvez adapter votre niveau de vigilance à l’importance de ce qui est en jeu.",
+      "Votre inquiétude modérée peut vous aider à anticiper sans vous envahir."
+     ],
+     "cout": [
+      "Vos réactions peuvent sembler difficiles à lire pour votre entourage, selon les jours.",
+      "Vous pouvez hésiter sur le degré d’inquiétude à accorder à une situation nouvelle."
+     ],
+     "question": "Qu’est-ce qui, selon les périodes, fait passer votre inquiétude d’un niveau à l’autre ?"
+    }},
+    "plutot_haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous vous inquiétez assez souvent et qu’il vous arrive d’envisager des issues défavorables.",
+      "Il s’agit d’une tendance déclarée, jamais d’un diagnostic ni d’un jugement sur votre valeur."
+     ],
+     "apport": [
+      "Votre attention aux risques peut vous faire préparer des solutions de repli avant qu’on vous les demande.",
+      "Vous pouvez repérer tôt ce qui risque de mal tourner dans un projet."
+     ],
+     "cout": [
+      "L’anticipation des difficultés peut vous prendre de l’énergie avant même que la situation se présente.",
+      "Il se peut que vous cherchiez des garanties avant de vous engager."
+     ],
+     "question": "Quand vous envisagez une issue défavorable, qu’est-ce qui vous aide à distinguer ce qui est probable de ce qui est seulement possible ?"
+    }},
+    "haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous vous inquiétez très souvent et que l’appréhension vous accompagne dans de nombreuses situations.",
+      "Il s’agit d’une tendance déclarée, jamais d’un diagnostic ; elle peut varier selon la période de vie et le contexte."
+     ],
+     "apport": [
+      "Votre vigilance peut vous faire détecter très tôt des points de fragilité que d’autres négligent.",
+      "Vous pouvez porter un soin particulier à la préparation et à la vérification."
+     ],
+     "cout": [
+      "Une inquiétude fréquente peut vous fatiguer et alourdir vos journées.",
+      "Il se peut que vous repoussiez des décisions dont l’issue vous paraît incertaine."
+     ],
+     "question": "Quels appuis (personnes, méthodes, rythme de travail) vous aident aujourd’hui quand l’inquiétude s’installe ?"
+    }}
+   }
+  },
+  {
+   "code": "N2",
+   "domaine": "N",
+   "libelle": {"fr": "Irritabilité et patience"},
+   "libelle_plateforme": "Colère",
+   "affirmations_fr": [
+    {"texte": "Je me mets en colère facilement", "cotation": "directe"},
+    {"texte": "Je suis irritable facilement", "cotation": "directe"},
+    {"texte": "Je perds patience", "cotation": "directe"},
+    {"texte": "Je ne suis pas facilement agacé", "cotation": "inversée"}
+   ],
+   "definition": {"fr": "Cette facette porte sur la facilité avec laquelle l’irritation et l’impatience montent chez vous."},
+   "avertissement": {"fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur l’irritabilité et la patience au quotidien, non sur la manière dont vous exprimez ou gérez une colère."},
+   "niveaux": {
+    "bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que l’impatience vous gagne rarement et que les contrariétés vous agacent peu.",
+      "Cette lecture porte sur ce que vous déclarez, non sur votre comportement tel que d’autres le perçoivent."
+     ],
+     "apport": [
+      "Votre patience peut détendre une discussion qui s’échauffe.",
+      "Vous pouvez donner à votre entourage le sentiment qu’on peut aborder un désaccord sans crainte."
+     ],
+     "cout": [
+      "Il se peut que vous exprimiez tard une contrariété réelle, au point que l’autre ne la découvre qu’après coup.",
+      "Votre calme apparent peut aussi masquer un désaccord que vous n’avez pas dit."
+     ],
+     "question": "Qu’est-ce qui vous contrarie malgré tout, et comment le faites-vous savoir ?"
+    }},
+    "plutot_bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que l’irritation reste plutôt rare, avec quelques situations qui vous font perdre patience.",
+      "Ces moments semblent dépendre du contexte plus que d’une habitude."
+     ],
+     "apport": [
+      "Vous pouvez garder une conversation constructive dans la plupart des désaccords.",
+      "Les moments où votre patience s’amenuise peuvent vous indiquer ce qui compte vraiment pour vous."
+     ],
+     "cout": [
+      "Il se peut qu’un agacement longtemps contenu s’exprime plus vivement que vous ne le souhaitiez.",
+      "Vos interlocuteurs peuvent être surpris par une réaction que rien ne laissait prévoir."
+     ],
+     "question": "Quelles circonstances vous font perdre patience, et que faites-vous alors ?"
+    }},
+    "milieu": {"fr": {
+     "description": [
+      "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers la patience constante ni vers l’irritation fréquente.",
+      "Votre réaction semble varier selon la situation, ce que l’entretien de restitution permet de préciser."
+     ],
+     "apport": [
+      "Vous pouvez moduler votre réaction selon l’enjeu, en laissant passer certaines contrariétés et en relevant d’autres.",
+      "Votre irritation occasionnelle peut servir de signal quand une limite est franchie."
+     ],
+     "cout": [
+      "Votre entourage peut avoir du mal à prévoir comment vous réagirez à une même contrariété.",
+      "Vous pouvez hésiter entre laisser passer un désaccord et le relever."
+     ],
+     "question": "Dans quelles circonstances votre patience tient-elle, et dans lesquelles cède-t-elle ?"
+    }},
+    "plutot_haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que l’irritation et l’impatience vous gagnent assez souvent.",
+      "Il s’agit d’une tendance déclarée, jamais d’un diagnostic ni d’un jugement sur votre valeur."
+     ],
+     "apport": [
+      "Votre sensibilité aux contrariétés peut vous faire relever rapidement ce qui dysfonctionne.",
+      "Vous pouvez dire tôt ce qui ne va pas, ce qui peut éviter qu’un désaccord s’enkyste."
+     ],
+     "cout": [
+      "Une irritation fréquente peut tendre vos échanges et user votre énergie.",
+      "Il se peut que certains interlocuteurs hésitent à vous soumettre des nouvelles difficiles."
+     ],
+     "question": "Qu’est-ce qui vous aide à retrouver votre patience quand une contrariété s’installe ?"
+    }},
+    "haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que l’irritation vous gagne très facilement et que vous perdez souvent patience.",
+      "Il s’agit d’une tendance déclarée, jamais d’un diagnostic ; elle peut varier selon la charge de travail et le contexte."
+     ],
+     "apport": [
+      "Votre exigence peut vous faire réagir vite à ce qui vous paraît injuste ou négligé.",
+      "Vous pouvez porter avec énergie des sujets que d’autres laisseraient s’enliser."
+     ],
+     "cout": [
+      "Des réactions vives peuvent fatiguer votre entourage et vous fatiguer vous-même.",
+      "Il se peut que des échanges tendus laissent des traces dans des relations auxquelles vous tenez."
+     ],
+     "question": "Quels signes vous préviennent que votre irritation monte, et qu’est-ce qui vous aide à la faire redescendre ?"
+    }}
+   }
+  },
+  {
+   "code": "N3",
+   "domaine": "N",
+   "libelle": {"fr": "Humeur et estime de soi"},
+   "libelle_plateforme": "Dépression",
+   "affirmations_fr": [
+    {"texte": "Je me sens souvent triste", "cotation": "directe"},
+    {"texte": "Je n'ai pas beaucoup d'estime pour moi", "cotation": "directe"},
+    {"texte": "Il m'arrive souvent de broyer du noir", "cotation": "directe"},
+    {"texte": "Je suis à l'aise avec moi-même", "cotation": "inversée"}
+   ],
+   "definition": {"fr": "Cette facette porte sur la fréquence des moments de tristesse et sur le degré de confort avec vous-même."},
+   "avertissement": {"fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la fréquence déclarée de la tristesse et sur le confort avec soi-même. Elle ne mesure ni ne dit rien de votre état de santé et n’est pas un diagnostic ; en cas de préoccupation personnelle, un professionnel de santé de votre choix est l’interlocuteur approprié."},
+   "niveaux": {
+    "bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que la tristesse vous accompagne rarement et que vous vous sentez à l’aise avec vous-même.",
+      "Cette lecture porte sur ce que vous déclarez, non sur ce que vous vivez chaque jour."
+     ],
+     "apport": [
+      "Votre aisance avec vous-même peut vous permettre de recevoir une critique sans la prendre pour une remise en cause personnelle.",
+      "Vous pouvez apporter de la stabilité à un groupe qui traverse une période difficile."
+     ],
+     "cout": [
+      "Il se peut que vous ayez du mal à comprendre un collègue dont l’humeur est plus changeante que la vôtre.",
+      "Vous pouvez aussi sous-estimer l’effet d’une période éprouvante sur vos proches."
+     ],
+     "question": "Qu’est-ce qui contribue, selon vous, à ce que vous vous sentiez à l’aise avec vous-même ?"
+    }},
+    "plutot_bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que les moments de tristesse sont plutôt peu fréquents et que votre estime de vous-même est le plus souvent confortable.",
+      "Quelques moments de doute ou de baisse d’humeur peuvent exister, sans qu’ils soient habituels."
+     ],
+     "apport": [
+      "Vous pouvez traverser la plupart des contrariétés sans que votre confiance en vous en soit durablement ébranlée.",
+      "Vos moments de doute peuvent vous aider à remettre en question une idée ou une méthode."
+     ],
+     "cout": [
+      "Il se peut qu’un moment de baisse d’humeur vous surprenne précisément parce qu’il est inhabituel.",
+      "Vous pouvez hésiter à en parler, tant il vous paraît passager."
+     ],
+     "question": "Dans quelles situations vous arrive-t-il de douter de vous, et comment en sortez-vous ?"
+    }},
+    "milieu": {"fr": {
+     "description": [
+      "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers un confort constant avec vous-même ni vers des moments fréquents de tristesse.",
+      "Votre humeur et le regard que vous portez sur vous semblent varier selon les périodes et les contextes."
+     ],
+     "apport": [
+      "Vous pouvez vous remettre en question sans perdre confiance dans l’ensemble de vos choix.",
+      "Cette variabilité peut vous rendre sensible aux difficultés des autres."
+     ],
+     "cout": [
+      "Votre entrain peut sembler irrégulier à votre entourage, qui ne sait pas toujours comment vous aborder.",
+      "Vous pouvez avoir du mal à identifier ce qui fait basculer vos journées d’un côté ou de l’autre."
+     ],
+     "question": "Qu’est-ce qui fait varier votre humeur et le regard que vous portez sur vous d’une période à l’autre ?"
+    }},
+    "plutot_haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que des moments de tristesse et de doute sur vous-même reviennent assez souvent.",
+      "Il s’agit d’une tendance déclarée, jamais d’un diagnostic ni d’un jugement sur votre valeur ; elle ne dit rien de votre état de santé."
+     ],
+     "apport": [
+      "Votre sensibilité peut vous faire remarquer les difficultés des autres avant qu’elles ne se disent.",
+      "Votre exigence envers vous-même peut vous pousser à soigner votre travail."
+     ],
+     "cout": [
+      "Vos moments de doute peuvent vous faire hésiter à vous mettre en avant ou à proposer vos idées.",
+      "Il se peut qu’une critique pèse plus lourd pour vous que son auteur ne l’imaginait."
+     ],
+     "question": "Quels moments ou quelles personnes vous aident à retrouver confiance en vous ?"
+    }},
+    "haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que la tristesse et le doute sur vous-même sont très présents, avec des moments où vous broyez du noir.",
+      "Il s’agit d’une tendance déclarée, jamais d’un diagnostic ; elle ne dit rien de votre état de santé et peut varier selon la période de vie."
+     ],
+     "apport": [
+      "Votre sensibilité peut vous faire percevoir finement l’ambiance d’un groupe et le moral de ses membres.",
+      "Votre exigence envers vous-même peut vous conduire à soigner votre travail avec rigueur."
+     ],
+     "cout": [
+      "Des pensées sombres répétées peuvent peser sur votre énergie et votre motivation.",
+      "Il se peut que vous gardiez pour vous des préoccupations que vous hésitez à partager."
+     ],
+     "question": "Quels appuis (personnes, activités, rythme de vie) vous font du bien aujourd’hui quand le moral baisse ?"
+    }}
+   }
+  },
+  {
+   "code": "N4",
+   "domaine": "N",
+   "libelle": {"fr": "Réserve en situation sociale"},
+   "libelle_plateforme": "Conscience de soi",
+   "affirmations_fr": [
+    {"texte": "J'éprouve de la difficulté à aborder les autres", "cotation": "directe"},
+    {"texte": "J'ai peur d'attirer l'attention", "cotation": "directe"},
+    {"texte": "Je me sens seulement à l'aise avec mes amis", "cotation": "directe"},
+    {"texte": "Je ne suis pas dérangé par les situations sociales difficiles", "cotation": "inversée"}
+   ],
+   "definition": {"fr": "Cette facette porte sur l’aisance avec laquelle vous abordez des inconnus, supportez l’attention des autres et traversez des situations sociales délicates."},
+   "avertissement": {"fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur l’aisance déclarée en situation sociale, non sur la conscience de soi au sens large. Elle ne dit rien de votre valeur ni de votre état de santé."},
+   "niveaux": {
+    "bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous abordez les autres sans difficulté, que l’attention ne vous gêne pas et que les situations sociales délicates vous dérangent peu.",
+      "Cette lecture porte sur ce que vous déclarez, non sur votre comportement tel que d’autres le perçoivent."
+     ],
+     "apport": [
+      "Votre aisance peut vous permettre de créer des contacts rapidement, y compris avec des inconnus.",
+      "Vous pouvez prendre la parole ou représenter un groupe sans y voir une épreuve."
+     ],
+     "cout": [
+      "Il se peut que vous ne remarquiez pas qu’un interlocuteur plus réservé n’ose pas intervenir.",
+      "Votre aisance peut aussi vous faire sous-estimer l’effort que représente pour d’autres une situation sociale exposée."
+     ],
+     "question": "Dans quelles situations sociales vous sentez-vous le moins à l’aise, malgré tout ?"
+    }},
+    "plutot_bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que les situations sociales vous mettent le plus souvent à l’aise, avec quelques exceptions.",
+      "Aborder un inconnu ou attirer l’attention peut vous demander un petit effort dans certains contextes."
+     ],
+     "apport": [
+      "Vous pouvez aller vers les autres quand l’enjeu l’exige, tout en gardant une certaine retenue.",
+      "Cette retenue légère peut vous conduire à observer une situation avant de vous y engager."
+     ],
+     "cout": [
+      "Il se peut que vous laissiez passer une occasion de vous présenter parce que le moment vous semblait peu propice.",
+      "Vous pouvez hésiter à prendre la parole devant un groupe que vous connaissez mal."
+     ],
+     "question": "Dans quels contextes aborder quelqu’un vous demande-t-il un effort, et lesquels sont plus naturels pour vous ?"
+    }},
+    "milieu": {"fr": {
+     "description": [
+      "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers l’aisance en toute situation sociale ni vers la réserve.",
+      "Votre degré d’aisance semble dépendre des personnes présentes et de l’enjeu, ce que l’entretien de restitution permet de préciser."
+     ],
+     "apport": [
+      "Vous pouvez vous adapter à des cercles très différents, plus ouverts avec des proches et plus mesurés avec des inconnus.",
+      "Cette souplesse peut vous aider à choisir le moment où prendre la place que vous souhaitez."
+     ],
+     "cout": [
+      "Votre aisance variable peut donner à votre entourage une image différente de vous selon le contexte.",
+      "Vous pouvez hésiter à aller vers quelqu’un quand vous ne savez pas comment il réagira."
+     ],
+     "question": "Avec quelles personnes ou dans quels lieux votre aisance change-t-elle le plus ?"
+    }},
+    "plutot_haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent qu’aborder des inconnus ou attirer l’attention vous demande assez souvent un effort, et que vous vous sentez surtout à l’aise avec des personnes connues.",
+      "Il s’agit d’une tendance déclarée en situation sociale, jamais d’un diagnostic ni d’un jugement sur votre valeur."
+     ],
+     "apport": [
+      "Votre retenue peut vous donner le temps d’observer et d’écouter avant de vous exprimer.",
+      "Vous pouvez construire des relations de confiance durables avec un cercle restreint."
+     ],
+     "cout": [
+      "Il se peut que des occasions de réseau ou de visibilité vous échappent faute d’avoir fait le premier pas.",
+      "Des personnes qui ne vous connaissent pas peuvent interpréter votre réserve comme de la distance."
+     ],
+     "question": "Quelles situations sociales vous demandent le plus d’énergie, et qu’est-ce qui les rend plus faciles ?"
+    }},
+    "haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que les situations sociales avec des inconnus, l’attention d’un groupe ou les moments délicats vous mettent très souvent mal à l’aise.",
+      "Il s’agit d’une tendance déclarée en situation sociale, jamais d’un diagnostic ; elle peut varier selon le contexte et le degré de familiarité."
+     ],
+     "apport": [
+      "Votre réserve peut vous faire préparer soigneusement vos interventions.",
+      "Vous pouvez investir beaucoup dans la qualité de vos relations proches."
+     ],
+     "cout": [
+      "Il se peut que vous évitiez des réunions, des événements ou des prises de parole où vous auriez des choses à apporter.",
+      "Cette retenue peut limiter vos occasions de rencontres professionnelles."
+     ],
+     "question": "Quels aménagements (préparation, présence d’une personne connue, format) vous aident à vous exprimer plus facilement ?"
+    }}
+   }
+  },
+  {
+   "code": "N5",
+   "domaine": "N",
+   "libelle": {"fr": "Envies et tentations"},
+   "libelle_plateforme": "Immodération",
+   "affirmations_fr": [
+    {"texte": "Je fais des folies", "cotation": "directe"},
+    {"texte": "Je cède rarement à la tentation", "cotation": "inversée"},
+    {"texte": "Je résiste facilement à la tentation", "cotation": "inversée"},
+    {"texte": "Je suis capable de contrôler mes envies", "cotation": "inversée"}
+   ],
+   "definition": {"fr": "Cette facette porte sur la facilité avec laquelle vous résistez à vos envies ou vous vous laissez tenter."},
+   "avertissement": {"fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la maîtrise déclarée des envies et des tentations, sans viser aucun domaine précis. Cette lecture ne porte aucun jugement sur vos choix ni sur votre mode de vie."},
+   "niveaux": {
+    "bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous résistez facilement aux tentations, que vous cédez rarement et que vous faites peu de folies.",
+      "Cette lecture porte sur ce que vous déclarez, non sur vos choix dans chaque situation."
+     ],
+     "apport": [
+      "Votre maîtrise de vos envies peut vous aider à tenir un cap ou un budget sur la durée.",
+      "Vous pouvez rester sur un objectif sans que des occasions séduisantes vous en écartent."
+     ],
+     "cout": [
+      "Il se peut que vous passiez à côté d’une opportunité spontanée parce qu’elle n’était pas prévue.",
+      "Vous pouvez avoir du mal à comprendre un proche qui se laisse volontiers tenter."
+     ],
+     "question": "Dans quelles situations vous accordez-vous une envie, et qu’est-ce qui vous y autorise ?"
+    }},
+    "plutot_bas": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous résistez le plus souvent à vos envies, avec quelques occasions où vous vous laissez tenter.",
+      "Ces écarts semblent liés à des contextes précis plutôt qu’à une habitude."
+     ],
+     "apport": [
+      "Vous pouvez tenir vos engagements tout en vous réservant de temps en temps un plaisir ou un écart choisi.",
+      "Cet équilibre peut vous aider à tenir vos objectifs sans que l’effort vous pèse."
+     ],
+     "cout": [
+      "Il se peut qu’une envie retenue longtemps finisse par s’imposer d’un coup.",
+      "Vous pouvez regretter après coup un écart que vous n’aviez pas prévu."
+     ],
+     "question": "Quelles circonstances vous font céder à une envie, et comment vivez-vous ensuite ce moment ?"
+    }},
+    "milieu": {"fr": {
+     "description": [
+      "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers la retenue ni vers le fait de se laisser tenter.",
+      "Votre façon de réagir aux envies semble varier selon l’enjeu et le moment, ce que l’entretien de restitution permet de préciser."
+     ],
+     "apport": [
+      "Vous pouvez tantôt tenir une ligne, tantôt vous accorder une envie, selon ce qui compte à vos yeux.",
+      "Cette souplesse peut vous aider à profiter d’une occasion sans perdre de vue vos priorités."
+     ],
+     "cout": [
+      "Il se peut que vous ayez du mal à anticiper votre propre décision face à une tentation.",
+      "Vous pouvez hésiter, sur le moment, entre l’envie présente et l’objectif fixé."
+     ],
+     "question": "Qu’est-ce qui fait pencher votre décision d’un côté ou de l’autre quand une envie se présente ?"
+    }},
+    "plutot_haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous vous laissez assez souvent tenter et que vous vous accordez volontiers des folies.",
+      "Il s’agit d’une tendance déclarée, sans jugement sur vos choix ni sur votre valeur."
+     ],
+     "apport": [
+      "Votre spontanéité peut vous faire saisir une occasion avant qu’elle ne passe.",
+      "Vous pouvez apporter de l’entrain et de l’inattendu dans un groupe."
+     ],
+     "cout": [
+      "Il se peut que des décisions prises sur l’élan demandent ensuite des ajustements.",
+      "Vous pouvez avoir du mal à tenir un plan qui suppose de renoncer à des occasions séduisantes."
+     ],
+     "question": "Dans quels domaines suivre vos envies vous convient-il, et dans lesquels aimeriez-vous vous donner un cadre ?"
+    }},
+    "haut": {"fr": {
+     "description": [
+      "Vos réponses indiquent que vous cédez très souvent à vos envies et que vous résistez difficilement aux tentations.",
+      "Il s’agit d’une tendance déclarée, sans jugement sur vos choix ni sur votre valeur ; elle peut varier selon la période de vie et le contexte."
+     ],
+     "apport": [
+      "Votre élan peut vous faire saisir des occasions que d’autres laissent passer.",
+      "Vous pouvez faire preuve d’une grande spontanéité qui anime votre entourage."
+     ],
+     "cout": [
+      "Des décisions prises sur l’élan peuvent entrer en tension avec des engagements ou des objectifs de long terme.",
+      "Il se peut que vous ayez besoin de garde-fous (délai de réflexion, avis d’un proche) pour certains choix importants."
+     ],
+     "question": "Quels repères (délai de réflexion, personne de confiance, règle personnelle) vous aident à décider quand une envie est très présente ?"
+    }}
+   }
+  }
+ ]
+}

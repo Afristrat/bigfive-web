@@ -1,0 +1,597 @@
+{
+  "facettes": [
+    {
+      "code": "A1",
+      "domaine": "A",
+      "libelle": {
+        "fr": "Confiance envers les autres"
+      },
+      "libelle_plateforme": "Confiance",
+      "affirmations_fr": [
+        {
+          "texte": "Je fais confiance aux autres",
+          "cotation": "directe"
+        },
+        {
+          "texte": "Je crois que les autres ont de bonnes intentions",
+          "cotation": "directe"
+        },
+        {
+          "texte": "J'ai confiance en ce que les gens disent",
+          "cotation": "directe"
+        },
+        {
+          "texte": "Je ne fais pas confiance aux autres",
+          "cotation": "inversée"
+        }
+      ],
+      "definition": {
+        "fr": "Cette facette porte sur la confiance que vous accordez aux autres, à leurs propos comme à leurs intentions."
+      },
+      "avertissement": {
+        "fr": "Le libellé « Confiance » désigne ici la confiance envers autrui, non la confiance en soi : les quatre affirmations portent sur ce que vous croyez des intentions et de la parole des autres."
+      },
+      "niveaux": {
+        "bas": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous accordez peu spontanément votre confiance aux autres, à leurs propos comme à leurs intentions.",
+              "Cela décrit une attitude déclarée face à autrui, non un jugement sur les personnes que vous côtoyez."
+            ],
+            "apport": [
+              "Vous pouvez vérifier une information avant de vous y fier.",
+              "Vous pouvez repérer plus tôt les situations où la prudence s’impose."
+            ],
+            "cout": [
+              "Il se peut que vos interlocuteurs perçoivent de la méfiance dans vos questions.",
+              "Vous pouvez consacrer du temps à contrôler ce que d’autres auraient simplement confirmé."
+            ],
+            "question": "Qu’est-ce qui vous aide à accorder votre confiance à quelqu’un, et qu’est-ce qui vous la fait retirer ?"
+          }
+        },
+        "plutot_bas": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent une confiance accordée avec réserve : vous attendez souvent d’avoir des éléments avant de croire ce que disent les autres.",
+              "Les circonstances et la connaissance que vous avez des personnes semblent compter dans cette attitude."
+            ],
+            "apport": [
+              "Vous pouvez accorder votre confiance de manière progressive, au fil des preuves.",
+              "Vous pouvez poser des questions utiles avant de vous engager."
+            ],
+            "cout": [
+              "Il se peut que la confiance mette du temps à s’installer dans vos nouvelles relations de travail.",
+              "Des collègues peuvent ressentir cette réserve comme un doute sur leur parole."
+            ],
+            "question": "Quels signes vous font passer de la réserve à la confiance avec une personne nouvelle ?"
+          }
+        },
+        "milieu": {
+          "fr": {
+            "description": [
+              "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers une confiance spontanée envers les autres ni vers la méfiance.",
+              "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+            ],
+            "apport": [
+              "Vous pouvez accorder ou retenir votre confiance selon la personne et l’enjeu.",
+              "Vous pouvez croire sur parole dans certains cas et vérifier dans d’autres."
+            ],
+            "cout": [
+              "Votre entourage peut ne pas savoir à quoi s’attendre de votre part.",
+              "Il se peut que vous hésitiez à vous fier à quelqu’un quand les signaux sont ambigus."
+            ],
+            "question": "Dans quelles situations faites-vous confiance d’emblée, et dans lesquelles préférez-vous vérifier ?"
+          }
+        },
+        "plutot_haut": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous accordez assez volontiers votre confiance et que vous prêtez le plus souvent de bonnes intentions aux autres.",
+              "Cette attitude se décrit sans préjuger de ce que les autres font réellement."
+            ],
+            "apport": [
+              "Vous pouvez faciliter la coopération en partant d’un a priori favorable.",
+              "Vous pouvez créer un climat où les autres osent s’exprimer."
+            ],
+            "cout": [
+              "Il se peut que vous releviez tardivement un écart entre ce qui est dit et ce qui est fait.",
+              "Une déception peut survenir quand une attente de loyauté n’est pas satisfaite."
+            ],
+            "question": "Comment décidez-vous qu’une information mérite d’être vérifiée malgré votre confiance ?"
+          }
+        },
+        "haut": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous faites très volontiers confiance aux autres, à ce qu’ils disent comme à leurs intentions.",
+              "Cette attitude se décrit sans préjuger de la fiabilité des personnes concernées."
+            ],
+            "apport": [
+              "Vous pouvez nouer rapidement des relations de travail fondées sur la bonne foi.",
+              "Vous pouvez inciter les autres à se montrer ouverts avec vous."
+            ],
+            "cout": [
+              "Il se peut que vous acceptiez des affirmations sans les confronter aux faits quand l’enjeu est élevé.",
+              "Vous pouvez avoir à reprendre un engagement si quelqu’un n’a pas tenu parole."
+            ],
+            "question": "Dans quelles situations vérifier ce qu’on vous dit vous paraît-il utile malgré votre confiance ?"
+          }
+        }
+      }
+    },
+    {
+      "code": "A2",
+      "domaine": "A",
+      "libelle": {
+        "fr": "Usage des autres à ses propres fins"
+      },
+      "libelle_plateforme": "Moralité",
+      "affirmations_fr": [
+        {
+          "texte": "J'utilise les autres pour mes propres fins",
+          "cotation": "inversée"
+        },
+        {
+          "texte": "Je triche pour avancer",
+          "cotation": "inversée"
+        },
+        {
+          "texte": "Je profite des autres",
+          "cotation": "inversée"
+        },
+        {
+          "texte": "J'entrave les plans des autres",
+          "cotation": "inversée"
+        }
+      ],
+      "definition": {
+        "fr": "Cette facette est mesurée par quatre affirmations sur ce que vous déclarez de vos propres pratiques : utiliser les autres pour vos fins, tricher pour avancer, profiter des autres, entraver leurs plans."
+      },
+      "avertissement": {
+        "fr": "Le libellé « Moralité » est beaucoup plus large que ce qui est mesuré : les quatre affirmations portent seulement sur ce que vous déclarez de vos pratiques, non sur votre valeur morale ni sur votre honnêteté. Ce résultat repose sur votre seule déclaration ; il ne doit jamais servir à juger une personne."
+      },
+      "niveaux": {
+        "bas": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous vous reconnaissez volontiers des pratiques où les autres servent vos propres fins : en tirer parti, contourner une règle, gêner un projet.",
+              "Cela rapporte ce que vous déclarez sur vous-même ; ce n’est ni un jugement moral ni une mesure d’honnêteté, et une grande franchise peut produire ce type de réponse."
+            ],
+            "apport": [
+              "Vous pouvez avoir un sens aigu de vos intérêts et des occasions à saisir.",
+              "Vous pouvez négocier avec lucidité, en sachant ce que vous cherchez."
+            ],
+            "cout": [
+              "Il se peut que certains collègues vous prêtent plus d’arrière-pensées que vous n’en avez.",
+              "Des relations de travail peuvent gagner en confiance si vos buts sont dits ouvertement."
+            ],
+            "question": "Quand vos intérêts et ceux d’un collègue divergent, comment procédez-vous ?"
+          }
+        },
+        "plutot_bas": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous reconnaissez parfois, dans votre manière d’avancer, de tirer parti d’une situation ou d’autrui.",
+              "Cela rapporte ce que vous déclarez sur vous-même ; ce n’est ni un jugement moral ni une mesure d’honnêteté."
+            ],
+            "apport": [
+              "Vous pouvez saisir une occasion quand elle se présente, sans vous en excuser.",
+              "Vous pouvez défendre vos intérêts avec pragmatisme."
+            ],
+            "cout": [
+              "Il se peut que votre pragmatisme soit lu comme de l’opportunisme par des collègues qui vous connaissent peu.",
+              "Des collaborations peuvent se tendre si vos interlocuteurs ignorent ce que vous cherchez."
+            ],
+            "question": "Comment arbitrez-vous entre un avantage personnel et l’intérêt d’un collègue ?"
+          }
+        },
+        "milieu": {
+          "fr": {
+            "description": [
+              "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers la reconnaissance de pratiques tournées vers vos seuls buts ni vers leur rejet complet.",
+              "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+            ],
+            "apport": [
+              "Vous pouvez défendre vos intérêts tout en tenant compte de ceux des autres.",
+              "Vous pouvez adapter votre manière d’agir aux règles propres à chaque situation."
+            ],
+            "cout": [
+              "Il se peut que votre ligne de conduite semble varier selon les enjeux.",
+              "Vous pouvez hésiter entre avancer pour vous et laisser la place à un autre."
+            ],
+            "question": "Dans quelles situations vous autorisez-vous à passer avant un autre, et dans lesquelles y renoncez-vous ?"
+          }
+        },
+        "plutot_haut": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous déclarez le plus souvent ne pas utiliser les autres pour vos fins, ni profiter d’eux, ni entraver leurs plans.",
+              "Cela traduit ce que vous déclarez sur vous-même, sans constituer un jugement moral ni une mesure d’honnêteté."
+            ],
+            "apport": [
+              "Vous pouvez inspirer la confiance de collègues qui attendent de la loyauté dans l’échange.",
+              "Vous pouvez privilégier des gains partagés plutôt que des gains obtenus aux dépens d’autrui."
+            ],
+            "cout": [
+              "Il se peut que vous laissiez passer des occasions que d’autres saisissent plus ouvertement.",
+              "Vous pouvez tarder à demander ce dont vous avez besoin."
+            ],
+            "question": "Comment défendez-vous vos intérêts quand ils s’opposent à ceux d’un collègue ?"
+          }
+        },
+        "haut": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous écartez très nettement l’idée d’utiliser les autres, de tricher pour avancer, d’en profiter ou de gêner leurs plans.",
+              "Cela rapporte ce que vous déclarez sur vous-même ; ni un niveau haut ni un niveau bas ne permet de conclure sur la conduite réelle."
+            ],
+            "apport": [
+              "Vos collègues peuvent trouver vos actes lisibles et prévisibles.",
+              "Vous pouvez favoriser des relations fondées sur la réciprocité."
+            ],
+            "cout": [
+              "Il se peut que vous ayez du mal à défendre vos intérêts quand cela suppose de faire passer un autre au second plan.",
+              "Dans un environnement très compétitif, votre réserve peut vous laisser en retrait."
+            ],
+            "question": "Qu’est-ce qui vous aiderait à défendre vos intérêts sans craindre de nuire à quelqu’un ?"
+          }
+        }
+      }
+    },
+    {
+      "code": "A3",
+      "domaine": "A",
+      "libelle": {
+        "fr": "Souci d’aider les autres"
+      },
+      "libelle_plateforme": "Altruisme",
+      "affirmations_fr": [
+        {
+          "texte": "J'adore aider les autres",
+          "cotation": "directe"
+        },
+        {
+          "texte": "Je me préoccupe des autres",
+          "cotation": "directe"
+        },
+        {
+          "texte": "Je suis indifférent aux sentiments des autres",
+          "cotation": "inversée"
+        },
+        {
+          "texte": "Je ne prends pas de temps pour les autres",
+          "cotation": "inversée"
+        }
+      ],
+      "definition": {
+        "fr": "Cette facette porte sur le plaisir d’aider les autres, l’attention à leurs sentiments et le temps que vous leur consacrez."
+      },
+      "avertissement": null,
+      "niveaux": {
+        "bas": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que l’aide aux autres et l’attention à leurs sentiments tiennent peu de place dans votre manière d’agir.",
+              "Cela décrit où vous placez votre énergie, non une absence de bienveillance ni un jugement sur votre valeur."
+            ],
+            "apport": [
+              "Vous pouvez concentrer votre temps et votre énergie sur vos propres objectifs.",
+              "Vous pouvez dire non sans difficulté quand une demande dépasse ce que vous souhaitez donner."
+            ],
+            "cout": [
+              "Il se peut que des collègues en quête de soutien ne pensent pas à se tourner vers vous.",
+              "Vous pouvez passer à côté de signaux que votre entourage aurait voulu vous voir relever."
+            ],
+            "question": "Dans quelles circonstances avez-vous choisi de consacrer du temps à quelqu’un, et qu’est-ce qui vous y a conduit ?"
+          }
+        },
+        "plutot_bas": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous aidez les autres surtout quand la demande est claire ou que la personne vous est proche.",
+              "Le temps disponible et le lien avec la personne semblent compter dans votre décision d’aider."
+            ],
+            "apport": [
+              "Vous pouvez aider de façon ciblée, là où votre aide pèse vraiment.",
+              "Vous pouvez préserver votre temps pour ce qui vous est confié."
+            ],
+            "cout": [
+              "Il se peut que votre entourage ignore que vous pouvez vous rendre disponible en cas de besoin.",
+              "Une demande restée implicite peut vous échapper."
+            ],
+            "question": "Qu’est-ce qui vous décide à consacrer du temps à une personne qui n’a rien demandé ?"
+          }
+        },
+        "milieu": {
+          "fr": {
+            "description": [
+              "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers un souci marqué d’aider les autres ni vers un recentrage sur vous-même.",
+              "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+            ],
+            "apport": [
+              "Vous pouvez aider quand la situation l’appelle et vous retirer quand elle ne l’appelle pas.",
+              "Vous pouvez équilibrer votre temps entre vos tâches et celles des autres."
+            ],
+            "cout": [
+              "Il se peut que votre entourage ne sache pas s’il peut compter sur vous.",
+              "Vous pouvez hésiter à vous engager quand une demande d’aide empiète sur votre propre charge."
+            ],
+            "question": "Comment décidez-vous d’aider quelqu’un ou de consacrer votre temps à autre chose ?"
+          }
+        },
+        "plutot_haut": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous aimez assez volontiers aider les autres et que vous vous préoccupez de ce qu’ils ressentent.",
+              "Cela décrit une orientation vers autrui, sans préjuger de la qualité de l’aide apportée."
+            ],
+            "apport": [
+              "Vous pouvez remarquer qu’un collègue traverse une période difficile.",
+              "Vous pouvez créer un climat où demander de l’aide paraît naturel."
+            ],
+            "cout": [
+              "Il se peut que votre disponibilité grignote le temps prévu pour vos propres tâches.",
+              "Vous pouvez avoir du mal à refuser une demande qui arrive à contretemps."
+            ],
+            "question": "Comment protégez-vous le temps nécessaire à vos propres priorités quand on vous sollicite ?"
+          }
+        },
+        "haut": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous adorez aider les autres, que vous vous préoccupez beaucoup d’eux et que vous prenez le temps de le faire.",
+              "Cette tendance concerne l’attention portée aux autres ; elle ne dit rien de l’efficacité de l’aide."
+            ],
+            "apport": [
+              "Vous pouvez devenir une personne vers qui l’on se tourne spontanément en cas de difficulté.",
+              "Vous pouvez soutenir un collectif dans les périodes de tension."
+            ],
+            "cout": [
+              "Il se peut que votre énergie s’épuise à force de répondre aux besoins des autres.",
+              "Vous pouvez tarder à poser des limites, au détriment de vos propres échéances."
+            ],
+            "question": "Dans quelles situations est-il utile pour vous de limiter votre disponibilité envers les autres ?"
+          }
+        }
+      }
+    },
+    {
+      "code": "A5",
+      "domaine": "A",
+      "libelle": {
+        "fr": "Opinion de soi et mise en avant"
+      },
+      "libelle_plateforme": "Modestie",
+      "affirmations_fr": [
+        {
+          "texte": "Je crois être meilleur que les autres",
+          "cotation": "inversée"
+        },
+        {
+          "texte": "J'ai une haute estime de moi-même",
+          "cotation": "inversée"
+        },
+        {
+          "texte": "J'ai une très bonne opinion de moi-même",
+          "cotation": "inversée"
+        },
+        {
+          "texte": "Je me vante de mes qualités",
+          "cotation": "inversée"
+        }
+      ],
+      "definition": {
+        "fr": "Cette facette porte sur l’opinion que vous avez de vous-même et sur la tendance à la mettre en avant devant les autres."
+      },
+      "avertissement": {
+        "fr": "Le libellé « Modestie » est plus large que ce qui est mesuré : les quatre affirmations portent sur l’opinion que vous déclarez avoir de vous-même et sur le fait de la mettre en avant. Un résultat haut décrit une opinion de soi plus réservée, non une valeur ni un manque de confiance en soi."
+      },
+      "niveaux": {
+        "bas": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous avez une haute opinion de vous-même et que vous la mettez volontiers en avant.",
+              "Cela décrit l’opinion que vous déclarez avoir de vous, non la réalité de vos résultats ni votre valeur."
+            ],
+            "apport": [
+              "Vous pouvez aborder des responsabilités importantes avec assurance.",
+              "Vous pouvez présenter clairement vos réalisations."
+            ],
+            "cout": [
+              "Il se peut que votre assurance soit perçue comme de la supériorité par certains interlocuteurs.",
+              "Vous pouvez avoir moins de raisons de chercher l’avis des autres sur votre travail."
+            ],
+            "question": "Comment recueillez-vous un regard extérieur sur ce que vous faites ?"
+          }
+        },
+        "plutot_bas": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent une opinion plutôt favorable de vous-même, que vous exprimez assez volontiers.",
+              "Cela décrit l’opinion que vous déclarez avoir de vous, non la réalité de vos résultats."
+            ],
+            "apport": [
+              "Vous pouvez parler de vos réussites sans gêne quand le sujet s’y prête.",
+              "Vous pouvez avancer vos idées avec aplomb."
+            ],
+            "cout": [
+              "Il se peut que certains collègues trouvent que vous parlez beaucoup de vous.",
+              "Vous pouvez prêter peu d’attention aux apports des autres dans un succès commun."
+            ],
+            "question": "Comment faites-vous place, dans votre discours, à ce que d’autres ont apporté ?"
+          }
+        },
+        "milieu": {
+          "fr": {
+            "description": [
+              "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers une haute opinion de vous-même exprimée ouvertement ni vers une grande retenue à ce sujet.",
+              "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+            ],
+            "apport": [
+              "Vous pouvez parler de vos réussites ou rester discret selon le contexte.",
+              "Vous pouvez ajuster ce que vous dites de vous à votre interlocuteur."
+            ],
+            "cout": [
+              "Il se peut que votre entourage ait du mal à cerner l’opinion que vous avez de vous.",
+              "Vous pouvez hésiter sur la part de vos réussites qu’il convient de mettre en avant."
+            ],
+            "question": "Dans quelles situations jugez-vous utile de mettre vos réalisations en avant, et dans lesquelles préférez-vous les taire ?"
+          }
+        },
+        "plutot_haut": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous avez plutôt une opinion réservée de vous-même et que vous mettez rarement vos qualités en avant.",
+              "Cela décrit l’opinion que vous déclarez avoir de vous, non la réalité de vos résultats ni un manque de confiance."
+            ],
+            "apport": [
+              "Vous pouvez laisser la place aux réussites des autres.",
+              "Vous pouvez accueillir une critique sans la vivre comme une atteinte."
+            ],
+            "cout": [
+              "Il se peut que vos réalisations restent peu visibles de votre hiérarchie.",
+              "Votre contribution à un projet peut être moins reconnue que celle de collègues plus démonstratifs."
+            ],
+            "question": "Comment faites-vous connaître votre contribution quand elle compte pour un projet ?"
+          }
+        },
+        "haut": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous écartez très nettement l’idée de vous placer au-dessus des autres, d’avoir de vous-même une opinion très haute ou de vous vanter.",
+              "Cela décrit l’opinion que vous déclarez avoir de vous ; ce n’est ni un manque de confiance en vous ni un manque d’ambition."
+            ],
+            "apport": [
+              "Vous pouvez travailler en équipe sans chercher à attirer l’attention.",
+              "Vous pouvez reconnaître ouvertement l’apport d’autres personnes."
+            ],
+            "cout": [
+              "Il se peut que vous évitiez de parler d’une réussite alors que la valoriser serait utile.",
+              "Dans un contexte où l’on attend de chacun qu’il se mette en avant, votre retenue peut passer inaperçue."
+            ],
+            "question": "Qu’est-ce qui vous aiderait à présenter vos réalisations quand le contexte l’exige ?"
+          }
+        }
+      }
+    },
+    {
+      "code": "A6",
+      "domaine": "A",
+      "libelle": {
+        "fr": "Compassion envers les personnes en difficulté"
+      },
+      "libelle_plateforme": "Sympathie",
+      "affirmations_fr": [
+        {
+          "texte": "Je compatis avec les sans-abri",
+          "cotation": "directe"
+        },
+        {
+          "texte": "Je compatis avec les gens plus démunis que moi",
+          "cotation": "directe"
+        },
+        {
+          "texte": "Je ne suis pas intéressé par les problèmes des autres",
+          "cotation": "inversée"
+        },
+        {
+          "texte": "Je tente de ne pas penser aux gens dans le besoin",
+          "cotation": "inversée"
+        }
+      ],
+      "definition": {
+        "fr": "Cette facette porte sur la compassion que vous éprouvez envers les personnes démunies ou dans le besoin, et sur la place que leurs difficultés prennent dans vos pensées."
+      },
+      "avertissement": {
+        "fr": "Le libellé « Sympathie » peut faire penser à l’amabilité dans les relations : les quatre affirmations portent en réalité sur la compassion envers les sans-abri, les personnes plus démunies et celles qui sont dans le besoin."
+      },
+      "niveaux": {
+        "bas": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que les difficultés des personnes dans le besoin retiennent peu votre attention et que vous préférez ne pas y penser.",
+              "Cela décrit où vous portez votre attention, non une absence de sensibilité ni un jugement sur vos valeurs."
+            ],
+            "apport": [
+              "Vous pouvez garder la distance utile pour décider dans des situations pénibles.",
+              "Votre attention peut rester disponible pour vos propres objectifs."
+            ],
+            "cout": [
+              "Il se peut que vous passiez à côté de la détresse de certains collègues ou clients.",
+              "Des interlocuteurs sensibles à ces sujets peuvent vous trouver distant."
+            ],
+            "question": "Dans quelles situations la difficulté d’une personne pèse-t-elle sur vos décisions ?"
+          }
+        },
+        "plutot_bas": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que la situation des personnes démunies vous touche de façon inégale, selon les cas.",
+              "Certaines situations semblent retenir votre attention, d’autres beaucoup moins."
+            ],
+            "apport": [
+              "Vous pouvez choisir les causes auxquelles vous consacrez votre énergie.",
+              "Vous pouvez garder du recul face à des situations difficiles."
+            ],
+            "cout": [
+              "Il se peut que des situations de précarité vous échappent quand elles ne sont pas à proximité.",
+              "Une cause qui compte pour vos proches peut vous sembler éloignée."
+            ],
+            "question": "Qu’est-ce qui fait qu’une situation difficile retient votre attention plus qu’une autre ?"
+          }
+        },
+        "milieu": {
+          "fr": {
+            "description": [
+              "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers une compassion marquée pour les personnes en difficulté ni vers un détachement à leur égard.",
+              "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+            ],
+            "apport": [
+              "Vous pouvez vous mobiliser pour une cause tout en gardant du recul.",
+              "Vous pouvez adapter votre degré d’implication à ce que la situation exige."
+            ],
+            "cout": [
+              "Il se peut que votre implication paraisse variable à votre entourage.",
+              "Vous pouvez hésiter sur la place à donner à ces situations dans vos décisions."
+            ],
+            "question": "Dans quels cas la difficulté d’autrui vous mobilise-t-elle, et dans quels cas vous laisse-t-elle plus en retrait ?"
+          }
+        },
+        "plutot_haut": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous compatissez assez volontiers avec les personnes démunies ou dans le besoin.",
+              "Cela décrit la place que ces situations prennent dans vos pensées, non ce que vous faites concrètement."
+            ],
+            "apport": [
+              "Vous pouvez porter attention aux personnes vulnérables dans votre environnement de travail.",
+              "Vous pouvez apporter un regard humain dans des décisions qui touchent des personnes."
+            ],
+            "cout": [
+              "Il se peut que des situations difficiles pèsent sur votre humeur au-delà du moment.",
+              "Vous pouvez avoir du mal à garder la distance nécessaire pour trancher."
+            ],
+            "question": "Comment conciliez-vous votre souci des personnes en difficulté et les contraintes d’une décision ?"
+          }
+        },
+        "haut": {
+          "fr": {
+            "description": [
+              "Vos réponses indiquent que vous compatissez très volontiers avec les sans-abri et les personnes plus démunies, et que vous ne détournez pas votre pensée de ceux qui sont dans le besoin.",
+              "Cette tendance concerne la sensibilité déclarée, sans préjuger des actions menées."
+            ],
+            "apport": [
+              "Vous pouvez maintenir l’attention du groupe sur les personnes les plus vulnérables.",
+              "Vous pouvez inspirer un engagement durable pour une cause."
+            ],
+            "cout": [
+              "Il se peut que vous ressentiez une charge émotionnelle importante face aux situations de détresse.",
+              "Vous pouvez avoir du mal à vous détacher d’un problème qui touche une personne démunie."
+            ],
+            "question": "Comment préservez-vous votre énergie face à des situations de détresse ?"
+          }
+        }
+      }
+    }
+  ]
+}

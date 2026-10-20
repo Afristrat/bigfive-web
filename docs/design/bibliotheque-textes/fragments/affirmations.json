@@ -1,0 +1,692 @@
+[
+ {
+  "code": "N1",
+  "domaine": "N",
+  "titre_plateforme": "Anxiété",
+  "affirmations_fr": [
+   {
+    "texte": "Je m'inquiète à propos des choses",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je crains le pire",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'ai peur de beaucoup de choses",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je deviens stressé facilement",
+    "cotation": "directe"
+   }
+  ]
+ },
+ {
+  "code": "N2",
+  "domaine": "N",
+  "titre_plateforme": "Colère",
+  "affirmations_fr": [
+   {
+    "texte": "Je me mets en colère facilement",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je suis irritable facilement",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je perds patience",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je ne suis pas facilement agacé",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "N3",
+  "domaine": "N",
+  "titre_plateforme": "Dépression",
+  "affirmations_fr": [
+   {
+    "texte": "Je me sens souvent triste",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je n'ai pas beaucoup d'estime pour moi",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Il m'arrive souvent de broyer du noir",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je suis à l'aise avec moi-même",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "N4",
+  "domaine": "N",
+  "titre_plateforme": "Conscience de soi",
+  "affirmations_fr": [
+   {
+    "texte": "J'éprouve de la difficulté à aborder les autres",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'ai peur d'attirer l'attention",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je me sens seulement à l'aise avec mes amis",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je ne suis pas dérangé par les situations sociales difficiles",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "N5",
+  "domaine": "N",
+  "titre_plateforme": "Immodération",
+  "affirmations_fr": [
+   {
+    "texte": "Je fais des folies",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je cède rarement à la tentation",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je résiste facilement à la tentation",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je suis capable de contrôler mes envies",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "N6",
+  "domaine": "N",
+  "titre_plateforme": "Vulnérabilité",
+  "affirmations_fr": [
+   {
+    "texte": "Je panique facilement",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je peux être dépassé par les événements",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je me sens incapable de gérer les choses",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je reste calme sous pression",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "E1",
+  "domaine": "E",
+  "titre_plateforme": "Bienveillance",
+  "affirmations_fr": [
+   {
+    "texte": "Je me fais des amis facilement",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je me sens confortable avec les gens",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'évite le contact avec les autres",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je garde les autres à distance",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "E2",
+  "domaine": "E",
+  "titre_plateforme": "Conformisme",
+  "affirmations_fr": [
+   {
+    "texte": "J'adore les grandes fêtes",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je parle à beaucoup de personnes dans les fêtes",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je préfère être seul",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "J'évite les foules",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "E3",
+  "domaine": "E",
+  "titre_plateforme": "Assurance",
+  "affirmations_fr": [
+   {
+    "texte": "J'aime prendre les choses en main",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'essaie de diriger les autres",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je prends les choses en main",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'attends que les autres prennent les choses en main",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "E4",
+  "domaine": "E",
+  "titre_plateforme": "Activité",
+  "affirmations_fr": [
+   {
+    "texte": "Je suis toujours occupé",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je suis toujours en mouvement",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je fais beaucoup de choses pendant mon temps libre",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'aime prendre ça mollo",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "E5",
+  "domaine": "E",
+  "titre_plateforme": "Enthousiasme",
+  "affirmations_fr": [
+   {
+    "texte": "J'adore les sensations fortes",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je recherche l'aventure",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'aime être téméraire",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'agis de façon téméraire",
+    "cotation": "directe"
+   }
+  ]
+ },
+ {
+  "code": "E6",
+  "domaine": "E",
+  "titre_plateforme": "Gaieté",
+  "affirmations_fr": [
+   {
+    "texte": "Je rayonne de joie",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'ai beaucoup de plaisir",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'adore la vie",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je regarde le bon côté de la vie",
+    "cotation": "directe"
+   }
+  ]
+ },
+ {
+  "code": "O1",
+  "domaine": "O",
+  "titre_plateforme": "Imagination",
+  "affirmations_fr": [
+   {
+    "texte": "J'ai une imagination débordante",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'aime me perdre dans mes idées",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'adore rêvasser",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'aime me perdre dans mes pensées",
+    "cotation": "directe"
+   }
+  ]
+ },
+ {
+  "code": "O2",
+  "domaine": "O",
+  "titre_plateforme": "Sens Artistique",
+  "affirmations_fr": [
+   {
+    "texte": "Je crois en l'importance de l'art",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je perçois de la beauté dans les choses que d'autres pourraient ne pas remarquer",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je n'aime pas la poésie",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je n'apprécie pas visiter des musées d'art",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "O3",
+  "domaine": "O",
+  "titre_plateforme": "Affection",
+  "affirmations_fr": [
+   {
+    "texte": "Je vis mes émotions intensément",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je ressens les émotions des autres",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je suis rarement sensible à mes réactions émotionnelles",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je ne comprends pas les gens qui ont des réactions émotionnelles fortes",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "O4",
+  "domaine": "O",
+  "titre_plateforme": "Aventure",
+  "affirmations_fr": [
+   {
+    "texte": "Je préfère la variété à la routine",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je préfère m'en tenir à ce que je connais",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je n'aime pas les changements",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je suis attaché aux méthodes conventionnelles",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "O5",
+  "domaine": "O",
+  "titre_plateforme": "Intellect",
+  "affirmations_fr": [
+   {
+    "texte": "J'adore lire des documents exigeants",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'évite les discussions philosophiques",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "J'ai des difficultés à comprendre les idées abstraites",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je ne suis pas intéressé par les discussions théoriques",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "O6",
+  "domaine": "O",
+  "titre_plateforme": "Libéralisme",
+  "affirmations_fr": [
+   {
+    "texte": "J’ai tendance voter pour des candidats libéraux",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je crois qu'il n'y a pas de bien ou de mal absolu",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J’ai tendance à voter pour des candidats conservateurs",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je crois que nous devrions être sévères à propos des crimes",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "A1",
+  "domaine": "A",
+  "titre_plateforme": "Confiance",
+  "affirmations_fr": [
+   {
+    "texte": "Je fais confiance aux autres",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je crois que les autres ont de bonnes intentions",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'ai confiance en ce que les gens disent",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je ne fais pas confiance aux autres",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "A2",
+  "domaine": "A",
+  "titre_plateforme": "Moralité",
+  "affirmations_fr": [
+   {
+    "texte": "J'utilise les autres pour mes propres fins",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je triche pour avancer",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je profite des autres",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "J'entrave les plans des autres",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "A3",
+  "domaine": "A",
+  "titre_plateforme": "Altruisme",
+  "affirmations_fr": [
+   {
+    "texte": "J'adore aider les autres",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je me préoccupe des autres",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je suis indifférent aux sentiments des autres",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je ne prends pas de temps pour les autres",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "A4",
+  "domaine": "A",
+  "titre_plateforme": "Coopération",
+  "affirmations_fr": [
+   {
+    "texte": "J'adore une bonne dispute",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je crie sur les gens",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "J'insulte les gens",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je me venge",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "A5",
+  "domaine": "A",
+  "titre_plateforme": "Modestie",
+  "affirmations_fr": [
+   {
+    "texte": "Je crois être meilleur que les autres",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "J'ai une haute estime de moi-même",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "J'ai une très bonne opinion de moi-même",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je me vante de mes qualités",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "A6",
+  "domaine": "A",
+  "titre_plateforme": "Sympathie",
+  "affirmations_fr": [
+   {
+    "texte": "Je compatis avec les sans-abri",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je compatis avec les gens plus démunis que moi",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je ne suis pas intéressé par les problèmes des autres",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je tente de ne pas penser aux gens dans le besoin",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "C1",
+  "domaine": "C",
+  "titre_plateforme": "Auto-efficacité",
+  "affirmations_fr": [
+   {
+    "texte": "J'accomplis mes tâches avec succès",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'excelle dans ce que je fais",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je gère les tâches facilement",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je sais comment faire avancer les choses",
+    "cotation": "directe"
+   }
+  ]
+ },
+ {
+  "code": "C2",
+  "domaine": "C",
+  "titre_plateforme": "Organisation",
+  "affirmations_fr": [
+   {
+    "texte": "J'aime faire du rangement",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'oublie souvent de remettre les choses à leur place",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je laisse ma chambre en désordre",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je laisse traîner les choses",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "C3",
+  "domaine": "C",
+  "titre_plateforme": "Respect",
+  "affirmations_fr": [
+   {
+    "texte": "Je tiens mes promesses",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je dis la vérité",
+    "cotation": "directe"
+   },
+   {
+    "texte": "J'enfreins les règles",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je ne tiens pas mes promesses",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "C4",
+  "domaine": "C",
+  "titre_plateforme": "Persévérance",
+  "affirmations_fr": [
+   {
+    "texte": "Je travaille dur",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je fais plus que ce que l'on attend de moi",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je fais juste assez de travail pour m'en sortir",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je mets peu de temps et d'efforts dans mon travail",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "C5",
+  "domaine": "C",
+  "titre_plateforme": "Auto-discipline",
+  "affirmations_fr": [
+   {
+    "texte": "Je suis toujours préparé",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je réalise mes projets",
+    "cotation": "directe"
+   },
+   {
+    "texte": "Je perds mon temps",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "J'ai de la difficulté à commencer les tâches",
+    "cotation": "inversée"
+   }
+  ]
+ },
+ {
+  "code": "C6",
+  "domaine": "C",
+  "titre_plateforme": "Prudence",
+  "affirmations_fr": [
+   {
+    "texte": "Je me lance dans des choses sans réfléchir",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je prends des décisions impulsives",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "Je me précipite dans l'action",
+    "cotation": "inversée"
+   },
+   {
+    "texte": "J'agis sans penser",
+    "cotation": "inversée"
+   }
+  ]
+ }
+]

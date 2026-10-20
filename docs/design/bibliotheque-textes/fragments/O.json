@@ -1,0 +1,597 @@
+{
+ "facettes": [
+  {
+   "code": "O1",
+   "domaine": "O",
+   "libelle": {
+    "fr": "Imagination et rêverie"
+   },
+   "libelle_plateforme": "Imagination",
+   "affirmations_fr": [
+    {
+     "texte": "J’ai une imagination débordante",
+     "cotation": "directe"
+    },
+    {
+     "texte": "J’aime me perdre dans mes idées",
+     "cotation": "directe"
+    },
+    {
+     "texte": "J’adore rêvasser",
+     "cotation": "directe"
+    },
+    {
+     "texte": "J’aime me perdre dans mes pensées",
+     "cotation": "directe"
+    }
+   ],
+   "definition": {
+    "fr": "Cette facette porte sur la place de l’imagination, de la rêverie et des pensées libres dans votre vie intérieure."
+   },
+   "avertissement": null,
+   "niveaux": {
+    "bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous laissez rarement aller à la rêverie et que votre attention reste le plus souvent sur ce qui est devant vous.",
+       "Cela décrit une manière d’occuper son esprit, non une absence d’idées neuves."
+      ],
+      "apport": [
+       "Vous pouvez garder votre attention sur la tâche en cours sans vous disperser.",
+       "Vous pouvez transmettre une information de façon directe, sans détour par des scénarios imaginaires."
+      ],
+      "cout": [
+       "Il se peut que des pistes inattendues vous échappent, faute de temps laissé à l’imagination.",
+       "Un projet qui demande d’inventer à partir de rien peut vous sembler peu naturel."
+      ],
+      "question": "Dans quelles situations avez-vous eu besoin de laisser votre esprit vagabonder pour trouver une solution ?"
+     }
+    },
+    "plutot_bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que la rêverie vous visite de temps en temps, sans occuper une grande place dans votre quotidien.",
+       "Votre imagination semble se mettre au service d’un but précis plutôt que de vagabonder librement."
+      ],
+      "apport": [
+       "Vous pouvez mobiliser votre imagination quand un problème l’exige, puis revenir au concret.",
+       "Vous pouvez imaginer des scénarios sans vous y perdre."
+      ],
+      "cout": [
+       "Il se peut que vous écourtiez des moments de réflexion libre qui auraient fait mûrir une idée.",
+       "Des interlocuteurs plus rêveurs peuvent avoir l’impression que vous voulez conclure vite."
+      ],
+      "question": "À quelles occasions laissez-vous volontiers votre esprit vagabonder ?"
+     }
+    },
+    "milieu": {
+     "fr": {
+      "description": [
+       "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers la rêverie ni vers une attention tournée vers le présent.",
+       "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+      ],
+      "apport": [
+       "Vous pouvez passer d’un temps de réflexion libre à une tâche concrète selon le moment.",
+       "Vous pouvez imaginer quand la situation s’y prête et vous en tenir aux faits quand elle l’exige."
+      ],
+      "cout": [
+       "Votre goût pour la rêverie peut varier d’un jour à l’autre, ce qui peut dérouter votre entourage.",
+       "Il se peut que vous hésitiez à consacrer du temps à une idée qui n’a pas encore de forme."
+      ],
+      "question": "Quels moments de la journée ou de la semaine laissez-vous à votre imagination ?"
+     }
+    },
+    "plutot_haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent un goût assez marqué pour la rêverie et pour les idées qui naissent quand l’esprit vagabonde.",
+       "Cette tendance décrit une manière d’occuper son esprit ; elle ne dit rien de la valeur des idées produites."
+      ],
+      "apport": [
+       "Vous pouvez proposer des pistes originales quand un groupe tourne en rond.",
+       "Vous pouvez envisager plusieurs issues à une situation avant d’agir."
+      ],
+      "cout": [
+       "Il se peut que votre attention s’éloigne d’une réunion ou d’une tâche répétitive.",
+       "Vous pouvez avoir besoin de temps pour transformer une idée en plan d’action."
+      ],
+      "question": "Comment faites-vous pour que vos idées arrivent jusqu’à une décision ou une action ?"
+     }
+    },
+    "haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent un goût très marqué pour l’imagination, la rêverie et le fait de se perdre dans ses idées et ses pensées.",
+       "Cette tendance décrit une manière d’occuper son esprit ; elle ne dit rien de la valeur des idées produites."
+      ],
+      "apport": [
+       "Vous pouvez enrichir un projet de scénarios et d’images que d’autres n’auraient pas envisagés.",
+       "Votre vie intérieure peut vous offrir une source d’idées quand l’environnement est pauvre en stimulation."
+      ],
+      "cout": [
+       "Il se peut que vous perdiez le fil d’une conversation ou d’une consigne quand vos pensées s’emballent.",
+       "Vos idées peuvent rester à l’état de projets imaginés, faute d’étapes concrètes pour les réaliser."
+      ],
+      "question": "Quels repères vous aident à revenir au présent quand vos pensées vous emportent ?"
+     }
+    }
+   }
+  },
+  {
+   "code": "O2",
+   "domaine": "O",
+   "libelle": {
+    "fr": "Sensibilité artistique"
+   },
+   "libelle_plateforme": "Sens Artistique",
+   "affirmations_fr": [
+    {
+     "texte": "Je crois en l’importance de l’art",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je perçois de la beauté dans les choses que d’autres pourraient ne pas remarquer",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je n’aime pas la poésie",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je n’apprécie pas visiter des musées d’art",
+     "cotation": "inversée"
+    }
+   ],
+   "definition": {
+    "fr": "Cette facette porte sur l’intérêt pour l’art, la poésie et les musées, et sur l’attention à la beauté de ce qui nous entoure."
+   },
+   "avertissement": {
+    "fr": "Le titre « Sens artistique » peut laisser croire que cette facette mesure un talent ou une culture. Les quatre affirmations portent sur le goût pour l’art et la poésie et sur l’attention à la beauté, non sur ce que vous savez faire ou connaître."
+   },
+   "niveaux": {
+    "bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que l’art, la poésie et les musées vous touchent peu, et que vous remarquez rarement de la beauté dans les choses ordinaires.",
+       "Cela décrit un goût, non une insensibilité ni un manque de culture."
+      ],
+      "apport": [
+       "Vous pouvez juger une situation sur ses faits, sans que son apparence pèse sur votre jugement.",
+       "Vous pouvez consacrer votre temps libre à d’autres centres d’intérêt avec constance."
+      ],
+      "cout": [
+       "Il se peut que vous ayez moins d’affinité avec des collègues pour qui l’esthétique compte dans un projet.",
+       "Un travail où le soin de la forme est déterminant peut vous demander un effort particulier."
+      ],
+      "question": "Dans quelles circonstances l’aspect esthétique d’un travail a-t-il compté pour vous malgré tout ?"
+     }
+    },
+    "plutot_bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent un intérêt limité pour l’art, avec quelques exceptions selon les formes ou les occasions.",
+       "Votre sensibilité à la beauté semble s’éveiller de manière sélective."
+      ],
+      "apport": [
+       "Vous pouvez apprécier une œuvre ou un lieu qui vous parle, sans chercher à tout explorer.",
+       "Vous pouvez tenir compte de la forme quand elle sert un objectif précis."
+      ],
+      "cout": [
+       "Il se peut que vous passiez à côté d’une œuvre ou d’un lieu qui vous aurait plu, faute d’y avoir prêté attention.",
+       "Dans un groupe très tourné vers la culture, vous pouvez hésiter à vous exprimer."
+      ],
+      "question": "Quelles formes d’art ou de beauté vous touchent, et lesquelles ne vous disent rien ?"
+     }
+    },
+    "milieu": {
+     "fr": {
+      "description": [
+       "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers l’attrait pour l’art ni vers le détachement à son égard.",
+       "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+      ],
+      "apport": [
+       "Vous pouvez apprécier l’art à l’occasion, sans en faire une priorité.",
+       "Vous pouvez dialoguer avec des personnes très sensibles à l’art comme avec d’autres qui le sont peu."
+      ],
+      "cout": [
+       "Votre intérêt pour l’art peut dépendre de l’humeur ou du contexte, ce qui peut rendre vos goûts difficiles à cerner pour vos proches.",
+       "Il se peut que vous hésitiez à vous prononcer sur une question de goût."
+      ],
+      "question": "Dans quelles occasions l’art ou la beauté prennent-ils de l’importance pour vous ?"
+     }
+    },
+    "plutot_haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent un attrait assez marqué pour l’art, la poésie et les lieux culturels, avec une attention à la beauté de ce qui vous entoure.",
+       "Cette tendance décrit un goût et une sensibilité, non un talent artistique."
+      ],
+      "apport": [
+       "Vous pouvez remarquer des détails de forme ou d’ambiance qui échappent à d’autres.",
+       "Vous pouvez apporter un souci d’esthétique à un livrable ou à un espace de travail."
+      ],
+      "cout": [
+       "Il se peut que vous passiez du temps sur la forme alors que le délai demande d’aller à l’essentiel.",
+       "Vos interlocuteurs peuvent ne pas partager l’importance que vous accordez à l’apparence des choses."
+      ],
+      "question": "Comment décidez-vous jusqu’où soigner la forme d’un travail ?"
+     }
+    },
+    "haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent un attrait très marqué pour l’art et la poésie, avec une grande attention à la beauté, y compris dans ce que d’autres ne remarquent pas.",
+       "Cette tendance décrit un goût et une sensibilité, non un talent artistique."
+      ],
+      "apport": [
+       "Vous pouvez faire ressortir une dimension sensible ou symbolique dans un projet.",
+       "Vous pouvez donner à d’autres l’envie de regarder les choses autrement."
+      ],
+      "cout": [
+       "Il se peut que vous ressentiez un décalage dans un cadre où l’esthétique est jugée secondaire.",
+       "Vous pouvez avoir du mal à accepter un résultat que vous trouvez négligé, même s’il remplit sa fonction."
+      ],
+      "question": "Comment partagez-vous ce que vous percevez avec des personnes moins attentives à la beauté ?"
+     }
+    }
+   }
+  },
+  {
+   "code": "O3",
+   "domaine": "O",
+   "libelle": {
+    "fr": "Intensité et écoute des émotions"
+   },
+   "libelle_plateforme": "Affection",
+   "affirmations_fr": [
+    {
+     "texte": "Je vis mes émotions intensément",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je ressens les émotions des autres",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je suis rarement sensible à mes réactions émotionnelles",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je ne comprends pas les gens qui ont des réactions émotionnelles fortes",
+     "cotation": "inversée"
+    }
+   ],
+   "definition": {
+    "fr": "Cette facette porte sur l’intensité avec laquelle vous vivez vos émotions et sur l’attention que vous portez aux émotions, les vôtres comme celles des autres."
+   },
+   "avertissement": {
+    "fr": "Le titre « Affection » peut laisser croire que cette facette mesure la tendresse ou l’attachement envers les autres. Les quatre affirmations portent sur l’intensité de vos émotions et sur l’attention portée aux vôtres et à celles d’autrui, non sur l’affection."
+   },
+   "niveaux": {
+    "bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vivez vos émotions avec retenue, que vous y prêtez peu attention et que vous comprenez mal les réactions émotionnelles intenses des autres.",
+       "Cela décrit une manière de vivre et de repérer les émotions, non une absence d’émotions ni d’empathie."
+      ],
+      "apport": [
+       "Vous pouvez garder une certaine distance dans les situations chargées d’émotion.",
+       "Vous pouvez aborder un désaccord en vous appuyant sur les faits plutôt que sur le ressenti."
+      ],
+      "cout": [
+       "Il se peut que vous repériez tard ce que vous ressentez vous-même.",
+       "Vous pouvez avoir du mal à comprendre une personne dont la réaction émotionnelle vous surprend."
+      ],
+      "question": "Dans quelles situations avez-vous eu besoin de prêter davantage attention à ce que vous ressentiez ?"
+     }
+    },
+    "plutot_bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent des émotions plutôt discrètes, que vous remarquez surtout quand elles s’imposent, et une compréhension partielle des réactions des autres.",
+       "Les émotions d’autrui semblent vous atteindre selon la situation et la proximité."
+      ],
+      "apport": [
+       "Vous pouvez garder votre calme quand l’ambiance se tend.",
+       "Vous pouvez écouter une personne émue sans vous laisser submerger."
+      ],
+      "cout": [
+       "Il se peut que des signaux émotionnels discrets de votre entourage vous échappent.",
+       "Vos proches peuvent attendre de vous une réaction plus visible que celle que vous donnez."
+      ],
+      "question": "Qu’est-ce qui vous aide à repérer ce qu’une autre personne ressent quand elle ne le dit pas ?"
+     }
+    },
+    "milieu": {
+     "fr": {
+      "description": [
+       "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers une vie émotionnelle intense et attentive ni vers la réserve.",
+       "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+      ],
+      "apport": [
+       "Vous pouvez vous adapter à des interlocuteurs plus expressifs comme à d’autres plus réservés.",
+       "Vous pouvez accueillir une émotion sans qu’elle prenne toute la place."
+      ],
+      "cout": [
+       "Votre manière de réagir peut varier d’une situation à l’autre, ce qui peut la rendre difficile à anticiper pour votre entourage.",
+       "Il se peut que vous hésitiez à partager ce que vous ressentez."
+      ],
+      "question": "Dans quelles situations laissez-vous vos émotions s’exprimer, et dans lesquelles les gardez-vous pour vous ?"
+     }
+    },
+    "plutot_haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent des émotions assez vives, auxquelles vous prêtez attention, et une réceptivité à ce que ressentent les autres.",
+       "Cette tendance concerne l’intensité et l’écoute des émotions ; elle ne dit rien de la tendresse que vous éprouvez pour autrui."
+      ],
+      "apport": [
+       "Vous pouvez percevoir l’ambiance d’une équipe et repérer une tension naissante.",
+       "Vous pouvez comprendre qu’une personne réagisse vivement sans la juger."
+      ],
+      "cout": [
+       "Il se peut que l’état émotionnel de votre entourage vous touche au point de peser sur votre journée.",
+       "Vous pouvez avoir du mal à garder la distance dans une décision qui affecte des personnes."
+      ],
+      "question": "Comment prenez-vous du recul quand les émotions d’un groupe vous atteignent ?"
+     }
+    },
+    "haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent des émotions très vives, que vous percevez nettement, et une grande réceptivité à celles des autres.",
+       "Cette tendance concerne l’intensité et l’écoute des émotions ; elle ne dit rien de la tendresse que vous éprouvez pour autrui."
+      ],
+      "apport": [
+       "Vous pouvez percevoir avec finesse l’état d’une personne et ajuster votre manière de lui parler.",
+       "Vous pouvez donner de la profondeur à une relation en prenant les émotions au sérieux."
+      ],
+      "cout": [
+       "Il se peut que des émotions intenses compliquent une décision ou une conversation difficile.",
+       "Vous pouvez ressentir durablement les tensions de votre entourage, même lorsqu’elles ne vous concernent pas."
+      ],
+      "question": "Quelles habitudes vous aident à vous ressourcer après une période émotionnellement chargée ?"
+     }
+    }
+   }
+  },
+  {
+   "code": "O4",
+   "domaine": "O",
+   "libelle": {
+    "fr": "Goût de la variété"
+   },
+   "libelle_plateforme": "Aventure",
+   "affirmations_fr": [
+    {
+     "texte": "Je préfère la variété à la routine",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je préfère m’en tenir à ce que je connais",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je n’aime pas les changements",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je suis attaché aux méthodes conventionnelles",
+     "cotation": "inversée"
+    }
+   ],
+   "definition": {
+    "fr": "Cette facette porte sur le goût de la variété et du changement, par opposition à la routine et aux méthodes habituelles."
+   },
+   "avertissement": {
+    "fr": "Le titre « Aventure » peut évoquer la recherche de sensations ou le goût du risque. Les quatre affirmations portent sur la préférence entre la variété et la routine, entre les méthodes connues et les méthodes nouvelles, non sur le rapport au risque."
+   },
+   "niveaux": {
+    "bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous préférez ce que vous connaissez, que vous appréciez la routine et les méthodes éprouvées, et que le changement ne vous attire pas.",
+       "Cela décrit un goût pour la stabilité, non une réticence à apprendre."
+      ],
+      "apport": [
+       "Vous pouvez assurer une régularité dans un travail qui demande des gestes sûrs.",
+       "Vous pouvez vous appuyer sur des méthodes éprouvées pour limiter les erreurs."
+      ],
+      "cout": [
+       "Il se peut qu’un changement d’organisation vous demande un effort important.",
+       "Vous pouvez hésiter à essayer une méthode nouvelle tant que l’ancienne fonctionne."
+      ],
+      "question": "Quels changements avez-vous finalement accueillis avec satisfaction, et qu’est-ce qui les a rendus acceptables ?"
+     }
+    },
+    "plutot_bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent une préférence pour le connu et les habitudes, avec une curiosité occasionnelle pour la nouveauté.",
+       "Votre accueil du changement semble dépendre de ce qu’il apporte."
+      ],
+      "apport": [
+       "Vous pouvez adopter une nouveauté quand son intérêt est démontré.",
+       "Vous pouvez offrir un cadre stable à une équipe en période de changement."
+      ],
+      "cout": [
+       "Il se peut que vous attendiez longtemps avant d’essayer une approche nouvelle.",
+       "Votre réserve face à la nouveauté peut être comprise comme de la résistance."
+      ],
+      "question": "Qu’est-ce qui vous convainc d’essayer une méthode nouvelle ?"
+     }
+    },
+    "milieu": {
+     "fr": {
+      "description": [
+       "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers la variété ni vers la routine.",
+       "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+      ],
+      "apport": [
+       "Vous pouvez apprécier une routine stable et accueillir un changement quand il a du sens.",
+       "Vous pouvez vous entendre avec des collègues qui aiment bouger comme avec ceux qui préfèrent la stabilité."
+      ],
+      "cout": [
+       "Votre goût pour la nouveauté peut dépendre de la période, ce qui peut rendre vos préférences difficiles à deviner.",
+       "Il se peut que vous hésitiez entre changer et conserver."
+      ],
+      "question": "Dans quelles situations la routine vous convient-elle, et dans lesquelles la variété vous manque-t-elle ?"
+     }
+    },
+    "plutot_haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous préférez assez nettement la variété à la routine et que vous changez volontiers de méthode.",
+       "Cette tendance décrit un goût pour la variété ; elle ne dit rien de votre rapport au risque."
+      ],
+      "apport": [
+       "Vous pouvez apporter un souffle nouveau à une équipe installée dans ses habitudes.",
+       "Vous pouvez vous adapter à un changement d’organisation sans trop de résistance."
+      ],
+      "cout": [
+       "Il se peut que vous perdiez de l’intérêt pour une tâche qui devient répétitive.",
+       "Vous pouvez multiplier les changements au point de fatiguer votre entourage."
+      ],
+      "question": "Comment trouvez-vous de l’intérêt dans les tâches qui reviennent régulièrement ?"
+     }
+    },
+    "haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent un goût très marqué pour la variété, le changement et les méthodes inhabituelles, et peu d’attrait pour la routine.",
+       "Cette tendance décrit un goût pour la variété ; elle ne dit rien de votre rapport au risque."
+      ],
+      "apport": [
+       "Vous pouvez essayer des approches inédites là où les habitudes sont installées.",
+       "Vous pouvez vous sentir à l’aise dans un contexte qui évolue sans cesse."
+      ],
+      "cout": [
+       "Il se peut que vous quittiez une méthode éprouvée avant d’en avoir tiré le bénéfice.",
+       "Une tâche répétitive mais nécessaire peut vous peser davantage que prévu."
+      ],
+      "question": "Comment faites-vous pour mener à terme une tâche qui n’a plus rien de nouveau ?"
+     }
+    }
+   }
+  },
+  {
+   "code": "O6",
+   "domaine": "O",
+   "libelle": {
+    "fr": "Ouverture aux positions non conventionnelles"
+   },
+   "libelle_plateforme": "Libéralisme",
+   "affirmations_fr": [
+    {
+     "texte": "J’ai tendance voter pour des candidats libéraux",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je crois qu’il n’y a pas de bien ou de mal absolu",
+     "cotation": "directe"
+    },
+    {
+     "texte": "J’ai tendance à voter pour des candidats conservateurs",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je crois que nous devrions être sévères à propos des crimes",
+     "cotation": "inversée"
+    }
+   ],
+   "definition": {
+    "fr": "Cette facette porte sur l’ouverture à des positions non conventionnelles, par opposition à l’attachement aux repères établis."
+   },
+   "avertissement": {
+    "fr": "Le titre « Libéralisme » peut sembler désigner une position précise, alors que le texte décrit seulement l’ouverture à des positions non conventionnelles ou l’attachement à l’ordre établi. Les affirmations touchent à des opinions politiques et morales. Une opinion est une donnée sensible : elle ne doit jamais être restituée à un employeur ni servir à juger une personne."
+   },
+   "niveaux": {
+    "bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent un attachement aux repères établis et aux règles stables, avec la conviction que certaines limites sont claires et que les écarts appellent de la fermeté.",
+       "Cela décrit un attachement aux repères établis, non un jugement sur vos valeurs."
+      ],
+      "apport": [
+       "Vous pouvez offrir un repère stable quand un groupe doute de ses règles.",
+       "Vous pouvez veiller à la continuité des pratiques qui ont fait leurs preuves."
+      ],
+      "cout": [
+       "Il se peut que des positions inhabituelles vous semblent difficiles à examiner avec sérénité.",
+       "Vous pouvez avoir du mal à accueillir un point de vue qui remet en cause un cadre que vous jugez établi."
+      ],
+      "question": "Dans quelles situations avez-vous eu intérêt à examiner une position inhabituelle avant de vous prononcer ?"
+     }
+    },
+    "plutot_bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent un attachement assez marqué aux repères établis, avec une ouverture occasionnelle à des points de vue différents.",
+       "Votre accueil des positions inhabituelles semble dépendre du sujet."
+      ],
+      "apport": [
+       "Vous pouvez distinguer ce qui mérite d’être conservé de ce qui peut évoluer.",
+       "Vous pouvez examiner une idée nouvelle sans abandonner vos repères."
+      ],
+      "cout": [
+       "Il se peut que vous jugiez une idée inhabituelle avant de l’avoir écoutée en entier.",
+       "Des interlocuteurs plus ouverts au changement peuvent penser que vous tardez à faire évoluer votre position."
+      ],
+      "question": "Qu’est-ce qui vous conduit à réviser un point de vue auquel vous teniez ?"
+     }
+    },
+    "milieu": {
+     "fr": {
+      "description": [
+       "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers l’attachement aux repères établis ni vers l’ouverture aux positions non conventionnelles.",
+       "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+      ],
+      "apport": [
+       "Vous pouvez dialoguer avec des personnes de sensibilités très différentes.",
+       "Vous pouvez peser les arguments au cas par cas."
+      ],
+      "cout": [
+       "Vos positions peuvent varier selon les sujets, ce qui peut rendre votre avis difficile à prévoir.",
+       "Il se peut que vous hésitiez à vous prononcer sur une question de principe."
+      ],
+      "question": "Sur quels sujets vos convictions sont-elles les plus arrêtées, et sur lesquels restent-elles ouvertes ?"
+     }
+    },
+    "plutot_haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent une ouverture assez marquée aux positions non conventionnelles et la conviction que les repères moraux dépendent souvent des situations.",
+       "Cette tendance décrit une manière d’aborder les questions de principe ; elle ne dit rien de la valeur de vos opinions."
+      ],
+      "apport": [
+       "Vous pouvez examiner sans a priori une idée qui sort du cadre habituel.",
+       "Vous pouvez aider un groupe à considérer plusieurs points de vue avant de conclure."
+      ],
+      "cout": [
+       "Il se peut que votre souplesse déroute des interlocuteurs qui tiennent à des règles claires.",
+       "Vous pouvez avoir du mal à trancher quand toutes les options vous paraissent défendables."
+      ],
+      "question": "Comment décidez-vous qu’une règle doit être maintenue plutôt que remise en cause ?"
+     }
+    },
+    "haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent une ouverture très marquée aux positions non conventionnelles, la conviction que le bien et le mal n’ont rien d’absolu et peu d’attrait pour la fermeté envers les écarts.",
+       "Cette tendance décrit une manière d’aborder les questions de principe ; elle ne dit rien de la valeur de vos opinions."
+      ],
+      "apport": [
+       "Vous pouvez remettre en question une habitude que plus personne ne questionne.",
+       "Vous pouvez accueillir des points de vue très différents sans chercher à les ranger d’emblée."
+      ],
+      "cout": [
+       "Il se peut qu’un cadre commun soit difficile à tenir si vous en remettez souvent les règles en question.",
+       "Vous pouvez heurter des personnes pour qui certaines règles ne se discutent pas."
+      ],
+      "question": "Quelles règles ou quels principes tenez-vous pour non négociables, malgré votre ouverture ?"
+     }
+    }
+   }
+  }
+ ]
+}

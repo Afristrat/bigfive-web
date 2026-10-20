@@ -19,6 +19,7 @@ NIVEAU_FR = {"bas": "Bas", "plutot_bas": "Plutôt bas", "milieu": "Milieu de l�
 NIVEAU_AR = {"bas": "منخفض", "plutot_bas": "منخفض نسبيًّا", "milieu": "قرب المنتصف",
              "plutot_haut": "مرتفع نسبيًّا", "haut": "مرتفع"}
 ACCORDS = ("m", "f", "n")
+STATUT_BLOC = "non relue"  # tout bloc d'une bibliothèque à relecture requise porte cette mention
 INDEX_ACCORD = {"m": 0, "f": 1, "n": 2}
 
 MARQUEUR = re.compile(r"\{([^{}]*)\}")
@@ -103,15 +104,25 @@ PHRASES_FIXES = ("ne dit rien", "non un", "لا يقول", "لا يدل", "لي�
                  "Cette tendance", "Il s’agit", "يصف", "يتعلق", "لا حكمًا")
 
 
+def langues(lib):
+    return lib.get("langues", ["fr", "ar"])
+
+
 def controler(lib):
     defauts = []
+    langs = langues(lib)
     def d(msg): defauts.append(msg)
+    if lib.get("complete"):  # bibliothèque annoncée complète : les 30 facettes, une fois chacune
+        attendus = [dom + str(i) for dom in "NEOAC" for i in range(1, 7)]
+        codes = [f["code"] for f in lib["facettes"]]
+        if sorted(codes) != sorted(attendus):
+            d(f"facettes attendues {len(attendus)}, trouvées {len(codes)} : manquantes {sorted(set(attendus) - set(codes))}, en trop ou en double {sorted(c for c in set(codes) if codes.count(c) > 1 or c not in attendus)}")
     for f in lib["facettes"]:
         code = f["code"]
         if sorted(f["niveaux"]) != sorted(NIVEAUX):
             d(f"{code} : niveaux attendus {NIVEAUX}")
             continue
-        for lg in ("fr", "ar"):
+        for lg in langs:
             if not f["libelle"].get(lg) or not f["definition"].get(lg):
                 d(f"{code}/{lg} : libellé ou définition manquant")
         if len(f["affirmations_fr"]) != 4:
@@ -119,7 +130,9 @@ def controler(lib):
         for n in NIVEAUX:
             niv = f["niveaux"][n]
             vus = set()
-            for lg in ("fr", "ar"):
+            if lib.get("relecture_requise") and niv.get("relecture") != STATUT_BLOC:
+                d(f"{code}/{n} : mention « {STATUT_BLOC} » absente du bloc")
+            for lg in langs:
                 b = niv.get(lg)
                 if not b:
                     d(f"{code}/{n}/{lg} : bloc manquant"); continue
@@ -137,7 +150,7 @@ def controler(lib):
                     vus.add(accorder(t, "n"))
     # Aucune phrase d'apport, de coût ou de question identique entre deux niveaux d'une facette
     for f in lib["facettes"]:
-        for lg in ("fr", "ar"):
+        for lg in langs:
             vus = {}
             for n in NIVEAUX:
                 if n not in f["niveaux"] or lg not in f["niveaux"][n]:
@@ -187,12 +200,13 @@ def rendre_md(lib):
     a("**Accord grammatical.** Le corps de chaque bloc ci-dessous est la forme **sans accord**, celle que reçoit tout profil sans valeur renseignée. Les phrases qui s’accordent portent des marqueurs dans le fichier source et sont listées sous chaque bloc avec leurs trois formes (masculin, féminin, sans accord). Syntaxe : " + "`{masculin|féminin|sans accord}`" + ", exactement trois alternatives ; la forme sans accord est identique au texte d’avant le marquage (prouvé par `--regression`).")
     a("")
     for f in lib["facettes"]:
-        a(f"## {f['code']} · {f['libelle']['fr']} / {f['libelle']['ar']}")
+        a(f"## {f['code']} · {f['libelle']['fr']}" + (f" / {f['libelle']['ar']}" if "ar" in langues(lib) else ""))
         a("")
         a(f"**Définition.** {f['definition']['fr']}")
         a("")
-        a(f"**التعريف.** {f['definition']['ar']}")
-        a("")
+        if "ar" in langues(lib):
+            a(f"**التعريف.** {f['definition']['ar']}")
+            a("")
         a("**Les quatre affirmations du questionnaire (français) :**")
         a("")
         for it in f["affirmations_fr"]:
@@ -200,15 +214,17 @@ def rendre_md(lib):
         a("")
         if f["avertissement"]:
             a(f"> **Avertissement sur le libellé.** {f['avertissement']['fr']}")
-            a(">")
-            a(f"> **تنبيه حول العنوان.** {f['avertissement']['ar']}")
+            if "ar" in langues(lib):
+                a(">")
+                a(f"> **تنبيه حول العنوان.** {f['avertissement']['ar']}")
             a("")
         for n in NIVEAUX:
             niv = f["niveaux"][n]
-            a(f"### {f['code']} · {NIVEAU_FR[n]} / {NIVEAU_AR[n]}")
+            a(f"### {f['code']} · {NIVEAU_FR[n]}" + (f" / {NIVEAU_AR[n]}" if "ar" in langues(lib) else "") + (f" ({niv['relecture']})" if niv.get("relecture") else ""))
             a("")
             for lg, titres in (("fr", ("Description", "Ce que cela peut apporter", "Ce que cela peut coûter", "Question pour l’entretien")),
                                 ("ar", ("الوصف", "ما قد يتيحه ذلك", "ما قد يكلّفه ذلك", "سؤال للجلسة"))):
+                if lg not in langues(lib): continue
                 b = niv[lg]
                 a(f"**{titres[0]}** (`ipip-items`, {lg})")
                 a("")
@@ -240,7 +256,7 @@ def autotest(lib):
     def trouver(l, pred):
         for f in l["facettes"]:
             for n in NIVEAUX:
-                for lg in ("fr", "ar"):
+                for lg in langues(l):
                     b = f["niveaux"][n][lg]
                     for k in ("description", "apport", "cout"):
                         for i, t in enumerate(b[k]):
@@ -248,30 +264,55 @@ def autotest(lib):
                     if pred(b["question"]): return b, "question"
         raise LookupError("aucune phrase marquée")
     marque = lambda t: bool(MARQUEUR.search(t))
-    def modifier(l, fn):
-        cont, i = trouver(l, marque)
+    francais = lambda t: bool(MARQUEUR.search(t)) and not re.search(r"[؀-ۿ]", t)
+    def modifier(l, fn, fr=False):
+        cont, i = trouver(l, francais if fr else marque)
         cont[i] = fn(cont[i])
     muts = []
     def m(nom, fn): muts.append((nom, fn))
-    m("chiffre dans un texte", lambda l: l["facettes"][0]["niveaux"]["bas"]["fr"]["description"].__setitem__(0, "Vous répondez à 3 sur 5."))
-    m("mot interdit FR (moyenne)", lambda l: l["facettes"][1]["niveaux"]["haut"]["fr"]["description"].__setitem__(1, "Vous êtes au-dessus de la moyenne."))
-    m("mot interdit FR (faible)", lambda l: l["facettes"][2]["niveaux"]["bas"]["fr"]["cout"].__setitem__(0, "Votre intérêt peut paraître faible."))
-    m("mot interdit AR (ضعيف)", lambda l: l["facettes"][3]["niveaux"]["milieu"]["ar"]["cout"].__setitem__(0, "قد يظهر أداء ضعيف."))
-    m("hypothèse sans tournure d’hypothèse", lambda l: l["facettes"][4]["niveaux"]["haut"]["fr"]["apport"].__setitem__(0, "Vous tenez toujours vos engagements."))
-    m("diagnostic non nié", lambda l: l["facettes"][0]["niveaux"]["haut"]["fr"]["description"].__setitem__(1, "Ceci est un diagnostic."))
-    m("bloc arabe manquant", lambda l: l["facettes"][1]["niveaux"]["milieu"].pop("ar"))
-    m("structure incomplète", lambda l: l["facettes"][2]["niveaux"]["haut"]["fr"]["apport"].pop())
-    m("niveau manquant", lambda l: l["facettes"][3]["niveaux"].pop("plutot_bas"))
-    m("point d’exclamation", lambda l: l["facettes"][4]["niveaux"]["bas"]["fr"].__setitem__("question", "Pourquoi ?!"))
-    m("phrase dupliquée entre niveaux", lambda l: l["facettes"][0]["niveaux"]["haut"]["fr"]["apport"].__setitem__(0, l["facettes"][0]["niveaux"]["bas"]["fr"]["apport"][0]))
-    # Accord
-    m("marqueur à deux alternatives seulement", lambda l: modifier(l, lambda t: re.sub(r"\{([^{}|]*)\|([^{}|]*)\|[^{}|]*\}", r"{\1|\2}", t, count=1)))
-    m("alternative vide dans un marqueur", lambda l: modifier(l, lambda t: re.sub(r"\{([^{}|]*)\|([^{}|]*)\|([^{}|]*)\}", r"{\1||\3}", t, count=1)))
-    m("accolade non fermée", lambda l: modifier(l, lambda t: t + " {oups"))
-    m("mot interdit seulement dans la forme féminine", lambda l: modifier(l, lambda t: re.sub(r"\{([^{}|]*)\|([^{}|]*)\|([^{}|]*)\}", lambda x: "{%s|%s %s|%s}" % (x.group(1), x.group(2), "ضعيف" if re.search(r"[؀-ۿ]", t) else "faible", x.group(3)), t, count=1)))
-    m("mot interdit seulement dans la forme féminine (français)", lambda l: l["facettes"][4]["niveaux"]["haut"]["fr"]["cout"].__setitem__(1, l["facettes"][4]["niveaux"]["haut"]["fr"]["cout"][1].replace("porter seule|", "porter seule faible|")))
-    m("chiffre seulement dans la forme masculine", lambda l: modifier(l, lambda t: re.sub(r"\{([^{}|]*)\|([^{}|]*)\|([^{}|]*)\}", lambda x: "{%s 3|%s|%s}" % (x.group(1), x.group(2), x.group(3)), t, count=1)))
-    m("marqueur imbriqué", lambda l: modifier(l, lambda t: t.replace("{", "{{", 1)))
+    langs = langues(lib)
+    codes = [f["code"] for f in lib["facettes"]]
+    def F(l, k): return l["facettes"][k % len(l["facettes"])]
+    def txt(l, k, niv, lg, rub, i=0): return F(l, k)["niveaux"][niv][lg][rub], i
+    def poser(l, k, niv, lg, rub, i, valeur):
+        cont = F(l, k)["niveaux"][niv][lg][rub]
+        if rub == "question": F(l, k)["niveaux"][niv][lg]["question"] = valeur
+        else: cont[i] = valeur
+    m("chiffre dans un texte", lambda l: poser(l, 0, "bas", "fr", "description", 0, "Vous répondez à 3 sur 5."))
+    m("mot interdit FR (moyenne)", lambda l: poser(l, 1, "haut", "fr", "description", 1, "Vous êtes au-dessus de la moyenne."))
+    m("mot interdit FR (faible)", lambda l: poser(l, 2, "bas", "fr", "cout", 0, "Votre intérêt peut paraître faible."))
+    if "ar" in langs:
+        m("mot interdit AR (ضعيف)", lambda l: poser(l, 3, "milieu", "ar", "cout", 0, "قد يظهر أداء ضعيف."))
+        m("bloc arabe manquant", lambda l: F(l, 1)["niveaux"]["milieu"].pop("ar"))
+    m("hypothèse sans tournure d’hypothèse", lambda l: poser(l, 4, "haut", "fr", "apport", 0, "Vous tenez toujours vos engagements."))
+    m("diagnostic non nié", lambda l: poser(l, 0, "haut", "fr", "description", 1, "Ceci est un diagnostic."))
+    m("bloc français manquant", lambda l: F(l, 2)["niveaux"]["milieu"].pop("fr"))
+    m("structure incomplète", lambda l: F(l, 2)["niveaux"]["haut"]["fr"]["apport"].pop())
+    m("niveau manquant", lambda l: F(l, 3)["niveaux"].pop("plutot_bas"))
+    m("point d’exclamation", lambda l: poser(l, 4, "bas", "fr", "question", 0, "Pourquoi ?!"))
+    m("phrase dupliquée entre niveaux", lambda l: poser(l, 0, "haut", "fr", "apport", 0, F(l, 0)["niveaux"]["bas"]["fr"]["apport"][0]))
+    m("phrase de plus de 240 caractères", lambda l: poser(l, 1, "milieu", "fr", "description", 0, "Vos réponses indiquent " + "une tendance " * 25 + "."))
+    m("tiret cadratin", lambda l: poser(l, 2, "plutot_haut", "fr", "cout", 1, "Il se peut que ce soit lourd — parfois."))
+    m("lexique interdit (coach)", lambda l: poser(l, 3, "plutot_bas", "fr", "apport", 1, "Un coach peut vous aider."))
+    m("lexique interdit (compétence)", lambda l: poser(l, 4, "milieu", "fr", "cout", 0, "Cela peut limiter une compétence."))
+    m("question sans point d’interrogation", lambda l: poser(l, 0, "milieu", "fr", "question", 0, "Que se passe-t-il pour vous."))
+    if lib.get("relecture_requise"):
+        m("mention « non relue » retirée d’un bloc", lambda l: F(l, 5)["niveaux"]["milieu"].pop("relecture"))
+        m("mention « relue » posée sans relecteur", lambda l: F(l, 6)["niveaux"]["haut"].__setitem__("relecture", "relue"))
+    if lib.get("complete"):
+        m("facette manquante", lambda l: l["facettes"].pop())
+        m("facette en double", lambda l: l["facettes"].append(copy.deepcopy(l["facettes"][0])))
+    # Accord (seulement si la bibliothèque porte des marqueurs)
+    def a_marqueur(l):
+        try: trouver(l, marque); return True
+        except LookupError: return False
+    if a_marqueur(lib):
+        m("marqueur à deux alternatives seulement", lambda l: modifier(l, lambda t: re.sub(r"\{([^{}|]*)\|([^{}|]*)\|[^{}|]*\}", r"{|}", t, count=1)))
+        m("alternative vide dans un marqueur", lambda l: modifier(l, lambda t: re.sub(r"\{([^{}|]*)\|([^{}|]*)\|([^{}|]*)\}", r"{||}", t, count=1)))
+        m("accolade non fermée", lambda l: modifier(l, lambda t: t + " {oups"))
+        m("mot interdit seulement dans la forme féminine (français)", lambda l: modifier(l, lambda t: re.sub(r"\{([^{}|]*)\|([^{}|]*)\|([^{}|]*)\}", lambda x: "{%s|%s faible|%s}" % (x.group(1), x.group(2), x.group(3)), t, count=1), fr=True))
+        m("chiffre seulement dans la forme masculine", lambda l: modifier(l, lambda t: re.sub(r"\{([^{}|]*)\|([^{}|]*)\|([^{}|]*)\}", lambda x: "{%s 3|%s|%s}" % (x.group(1), x.group(2), x.group(3)), t, count=1)))
+        m("marqueur imbriqué", lambda l: modifier(l, lambda t: t.replace("{", "{{", 1)))
     ok = True
     for nom, fn in muts:
         copie = copy.deepcopy(lib)

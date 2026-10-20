@@ -1,0 +1,599 @@
+{
+ "facettes": [
+  {
+   "code": "C1",
+   "domaine": "C",
+   "libelle": {
+    "fr": "Confiance déclarée dans sa maîtrise des tâches"
+   },
+   "libelle_plateforme": "Auto-efficacité",
+   "affirmations_fr": [
+    {
+     "texte": "J'accomplis mes tâches avec succès",
+     "cotation": "directe"
+    },
+    {
+     "texte": "J'excelle dans ce que je fais",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je gère les tâches facilement",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je sais comment faire avancer les choses",
+     "cotation": "directe"
+    }
+   ],
+   "definition": {
+    "fr": "Cette facette porte sur la confiance que vous déclarez dans votre façon de mener vos tâches à bien, non sur ce que vous réalisez effectivement."
+   },
+   "avertissement": {
+    "fr": "Cette facette mesure une confiance déclarée en sa propre maîtrise des tâches, non un savoir-faire démontré ni une performance réelle. Le titre « Auto-efficacité » ne doit jamais être lu comme une évaluation de ce que la personne sait faire."
+   },
+   "niveaux": {
+    "bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous reconnaissez rarement dans l’idée de réussir vos tâches, d’y exceller ou de les gérer facilement.",
+       "Il s’agit d’une confiance déclarée, non d’un constat sur ce que vous réalisez réellement ni d’un jugement sur votre valeur."
+      ],
+      "apport": [
+       "Votre prudence à l’égard de votre propre travail peut vous conduire à vérifier et à préparer avec soin.",
+       "Vous pouvez accueillir plus volontiers les retours et les conseils des autres."
+      ],
+      "cout": [
+       "Il se peut que vous renonciez à des responsabilités que vous pourriez assumer.",
+       "Un doute durable sur votre travail peut vous coûter de l’énergie et vous conduire à sous-estimer vos réussites."
+      ],
+      "question": "Sur quelles tâches vous sentez-vous le plus en confiance, et qu’est-ce qui l’explique ?"
+     }
+    },
+    "plutot_bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous doutez assez souvent de mener vos tâches à bien, avec des exceptions dans certains domaines.",
+       "Cette confiance peut varier selon la familiarité que vous avez avec la tâche."
+      ],
+      "apport": [
+       "Vous pouvez demander de l’aide ou un avis avant de vous engager dans une tâche nouvelle.",
+       "Votre exigence envers votre propre travail peut vous pousser à progresser."
+      ],
+      "cout": [
+       "Il se peut que vous hésitiez à vous proposer pour une tâche dont les contours sont encore flous.",
+       "Vous pouvez attribuer vos réussites aux circonstances plutôt qu’à votre action."
+      ],
+      "question": "Qu’est-ce qui renforce votre confiance lorsque vous abordez une tâche nouvelle ?"
+     }
+    },
+    "milieu": {
+     "fr": {
+      "description": [
+       "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers la confiance ni vers le doute à l’égard de vos tâches.",
+       "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+      ],
+      "apport": [
+       "Vous pouvez ajuster votre assurance à la difficulté réelle de la tâche.",
+       "Vous pouvez reconnaître vos limites sans renoncer à agir."
+      ],
+      "cout": [
+       "Votre confiance peut varier d’une tâche à l’autre, ce qui peut rendre votre posture moins lisible pour autrui.",
+       "Il peut vous être difficile d’estimer à l’avance le temps et l’effort qu’une tâche vous demandera."
+      ],
+      "question": "Pour quelles tâches votre confiance change-t-elle le plus, et qu’est-ce qui la fait varier ?"
+     }
+    },
+    "plutot_haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous reconnaissez le plus souvent dans l’idée de réussir vos tâches et de savoir faire avancer les choses.",
+       "Ce que vous déclarez est une confiance en vous, qui ne prouve pas à elle seule la qualité de ce qui est réalisé."
+      ],
+      "apport": [
+       "Votre confiance peut vous aider à prendre une tâche en charge sans attendre qu’on vous le demande.",
+       "Elle peut rassurer des collègues qui ont besoin de sentir une tâche bien tenue."
+      ],
+      "cout": [
+       "Il se peut que vous sous-estimiez la difficulté d’une tâche inhabituelle.",
+       "Vous pouvez tarder à solliciter un avis extérieur quand une tâche dépasse ce que vous aviez prévu."
+      ],
+      "question": "Comment vérifiez-vous, au-delà de votre propre impression, que votre travail répond à ce qui est attendu ?"
+     }
+    },
+    "haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous reconnaissez presque toujours dans l’idée de réussir vos tâches, d’y exceller et de les gérer facilement.",
+       "Il s’agit d’une confiance déclarée, qui ne dit rien à elle seule de la qualité réelle du travail accompli."
+      ],
+      "apport": [
+       "Votre confiance peut vous permettre d’entreprendre des tâches exigeantes et d’entraîner d’autres personnes.",
+       "Elle peut vous aider à poursuivre quand les premiers résultats tardent."
+      ],
+      "cout": [
+       "Il se peut que vous mesuriez mal vos limites ou la complexité d’une situation nouvelle.",
+       "Votre assurance peut décourager des collègues de vous signaler une difficulté ou une erreur."
+      ],
+      "question": "Quelles informations extérieures vous amèneraient à réviser votre jugement sur la qualité de votre travail ?"
+     }
+    }
+   }
+  },
+  {
+   "code": "C2",
+   "domaine": "C",
+   "libelle": {
+    "fr": "Organisation et rangement"
+   },
+   "libelle_plateforme": "Organisation",
+   "affirmations_fr": [
+    {
+     "texte": "J'aime faire du rangement",
+     "cotation": "directe"
+    },
+    {
+     "texte": "J'oublie souvent de remettre les choses à leur place",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je laisse ma chambre en désordre",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je laisse traîner les choses",
+     "cotation": "inversée"
+    }
+   ],
+   "definition": {
+    "fr": "Cette facette porte sur le goût du rangement et sur l’habitude de remettre les choses à leur place."
+   },
+   "avertissement": {
+    "fr": "Le titre « Organisation » est plus large que ce qui est mesuré : les affirmations portent sur le rangement et l’ordre matériel de l’environnement personnel, non sur la planification ni sur l’organisation du travail."
+   },
+   "niveaux": {
+    "bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous aimez peu ranger et que les objets restent souvent là où vous les avez laissés.",
+       "Cela concerne l’ordre matériel de votre environnement, non votre façon d’organiser votre travail ni de planifier."
+      ],
+      "apport": [
+       "Vous pouvez tolérer un espace en mouvement, où les choses restent à portée de main.",
+       "Vous pouvez consacrer votre temps à ce qui vous importe plutôt qu’au rangement."
+      ],
+      "cout": [
+       "Il se peut que vous perdiez du temps à retrouver un document ou un objet.",
+       "Un espace partagé peut devenir source de tension si l’ordre compte davantage pour les autres que pour vous."
+      ],
+      "question": "Quel degré de désordre vous convient, et à partir de quand commence-t-il à vous gêner ?"
+     }
+    },
+    "plutot_bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous rangez par moments, mais que les objets traînent assez souvent.",
+       "Votre rapport à l’ordre peut dépendre de la période et du temps dont vous disposez."
+      ],
+      "apport": [
+       "Vous pouvez vous adapter à des lieux dont l’ordre n’est pas le vôtre.",
+       "Vous pouvez ranger de façon ciblée quand une situation l’exige."
+      ],
+      "cout": [
+       "Il se peut que le désordre s’installe progressivement avant que vous ne le remarquiez.",
+       "Vous pouvez avoir à rattraper un rangement en urgence avant une visite ou une échéance."
+      ],
+      "question": "Dans quelles circonstances prenez-vous le temps de ranger, et qu’est-ce qui vous y décide ?"
+     }
+    },
+    "milieu": {
+     "fr": {
+      "description": [
+       "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers l’ordre ni vers la souplesse dans le rangement.",
+       "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+      ],
+      "apport": [
+       "Vous pouvez ajuster votre niveau d’ordre à l’usage que vous faites d’un lieu.",
+       "Vous pouvez partager un espace avec des personnes aux habitudes différentes sans que cela vous pèse."
+      ],
+      "cout": [
+       "Votre niveau d’ordre peut varier d’un lieu ou d’une période à l’autre, ce qui peut dérouter vos proches.",
+       "Vous pouvez hésiter sur le niveau d’ordre à viser dans un espace commun."
+      ],
+      "question": "Dans quels lieux ou à quels moments tenez-vous le plus à l’ordre ?"
+     }
+    },
+    "plutot_haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous rangez le plus souvent et que vous remettez en général les choses à leur place.",
+       "Cela concerne l’ordre matériel de votre environnement, non la manière dont vous menez votre travail."
+      ],
+      "apport": [
+       "Vous pouvez retrouver rapidement ce dont vous avez besoin.",
+       "Votre sens de l’ordre peut rendre un espace partagé plus aisé à utiliser."
+      ],
+      "cout": [
+       "Il se peut que le désordre d’autrui vous gêne ou vous distraie davantage que lui.",
+       "Vous pouvez consacrer du temps au rangement au détriment d’une tâche plus urgente."
+      ],
+      "question": "Que ressentez-vous lorsque vous travaillez dans un espace que d’autres n’ont pas rangé comme vous l’auriez fait ?"
+     }
+    },
+    "haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous aimez ranger et que vous laissez presque toujours chaque chose à sa place.",
+       "Cela concerne l’ordre matériel de votre environnement, non la planification ni l’organisation de votre activité."
+      ],
+      "apport": [
+       "Vous pouvez créer autour de vous un cadre matériel stable, où chacun retrouve ses repères.",
+       "Votre soin peut réduire les oublis et les recherches d’objets."
+      ],
+      "cout": [
+       "Il se peut que vous éprouviez de l’inconfort dans un lieu en désordre que vous ne maîtrisez pas.",
+       "Vous pouvez en venir à ranger à la place des autres, au risque de créer de l’agacement."
+      ],
+      "question": "Qu’est-ce qui change pour vous quand un lieu reste en désordre malgré vos efforts ?"
+     }
+    }
+   }
+  },
+  {
+   "code": "C3",
+   "domaine": "C",
+   "libelle": {
+    "fr": "Respect des engagements et des règles"
+   },
+   "libelle_plateforme": "Respect",
+   "affirmations_fr": [
+    {
+     "texte": "Je tiens mes promesses",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je dis la vérité",
+     "cotation": "directe"
+    },
+    {
+     "texte": "J'enfreins les règles",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je ne tiens pas mes promesses",
+     "cotation": "inversée"
+    }
+   ],
+   "definition": {
+    "fr": "Cette facette porte sur ce que vous déclarez de votre façon de tenir vos promesses, de dire la vérité et de suivre les règles."
+   },
+   "avertissement": {
+    "fr": "Le titre « Respect » est plus large que ce qui est mesuré : les affirmations portent sur les promesses tenues, le fait de dire la vérité et le suivi des règles, tels que la personne les déclare. Il ne s’agit ni du respect envers autrui ni d’une vérification de l’honnêteté."
+   },
+   "niveaux": {
+    "bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous reconnaissez peu dans les affirmations sur le fait de tenir vos promesses, de dire la vérité et de respecter les règles.",
+       "Cette lecture rapporte la façon dont vous vous percevez ; elle ne dit rien de votre honnêteté ni de votre intégrité."
+      ],
+      "apport": [
+       "Vous pouvez remettre en question une règle ou un engagement dont le sens vous échappe.",
+       "Votre regard sur les règles peut amener un groupe à vérifier si elles servent encore leur but."
+      ],
+      "cout": [
+       "Il se peut que votre entourage ait du mal à savoir sur quels engagements compter.",
+       "Vous pouvez vous trouver en décalage avec un cadre qui exige un suivi strict des règles."
+      ],
+      "question": "Dans quelles situations un engagement ou une règle vous paraît-il difficile à tenir, et pourquoi ?"
+     }
+    },
+    "plutot_bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous reconnaissez par moments dans ces affirmations, avec des situations où promesses et règles pèsent moins.",
+       "Cette lecture rapporte la façon dont vous vous percevez, non votre honnêteté."
+      ],
+      "apport": [
+       "Vous pouvez faire preuve de souplesse quand une règle ne convient pas à la situation.",
+       "Vous pouvez signaler qu’un engagement n’est plus réaliste plutôt que de le maintenir par principe."
+      ],
+      "cout": [
+       "Il se peut que certains engagements pris dans l’élan soient ensuite difficiles à honorer.",
+       "Vous pouvez avoir à clarifier régulièrement ce que votre entourage peut attendre de vous."
+      ],
+      "question": "Quels types d’engagements ou de règles tenez-vous le plus facilement, et lesquels moins ?"
+     }
+    },
+    "milieu": {
+     "fr": {
+      "description": [
+       "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers un respect strict des engagements et des règles ni vers une grande souplesse à leur égard.",
+       "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+      ],
+      "apport": [
+       "Vous pouvez distinguer les règles qui comptent de celles qui peuvent être adaptées.",
+       "Vous pouvez tenir vos engagements tout en reconnaissant quand une situation demande de les revoir."
+      ],
+      "cout": [
+       "Votre manière de traiter une règle peut varier d’un contexte à l’autre, ce qui peut surprendre votre entourage.",
+       "Vous pouvez hésiter sur la conduite à suivre quand un engagement et une règle entrent en conflit."
+      ],
+      "question": "Dans quels contextes tenez-vous un engagement ou une règle sans aucune marge, et dans lesquels vous en accordez-vous une ?"
+     }
+    },
+    "plutot_haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous reconnaissez le plus souvent dans les affirmations sur le fait de tenir vos promesses, de dire la vérité et de suivre les règles.",
+       "Cette lecture rapporte la façon dont vous vous percevez ; elle n’établit rien sur votre comportement observé."
+      ],
+      "apport": [
+       "Vous pouvez inspirer confiance à des collègues qui ont besoin de s’appuyer sur des engagements clairs.",
+       "Vous pouvez aider un groupe à respecter un cadre commun."
+      ],
+      "cout": [
+       "Il se peut que vous ayez du mal à vous écarter d’une règle quand la situation y inviterait.",
+       "Vous pouvez vous sentir mal à l’aise avec des collègues dont les engagements sont plus souples que les vôtres."
+      ],
+      "question": "Comment réagissez-vous quand un engagement que vous avez pris devient impossible à tenir ?"
+     }
+    },
+    "haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous reconnaissez presque toujours dans les affirmations sur le fait de tenir vos promesses, de dire la vérité et de ne pas enfreindre les règles.",
+       "Cette lecture rapporte la façon dont vous vous percevez ; une déclaration ne constitue pas une preuve de comportement."
+      ],
+      "apport": [
+       "Vous pouvez servir de repère dans un groupe où les engagements comptent beaucoup.",
+       "Vous pouvez contribuer à instaurer un climat où chacun sait ce qui est attendu."
+      ],
+      "cout": [
+       "Il se peut que vous ayez du mal à comprendre un écart à la règle quand il a des raisons légitimes.",
+       "Vous pouvez vous imposer une exigence élevée qui rend un engagement abandonné difficile à vivre pour vous."
+      ],
+      "question": "Que faites-vous lorsque deux règles ou deux engagements se contredisent ?"
+     }
+    }
+   }
+  },
+  {
+   "code": "C4",
+   "domaine": "C",
+   "libelle": {
+    "fr": "Effort et engagement au travail"
+   },
+   "libelle_plateforme": "Persévérance",
+   "affirmations_fr": [
+    {
+     "texte": "Je travaille dur",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je fais plus que ce que l'on attend de moi",
+     "cotation": "directe"
+    },
+    {
+     "texte": "Je fais juste assez de travail pour m'en sortir",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je mets peu de temps et d'efforts dans mon travail",
+     "cotation": "inversée"
+    }
+   ],
+   "definition": {
+    "fr": "Cette facette porte sur le temps et l’énergie que vous déclarez consacrer à votre travail, y compris au-delà de ce qui est attendu."
+   },
+   "avertissement": {
+    "fr": "Le titre « Persévérance » est plus large que ce qui est mesuré : les affirmations portent sur l’effort fourni, le travail au-delà de l’attendu et le fait de ne faire que le nécessaire, non sur la ténacité face aux obstacles. Un niveau élevé n’est pas un idéal : un engagement soutenu se lit toujours avec la charge qu’il représente."
+   },
+   "niveaux": {
+    "bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous reconnaissez dans l’idée de faire juste ce qu’il faut et de mettre peu de temps et d’effort dans votre travail.",
+       "Cette lecture porte sur la place que vous donnez au travail, qui peut être un choix délibéré, et non sur votre valeur."
+      ],
+      "apport": [
+       "Vous pouvez préserver du temps et de l’énergie pour votre vie en dehors du travail.",
+       "Vous pouvez concentrer votre effort sur ce qui compte vraiment plutôt que de le disperser."
+      ],
+      "cout": [
+       "Il se peut que votre investissement paraisse limité à des collègues ou à un responsable qui attendent davantage.",
+       "Vous pouvez passer à côté d’occasions qui demandent un engagement plus soutenu."
+      ],
+      "question": "Qu’est-ce qui détermine, pour vous, la place que le travail doit occuper dans votre vie ?"
+     }
+    },
+    "plutot_bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous limitez le plus souvent à ce qui est demandé, avec des périodes où vous vous investissez davantage.",
+       "Cet investissement peut dépendre de l’intérêt de la tâche et de ce qui est en jeu pour vous."
+      ],
+      "apport": [
+       "Vous pouvez doser votre effort selon l’enjeu et garder des réserves.",
+       "Vous pouvez vous mobiliser pleinement quand un sujet vous importe."
+      ],
+      "cout": [
+       "Il se peut que des tâches jugées secondaires reçoivent moins d’attention que ce qu’en attendent d’autres.",
+       "Vous pouvez avoir à expliquer vos priorités à un entourage qui interprète votre effort mesuré comme un désintérêt."
+      ],
+      "question": "Pour quels sujets acceptez-vous de dépasser ce qui est demandé, et pourquoi ceux-là ?"
+     }
+    },
+    "milieu": {
+     "fr": {
+      "description": [
+       "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers un investissement soutenu ni vers un investissement mesuré dans votre travail.",
+       "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+      ],
+      "apport": [
+       "Vous pouvez adapter votre investissement à la période et aux priorités.",
+       "Vous pouvez fournir un effort soutenu quand il le faut, puis relâcher."
+      ],
+      "cout": [
+       "Votre niveau d’investissement peut varier d’une période à l’autre, ce qui peut rendre votre disponibilité difficile à anticiper.",
+       "Vous pouvez hésiter sur le moment où il convient de vous engager davantage."
+      ],
+      "question": "À quels signes reconnaissez-vous qu’une situation mérite que vous vous investissiez davantage ?"
+     }
+    },
+    "plutot_haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous travaillez avec application et que vous faites souvent un peu plus que ce qui est attendu.",
+       "Cet investissement peut varier selon les périodes."
+      ],
+      "apport": [
+       "Vous pouvez soutenir un effort dans la durée sur un sujet qui compte pour votre équipe.",
+       "Votre application peut contribuer à la qualité d’un travail commun."
+      ],
+      "cout": [
+       "Il se peut que la charge s’accumule sans que vous la signaliez.",
+       "Vous pouvez vous fatiguer sur la durée si l’effort supplémentaire devient la règle plutôt que l’exception."
+      ],
+      "question": "Comment décidez-vous de ce qui mérite un effort supplémentaire et de ce qui n’en mérite pas ?"
+     }
+    },
+    "haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous reconnaissez très nettement dans l’idée de travailler dur et de faire régulièrement plus que ce que l’on attend de vous.",
+       "Il s’agit d’un investissement déclaré, qui ne dit rien de la qualité des résultats et n’est pas à lire comme une qualité en soi."
+      ],
+      "apport": [
+       "Votre engagement peut permettre de mener à terme un projet qui demande un effort soutenu.",
+       "Il peut entraîner une équipe lors d’une période chargée."
+      ],
+      "cout": [
+       "Il se peut qu’un investissement soutenu sur la durée entraîne une fatigue ou un épuisement que vous remarquez tardivement.",
+       "Vous pouvez porter une charge de travail qui empiète sur votre vie personnelle, ou fixer à votre entourage des attentes difficiles à suivre."
+      ],
+      "question": "Que se passerait-il, pour vous et pour votre travail, si vous réduisiez pendant un temps votre niveau d’investissement ?"
+     }
+    }
+   }
+  },
+  {
+   "code": "C6",
+   "domaine": "C",
+   "libelle": {
+    "fr": "Réflexion avant d’agir"
+   },
+   "libelle_plateforme": "Prudence",
+   "affirmations_fr": [
+    {
+     "texte": "Je me lance dans des choses sans réfléchir",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je prends des décisions impulsives",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "Je me précipite dans l'action",
+     "cotation": "inversée"
+    },
+    {
+     "texte": "J'agis sans penser",
+     "cotation": "inversée"
+    }
+   ],
+   "definition": {
+    "fr": "Cette facette porte sur la tendance, que vous déclarez, à réfléchir avant d’agir plutôt qu’à vous lancer sans y penser."
+   },
+   "avertissement": {
+    "fr": "Le titre « Prudence » est plus large que ce qui est mesuré : les quatre affirmations portent sur l’impulsivité (se lancer, décider, se précipiter, agir sans réfléchir). Un niveau élevé décrit une réflexion préalable, non une aversion pour le risque ; un niveau bas décrit une action rapide, non une imprudence."
+   },
+   "niveaux": {
+    "bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous vous reconnaissez souvent dans l’idée de vous lancer, de décider et d’agir sans réfléchir longuement au préalable.",
+       "Cela décrit un rythme d’action rapide, déclaré par vous, non un jugement sur la qualité de vos décisions."
+      ],
+      "apport": [
+       "Vous pouvez saisir rapidement une occasion qui ne durerait pas.",
+       "Vous pouvez débloquer une situation où le groupe tarde à décider."
+      ],
+      "cout": [
+       "Il se peut que certaines conséquences ne soient aperçues qu’après coup.",
+       "Vous pouvez avoir à revenir sur une décision prise avant d’avoir réuni toutes les informations."
+      ],
+      "question": "Dans quelles situations agir vite vous a-t-il servi, et dans lesquelles auriez-vous aimé prendre plus de temps ?"
+     }
+    },
+    "plutot_bas": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous agissez assez souvent sans longue réflexion préalable, mais pas toujours.",
+       "Votre rythme peut varier selon l’enjeu et la pression du moment."
+      ],
+      "apport": [
+       "Vous pouvez décider rapidement lorsque la situation l’exige.",
+       "Vous pouvez garder de la spontanéité tout en pesant les enjeux importants."
+      ],
+      "cout": [
+       "Il se peut que des détails vous échappent dans les décisions prises dans l’urgence.",
+       "Vous pouvez laisser peu de temps à votre entourage pour s’exprimer avant que vous n’agissiez."
+      ],
+      "question": "Pour quelles décisions prenez-vous le temps de réfléchir, et pour lesquelles préférez-vous agir directement ?"
+     }
+    },
+    "milieu": {
+     "fr": {
+      "description": [
+       "Vos réponses se situent près du milieu de l’échelle : elles ne penchent nettement ni vers la réflexion préalable ni vers l’action rapide.",
+       "Seul, un résultat proche du milieu dit peu de choses : l’entretien de restitution sert à en préciser le sens."
+      ],
+      "apport": [
+       "Vous pouvez adapter le temps de réflexion à l’importance de ce qui est en jeu.",
+       "Vous pouvez passer de la réflexion à l’action sans vous attarder ni vous précipiter."
+      ],
+      "cout": [
+       "Votre façon de décider peut varier d’une situation à l’autre, ce qui peut étonner votre entourage.",
+       "Vous pouvez hésiter sur le temps de réflexion à accorder à une décision dont l’enjeu est incertain."
+      ],
+      "question": "Quels éléments vous indiquent qu’une situation mérite plus de réflexion avant d’agir ?"
+     }
+    },
+    "plutot_haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous réfléchissez le plus souvent avant d’agir et que vous vous lancez rarement sans y penser.",
+       "Il peut vous arriver d’agir plus vite dans certaines situations."
+      ],
+      "apport": [
+       "Vous pouvez anticiper des conséquences avant qu’elles ne se produisent.",
+       "Vous pouvez apporter au groupe un regard posé au moment de décider."
+      ],
+      "cout": [
+       "Il se peut que votre délai de réflexion paraisse long à des personnes qui attendent une réponse rapide.",
+       "Vous pouvez laisser passer une occasion qui demandait de réagir vite."
+      ],
+      "question": "Dans quelles situations vous arrive-t-il d’agir plus vite que d’habitude, et qu’en retirez-vous ?"
+     }
+    },
+    "haut": {
+     "fr": {
+      "description": [
+       "Vos réponses indiquent que vous réfléchissez presque toujours avant d’agir et que vous vous reconnaissez très peu dans l’idée de décider sur un coup de tête.",
+       "Il s’agit d’un mode d’action déclaré, qui ne dit rien de la qualité des décisions ni d’un rapport au risque."
+      ],
+      "apport": [
+       "Vous pouvez éviter des erreurs qu’un examen préalable permet de repérer.",
+       "Vous pouvez donner de la stabilité aux décisions d’un groupe."
+      ],
+      "cout": [
+       "Il se peut que le besoin de réfléchir longuement retarde une décision pour laquelle une action rapide aurait suffi.",
+       "Vous pouvez avoir du mal à suivre un rythme d’action plus spontané que le vôtre."
+      ],
+      "question": "Comment savez-vous que vous avez assez réfléchi pour passer à l’action ?"
+     }
+    }
+   }
+  }
+ ]
+}
