@@ -145,6 +145,16 @@ export const SCRIPT_MOUVEMENT = `
     tous.forEach(function (e) { io.observe(e); });
   }
   function toutMontrer() { tous.forEach(function (e) { e.classList.add('vu'); e.querySelectorAll('[data-count]').forEach(function (n) { n.textContent = n.getAttribute('data-count'); }); }); }
+  // Dans un iframe srcdoc, un lien #ancre se résout contre l'adresse de la page parente et la recharge dans le cadre :
+  // on intercepte donc tous les liens internes et on fait défiler le document soi-même.
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest ? ev.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var cible = document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));
+    if (!cible) return;
+    ev.preventDefault();
+    cible.scrollIntoView({ behavior: reduit ? 'auto' : 'smooth', block: 'start' });
+  });
   window.addEventListener('beforeprint', toutMontrer);
   var b = document.getElementById('imprimer');
   if (b) b.addEventListener('click', function () { toutMontrer(); window.print(); });
