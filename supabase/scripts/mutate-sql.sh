@@ -35,7 +35,7 @@ minimum=${TENGA_MUTATIONS_MIN:-12}
 tout=${TENGA_MUTATION_TOUT:-0}
 
 case "$stack" in
-  tenga-sb | tenga-sb-preprod) ;;
+  tenga-sb | tenga-sb-preprod | tenga-sb-jetable) ;;
   *) echo "mutate-sql: pile inconnue : $stack (jamais la production)" >&2; exit 1 ;;
 esac
 [ -d "$mdir" ] || { echo "mutate-sql: dossier introuvable : $mdir" >&2; exit 1; }

@@ -111,11 +111,11 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000007', 'authenticated',
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated', 'select app.suis_membre(''a1000000-0000-4000-8000-00000000000b'')'), 'false', 'suis_membre, participant A pour B : faux');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', 'select app.suis_membre(''a1000000-0000-4000-8000-00000000000a'')'), 'false', 'suis_membre, administrateur sans appartenance : faux (l''administration est un droit distinct)');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated', 'select app.attribuer_role(''a0000000-0000-4000-8000-000000000001'', ''a1000000-0000-4000-8000-00000000000b'', ''responsable'')::text'),
-  'ERR:42501:Réservé aux administrateurs Tenga', 'attribuer_role, participant : refusé (verrou 4)');
+  'ERR:42501:Nul ne modifie son propre rôle', 'attribuer_role, participant qui se donne un rôle : refusé (verrou 4, auto-attribution)');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', 'select app.attribuer_role(''a0000000-0000-4000-8000-000000000003'', ''a1000000-0000-4000-8000-00000000000b'', ''responsable'')::text'),
-  'ERR:42501:Réservé aux administrateurs Tenga', 'attribuer_role, responsable : refusé');
+  'ERR:42501:Nul ne modifie son propre rôle', 'attribuer_role, responsable qui se donne un rôle dans une autre organisation : refusé (auto-attribution)');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000004', 'authenticated', 'select app.attribuer_role(''a0000000-0000-4000-8000-000000000004'', ''a1000000-0000-4000-8000-00000000000a'', ''responsable'')::text'),
-  'ERR:42501:Réservé aux administrateurs Tenga', 'attribuer_role, consultant affecté : refusé');
+  'ERR:42501:Nul ne modifie son propre rôle', 'attribuer_role, consultant affecté qui se promeut : refusé (auto-attribution)');
 SELECT is(pg_temp.comme(NULL, 'service_role', 'select app.attribuer_role(''a0000000-0000-4000-8000-000000000001'', ''a1000000-0000-4000-8000-00000000000b'', ''responsable'')::text'),
   'ERR:42501:permission denied for function attribuer_role', 'attribuer_role, service_role : refusé (aucun droit d''exécution)');
 SELECT is(pg_temp.comme(NULL, 'anon', 'select app.attribuer_role(''a0000000-0000-4000-8000-000000000001'', ''a1000000-0000-4000-8000-00000000000b'', ''responsable'')::text'),

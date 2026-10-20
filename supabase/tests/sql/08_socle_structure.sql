@@ -242,6 +242,8 @@ SELECT throws_ok($$INSERT INTO private.audit_log (action) VALUES ('quelquun@exam
   '23514', NULL, 'une adresse e-mail ne passe pas dans la colonne action');
 
 -- Suppression de compte : cascade complète, journal conservé (identifiant pseudonyme)
+-- Un second administrateur existe : la migration 0007 interdit de supprimer le dernier.
+INSERT INTO private.tenga_admins (user_id) VALUES ('a0000000-0000-4000-8000-000000000002');
 INSERT INTO private.tenga_admins (user_id) VALUES ('a0000000-0000-4000-8000-000000000001');
 INSERT INTO private.liens_connexion (user_id, jeton_hash, code_hash, expire_le)
 VALUES ('a0000000-0000-4000-8000-000000000001', sha256('x'), sha256('y'), now() + interval '15 minutes');

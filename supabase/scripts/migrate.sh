@@ -45,7 +45,7 @@ dir=${2:-${TENGA_MIGRATIONS_DIR:-$here/../migrations}}
 ctr=${TENGA_DB_CONTAINER:-$stack-db}
 
 case "$stack" in
-  tenga-sb | tenga-sb-preprod) ;;
+  tenga-sb | tenga-sb-preprod | tenga-sb-jetable) ;;
   *) echo "migrate: pile inconnue : $stack" >&2; exit 1 ;;
 esac
 [ -d "$dir" ] || { echo "migrate: dossier introuvable : $dir" >&2; exit 1; }

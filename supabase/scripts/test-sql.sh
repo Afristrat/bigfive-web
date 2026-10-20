@@ -27,7 +27,7 @@ dir=${2:-${TENGA_TESTS_DIR:-$here/../tests/sql}}
 ctr=${TENGA_DB_CONTAINER:-$stack-db}
 
 case "$stack" in
-  tenga-sb | tenga-sb-preprod) ;;
+  tenga-sb | tenga-sb-preprod | tenga-sb-jetable) ;;
   *) echo "test-sql: pile inconnue : $stack" >&2; exit 1 ;;
 esac
 [ -d "$dir" ] || { echo "test-sql: dossier introuvable : $dir" >&2; exit 1; }
@@ -35,6 +35,37 @@ esac
 # Instructions de transaction, à n'importe quelle position d'une ligne
 # (début de ligne ou après un point-virgule), insensible à la casse.
 motif_transaction='(^|;)[[:space:]]*((commit|rollback|abort)([^[:alnum:]_]|$)|(begin|end)[[:space:]]*;|(begin|start|end)[[:space:]]+(transaction|work)|begin[[:space:]]+(isolation|read|deferrable|not)|prepare[[:space:]]+transaction)|^[[:space:]]*\\set[[:space:]]+autocommit'
+
+# Copie restaurée par la restauration d'essai (TENGA_TEMOIN = le conteneur de la
+# copie) : les tests supposent les tables applicatives vides, alors que la
+# production contient de vraies données. On les vide SUR LA COPIE SEULE. Garde
+# stricte : le conteneur visé doit être exactement celui que le script de
+# restauration désigne comme témoin, et jamais une instance vivante de Tenga.
+# session_replication_role = replica suspend les déclencheurs (dont les gardes
+# du dernier administrateur et du vidage) : la copie est jetable.
+if [ -n "${TENGA_TEMOIN:-}" ]; then
+  if [ "$TENGA_TEMOIN" != "$ctr" ] || [ "$ctr" = "tenga-sb-db" ] || [ "$ctr" = "tenga-sb-preprod-db" ]; then
+    echo "test-sql: REFUS : le vidage n'est permis que sur la copie témoin (conteneur $ctr, témoin $TENGA_TEMOIN)" >&2
+    exit 1
+  fi
+  docker exec -i "$ctr" psql -U supabase_admin -d postgres -X -q -v ON_ERROR_STOP=1 <<'SQL'
+SET session_replication_role = replica;
+DO $vidage$
+DECLARE
+  t record;
+BEGIN
+  FOR t IN
+    SELECT schemaname, tablename FROM pg_catalog.pg_tables
+     WHERE (schemaname IN ('app', 'private') AND tablename NOT IN ('settings', 'schema_migrations'))
+        OR (schemaname = 'auth' AND tablename = 'users')
+  LOOP
+    EXECUTE pg_catalog.format('TRUNCATE %I.%I CASCADE', t.schemaname, t.tablename);
+  END LOOP;
+END
+$vidage$;
+SQL
+  echo "test-sql: copie témoin $ctr : données applicatives vidées avant les tests"
+fi
 
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT

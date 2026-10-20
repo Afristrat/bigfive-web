@@ -71,7 +71,7 @@ SELECT is((SELECT string_agg(action, ',' ORDER BY id) FROM private.audit_log WHE
   'role.attribuer.participant,role.attribuer.consultant', 'les attributions sont journalisées avec le rôle posé, les refus non');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000002', 'authenticated',
   format($q$select app.retirer_role('a0000000-0000-4000-8000-000000000001', %L)::text$q$, current_setting('zz.org'))),
-  'ERR:42501:Réservé aux administrateurs Tenga', 'retirer_role, non administrateur : refusé');
+  'ERR:42501:Réservé à un administrateur Tenga ou au responsable de l''organisation', 'retirer_role, ni administrateur ni responsable : refusé');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated',
   format($q$select app.retirer_role('a0000000-0000-4000-8000-000000000001', %L)::text$q$, current_setting('zz.org'))),
   'true', 'retirer_role : l''administrateur retire le rôle');
