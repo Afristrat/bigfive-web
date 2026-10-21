@@ -1,0 +1,29 @@
+{ "version": "r-1.0", "empreinte_entrees": "0a1b2c3d4e5f", "etiquette_fictif": "CAS FICTIF DE DÉMONSTRATION",
+  "avertissements": [
+    "Ce rapport prépare le travail d'un consultant qualifié, qui le relit et le signe.",
+    "Aucune décision d'emploi (recrutement, promotion, licenciement, affectation) ne peut s'appuyer sur ce rapport.",
+    "Ce rapport ne prédit pas la performance et n'attribue aucun type de personnalité.",
+    "Aucune comparaison à une population n'est faite : les niveaux sont des conventions de l'outil."
+  ],
+  "niveaux": [
+    { "id": "n1-individuel", "titre": "Analyse individuelle", "sections": [ { "id": "n1-s1", "titre": "Lecture de KB", "paragraphes": [
+      { "id": "n1-p1", "texte": "Hypothèse de lecture : la facette E6 de KB se situe à 3,25 sur l'échelle de 1 à 5, soit le milieu de l'échelle selon les conventions de l'outil.", "statut": "hypothese", "confiance": "moyenne", "verification": "Demander en entretien un exemple récent.", "bloc_ids": ["E6/milieu"] },
+      { "id": "n1-p2", "texte": "Le cas compte 4 personnes ; les niveaux sont des conventions, non des positions par rapport à d'autres personnes.", "statut": "constate", "bloc_ids": [] } ] } ] },
+    { "id": "n2-relations", "titre": "Analyse de relation", "sections": [ { "id": "n2-s1", "titre": "AM et KB", "paragraphes": [
+      { "id": "n2-p1", "texte": "L'écart entre AM et KB sur la facette E3 est de 1,25 point. Aucun pourcentage de compatibilité n'est calculé ni affiché.", "statut": "constate", "bloc_ids": [] } ] } ] },
+    { "id": "n3-equipe", "titre": "Analyse d'équipe", "sections": [ { "id": "n3-s1", "titre": "Diversité", "paragraphes": [
+      { "id": "n3-p1", "texte": "Sur le domaine N, les valeurs vont de 49 à 76 pour les 4 personnes. Il est possible de formuler l'hypothèse d'une sécurité psychologique à instruire (Edmondson, 1999).", "statut": "hypothese", "confiance": "faible", "verification": "Interroger l'équipe sur la prise de parole.", "bloc_ids": [] } ] } ] },
+    { "id": "n4-organisation", "titre": "Lecture organisationnelle", "sections": [ { "id": "n4-s1", "titre": "Anonymat", "paragraphes": [
+      { "id": "n4-p1", "texte": "Le seuil d'anonymat est de 5 personnes ; l'agrégat est montré malgré un effectif inférieur parce que le cas est fictif et consenti. Aucune moyenne nationale n'est attribuée à AM ni à KB.", "statut": "constate", "bloc_ids": [] },
+      { "id": "n4-p2", "texte": "Le cadre de référence est la loi 09-08 et la norme ISO 10667, sans règlement 2024/1689 tant que l'organisation n'y est pas soumise.", "statut": "constate", "bloc_ids": [] } ] } ] },
+    { "id": "n5-accompagnement", "titre": "Plan d'accompagnement", "sections": [ { "id": "n5-s1", "titre": "Jalons", "paragraphes": [
+      { "id": "n5-p1", "texte": "Le plan prévoit des jalons à 30, 60 et 90 jours, avec le cadre d'évaluation de la formation de Kirkpatrick comme repère. Un coaching d'équipe est proposé. Écarter l'hypothèse d'un blocage suppose un entretien ; la sélection des blocs est faite par un script.", "statut": "constate", "bloc_ids": [] } ] } ] }
+  ],
+  "recommandations": [
+    { "id": "r1", "niveau": "n3-equipe", "texte": "Instaurer un point hebdomadaire de coordination de 30 minutes.", "donnee": "Écart de 1,25 point sur la facette E3 entre AM et KB.", "contexte": "Équipe de 4 personnes, tâche en mode projet.", "preuve": { "niveau": "source", "reference_id": "edmondson-1999" }, "risque": "Le rituel peut devenir une formalité.", "responsable": "Direction de l'équipe", "horizon": "30 jours", "indicateur": "Part des décisions consignées après chaque point." },
+    { "id": "r2", "niveau": "n5-accompagnement", "texte": "Prévoir une séance de coaching sur la prise de parole.", "donnee": "Facette E6 de KB à 3,25.", "contexte": "Site de Casablanca.", "preuve": { "niveau": "hypothese", "reference_id": null }, "risque": "Séance perçue comme une évaluation.", "responsable": "Consultant qualifié", "horizon": "60 jours", "indicateur": "Retour de KB en entretien." }
+  ],
+  "references": [
+    { "id": "edmondson-1999", "citation": "Edmondson, 1999, Administrative Science Quarterly", "statut": "à vérifier" },
+    { "id": "kirkpatrick", "citation": "Kirkpatrick (évaluation des formations)", "statut": "à vérifier" }
+  ] }

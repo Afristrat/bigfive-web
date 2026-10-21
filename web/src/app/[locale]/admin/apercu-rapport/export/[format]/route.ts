@@ -15,26 +15,26 @@ interface Fichier {
 const octets = (base64: string): Uint8Array =>
   new Uint8Array(Buffer.from(base64, 'base64'));
 
-// Données fixes de la maquette : profils fictifs et profil estimé (voir la page).
+// Données fixes de la démonstration : cas fictif et profil estimé (voir la page).
 const fichiers: Record<string, Fichier> = {
   pdf: {
     type: 'application/pdf',
-    nom: 'rapports-comparatifs.pdf',
+    nom: 'rapport-cabinet.pdf',
     corps: () => octets(rapportApercuPdfBase64)
   },
   docx: {
     type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    nom: 'rapports-comparatifs.docx',
+    nom: 'rapport-cabinet.docx',
     corps: () => octets(rapportApercuDocxBase64)
   },
   md: {
     type: 'text/markdown; charset=utf-8',
-    nom: 'rapports-comparatifs.md',
+    nom: 'rapport-cabinet.md',
     corps: () => rapportApercuMarkdown
   },
   html: {
     type: 'text/html; charset=utf-8',
-    nom: 'rapports-comparatifs.html',
+    nom: 'rapport-cabinet.html',
     corps: () => rapportApercuHtml
   }
 };

@@ -1,0 +1,4 @@
+[ { "code": "AM", "nom": "Amine (estimation)", "fictif": false, "domaine": { "N": 60, "E": 100 }, "facette": { "N1": 3, "E3": 5, "E6": 4 } },
+  { "code": "KB", "nom": "Karim B.", "fictif": true, "domaine": { "N": 49, "E": 80 }, "facette": { "N1": 2, "E3": 3.75, "E6": 3.25 } },
+  { "code": "SR", "nom": "Salma R.", "fictif": true, "domaine": { "N": 76, "E": 90 }, "facette": { "N1": 4, "E3": 3, "E6": 2.5 } },
+  { "code": "HT", "nom": "Hind T.", "fictif": true, "domaine": { "N": 70, "E": 70 }, "facette": { "N1": 3, "E3": 3, "E6": 3 } } ]

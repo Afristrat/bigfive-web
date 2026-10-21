@@ -1,0 +1,137 @@
+{
+  "fictif": true,
+  "etiquette": "CAS FICTIF DE DÉMONSTRATION",
+  "avertissement": "Organisation, personnes (sauf l'estimation d'AM), contraintes et chiffres de ce fichier sont inventés pour la démonstration. Aucune marque ni organisation réelle n'est visée. Le profil d'AM est une estimation, pas une mesure.",
+  "legende_sens": "a->b : a oriente, décide ou fournit pour b ; b->a : l'inverse ; reciproque : aucune direction dominante.",
+  "organisation": {
+    "fictif": true,
+    "nom": "Démo Distribution Maroc (fictif)",
+    "secteur": "Distribution de produits de grande consommation",
+    "taille": "Entre 250 et 500 salariés",
+    "age": "14 ans d'existence",
+    "pays": "Maroc",
+    "structure": "bureaucratie mécaniste",
+    "culture": "hiérarchie",
+    "maturite": "maturité",
+    "historique": "Filiale marocaine d'un groupe européen fictif, rachetée il y a quatre ans. Changement de direction générale l'an dernier. Première démarche de transformation numérique en cours."
+  },
+  "strategie": {
+    "objectifs": [
+      "Lancer un canal de vente en ligne sur le marché marocain dans les 9 mois",
+      "Obtenir les autorisations de traitement de données auprès de la CNDP avant le pilote",
+      "Réduire de moitié, d'ici 18 mois, le délai de décision entre la filiale et le siège sur les sujets du programme"
+    ],
+    "orientation": "croissance",
+    "indicateurs": [
+      "Respect du calendrier du lancement",
+      "Délai moyen de décision entre la filiale et le siège",
+      "Taux de participation aux rituels d'équipe du projet"
+    ],
+    "arbitrages": [
+      "Aucun recrutement externe avant le lancement",
+      "Le pilote est limité à un seul site",
+      "Les décisions de budget restent validées par le siège"
+    ]
+  },
+  "contraintes": [
+    { "id": "CT-01", "libelle": "Loi 09-08 : les résultats du questionnaire sont des données personnelles, information et consentement préalables des personnes", "type": "reglementation", "durete": "dure" },
+    { "id": "CT-02", "libelle": "CNDP : déclaration ou autorisation préalable du traitement avant toute analyse de relation ou d'équipe", "type": "reglementation", "durete": "dure" },
+    { "id": "CT-03", "libelle": "Code du travail (loi 65-99) : aucune décision d'emploi ne peut s'appuyer sur ces rapports", "type": "reglementation", "durete": "dure" },
+    { "id": "CT-04", "libelle": "Transfert de données vers le siège à l'étranger : cadre et autorisation à faire instruire avant tout envoi", "type": "reglementation", "durete": "dure" },
+    { "id": "CT-05", "libelle": "Calendrier de lancement fixé par le siège : 9 mois", "type": "delai", "durete": "dure" },
+    { "id": "CT-06", "libelle": "Enveloppe d'accompagnement plafonnée sur 12 mois", "type": "budget", "durete": "negociable" },
+    { "id": "CT-07", "libelle": "Équipe projet mobilisée aux sept dixièmes de son temps seulement", "type": "ressources", "durete": "negociable" },
+    { "id": "CT-08", "libelle": "Interculturel : le siège valide le budget et les choix d'outils, les documents de pilotage du groupe sont en anglais, la filiale travaille en arabe, en darija et en français", "type": "culture", "durete": "negociable" },
+    { "id": "CT-09", "libelle": "Un précédent outil d'évaluation, introduit avant le rachat, a laissé de la méfiance dans les équipes", "type": "heritage", "durete": "negociable" },
+    { "id": "CT-10", "libelle": "Les représentants du personnel attendent d'être informés de toute démarche touchant aux personnes", "type": "syndical", "durete": "negociable" }
+  ],
+  "interculturel": {
+    "actif": true,
+    "sites": ["Casablanca (filiale)", "Paris (siège du groupe fictif)", "Dubaï (centre de services partagés fictif)"],
+    "nationalites": ["marocaine", "française", "émiratie"],
+    "langues_travail": ["arabe", "darija", "français", "anglais"],
+    "rapport_siege_filiale": "Autonomie encadrée : le siège valide le budget et les choix d'outils, la filiale conduit l'exécution",
+    "part_expatries": "Deux postes de direction sur sept occupés par des expatriés du groupe",
+    "travail_reparti": "Équipe projet répartie entre Casablanca et Dubaï, avec un point hebdomadaire avec Paris",
+    "fuseaux": ["Casablanca", "Paris", "Dubaï"],
+    "culture_maison_mere": "marché",
+    "culture_locale": "clan",
+    "precision": "Culture de chaque entité d'organisation (quadrants de Cameron et Quinn), jamais une moyenne nationale attribuée à une personne."
+  },
+  "personnes": [
+    {
+      "code": "AM",
+      "nom": "Amine (estimation)",
+      "fictif": false,
+      "etiquette": "Estimation, pas une mesure ; fonction fictive",
+      "fonction": "Directeur du programme de transformation (fonction fictive)",
+      "niveau": "direction",
+      "anciennete": "3 ans",
+      "perimetre_decision": "Arbitre le budget et le calendrier du programme",
+      "role_equipe": "Pilote du programme",
+      "langue_passation": "français",
+      "consentements": { "individuel": true, "binome": true, "equipe": true, "organisation": true }
+    },
+    {
+      "code": "KB",
+      "nom": "Karim B.",
+      "fictif": true,
+      "etiquette": "Profil fictif",
+      "fonction": "Responsable des opérations et de la qualité (fictif)",
+      "niveau": "encadrement",
+      "anciennete": "9 ans",
+      "perimetre_decision": "Décide des processus opérationnels",
+      "role_equipe": "Garant de l'exécution",
+      "langue_passation": "français",
+      "consentements": { "individuel": true, "binome": true, "equipe": true, "organisation": true }
+    },
+    {
+      "code": "SR",
+      "nom": "Salma R.",
+      "fictif": true,
+      "etiquette": "Profil fictif",
+      "fonction": "Responsable du canal numérique (fictif)",
+      "niveau": "encadrement",
+      "anciennete": "2 ans",
+      "perimetre_decision": "Propose les évolutions de l'offre en ligne",
+      "role_equipe": "Porteuse de l'innovation",
+      "langue_passation": "arabe",
+      "consentements": { "individuel": true, "binome": true, "equipe": true, "organisation": true }
+    },
+    {
+      "code": "HT",
+      "nom": "Hind T.",
+      "fictif": true,
+      "etiquette": "Profil fictif",
+      "fonction": "Responsable de la relation clients et de la conformité des données (fictif)",
+      "niveau": "encadrement",
+      "anciennete": "6 ans",
+      "perimetre_decision": "Valide les engagements envers les clients et la conformité",
+      "role_equipe": "Garante de la relation client",
+      "langue_passation": "français",
+      "consentements": { "individuel": true, "binome": true, "equipe": true, "organisation": true }
+    }
+  ],
+  "relations": [
+    { "id": "AM-KB", "a": "AM", "b": "KB", "nature": "ligne", "sens": "a->b", "frequence": "quotidienne", "interdependance": "sequentielle" },
+    { "id": "AM-SR", "a": "AM", "b": "SR", "nature": "fonctionnel", "sens": "a->b", "frequence": "hebdomadaire", "interdependance": "reciproque" },
+    { "id": "AM-HT", "a": "AM", "b": "HT", "nature": "mentorat", "sens": "a->b", "frequence": "mensuelle", "interdependance": "mise-en-commun" },
+    { "id": "KB-SR", "a": "KB", "b": "SR", "nature": "client-fournisseur", "sens": "a->b", "frequence": "hebdomadaire", "interdependance": "sequentielle" },
+    { "id": "KB-HT", "a": "KB", "b": "HT", "nature": "pairs", "sens": "reciproque", "frequence": "hebdomadaire", "interdependance": "mise-en-commun" },
+    { "id": "SR-HT", "a": "SR", "b": "HT", "nature": "co-direction", "sens": "reciproque", "frequence": "quotidienne", "interdependance": "reciproque" }
+  ],
+  "tache": {
+    "description": "Réussir ensemble le lancement du canal de vente en ligne, en conformité avec la loi 09-08 et l'autorisation de la CNDP, en coordination avec le siège",
+    "nature": "projet",
+    "echeances": [
+      "Dépôt du dossier CNDP : dans les 3 mois",
+      "Pilote sur un seul site : dans les 6 mois",
+      "Lancement : dans les 9 mois"
+    ],
+    "risques": [
+      "Délai d'autorisation de la CNDP non maîtrisé par l'équipe",
+      "Décisions du siège tardives en raison du décalage horaire et de la langue de travail du groupe",
+      "Méfiance des équipes héritée de l'ancien outil d'évaluation"
+    ]
+  }
+}

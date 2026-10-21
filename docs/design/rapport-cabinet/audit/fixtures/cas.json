@@ -1,0 +1,12 @@
+{ "fictif": true, "etiquette": "CAS FICTIF DE DÉMONSTRATION",
+  "organisation": { "nom": "Atlas Services", "secteur": "services", "taille": "250 salariés", "age": "12 ans", "pays": "Maroc", "structure": "adhocratie", "culture": "clan", "maturite": "intermédiaire", "historique": "croissance depuis 2023" },
+  "strategie": { "objectifs": ["Ouvrir un site à Dubaï en 18 mois"], "orientation": "croissance", "indicateurs": ["Délai de livraison"], "arbitrages": [] },
+  "contraintes": [ { "id": "c1", "libelle": "Loi 09-08 et CNDP", "type": "reglementation", "durete": "dure" } ],
+  "interculturel": { "actif": true, "sites": ["Casablanca", "Paris"], "nationalites": ["marocaine", "française"], "langues_travail": ["français", "arabe"], "rapport_siege_filiale": "filiale", "part_expatries": "10 pour cent", "travail_reparti": true, "fuseaux": "UTC+1", "culture_maison_mere": "x", "culture_locale": "y" },
+  "personnes": [
+    { "code": "AM", "nom": "Amine (estimation)", "fictif": false, "fonction": "Direction" },
+    { "code": "KB", "nom": "Karim B.", "fictif": true, "fonction": "Finance" },
+    { "code": "SR", "nom": "Salma R.", "fictif": true, "fonction": "Opérations" },
+    { "code": "HT", "nom": "Hind T.", "fictif": true, "fonction": "Qualité" } ],
+  "relations": [ { "id": "AM-KB", "a": "AM", "b": "KB", "nature": "co-direction", "sens": "reciproque", "frequence": "quotidienne", "interdependance": "reciproque" } ],
+  "tache": { "description": "Lancer le site", "nature": "projet", "echeances": ["T4"], "risques": [] } }

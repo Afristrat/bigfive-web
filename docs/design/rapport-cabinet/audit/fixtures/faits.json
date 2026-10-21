@@ -1,0 +1,7 @@
+{ "version_moteur": "m-1.0", "bibliotheque": { "version": "bib-0.3", "empreinte": "9f2c4ab1e77d" }, "empreinte_entrees": "0a1b2c3d4e5f",
+  "conventions": { "niveaux": { "bas": "< 2,0", "milieu": "< 3,4" }, "ecarts": { "proche": "<= 0,5", "notable": ">= 1,0" }, "avertissement": "conventions non calibrées, aucune norme de population" },
+  "personnes": { "KB": { "facettes": { "E6": { "moy": 3.25, "niveau": "milieu", "bloc_id": "E6/milieu" } }, "tensions": [] } },
+  "relations": [ { "id": "AM-KB", "a": "AM", "b": "KB", "domaines": [ { "d": "E", "ecart": 20, "classe": "notable" } ],
+                   "facettes_notables": [ { "k": "E3", "ecart": 1.25, "niveau_a": "haut", "niveau_b": "plutot_haut" } ] } ],
+  "equipe": { "domaines": { "N": { "min": 49, "max": 76, "etendue": 27, "dispersion": "diverse" } } },
+  "organisation": { "n_personnes": 4, "seuil_anonymat": 5, "seuil_atteint": false } }

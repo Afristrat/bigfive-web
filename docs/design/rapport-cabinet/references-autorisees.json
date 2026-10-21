@@ -1,0 +1,22 @@
+{
+ "statut": "Références citées de mémoire dans le mandat (§ 3.9), NON vérifiées : toute apparition dans un rapport porte la mention « à vérifier » (DÉFCON 1).",
+ "source": "docs/design/mandat-rapports-cabinet.md, § 3 point 9",
+ "references": [
+  { "id": "barrick-mount-1991", "auteurs": ["Barrick", "Mount"], "annee": 1991, "citation": "Barrick et Mount, 1991, Personnel Psychology", "sujet": "Big Five et performance au travail" },
+  { "id": "bell-2007", "auteurs": ["Bell"], "annee": 2007, "citation": "Bell, 2007, Journal of Applied Psychology", "sujet": "composition des équipes et personnalité" },
+  { "id": "judge-2002", "auteurs": ["Judge"], "annee": 2002, "citation": "Judge et al., 2002, Journal of Applied Psychology", "sujet": "personnalité et leadership" },
+  { "id": "edmondson-1999", "auteurs": ["Edmondson"], "annee": 1999, "citation": "Edmondson, 1999, Administrative Science Quarterly", "sujet": "sécurité psychologique" },
+  { "id": "mintzberg-1979", "auteurs": ["Mintzberg"], "annee": 1979, "citation": "Mintzberg, 1979", "sujet": "configurations structurelles" },
+  { "id": "cameron-quinn-1999", "auteurs": ["Cameron", "Quinn"], "annee": 1999, "citation": "Cameron et Quinn, 1999", "sujet": "modèle des valeurs concurrentes" },
+  { "id": "nadler-tushman-1980", "auteurs": ["Nadler", "Tushman"], "annee": 1980, "citation": "Nadler et Tushman, 1980", "sujet": "modèle de congruence" },
+  { "id": "thompson-1967", "auteurs": ["Thompson"], "annee": 1967, "citation": "Thompson, 1967", "sujet": "interdépendance (mise en commun, séquentielle, réciproque)" },
+  { "id": "march-1991", "auteurs": ["March"], "annee": 1991, "citation": "March, 1991", "sujet": "exploration et exploitation" },
+  { "id": "graen-uhl-bien-1995", "auteurs": ["Graen", "Uhl-Bien"], "annee": 1995, "citation": "Graen et Uhl-Bien, 1995", "sujet": "relation leader-membre" },
+  { "id": "kirkpatrick", "auteurs": ["Kirkpatrick"], "annee": null, "citation": "Kirkpatrick (évaluation des formations)", "sujet": "niveaux d'évaluation d'une formation" },
+  { "id": "hofstede", "auteurs": ["Hofstede"], "annee": null, "citation": "Hofstede (dimensions culturelles nationales)", "sujet": "tendances culturelles de pays" },
+  { "id": "house-2004", "auteurs": ["House"], "annee": 2004, "citation": "House et al., 2004 (étude GLOBE)", "sujet": "tendances culturelles de pays" },
+  { "id": "meyer-2014", "auteurs": ["Meyer"], "annee": 2014, "citation": "Meyer, 2014, The Culture Map", "sujet": "carte culturelle" },
+  { "id": "hall-1976", "auteurs": ["Hall"], "annee": 1976, "citation": "Hall, 1976, Beyond Culture", "sujet": "contexte élevé ou faible" }
+ ],
+ "normes_citables_sans_annee": ["ISO 10667", "loi 09-08", "loi 65-99", "CNDP", "RGPD", "règlement 2024/1689"]
+}

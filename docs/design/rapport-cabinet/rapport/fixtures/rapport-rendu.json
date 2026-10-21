@@ -1,0 +1,224 @@
+{
+  "version": "r-1.0",
+  "empreinte_entrees": "0a1b2c3d4e5f",
+  "etiquette_fictif": "CAS FICTIF DE DÉMONSTRATION",
+  "avertissements": [
+    "Ce rapport prépare le travail d'un consultant qualifié, qui le relit et le signe.",
+    "Aucune décision d'emploi (recrutement, promotion, licenciement, affectation) ne peut s'appuyer sur ce rapport.",
+    "Ce rapport ne prédit pas la performance et n'attribue aucun type de personnalité.",
+    "Aucune comparaison à une population n'est faite : les niveaux sont des conventions de l'outil."
+  ],
+  "niveaux": [
+    {
+      "id": "n1-individuel",
+      "titre": "Analyse individuelle",
+      "sections": [
+        {
+          "id": "n1-kb",
+          "titre": "Chapitre de KB",
+          "paragraphes": [
+            {
+              "id": "n1-kb-1",
+              "texte": "La facette E6 de KB se situe à 3,25 sur 1 à 5.",
+              "statut": "hypothese",
+              "confiance": "moyenne",
+              "verification": "Demander un exemple récent.",
+              "bloc_ids": [
+                "E6/milieu"
+              ]
+            },
+            {
+              "id": "n1-kb-2",
+              "texte": "Le cas compte 4 personnes.",
+              "statut": "constate",
+              "bloc_ids": []
+            }
+          ]
+        },
+        {
+          "id": "n1-am",
+          "titre": "Chapitre de AM",
+          "paragraphes": [
+            {
+              "id": "n1-am-1",
+              "texte": "AM est estimé, pas mesuré.",
+              "statut": "constate",
+              "bloc_ids": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-relations",
+      "titre": "Analyse de relation",
+      "sections": [
+        {
+          "id": "n2-am-kb",
+          "titre": "AM et KB",
+          "paragraphes": [
+            {
+              "id": "n2-1",
+              "texte": "L'écart entre AM et KB sur E3 est de 1,25 point.",
+              "statut": "constate",
+              "bloc_ids": []
+            },
+            {
+              "id": "n2-2",
+              "texte": "Synergie probable sur la tâche.",
+              "statut": "hypothese",
+              "confiance": "faible",
+              "verification": "Observer une réunion de travail.",
+              "bloc_ids": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n3-equipe",
+      "titre": "Analyse d'équipe",
+      "sections": [
+        {
+          "id": "n3-div",
+          "titre": "Diversité & angles morts <test>",
+          "paragraphes": [
+            {
+              "id": "n3-1",
+              "texte": "Domaine N : 49 à 76.",
+              "statut": "hypothese",
+              "confiance": "faible",
+              "verification": "Interroger l'équipe.",
+              "bloc_ids": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n4-organisation",
+      "titre": "Lecture organisationnelle",
+      "sections": [
+        {
+          "id": "n4-a",
+          "titre": "Anonymat",
+          "paragraphes": [
+            {
+              "id": "n4-1",
+              "texte": "Seuil de 5 non atteint, dérogation de démonstration.",
+              "statut": "constate",
+              "bloc_ids": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n5-accompagnement",
+      "titre": "Plan d'accompagnement",
+      "sections": [
+        {
+          "id": "n5-j",
+          "titre": "Jalons",
+          "paragraphes": [
+            {
+              "id": "n5-1",
+              "texte": "Jalons à 30, 60 et 90 jours.",
+              "statut": "constate",
+              "bloc_ids": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "recommandations": [
+    {
+      "id": "REC-N1-1",
+      "niveau": "n1",
+      "texte": "Action REC-N1-1",
+      "donnee": "Écart E3 de 1,25.",
+      "contexte": "Équipe de 4.",
+      "preuve": {
+        "niveau": "hypothese",
+        "reference_id": null
+      },
+      "risque": "Formalité.",
+      "responsable": "Direction",
+      "horizon": "30 jours",
+      "indicateur": "Part des décisions consignées à 30 jours."
+    },
+    {
+      "id": "REC-N2-1",
+      "niveau": "n2",
+      "texte": "Action REC-N2-1",
+      "donnee": "Écart E3 de 1,25.",
+      "contexte": "Équipe de 4.",
+      "preuve": {
+        "niveau": "hypothese",
+        "reference_id": null
+      },
+      "risque": "Formalité.",
+      "responsable": "Direction",
+      "horizon": "30 jours",
+      "indicateur": "Part des décisions consignées à 30 jours."
+    },
+    {
+      "id": "REC-N3-1",
+      "niveau": "n3",
+      "texte": "Action REC-N3-1",
+      "donnee": "Écart E3 de 1,25.",
+      "contexte": "Équipe de 4.",
+      "preuve": {
+        "niveau": "source",
+        "reference_id": "edmondson-1999"
+      },
+      "risque": "Formalité.",
+      "responsable": "Direction",
+      "horizon": "30 jours",
+      "indicateur": "Part des décisions consignées à 30 jours."
+    },
+    {
+      "id": "REC-N5-1",
+      "niveau": "n5",
+      "texte": "Action REC-N5-1",
+      "donnee": "Écart E3 de 1,25.",
+      "contexte": "Équipe de 4.",
+      "preuve": {
+        "niveau": "source",
+        "reference_id": "kirkpatrick"
+      },
+      "risque": "Formalité.",
+      "responsable": "Direction",
+      "horizon": "30 jours",
+      "indicateur": "Part des décisions consignées à 30 jours."
+    },
+    {
+      "id": "REC-N5-2",
+      "niveau": "n5",
+      "texte": "Action REC-N5-2",
+      "donnee": "Écart E3 de 1,25.",
+      "contexte": "Équipe de 4.",
+      "preuve": {
+        "niveau": "hypothese",
+        "reference_id": null
+      },
+      "risque": "Formalité.",
+      "responsable": "Direction",
+      "horizon": "30 jours",
+      "indicateur": "Part des décisions consignées à 30 jours."
+    }
+  ],
+  "references": [
+    {
+      "id": "edmondson-1999",
+      "citation": "Edmondson, 1999, Administrative Science Quarterly",
+      "statut": "à vérifier"
+    },
+    {
+      "id": "kirkpatrick",
+      "citation": "Kirkpatrick (évaluation des formations)",
+      "statut": "à vérifier"
+    }
+  ]
+}

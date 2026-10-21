@@ -1,0 +1,2329 @@
+{
+  "version_moteur": "m-1.0",
+  "bibliotheque": {
+    "version": "bib-0.3",
+    "empreinte": "316da1cd34900d35b9c069e23210c0ddaca4836a1dcc286f1e00600aebb64f71",
+    "source": "facettes.json"
+  },
+  "empreinte_entrees": "3dfdf6225f1196568e81bcbbd3adeb291e939fb4e2b96878f28eada9070a8458",
+  "conventions": {
+    "niveaux": {
+      "bas": {
+        "min": 1,
+        "max_exclu": 2,
+        "regle": "NIV-bas"
+      },
+      "plutot_bas": {
+        "min": 2,
+        "max_exclu": 2.6,
+        "regle": "NIV-plutot_bas"
+      },
+      "milieu": {
+        "min": 2.6,
+        "max_exclu": 3.4,
+        "regle": "NIV-milieu"
+      },
+      "plutot_haut": {
+        "min": 3.4,
+        "max_exclu": 4,
+        "regle": "NIV-plutot_haut"
+      },
+      "haut": {
+        "min": 4,
+        "max": 5,
+        "regle": "NIV-haut"
+      }
+    },
+    "ecarts": {
+      "proche_max": 0.5,
+      "notable_min": 1,
+      "regles": [
+        "ECART-proche",
+        "ECART-intermediaire",
+        "ECART-notable"
+      ]
+    },
+    "dispersion": {
+      "homogene_max": 0.5,
+      "diverse_min": 1,
+      "regles": [
+        "DISP-homogene",
+        "DISP-intermediaire",
+        "DISP-diverse"
+      ]
+    },
+    "tension": {
+      "ecart_min": 1.5
+    },
+    "avertissement": "conventions non calibrées, aucune norme de population",
+    "gardes": [
+      "GARDE-NATIONALE",
+      "GARDE-EMPLOI",
+      "GARDE-POPULATION"
+    ]
+  },
+  "personnes": {
+    "AM": {
+      "domaines": {
+        "N": {
+          "score": 60,
+          "moy": 2.5,
+          "niveau": "plutot_bas"
+        },
+        "E": {
+          "score": 100,
+          "moy": 4.1667,
+          "niveau": "haut"
+        },
+        "O": {
+          "score": 96,
+          "moy": 4,
+          "niveau": "haut"
+        },
+        "A": {
+          "score": 72,
+          "moy": 3,
+          "niveau": "milieu"
+        },
+        "C": {
+          "score": 100,
+          "moy": 4.1667,
+          "niveau": "haut"
+        }
+      },
+      "facettes": {
+        "N1": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "N1/milieu"
+        },
+        "N2": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "N2/milieu"
+        },
+        "N3": {
+          "moy": 2,
+          "niveau": "plutot_bas",
+          "bloc_id": "N3/plutot_bas"
+        },
+        "N4": {
+          "moy": 2,
+          "niveau": "plutot_bas",
+          "bloc_id": "N4/plutot_bas"
+        },
+        "N5": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "N5/milieu"
+        },
+        "N6": {
+          "moy": 2,
+          "niveau": "plutot_bas",
+          "bloc_id": "N6/plutot_bas"
+        },
+        "E1": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "E1/haut"
+        },
+        "E2": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "E2/milieu"
+        },
+        "E3": {
+          "moy": 5,
+          "niveau": "haut",
+          "bloc_id": "E3/haut"
+        },
+        "E4": {
+          "moy": 5,
+          "niveau": "haut",
+          "bloc_id": "E4/haut"
+        },
+        "E5": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "E5/haut"
+        },
+        "E6": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "E6/haut"
+        },
+        "O1": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "O1/haut"
+        },
+        "O2": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "O2/haut"
+        },
+        "O3": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "O3/haut"
+        },
+        "O4": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "O4/haut"
+        },
+        "O5": {
+          "moy": 5,
+          "niveau": "haut",
+          "bloc_id": "O5/haut"
+        },
+        "O6": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "O6/milieu"
+        },
+        "A1": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "A1/milieu"
+        },
+        "A2": {
+          "moy": 2,
+          "niveau": "plutot_bas",
+          "bloc_id": "A2/plutot_bas"
+        },
+        "A3": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "A3/haut"
+        },
+        "A4": {
+          "moy": 2,
+          "niveau": "plutot_bas",
+          "bloc_id": "A4/plutot_bas"
+        },
+        "A5": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "A5/milieu"
+        },
+        "A6": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "A6/haut"
+        },
+        "C1": {
+          "moy": 5,
+          "niveau": "haut",
+          "bloc_id": "C1/haut"
+        },
+        "C2": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "C2/haut"
+        },
+        "C3": {
+          "moy": 5,
+          "niveau": "haut",
+          "bloc_id": "C3/haut"
+        },
+        "C4": {
+          "moy": 5,
+          "niveau": "haut",
+          "bloc_id": "C4/haut"
+        },
+        "C5": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "C5/haut"
+        },
+        "C6": {
+          "moy": 2,
+          "niveau": "plutot_bas",
+          "bloc_id": "C6/plutot_bas"
+        }
+      },
+      "tensions": [
+        {
+          "id": "E2-E3",
+          "domaine": "E",
+          "facettes": [
+            "E2",
+            "E3"
+          ],
+          "ecart": 2,
+          "regle": "TENS-E"
+        },
+        {
+          "id": "E2-E4",
+          "domaine": "E",
+          "facettes": [
+            "E2",
+            "E4"
+          ],
+          "ecart": 2,
+          "regle": "TENS-E"
+        },
+        {
+          "id": "O5-O6",
+          "domaine": "O",
+          "facettes": [
+            "O5",
+            "O6"
+          ],
+          "ecart": 2,
+          "regle": "TENS-O"
+        },
+        {
+          "id": "A2-A3",
+          "domaine": "A",
+          "facettes": [
+            "A2",
+            "A3"
+          ],
+          "ecart": 2,
+          "regle": "TENS-A"
+        },
+        {
+          "id": "A2-A6",
+          "domaine": "A",
+          "facettes": [
+            "A2",
+            "A6"
+          ],
+          "ecart": 2,
+          "regle": "TENS-A"
+        },
+        {
+          "id": "A3-A4",
+          "domaine": "A",
+          "facettes": [
+            "A3",
+            "A4"
+          ],
+          "ecart": 2,
+          "regle": "TENS-A"
+        },
+        {
+          "id": "A4-A6",
+          "domaine": "A",
+          "facettes": [
+            "A4",
+            "A6"
+          ],
+          "ecart": 2,
+          "regle": "TENS-A"
+        },
+        {
+          "id": "C1-C6",
+          "domaine": "C",
+          "facettes": [
+            "C1",
+            "C6"
+          ],
+          "ecart": 3,
+          "regle": "TENS-C"
+        },
+        {
+          "id": "C2-C6",
+          "domaine": "C",
+          "facettes": [
+            "C2",
+            "C6"
+          ],
+          "ecart": 2,
+          "regle": "TENS-C"
+        },
+        {
+          "id": "C3-C6",
+          "domaine": "C",
+          "facettes": [
+            "C3",
+            "C6"
+          ],
+          "ecart": 3,
+          "regle": "TENS-C"
+        },
+        {
+          "id": "C4-C6",
+          "domaine": "C",
+          "facettes": [
+            "C4",
+            "C6"
+          ],
+          "ecart": 3,
+          "regle": "TENS-C"
+        },
+        {
+          "id": "C5-C6",
+          "domaine": "C",
+          "facettes": [
+            "C5",
+            "C6"
+          ],
+          "ecart": 2,
+          "regle": "TENS-C"
+        }
+      ],
+      "contribution": {
+        "points_forts_hypothese": [
+          "E3",
+          "E4",
+          "O5",
+          "C1",
+          "C3"
+        ],
+        "couts_hypothese": [
+          "E2",
+          "E3",
+          "E4",
+          "O5",
+          "O6",
+          "A2",
+          "A3",
+          "A4",
+          "A6",
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "C6"
+        ]
+      }
+    },
+    "KB": {
+      "domaines": {
+        "N": {
+          "score": 49,
+          "moy": 2.0417,
+          "niveau": "plutot_bas"
+        },
+        "E": {
+          "score": 80,
+          "moy": 3.3333,
+          "niveau": "milieu"
+        },
+        "O": {
+          "score": 59,
+          "moy": 2.4583,
+          "niveau": "plutot_bas"
+        },
+        "A": {
+          "score": 79,
+          "moy": 3.2917,
+          "niveau": "milieu"
+        },
+        "C": {
+          "score": 102,
+          "moy": 4.25,
+          "niveau": "haut"
+        }
+      },
+      "facettes": {
+        "N1": {
+          "moy": 2,
+          "niveau": "plutot_bas",
+          "bloc_id": "N1/plutot_bas"
+        },
+        "N2": {
+          "moy": 2.25,
+          "niveau": "plutot_bas",
+          "bloc_id": "N2/plutot_bas"
+        },
+        "N3": {
+          "moy": 1.75,
+          "niveau": "bas",
+          "bloc_id": "N3/bas"
+        },
+        "N4": {
+          "moy": 2,
+          "niveau": "plutot_bas",
+          "bloc_id": "N4/plutot_bas"
+        },
+        "N5": {
+          "moy": 2.5,
+          "niveau": "plutot_bas",
+          "bloc_id": "N5/plutot_bas"
+        },
+        "N6": {
+          "moy": 1.75,
+          "niveau": "bas",
+          "bloc_id": "N6/bas"
+        },
+        "E1": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "E1/plutot_haut"
+        },
+        "E2": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "E2/milieu"
+        },
+        "E3": {
+          "moy": 3.75,
+          "niveau": "plutot_haut",
+          "bloc_id": "E3/plutot_haut"
+        },
+        "E4": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "E4/plutot_haut"
+        },
+        "E5": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "E5/milieu"
+        },
+        "E6": {
+          "moy": 3.25,
+          "niveau": "milieu",
+          "bloc_id": "E6/milieu"
+        },
+        "O1": {
+          "moy": 2.5,
+          "niveau": "plutot_bas",
+          "bloc_id": "O1/plutot_bas"
+        },
+        "O2": {
+          "moy": 2.25,
+          "niveau": "plutot_bas",
+          "bloc_id": "O2/plutot_bas"
+        },
+        "O3": {
+          "moy": 2.75,
+          "niveau": "milieu",
+          "bloc_id": "O3/milieu"
+        },
+        "O4": {
+          "moy": 2.25,
+          "niveau": "plutot_bas",
+          "bloc_id": "O4/plutot_bas"
+        },
+        "O5": {
+          "moy": 2,
+          "niveau": "plutot_bas",
+          "bloc_id": "O5/plutot_bas"
+        },
+        "O6": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "O6/milieu"
+        },
+        "A1": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "A1/plutot_haut"
+        },
+        "A2": {
+          "moy": 2.75,
+          "niveau": "milieu",
+          "bloc_id": "A2/milieu"
+        },
+        "A3": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "A3/plutot_haut"
+        },
+        "A4": {
+          "moy": 3.25,
+          "niveau": "milieu",
+          "bloc_id": "A4/milieu"
+        },
+        "A5": {
+          "moy": 3.25,
+          "niveau": "milieu",
+          "bloc_id": "A5/milieu"
+        },
+        "A6": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "A6/plutot_haut"
+        },
+        "C1": {
+          "moy": 4.25,
+          "niveau": "haut",
+          "bloc_id": "C1/haut"
+        },
+        "C2": {
+          "moy": 4.5,
+          "niveau": "haut",
+          "bloc_id": "C2/haut"
+        },
+        "C3": {
+          "moy": 4.5,
+          "niveau": "haut",
+          "bloc_id": "C3/haut"
+        },
+        "C4": {
+          "moy": 4.25,
+          "niveau": "haut",
+          "bloc_id": "C4/haut"
+        },
+        "C5": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "C5/haut"
+        },
+        "C6": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "C6/haut"
+        }
+      },
+      "tensions": [],
+      "contribution": {
+        "points_forts_hypothese": [
+          "C2",
+          "C3",
+          "N3",
+          "N6",
+          "C1"
+        ],
+        "couts_hypothese": []
+      }
+    },
+    "SR": {
+      "domaines": {
+        "N": {
+          "score": 76,
+          "moy": 3.1667,
+          "niveau": "milieu"
+        },
+        "E": {
+          "score": 99,
+          "moy": 4.125,
+          "niveau": "haut"
+        },
+        "O": {
+          "score": 105,
+          "moy": 4.375,
+          "niveau": "haut"
+        },
+        "A": {
+          "score": 71,
+          "moy": 2.9583,
+          "niveau": "milieu"
+        },
+        "C": {
+          "score": 70,
+          "moy": 2.9167,
+          "niveau": "milieu"
+        }
+      },
+      "facettes": {
+        "N1": {
+          "moy": 3.25,
+          "niveau": "milieu",
+          "bloc_id": "N1/milieu"
+        },
+        "N2": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "N2/plutot_haut"
+        },
+        "N3": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "N3/milieu"
+        },
+        "N4": {
+          "moy": 2.75,
+          "niveau": "milieu",
+          "bloc_id": "N4/milieu"
+        },
+        "N5": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "N5/plutot_haut"
+        },
+        "N6": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "N6/milieu"
+        },
+        "E1": {
+          "moy": 4.25,
+          "niveau": "haut",
+          "bloc_id": "E1/haut"
+        },
+        "E2": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "E2/haut"
+        },
+        "E3": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "E3/plutot_haut"
+        },
+        "E4": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "E4/haut"
+        },
+        "E5": {
+          "moy": 4.5,
+          "niveau": "haut",
+          "bloc_id": "E5/haut"
+        },
+        "E6": {
+          "moy": 4.5,
+          "niveau": "haut",
+          "bloc_id": "E6/haut"
+        },
+        "O1": {
+          "moy": 4.75,
+          "niveau": "haut",
+          "bloc_id": "O1/haut"
+        },
+        "O2": {
+          "moy": 4.5,
+          "niveau": "haut",
+          "bloc_id": "O2/haut"
+        },
+        "O3": {
+          "moy": 4.25,
+          "niveau": "haut",
+          "bloc_id": "O3/haut"
+        },
+        "O4": {
+          "moy": 4.75,
+          "niveau": "haut",
+          "bloc_id": "O4/haut"
+        },
+        "O5": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "O5/haut"
+        },
+        "O6": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "O6/haut"
+        },
+        "A1": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "A1/milieu"
+        },
+        "A2": {
+          "moy": 2.5,
+          "niveau": "plutot_bas",
+          "bloc_id": "A2/plutot_bas"
+        },
+        "A3": {
+          "moy": 3.25,
+          "niveau": "milieu",
+          "bloc_id": "A3/milieu"
+        },
+        "A4": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "A4/milieu"
+        },
+        "A5": {
+          "moy": 2.75,
+          "niveau": "milieu",
+          "bloc_id": "A5/milieu"
+        },
+        "A6": {
+          "moy": 3.25,
+          "niveau": "milieu",
+          "bloc_id": "A6/milieu"
+        },
+        "C1": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "C1/milieu"
+        },
+        "C2": {
+          "moy": 2.75,
+          "niveau": "milieu",
+          "bloc_id": "C2/milieu"
+        },
+        "C3": {
+          "moy": 3.25,
+          "niveau": "milieu",
+          "bloc_id": "C3/milieu"
+        },
+        "C4": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "C4/plutot_haut"
+        },
+        "C5": {
+          "moy": 2.75,
+          "niveau": "milieu",
+          "bloc_id": "C5/milieu"
+        },
+        "C6": {
+          "moy": 2.25,
+          "niveau": "plutot_bas",
+          "bloc_id": "C6/plutot_bas"
+        }
+      },
+      "tensions": [],
+      "contribution": {
+        "points_forts_hypothese": [
+          "O1",
+          "O4",
+          "E5",
+          "E6",
+          "O2"
+        ],
+        "couts_hypothese": []
+      }
+    },
+    "HT": {
+      "domaines": {
+        "N": {
+          "score": 88,
+          "moy": 3.6667,
+          "niveau": "plutot_haut"
+        },
+        "E": {
+          "score": 55,
+          "moy": 2.2917,
+          "niveau": "plutot_bas"
+        },
+        "O": {
+          "score": 89,
+          "moy": 3.7083,
+          "niveau": "plutot_haut"
+        },
+        "A": {
+          "score": 103,
+          "moy": 4.2917,
+          "niveau": "haut"
+        },
+        "C": {
+          "score": 93,
+          "moy": 3.875,
+          "niveau": "plutot_haut"
+        }
+      },
+      "facettes": {
+        "N1": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "N1/haut"
+        },
+        "N2": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "N2/plutot_haut"
+        },
+        "N3": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "N3/plutot_haut"
+        },
+        "N4": {
+          "moy": 4.25,
+          "niveau": "haut",
+          "bloc_id": "N4/haut"
+        },
+        "N5": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "N5/milieu"
+        },
+        "N6": {
+          "moy": 3.75,
+          "niveau": "plutot_haut",
+          "bloc_id": "N6/plutot_haut"
+        },
+        "E1": {
+          "moy": 2.5,
+          "niveau": "plutot_bas",
+          "bloc_id": "E1/plutot_bas"
+        },
+        "E2": {
+          "moy": 2.25,
+          "niveau": "plutot_bas",
+          "bloc_id": "E2/plutot_bas"
+        },
+        "E3": {
+          "moy": 2,
+          "niveau": "plutot_bas",
+          "bloc_id": "E3/plutot_bas"
+        },
+        "E4": {
+          "moy": 2.75,
+          "niveau": "milieu",
+          "bloc_id": "E4/milieu"
+        },
+        "E5": {
+          "moy": 1.75,
+          "niveau": "bas",
+          "bloc_id": "E5/bas"
+        },
+        "E6": {
+          "moy": 2.5,
+          "niveau": "plutot_bas",
+          "bloc_id": "E6/plutot_bas"
+        },
+        "O1": {
+          "moy": 3.75,
+          "niveau": "plutot_haut",
+          "bloc_id": "O1/plutot_haut"
+        },
+        "O2": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "O2/haut"
+        },
+        "O3": {
+          "moy": 4.25,
+          "niveau": "haut",
+          "bloc_id": "O3/haut"
+        },
+        "O4": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "O4/plutot_haut"
+        },
+        "O5": {
+          "moy": 3.75,
+          "niveau": "plutot_haut",
+          "bloc_id": "O5/plutot_haut"
+        },
+        "O6": {
+          "moy": 3,
+          "niveau": "milieu",
+          "bloc_id": "O6/milieu"
+        },
+        "A1": {
+          "moy": 4.25,
+          "niveau": "haut",
+          "bloc_id": "A1/haut"
+        },
+        "A2": {
+          "moy": 4.5,
+          "niveau": "haut",
+          "bloc_id": "A2/haut"
+        },
+        "A3": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "A3/haut"
+        },
+        "A4": {
+          "moy": 4.5,
+          "niveau": "haut",
+          "bloc_id": "A4/haut"
+        },
+        "A5": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "A5/haut"
+        },
+        "A6": {
+          "moy": 4.5,
+          "niveau": "haut",
+          "bloc_id": "A6/haut"
+        },
+        "C1": {
+          "moy": 3.75,
+          "niveau": "plutot_haut",
+          "bloc_id": "C1/plutot_haut"
+        },
+        "C2": {
+          "moy": 4.25,
+          "niveau": "haut",
+          "bloc_id": "C2/haut"
+        },
+        "C3": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "C3/haut"
+        },
+        "C4": {
+          "moy": 4,
+          "niveau": "haut",
+          "bloc_id": "C4/haut"
+        },
+        "C5": {
+          "moy": 3.75,
+          "niveau": "plutot_haut",
+          "bloc_id": "C5/plutot_haut"
+        },
+        "C6": {
+          "moy": 3.5,
+          "niveau": "plutot_haut",
+          "bloc_id": "C6/plutot_haut"
+        }
+      },
+      "tensions": [],
+      "contribution": {
+        "points_forts_hypothese": [
+          "A2",
+          "A4",
+          "A6",
+          "N4",
+          "E5"
+        ],
+        "couts_hypothese": []
+      }
+    }
+  },
+  "relations": [
+    {
+      "id": "AM-KB",
+      "a": "AM",
+      "b": "KB",
+      "nature": "ligne",
+      "sens": "a->b",
+      "interdependance": "sequentielle",
+      "domaines": [
+        {
+          "d": "N",
+          "ecart": 0.4583,
+          "classe": "proche"
+        },
+        {
+          "d": "E",
+          "ecart": 0.8333,
+          "classe": "intermediaire"
+        },
+        {
+          "d": "O",
+          "ecart": 1.5417,
+          "classe": "notable"
+        },
+        {
+          "d": "A",
+          "ecart": 0.2917,
+          "classe": "proche"
+        },
+        {
+          "d": "C",
+          "ecart": 0.0833,
+          "classe": "proche"
+        }
+      ],
+      "facettes_notables": [
+        {
+          "k": "O5",
+          "ecart": 3,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "C6",
+          "ecart": 2,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "O2",
+          "ecart": 1.75,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "O4",
+          "ecart": 1.75,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "E4",
+          "ecart": 1.5,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "O1",
+          "ecart": 1.5,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "E3",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "O3",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "A4",
+          "ecart": 1.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "N1",
+          "ecart": 1,
+          "niveau_a": "milieu",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "E5",
+          "ecart": 1,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        }
+      ],
+      "calibrage": {
+        "regles": [
+          {
+            "id": "CAL-NAT-ligne",
+            "declencheur": "nature de la relation = ligne hiérarchique directe",
+            "poids": "limité"
+          },
+          {
+            "id": "CAL-SENS-asymetrique",
+            "declencheur": "sens de la relation = a->b ou b->a",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-INT-sequentielle",
+            "declencheur": "interdépendance (Thompson) = séquentielle",
+            "poids": "limité"
+          },
+          {
+            "id": "CAL-TACHE-projet",
+            "declencheur": "nature de la tâche = projet",
+            "poids": "modéré"
+          },
+          {
+            "id": "CAL-ORI-croissance",
+            "declencheur": "orientation stratégique = croissance",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-DURETE-dure",
+            "declencheur": "au moins une contrainte de dureté dure (CT-01, CT-02, CT-03, CT-04, CT-05)",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-DURETE-negociable",
+            "declencheur": "au moins une contrainte de dureté négociable (CT-06, CT-07, CT-08, CT-09, CT-10)",
+            "poids": "contextuel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "AM-SR",
+      "a": "AM",
+      "b": "SR",
+      "nature": "fonctionnel",
+      "sens": "a->b",
+      "interdependance": "reciproque",
+      "domaines": [
+        {
+          "d": "N",
+          "ecart": 0.6667,
+          "classe": "intermediaire"
+        },
+        {
+          "d": "E",
+          "ecart": 0.0417,
+          "classe": "proche"
+        },
+        {
+          "d": "O",
+          "ecart": 0.375,
+          "classe": "proche"
+        },
+        {
+          "d": "A",
+          "ecart": 0.0417,
+          "classe": "proche"
+        },
+        {
+          "d": "C",
+          "ecart": 1.25,
+          "classe": "notable"
+        }
+      ],
+      "facettes_notables": [
+        {
+          "k": "C1",
+          "ecart": 2,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "C3",
+          "ecart": 1.75,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "E3",
+          "ecart": 1.5,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "C4",
+          "ecart": 1.5,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "C2",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "C5",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "N3",
+          "ecart": 1,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "N6",
+          "ecart": 1,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "E2",
+          "ecart": 1,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "E4",
+          "ecart": 1,
+          "niveau_a": "haut",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "O5",
+          "ecart": 1,
+          "niveau_a": "haut",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "O6",
+          "ecart": 1,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "A4",
+          "ecart": 1,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "milieu"
+        }
+      ],
+      "calibrage": {
+        "regles": [
+          {
+            "id": "CAL-NAT-fonctionnel",
+            "declencheur": "nature de la relation = lien fonctionnel",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-SENS-asymetrique",
+            "declencheur": "sens de la relation = a->b ou b->a",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-INT-reciproque",
+            "declencheur": "interdépendance (Thompson) = réciproque",
+            "poids": "modéré"
+          },
+          {
+            "id": "CAL-TACHE-projet",
+            "declencheur": "nature de la tâche = projet",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-ORI-croissance",
+            "declencheur": "orientation stratégique = croissance",
+            "poids": "limité"
+          },
+          {
+            "id": "CAL-DURETE-dure",
+            "declencheur": "au moins une contrainte de dureté dure (CT-01, CT-02, CT-03, CT-04, CT-05)",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-DURETE-negociable",
+            "declencheur": "au moins une contrainte de dureté négociable (CT-06, CT-07, CT-08, CT-09, CT-10)",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-IC-PASSATION",
+            "declencheur": "langue de passation différente entre les deux personnes (français et arabe)",
+            "poids": "contextuel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "AM-HT",
+      "a": "AM",
+      "b": "HT",
+      "nature": "mentorat",
+      "sens": "a->b",
+      "interdependance": "mise-en-commun",
+      "domaines": [
+        {
+          "d": "N",
+          "ecart": 1.1667,
+          "classe": "notable"
+        },
+        {
+          "d": "E",
+          "ecart": 1.875,
+          "classe": "notable"
+        },
+        {
+          "d": "O",
+          "ecart": 0.2917,
+          "classe": "proche"
+        },
+        {
+          "d": "A",
+          "ecart": 1.2917,
+          "classe": "notable"
+        },
+        {
+          "d": "C",
+          "ecart": 0.2917,
+          "classe": "proche"
+        }
+      ],
+      "facettes_notables": [
+        {
+          "k": "E3",
+          "ecart": 3,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "A2",
+          "ecart": 2.5,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "A4",
+          "ecart": 2.5,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "N4",
+          "ecart": 2.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "E4",
+          "ecart": 2.25,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "E5",
+          "ecart": 2.25,
+          "niveau_a": "haut",
+          "niveau_b": "bas"
+        },
+        {
+          "k": "N6",
+          "ecart": 1.75,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "N3",
+          "ecart": 1.5,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "E1",
+          "ecart": 1.5,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "E6",
+          "ecart": 1.5,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "C6",
+          "ecart": 1.5,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "O5",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "A1",
+          "ecart": 1.25,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "C1",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "N1",
+          "ecart": 1,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "A5",
+          "ecart": 1,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "C3",
+          "ecart": 1,
+          "niveau_a": "haut",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "C4",
+          "ecart": 1,
+          "niveau_a": "haut",
+          "niveau_b": "haut"
+        }
+      ],
+      "calibrage": {
+        "regles": [
+          {
+            "id": "CAL-NAT-mentorat",
+            "declencheur": "nature de la relation = mentorat",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-SENS-asymetrique",
+            "declencheur": "sens de la relation = a->b ou b->a",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-INT-mise-en-commun",
+            "declencheur": "interdépendance (Thompson) = mise en commun",
+            "poids": "limité"
+          },
+          {
+            "id": "CAL-TACHE-projet",
+            "declencheur": "nature de la tâche = projet",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-ORI-croissance",
+            "declencheur": "orientation stratégique = croissance",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-DURETE-dure",
+            "declencheur": "au moins une contrainte de dureté dure (CT-01, CT-02, CT-03, CT-04, CT-05)",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-DURETE-negociable",
+            "declencheur": "au moins une contrainte de dureté négociable (CT-06, CT-07, CT-08, CT-09, CT-10)",
+            "poids": "contextuel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "KB-SR",
+      "a": "KB",
+      "b": "SR",
+      "nature": "client-fournisseur",
+      "sens": "a->b",
+      "interdependance": "sequentielle",
+      "domaines": [
+        {
+          "d": "N",
+          "ecart": 1.125,
+          "classe": "notable"
+        },
+        {
+          "d": "E",
+          "ecart": 0.7917,
+          "classe": "intermediaire"
+        },
+        {
+          "d": "O",
+          "ecart": 1.9167,
+          "classe": "notable"
+        },
+        {
+          "d": "A",
+          "ecart": 0.3333,
+          "classe": "proche"
+        },
+        {
+          "d": "C",
+          "ecart": 1.3333,
+          "classe": "notable"
+        }
+      ],
+      "facettes_notables": [
+        {
+          "k": "O4",
+          "ecart": 2.5,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "O1",
+          "ecart": 2.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "O2",
+          "ecart": 2.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "O5",
+          "ecart": 2,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "C2",
+          "ecart": 1.75,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "C6",
+          "ecart": 1.75,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "E5",
+          "ecart": 1.5,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "O3",
+          "ecart": 1.5,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "N1",
+          "ecart": 1.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "N2",
+          "ecart": 1.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "N3",
+          "ecart": 1.25,
+          "niveau_a": "bas",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "N6",
+          "ecart": 1.25,
+          "niveau_a": "bas",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "E6",
+          "ecart": 1.25,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "C1",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "C3",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "C5",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "N5",
+          "ecart": 1,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "E2",
+          "ecart": 1,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "O6",
+          "ecart": 1,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        }
+      ],
+      "calibrage": {
+        "regles": [
+          {
+            "id": "CAL-NAT-client-fournisseur",
+            "declencheur": "nature de la relation = client-fournisseur interne",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-SENS-asymetrique",
+            "declencheur": "sens de la relation = a->b ou b->a",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-INT-sequentielle",
+            "declencheur": "interdépendance (Thompson) = séquentielle",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-TACHE-projet",
+            "declencheur": "nature de la tâche = projet",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-ORI-croissance",
+            "declencheur": "orientation stratégique = croissance",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-DURETE-dure",
+            "declencheur": "au moins une contrainte de dureté dure (CT-01, CT-02, CT-03, CT-04, CT-05)",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-DURETE-negociable",
+            "declencheur": "au moins une contrainte de dureté négociable (CT-06, CT-07, CT-08, CT-09, CT-10)",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-IC-PASSATION",
+            "declencheur": "langue de passation différente entre les deux personnes (français et arabe)",
+            "poids": "contextuel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "KB-HT",
+      "a": "KB",
+      "b": "HT",
+      "nature": "pairs",
+      "sens": "reciproque",
+      "interdependance": "mise-en-commun",
+      "domaines": [
+        {
+          "d": "N",
+          "ecart": 1.625,
+          "classe": "notable"
+        },
+        {
+          "d": "E",
+          "ecart": 1.0417,
+          "classe": "notable"
+        },
+        {
+          "d": "O",
+          "ecart": 1.25,
+          "classe": "notable"
+        },
+        {
+          "d": "A",
+          "ecart": 1,
+          "classe": "notable"
+        },
+        {
+          "d": "C",
+          "ecart": 0.375,
+          "classe": "proche"
+        }
+      ],
+      "facettes_notables": [
+        {
+          "k": "N4",
+          "ecart": 2.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "N1",
+          "ecart": 2,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "N6",
+          "ecart": 2,
+          "niveau_a": "bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "N3",
+          "ecart": 1.75,
+          "niveau_a": "bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "E3",
+          "ecart": 1.75,
+          "niveau_a": "plutot_haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "O2",
+          "ecart": 1.75,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "O5",
+          "ecart": 1.75,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "A2",
+          "ecart": 1.75,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "O3",
+          "ecart": 1.5,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "N2",
+          "ecart": 1.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "E5",
+          "ecart": 1.25,
+          "niveau_a": "milieu",
+          "niveau_b": "bas"
+        },
+        {
+          "k": "O1",
+          "ecart": 1.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "O4",
+          "ecart": 1.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "A4",
+          "ecart": 1.25,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "E1",
+          "ecart": 1,
+          "niveau_a": "plutot_haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "A6",
+          "ecart": 1,
+          "niveau_a": "plutot_haut",
+          "niveau_b": "haut"
+        }
+      ],
+      "calibrage": {
+        "regles": [
+          {
+            "id": "CAL-NAT-pairs",
+            "declencheur": "nature de la relation = pairs",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-SENS-reciproque",
+            "declencheur": "sens de la relation = reciproque",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-INT-mise-en-commun",
+            "declencheur": "interdépendance (Thompson) = mise en commun",
+            "poids": "limité"
+          },
+          {
+            "id": "CAL-TACHE-projet",
+            "declencheur": "nature de la tâche = projet",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-ORI-croissance",
+            "declencheur": "orientation stratégique = croissance",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-DURETE-dure",
+            "declencheur": "au moins une contrainte de dureté dure (CT-01, CT-02, CT-03, CT-04, CT-05)",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-DURETE-negociable",
+            "declencheur": "au moins une contrainte de dureté négociable (CT-06, CT-07, CT-08, CT-09, CT-10)",
+            "poids": "contextuel"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SR-HT",
+      "a": "SR",
+      "b": "HT",
+      "nature": "co-direction",
+      "sens": "reciproque",
+      "interdependance": "reciproque",
+      "domaines": [
+        {
+          "d": "N",
+          "ecart": 0.5,
+          "classe": "proche"
+        },
+        {
+          "d": "E",
+          "ecart": 1.8333,
+          "classe": "notable"
+        },
+        {
+          "d": "O",
+          "ecart": 0.6667,
+          "classe": "intermediaire"
+        },
+        {
+          "d": "A",
+          "ecart": 1.3333,
+          "classe": "notable"
+        },
+        {
+          "d": "C",
+          "ecart": 0.9583,
+          "classe": "intermediaire"
+        }
+      ],
+      "facettes_notables": [
+        {
+          "k": "E5",
+          "ecart": 2.75,
+          "niveau_a": "haut",
+          "niveau_b": "bas"
+        },
+        {
+          "k": "E6",
+          "ecart": 2,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "A2",
+          "ecart": 2,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "E1",
+          "ecart": 1.75,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "E2",
+          "ecart": 1.75,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "N4",
+          "ecart": 1.5,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "E3",
+          "ecart": 1.5,
+          "niveau_a": "plutot_haut",
+          "niveau_b": "plutot_bas"
+        },
+        {
+          "k": "A4",
+          "ecart": 1.5,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "C2",
+          "ecart": 1.5,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "E4",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "O4",
+          "ecart": 1.25,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "A1",
+          "ecart": 1.25,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "A5",
+          "ecart": 1.25,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "A6",
+          "ecart": 1.25,
+          "niveau_a": "milieu",
+          "niveau_b": "haut"
+        },
+        {
+          "k": "C6",
+          "ecart": 1.25,
+          "niveau_a": "plutot_bas",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "O1",
+          "ecart": 1,
+          "niveau_a": "haut",
+          "niveau_b": "plutot_haut"
+        },
+        {
+          "k": "O6",
+          "ecart": 1,
+          "niveau_a": "haut",
+          "niveau_b": "milieu"
+        },
+        {
+          "k": "C5",
+          "ecart": 1,
+          "niveau_a": "milieu",
+          "niveau_b": "plutot_haut"
+        }
+      ],
+      "calibrage": {
+        "regles": [
+          {
+            "id": "CAL-NAT-co-direction",
+            "declencheur": "nature de la relation = co-direction",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-SENS-reciproque",
+            "declencheur": "sens de la relation = reciproque",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-INT-reciproque",
+            "declencheur": "interdépendance (Thompson) = réciproque",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-TACHE-projet",
+            "declencheur": "nature de la tâche = projet",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-ORI-croissance",
+            "declencheur": "orientation stratégique = croissance",
+            "poids": "élevé"
+          },
+          {
+            "id": "CAL-DURETE-dure",
+            "declencheur": "au moins une contrainte de dureté dure (CT-01, CT-02, CT-03, CT-04, CT-05)",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-DURETE-negociable",
+            "declencheur": "au moins une contrainte de dureté négociable (CT-06, CT-07, CT-08, CT-09, CT-10)",
+            "poids": "contextuel"
+          },
+          {
+            "id": "CAL-IC-PASSATION",
+            "declencheur": "langue de passation différente entre les deux personnes (arabe et français)",
+            "poids": "contextuel"
+          }
+        ]
+      }
+    }
+  ],
+  "equipe": {
+    "n_personnes": 4,
+    "domaines": {
+      "N": {
+        "min": 2.0417,
+        "max": 3.6667,
+        "etendue": 1.625,
+        "dispersion": "diverse"
+      },
+      "E": {
+        "min": 2.2917,
+        "max": 4.1667,
+        "etendue": 1.875,
+        "dispersion": "diverse"
+      },
+      "O": {
+        "min": 2.4583,
+        "max": 4.375,
+        "etendue": 1.9167,
+        "dispersion": "diverse"
+      },
+      "A": {
+        "min": 2.9583,
+        "max": 4.2917,
+        "etendue": 1.3333,
+        "dispersion": "diverse"
+      },
+      "C": {
+        "min": 2.9167,
+        "max": 4.25,
+        "etendue": 1.3333,
+        "dispersion": "diverse"
+      }
+    },
+    "facettes_diverses": [
+      "N1",
+      "N2",
+      "N3",
+      "N4",
+      "N5",
+      "N6",
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "E6",
+      "O1",
+      "O2",
+      "O3",
+      "O4",
+      "O5",
+      "O6",
+      "A1",
+      "A2",
+      "A4",
+      "A5",
+      "A6",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6"
+    ],
+    "facettes_homogenes": [],
+    "facettes_etendue": {
+      "N1": 2,
+      "N2": 1.25,
+      "N3": 1.75,
+      "N4": 2.25,
+      "N5": 1,
+      "N6": 2,
+      "E1": 1.75,
+      "E2": 1.75,
+      "E3": 3,
+      "E4": 2.25,
+      "E5": 2.75,
+      "E6": 2,
+      "O1": 2.25,
+      "O2": 2.25,
+      "O3": 1.5,
+      "O4": 2.5,
+      "O5": 3,
+      "O6": 1,
+      "A1": 1.25,
+      "A2": 2.5,
+      "A3": 0.75,
+      "A4": 2.5,
+      "A5": 1.25,
+      "A6": 1.25,
+      "C1": 2,
+      "C2": 1.75,
+      "C3": 1.75,
+      "C4": 1.5,
+      "C5": 1.25,
+      "C6": 2
+    },
+    "couverture": {
+      "N": {
+        "hauts": [
+          "HT"
+        ],
+        "bas": [
+          "AM",
+          "KB"
+        ]
+      },
+      "E": {
+        "hauts": [
+          "AM",
+          "SR"
+        ],
+        "bas": [
+          "HT"
+        ]
+      },
+      "O": {
+        "hauts": [
+          "AM",
+          "SR",
+          "HT"
+        ],
+        "bas": [
+          "KB"
+        ]
+      },
+      "A": {
+        "hauts": [
+          "HT"
+        ],
+        "bas": []
+      },
+      "C": {
+        "hauts": [
+          "AM",
+          "KB",
+          "HT"
+        ],
+        "bas": []
+      }
+    }
+  },
+  "organisation": {
+    "n_personnes": 4,
+    "seuil_anonymat": 5,
+    "seuil_atteint": false,
+    "derogation_demonstration": "Agrégat montré malgré un effectif de 4 personnes, inférieur au seuil de 5, uniquement parce que le cas est fictif et consenti. Cette dérogation ne s'applique à aucune organisation réelle.",
+    "agregats": {
+      "n_personnes": 4,
+      "domaines": {
+        "N": {
+          "moy": 2.8438,
+          "niveau": "milieu"
+        },
+        "E": {
+          "moy": 3.4792,
+          "niveau": "plutot_haut"
+        },
+        "O": {
+          "moy": 3.6354,
+          "niveau": "plutot_haut"
+        },
+        "A": {
+          "moy": 3.3854,
+          "niveau": "milieu"
+        },
+        "C": {
+          "moy": 3.8021,
+          "niveau": "plutot_haut"
+        }
+      },
+      "repartition": {
+        "N": {
+          "bas": 0,
+          "plutot_bas": 2,
+          "milieu": 1,
+          "plutot_haut": 1,
+          "haut": 0
+        },
+        "E": {
+          "bas": 0,
+          "plutot_bas": 1,
+          "milieu": 1,
+          "plutot_haut": 0,
+          "haut": 2
+        },
+        "O": {
+          "bas": 0,
+          "plutot_bas": 1,
+          "milieu": 0,
+          "plutot_haut": 1,
+          "haut": 2
+        },
+        "A": {
+          "bas": 0,
+          "plutot_bas": 0,
+          "milieu": 3,
+          "plutot_haut": 0,
+          "haut": 1
+        },
+        "C": {
+          "bas": 0,
+          "plutot_bas": 0,
+          "milieu": 1,
+          "plutot_haut": 1,
+          "haut": 2
+        }
+      }
+    },
+    "adequation": [
+      {
+        "regle": "CAL-ORI-croissance",
+        "lecture": "Orientation stratégique = croissance. Une orientation de croissance demande d'aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l'énergie relationnelle et l'ouverture des profils soient plus sollicitées. À confirmer en entretien. Faits : domaine E, niveau plutôt haut (valeur d'équipe 3,48) ; domaine O, niveau plutôt haut (valeur d'équipe 3,64)."
+      },
+      {
+        "regle": "CAL-DURETE-dure",
+        "lecture": "Au moins une contrainte de dureté dure (CT-01, CT-02, CT-03, CT-04, CT-05). Une contrainte dure ne se négocie pas : toute lecture et toute recommandation la respectent, et la marge de manœuvre se cherche dans les contraintes négociables. À confirmer avec le commanditaire."
+      },
+      {
+        "regle": "CAL-DURETE-negociable",
+        "lecture": "Au moins une contrainte de dureté négociable (CT-06, CT-07, CT-08, CT-09, CT-10). Une contrainte négociable laisse une marge : il se peut qu'elle soit la première piste pour desserrer une friction. À confirmer avec le commanditaire."
+      },
+      {
+        "regle": "ADEQ-STRUCT-bureaucratie mécaniste",
+        "lecture": "Structure = bureaucratie mécaniste. Dans une bureaucratie mécaniste, les processus standardisés dominent : il se peut que la rigueur soit directement valorisée et que l'appétit pour la nouveauté demande des espaces dédiés pour s'exprimer. À confirmer en entretien. Faits : domaine C, niveau plutôt haut (valeur d'équipe 3,80) ; domaine O, niveau plutôt haut (valeur d'équipe 3,64)."
+      },
+      {
+        "regle": "ADEQ-CULT-hiérarchie",
+        "lecture": "Culture dominante = hiérarchie. Une culture de hiérarchie valorise la maîtrise des processus et la stabilité : il se peut que la rigueur y soit valorisée et que les profils plus ouverts à la nouveauté aient besoin d'un cadre pour proposer. À confirmer en entretien. Faits : domaine C, niveau plutôt haut (valeur d'équipe 3,80) ; domaine O, niveau plutôt haut (valeur d'équipe 3,64)."
+      },
+      {
+        "regle": "IC-SITES",
+        "lecture": "Organisation présente sur 2 sites ou plus (3 sites). L'organisation est répartie sur plusieurs sites : il se peut que des frictions viennent des règles du jeu propres à chaque site (circuits de décision, rituels, horaires) plutôt que des personnes. À instruire au niveau des sites."
+      },
+      {
+        "regle": "IC-LANGUES",
+        "lecture": "2 langues de travail ou plus (4 langues). Plusieurs langues de travail coexistent : il se peut que le choix de la langue selon le type d'échange (décision, documents, échanges informels) mérite une règle explicite. À confirmer avec le commanditaire."
+      },
+      {
+        "regle": "IC-SIEGE",
+        "lecture": "Rapport siège et filiale renseigné. Le rapport entre le siège et la filiale encadre la marge de décision locale : il se peut que les délais de validation pèsent sur le calendrier du projet. Règle de décision à expliciter avec le commanditaire."
+      },
+      {
+        "regle": "IC-EXPATRIES",
+        "lecture": "Part d'expatriés renseignée. Des postes sont occupés par des expatriés du groupe : il se peut que les références de fonctionnement du siège et celles de la filiale se rencontrent dans l'équipe de direction. À instruire au niveau de l'organisation."
+      },
+      {
+        "regle": "IC-FUSEAUX",
+        "lecture": "Travail réparti sur 2 fuseaux horaires ou plus (3 lieux). Le travail est réparti entre plusieurs fuseaux horaires : il se peut que les réunions et les validations demandent des règles de communication asynchrone. À confirmer avec le commanditaire."
+      },
+      {
+        "regle": "IC-CULTURES",
+        "lecture": "Culture de la maison mère différente de la culture locale (marché et clan). Deux logiques de culture d'organisation coexistent, celle de la maison mère et celle de la filiale : le calibrage doit dire laquelle s'applique à la situation étudiée. À instruire au niveau des organisations, jamais au niveau d'une personne."
+      },
+      {
+        "regle": "IC-PASSATION",
+        "lecture": "Langues de passation différentes entre les personnes (AM français, KB français, SR arabe, HT français). Les personnes n'ont pas toutes répondu dans la même langue. L'équivalence des versions n'est pas établie : toute comparaison entre elles porte cette réserve de comparaison, à instruire avant toute lecture."
+      },
+      {
+        "regle": "CONTR-reglementation",
+        "contrainte": "CT-01",
+        "lecture": "Loi 09-08 : les résultats du questionnaire sont des données personnelles, information et consentement préalables des personnes (dureté : dure). Une contrainte réglementaire conditionne l'usage des données et des rapports (droit marocain d'abord) : elle s'instruit avant toute action et ne se contourne pas. Base juridique à faire instruire par Tenga Conseil."
+      },
+      {
+        "regle": "CONTR-reglementation",
+        "contrainte": "CT-02",
+        "lecture": "CNDP : déclaration ou autorisation préalable du traitement avant toute analyse de relation ou d'équipe (dureté : dure). Une contrainte réglementaire conditionne l'usage des données et des rapports (droit marocain d'abord) : elle s'instruit avant toute action et ne se contourne pas. Base juridique à faire instruire par Tenga Conseil."
+      },
+      {
+        "regle": "CONTR-reglementation",
+        "contrainte": "CT-03",
+        "lecture": "Code du travail (loi 65-99) : aucune décision d'emploi ne peut s'appuyer sur ces rapports (dureté : dure). Une contrainte réglementaire conditionne l'usage des données et des rapports (droit marocain d'abord) : elle s'instruit avant toute action et ne se contourne pas. Base juridique à faire instruire par Tenga Conseil."
+      },
+      {
+        "regle": "CONTR-reglementation",
+        "contrainte": "CT-04",
+        "lecture": "Transfert de données vers le siège à l'étranger : cadre et autorisation à faire instruire avant tout envoi (dureté : dure). Une contrainte réglementaire conditionne l'usage des données et des rapports (droit marocain d'abord) : elle s'instruit avant toute action et ne se contourne pas. Base juridique à faire instruire par Tenga Conseil."
+      },
+      {
+        "regle": "CONTR-delai",
+        "contrainte": "CT-05",
+        "lecture": "Calendrier de lancement fixé par le siège : 9 mois (dureté : dure). Une contrainte de délai resserre le calendrier : il se peut que les écarts de rythme entre personnes pèsent davantage à l'approche des échéances."
+      },
+      {
+        "regle": "CONTR-budget",
+        "contrainte": "CT-06",
+        "lecture": "Enveloppe d'accompagnement plafonnée sur 12 mois (dureté : négociable). Une contrainte de budget limite le nombre et le format des actions d'accompagnement : les recommandations sont priorisées en conséquence."
+      },
+      {
+        "regle": "CONTR-ressources",
+        "contrainte": "CT-07",
+        "lecture": "Équipe projet mobilisée aux sept dixièmes de son temps seulement (dureté : négociable). Une contrainte de ressources limite le temps disponible des personnes : il se peut que les actions courtes et intégrées au travail soient plus réalistes que les actions longues."
+      },
+      {
+        "regle": "CONTR-culture",
+        "contrainte": "CT-08",
+        "lecture": "Interculturel : le siège valide le budget et les choix d'outils, les documents de pilotage du groupe sont en anglais, la filiale travaille en arabe, en darija et en français (dureté : négociable). Une contrainte de culture décrit les règles du jeu de l'organisation : elle se lit au niveau de l'organisation et de ses sites, jamais comme un trait attribué à une personne."
+      },
+      {
+        "regle": "CONTR-heritage",
+        "contrainte": "CT-09",
+        "lecture": "Un précédent outil d'évaluation, introduit avant le rachat, a laissé de la méfiance dans les équipes (dureté : négociable). Un héritage du passé conditionne l'accueil de la démarche : il se peut que la transparence sur l'usage des résultats soit un préalable. À confirmer avec le commanditaire."
+      },
+      {
+        "regle": "CONTR-syndical",
+        "contrainte": "CT-10",
+        "lecture": "Les représentants du personnel attendent d'être informés de toute démarche touchant aux personnes (dureté : négociable). Une sensibilité syndicale demande une information préalable des représentants du personnel : à instruire avec le commanditaire avant toute diffusion."
+      }
+    ]
+  },
+  "consentements": {
+    "bloquants": []
+  }
+}

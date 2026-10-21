@@ -1,0 +1,21 @@
+{
+ "statut": "Liste blanche des nombres structurels autorisés dans le texte visible d'un rapport, sans figurer dans les entrées numériques. Chaque entrée est justifiée. Un nombre hors liste, hors faits, hors cas, hors profils et hors années des références autorisées est un défaut. 'avant' (facultatif) : expression régulière testée sur les 24 caractères qui précèdent le nombre.",
+ "entrees": [
+  { "valeur": "30", "justification": "horizon de 30 jours (mandat § 2 et 4.2) et 30 facettes de l'IPIP-NEO-120" },
+  { "valeur": "60", "justification": "horizon de 60 jours (mandat § 2 et 4.2)" },
+  { "valeur": "90", "justification": "horizon de 90 jours (mandat § 2 et 4.2)" },
+  { "valeur": "1", "justification": "borne basse de l'échelle des moyennes de facette (1 à 5)" },
+  { "valeur": "5", "justification": "borne haute de l'échelle 1 à 5, 5 domaines, 5 niveaux de rapport, seuil d'anonymat de 5 personnes" },
+  { "valeur": "24", "justification": "borne basse de l'échelle d'un domaine (24 à 120)" },
+  { "valeur": "120", "justification": "borne haute de l'échelle d'un domaine (24 à 120) et IPIP-NEO-120" },
+  { "valeur": "4", "justification": "4 personnes du cas de démonstration (contrat, schéma d'entrée)" },
+  { "valeur": "6", "justification": "6 relations (paires de 4 personnes) et 6 facettes par domaine" },
+  { "valeur": "1", "avant": "(section|niveau|étape|partie|lot|annexe|chapitre|recommandation|n°)\\s*$", "justification": "numéro de section ou de niveau" },
+  { "valeur": "2", "avant": "(section|niveau|étape|partie|lot|annexe|chapitre|recommandation|n°)\\s*$", "justification": "numéro de section ou de niveau" },
+  { "valeur": "3", "avant": "(section|niveau|étape|partie|lot|annexe|chapitre|recommandation|n°)\\s*$", "justification": "numéro de section ou de niveau" },
+  { "valeur": "4", "avant": "(section|niveau|étape|partie|lot|annexe|chapitre|recommandation|n°)\\s*$", "justification": "numéro de section ou de niveau" },
+  { "valeur": "5", "avant": "(section|niveau|étape|partie|lot|annexe|chapitre|recommandation|n°)\\s*$", "justification": "numéro de section ou de niveau" },
+  { "valeur": "6", "avant": "(section|niveau|étape|partie|lot|annexe|chapitre|recommandation|n°)\\s*$", "justification": "numéro de section" }
+ ],
+ "non_comptes": "Les codes de facette (N1 à C6), les identifiants de niveau (n1-individuel...), les empreintes et versions sont des identifiants : un chiffre collé à une lettre n'est pas un nombre. Les normes citables (ISO 10667, loi 09-08, loi 65-99, règlement 2024/1689) sont masquées avant comptage. Les années des références autorisées sont lues dans references-autorisees.json."
+}

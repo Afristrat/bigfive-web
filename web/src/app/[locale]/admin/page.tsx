@@ -50,7 +50,7 @@ export default async function AdminPage({ params }: Props) {
             href='/admin/apercu-rapport'
             className='underline underline-offset-4'
           >
-            Aperçu des rapports comparatifs
+            Aperçu du rapport cabinet
           </Link>
         </p>
       </header>
