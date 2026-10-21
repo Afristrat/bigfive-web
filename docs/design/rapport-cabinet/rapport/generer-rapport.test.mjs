@@ -48,3 +48,11 @@ test('assemblage réel : les cinq niveaux dans l’ordre, déterministe', async 
   assert.equal(a, b);
   assert.deepEqual(JSON.parse(a).niveaux.map((n) => n.id), ORDRE_NIVEAUX);
 });
+
+test('assemblage : apostrophes courbes dans les textes, identifiants intacts', () => {
+  const m = { construire: () => ({ niveau: { id: 'n1-individuel', titre: "Titre d'un chapitre", sections: [section('n1-s', "Section d'essai", [paragraphe('n1-p1', "L'équipe d'AM")])] }, recommandations: [] }) };
+  const r = assembler(ctx, [m]);
+  assert.equal(r.niveaux[0].titre, 'Titre d’un chapitre');
+  assert.equal(r.niveaux[0].sections[0].paragraphes[0].texte, 'L’équipe d’AM');
+  assert.equal(r.niveaux[0].id, 'n1-individuel');
+});

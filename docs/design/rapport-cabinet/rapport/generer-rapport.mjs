@@ -13,11 +13,12 @@ const lire = (...p) => JSON.parse(fs.readFileSync(path.join(racine, ...p), 'utf-
 export const ORDRE_NIVEAUX = ['n1-individuel', 'n2-relations', 'n3-equipe', 'n4-organisation', 'n5-accompagnement'];
 
 export const AVERTISSEMENTS = [
-  'Cas de démonstration entièrement fictif : l’organisation, KB, SR et HT n’existent pas. AM est un profil estimé, pas une mesure : seules les réponses de la personne font foi.',
+  'Cas de démonstration : l’organisation, KB, SR et HT sont fictifs. AM est un profil estimé, pas une mesure ni un fictif : seules les réponses de la personne font foi.',
   'Ce rapport est préparé par des scripts à partir de faits calculés et de textes rédigés d’avance. Il ne formule aucune prévision et ne classe personne ; faute de référentiel établi pour ce questionnaire, aucune personne n’y est comparée à d’autres personnes que celles du cas.',
   'Aucune décision d’emploi (recrutement, promotion, licenciement, affectation) ne peut s’appuyer sur ce rapport.',
-  'Les blocs de la bibliothèque de textes ne sont pas relus par un humain. Les niveaux et les écarts sont des conventions de l’outil, non calibrées. Les références citées sont à vérifier avant diffusion.',
-  'Toute lecture est une hypothèse, avec son niveau de confiance et la façon de la vérifier en entretien. Un consultant qualifié désigné par Tenga Conseil relit et signe avant tout usage.'
+  'Les blocs de la bibliothèque de textes ne sont pas relus par un humain. Les niveaux et les écarts sont des conventions de l’outil, non calibrées. Les références citées sont non vérifiées à la date du rapport.',
+  'Toute lecture est une hypothèse, avec son niveau de confiance et la façon de la vérifier en entretien. Un consultant qualifié désigné par Tenga Conseil relit et signe avant tout usage.',
+  'Document de travail du consultant : il réunit des chapitres privés et des lectures de relation, il n’est jamais remis tel quel à un supérieur hiérarchique d’une personne citée.'
 ];
 
 /** Une référence est incluse si une recommandation la cite par id, ou si le nom d’un de ses auteurs figure dans un texte (l’audit signale toute citation absente de la liste). */
@@ -52,16 +53,24 @@ export function assembler(ctx, modules) {
   if (new Set(idsReco).size !== idsReco.length) throw new Error('ids de recommandation en double');
   const idsPar = niveaux.flatMap((n) => n.sections.flatMap((s) => s.paragraphes.map((p) => p.id)));
   if (new Set(idsPar).size !== idsPar.length) throw new Error('ids de paragraphe en double');
+  // Typographie : apostrophes courbes dans les textes lus par des personnes ; les identifiants ne sont pas touchés.
+  const CHAMPS_TEXTE = new Set(['texte', 'titre', 'verification', 'donnee', 'contexte', 'risque', 'responsable', 'horizon', 'indicateur']);
+  const courbes = (v, cle) => {
+    if (typeof v === 'string') return CHAMPS_TEXTE.has(cle) ? v.replace(/'/g, '’') : v;
+    if (Array.isArray(v)) return v.map((x) => courbes(x, cle));
+    if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, courbes(x, k)]));
+    return v;
+  };
   const rapport = {
     version: 'rapport-cabinet-1.0',
     empreinte_entrees: ctx.faits.empreinte_entrees,
     etiquette_fictif: ctx.cas.etiquette,
     avertissements: AVERTISSEMENTS,
-    niveaux,
-    recommandations,
+    niveaux: courbes(niveaux, ''),
+    recommandations: courbes(recommandations, ''),
     references: []
   };
-  rapport.references = referencesCitees(ctx.refs, toutesLesChaines({ niveaux, recommandations }), recommandations);
+  rapport.references = referencesCitees(ctx.refs, toutesLesChaines({ niveaux: rapport.niveaux, recommandations: rapport.recommandations }), rapport.recommandations);
   return rapport;
 }
 

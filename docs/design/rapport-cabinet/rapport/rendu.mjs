@@ -149,7 +149,11 @@ export function rendreHtml({ rapport, cas, faits, profils, bib, variante } = {})
   socle.push('<strong>Les lectures sont des hypothèses</strong> à vérifier en entretien. Ce rapport est relu et signé par un consultant qualifié avant tout usage.');
   const deja = socle.map((s) => s.replace(/<[^>]+>/g, '').toLowerCase());
   const supp = (r.avertissements ?? []).filter((a) => !deja.some((d) => d.includes(String(a).toLowerCase().slice(0, 40))));
-  const avert = `<div class="avert" role="note"><strong>À lire avant tout.</strong><ul>${socle.map((s) => `<li>${s}</li>`).join('')}${supp.map((a) => `<li>${esc(a)}</li>`).join('')}</ul></div>`;
+  // Une seule liste : celle du rapport quand il en porte une, le socle seulement à défaut.
+  const liste = (r.avertissements ?? []).length
+    ? r.avertissements.map((a) => `<li>${esc(a)}</li>`).join('')
+    : socle.map((s) => `<li>${s}</li>`).join('') + supp.map((a) => `<li>${esc(a)}</li>`).join('');
+  const avert = `<div class="avert" role="note"><strong>À lire avant tout.</strong><ul>${liste}</ul></div>`;
 
   const toc = docx ? '' : `<nav class="toc" aria-label="Niveaux du rapport">${NIVEAUX.map((n) => `<a href="#${n.id}">${n.court}</a>`).join('')}<a href="#references">Références</a></nav>`;
 
@@ -187,7 +191,7 @@ export function rendreHtml({ rapport, cas, faits, profils, bib, variante } = {})
 
   const refsHtml = `<section class="niveau" id="references"><h2>Références</h2>${refs.length
     ? `<ul class="refs">${refs.map((x) => `<li id="ref-${idSur(x.id)}">${esc(x.citation)} <span class="verif">(${esc(x.statut ?? 'à vérifier')})</span></li>`).join('')}</ul>`
-    : '<p class="absent">Aucune référence citée.</p>'}<p class="muet">Références citées de mémoire, non vérifiées : à vérifier avant toute citation externe.</p></section>`;
+    : '<p class="absent">Aucune référence citée.</p>'}<p class="muet">Références non vérifiées à la date du rapport : à vérifier avant toute citation externe.</p></section>`;
 
   const titre = 'Rapport cabinet : ' + (cas?.organisation?.nom ?? 'cas de démonstration');
   const etiquette = r.etiquette_fictif ?? cas?.etiquette ?? '';

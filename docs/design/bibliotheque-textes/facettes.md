@@ -111,7 +111,7 @@ Vos réponses indiquent que vous vous inquiétez très souvent et que l’appré
 
 **Question pour l’entretien** (`hypothese`) : Quels appuis (personnes, méthodes, rythme de travail) vous aident aujourd’hui quand l’inquiétude s’installe ?
 
-## N2 · Irritabilité et patience
+## N2 · Irritabilité
 
 **Définition.** Cette facette porte sur la facilité avec laquelle l’irritation et l’impatience montent chez vous.
 
@@ -214,7 +214,7 @@ Vos réponses indiquent que l’irritation vous gagne très facilement et que vo
 
 **Question pour l’entretien** (`hypothese`) : Quels signes vous préviennent que votre irritation monte, et qu’est-ce qui vous aide à la faire redescendre ?
 
-## N3 · Humeur et estime de soi
+## N3 · Tristesse et doute sur soi
 
 **Définition.** Cette facette porte sur la fréquence des moments de tristesse et sur le degré de confort avec vous-même.
 
@@ -317,7 +317,7 @@ Vos réponses indiquent que la tristesse et le doute sur vous-même sont très p
 
 **Question pour l’entretien** (`hypothese`) : Quels appuis (personnes, activités, rythme de vie) vous font du bien aujourd’hui quand le moral baisse ?
 
-## N4 · Réserve en situation sociale
+## N4 · Gêne en situation sociale
 
 **Définition.** Cette facette porte sur l’aisance avec laquelle vous abordez des inconnus, supportez l’attention des autres et traversez des situations sociales délicates.
 
@@ -328,7 +328,7 @@ Vos réponses indiquent que la tristesse et le doute sur vous-même sont très p
 - « Je me sens seulement à l'aise avec mes amis » (cotation directe)
 - « Je ne suis pas dérangé par les situations sociales difficiles » (cotation inversée)
 
-> **Avertissement sur le libellé.** Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur l’aisance déclarée en situation sociale, non sur la conscience de soi au sens large. Elle ne dit rien de votre valeur ni de votre état de santé.
+> **Avertissement sur le libellé.** Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la gêne déclarée en situation sociale (un résultat haut décrit une gêne plus fréquente), non sur la conscience de soi au sens large. Elle ne dit rien de votre valeur ni de votre état de santé.
 
 ### N4 · Bas (non relue)
 
@@ -420,7 +420,7 @@ Vos réponses indiquent que les situations sociales avec des inconnus, l’atten
 
 **Question pour l’entretien** (`hypothese`) : Quels aménagements (préparation, présence d’une personne connue, format) vous aident à vous exprimer plus facilement ?
 
-## N5 · Envies et tentations
+## N5 · Tendance à céder aux envies
 
 **Définition.** Cette facette porte sur la facilité avec laquelle vous résistez à vos envies ou vous vous laissez tenter.
 
@@ -431,7 +431,7 @@ Vos réponses indiquent que les situations sociales avec des inconnus, l’atten
 - « Je résiste facilement à la tentation » (cotation inversée)
 - « Je suis capable de contrôler mes envies » (cotation inversée)
 
-> **Avertissement sur le libellé.** Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la maîtrise déclarée des envies et des tentations, sans viser aucun domaine précis. Cette lecture ne porte aucun jugement sur vos choix ni sur votre mode de vie.
+> **Avertissement sur le libellé.** Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la difficulté déclarée à maîtriser ses envies et à résister aux tentations (un résultat haut décrit une tendance à y céder), sans viser aucun domaine précis. Cette lecture ne porte aucun jugement sur vos choix ni sur votre mode de vie.
 
 ### N5 · Bas (non relue)
 
@@ -1855,7 +1855,7 @@ Vos réponses indiquent une ouverture très marquée aux positions non conventio
 
 **Question pour l’entretien** (`hypothese`) : Quelles règles ou quels principes tenez-vous pour non négociables, malgré votre ouverture ?
 
-## A1 · Confiance envers les autres
+## A1 · Confiance accordée aux autres
 
 **Définition.** Cette facette porte sur la confiance que vous accordez aux autres, à leurs propos comme à leurs intentions.
 
@@ -1958,7 +1958,7 @@ Vos réponses indiquent que vous faites très volontiers confiance aux autres, �
 
 **Question pour l’entretien** (`hypothese`) : Dans quelles situations vérifier ce qu’on vous dit vous paraît-il utile malgré votre confiance ?
 
-## A2 · Usage des autres à ses propres fins
+## A2 · Absence d’usage des autres à ses propres fins
 
 **Définition.** Cette facette est mesurée par quatre affirmations sur ce que vous déclarez de vos propres pratiques : utiliser les autres pour vos fins, tricher pour avancer, profiter des autres, entraver leurs plans.
 
@@ -1969,7 +1969,7 @@ Vos réponses indiquent que vous faites très volontiers confiance aux autres, �
 - « Je profite des autres » (cotation inversée)
 - « J'entrave les plans des autres » (cotation inversée)
 
-> **Avertissement sur le libellé.** Le libellé « Moralité » est beaucoup plus large que ce qui est mesuré : les quatre affirmations portent seulement sur ce que vous déclarez de vos pratiques, non sur votre valeur morale ni sur votre honnêteté. Ce résultat repose sur votre seule déclaration ; il ne doit jamais servir à juger une personne.
+> **Avertissement sur le libellé.** Le libellé « Moralité » est beaucoup plus large que ce qui est mesuré : les quatre affirmations portent seulement sur ce que vous déclarez de vos pratiques, non sur votre valeur morale ni sur votre honnêteté. Un résultat haut décrit l’absence déclarée de ces pratiques, un résultat bas leur présence déclarée. Ce résultat repose sur votre seule déclaration ; il ne doit jamais servir à juger une personne.
 
 ### A2 · Bas (non relue)
 
@@ -2265,7 +2265,7 @@ Vos réponses indiquent que vous écartez très nettement la dispute, les cris, 
 
 **Question pour l’entretien** (`hypothese`) : Qu’est-ce qui vous permettrait d’exprimer un désaccord important sans que la relation en souffre ?
 
-## A5 · Opinion de soi et mise en avant
+## A5 · Retenue dans l’opinion de soi et sa mise en avant
 
 **Définition.** Cette facette porte sur l’opinion que vous avez de vous-même et sur la tendance à la mettre en avant devant les autres.
 

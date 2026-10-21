@@ -140,7 +140,7 @@ const NATURE_REGLES = {
   ligne: [
     'Les priorités de la semaine sont écrites et validées ensemble par {O} et {D}, pour limiter les changements non dits.',
     '{D} peut signaler un désaccord de méthode par écrit en une ligne, sans attendre un point formel ; {O} répond sous un délai convenu.',
-    'Le présent chapitre sert uniquement au calage entre {O} et {D} : il n’est pas versé à un dossier d’évaluation ni utilisé pour une décision touchant {D}.'
+    'Le présent chapitre sert uniquement au calage entre {a} et {b} : il n’est pas versé à un dossier d’évaluation ni utilisé pour une décision touchant {D}.'
   ],
   fonctionnel: [
     'Toute demande d’une fonction à l’autre est formulée avec son échéance et son niveau de priorité ; la réponse précise ce qui sera fait et ce qui sera reporté.',
@@ -192,14 +192,14 @@ const SCEN_RISQUE = {
   fonctionnel: 'Scénario (hypothèse) : si le risque « {risque} » se réalise, il se peut que les écarts lus plus haut se manifestent d’abord dans les relances entre fonctions, chacune renvoyant à l’autre la cause du retard ; un arbitre désigné à l’avance limite ce renvoi.',
   mentorat: 'Scénario (hypothèse) : si le risque « {risque} » se réalise, il se peut que {D} voie le mentorat comme une évaluation déguisée et se confie peu ; la confidentialité de l’échange est alors la condition de son usage.',
   'client-fournisseur': 'Scénario (hypothèse) : si le risque « {risque} » se réalise, il se peut que {D} reçoive un livrable tardif ou différent de sa demande et qu’il faille le reprendre près de l’échéance ; une reformulation de la demande avant production limite ce cas.',
-  pairs: 'Scénario (hypothèse) : si le risque « {risque} » se réalise, il se peut que {O} et {D} reportent les décisions communes en attendant que l’autre cède ; un arbitre désigné à l’avance et un délai de décision limitent ce report.',
-  'co-direction': 'Scénario (hypothèse) : si le risque « {risque} » se réalise, il se peut que {O} et {D} donnent des réponses différentes au siège et à l’équipe ; un message commun avant chaque prise de parole limite cet écart.'
+  pairs: 'Scénario (hypothèse) : si le risque « {risque} » se réalise, il se peut que {a} et {b} reportent les décisions communes en attendant que l’autre cède ; un arbitre désigné à l’avance et un délai de décision limitent ce report.',
+  'co-direction': 'Scénario (hypothèse) : si le risque « {risque} » se réalise, il se peut que {a} et {b} donnent des réponses différentes au siège et à l’équipe ; un message commun avant chaque prise de parole limite cet écart.'
 };
 const RISQUE_IDX = { ligne: 2, fonctionnel: 1, mentorat: 2, 'client-fournisseur': 0, pairs: 0, 'co-direction': 1 };
 
 const INT_SCEN = {
   sequentielle: 'Scénario (hypothèse) : si l’amont ({O}) livre une étape avec retard, il se peut que l’aval ({D}) ne puisse pas absorber le décalage avant l’échéance « {echeance} » ; un point de passage placé en amont de l’échéance permet de le voir plus tôt.',
-  reciproque: 'Scénario (hypothèse) : si les ajustements entre {O} et {D} se font au fil de l’eau sans trace, il se peut qu’un changement décidé par l’un ne soit pas connu de l’autre avant l’échéance « {echeance} » ; un point court à fréquence fixe réduit ce cas.',
+  reciproque: 'Scénario (hypothèse) : si les ajustements entre {a} et {b} se font au fil de l’eau sans trace, il se peut qu’un changement décidé par l’un ne soit pas connu de l’autre avant l’échéance « {echeance} » ; un point court à fréquence fixe réduit ce cas.',
   'mise-en-commun': 'Scénario (hypothèse) : si chacune des deux personnes avance de son côté, il se peut que l’assemblage final révèle des critères différents entre les deux contributions à l’échéance « {echeance} » ; un critère commun posé tôt réduit ce cas.'
 };
 
@@ -301,6 +301,14 @@ const RECO_INT = {
   }
 };
 
+// Facettes dont le bloc n’est jamais cité à un pair : tout le domaine N (lu au niveau du domaine seulement), O3 (émotions), O6 (opinions, donnée sensible) et A2 (usage des autres).
+const SENSIBLES = new Set(['N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'O3', 'O6', 'A2']);
+// ponytail: liste fixe des facettes pertinentes pour la tâche du cas de démonstration (lancement d’un canal de vente en ligne, conformité, coordination avec le siège), à dériver de tache.nature si d’autres tâches arrivent.
+const PERTINENTES = new Set(['E1', 'E3', 'E4', 'O4', 'O5', 'A1', 'A3', 'A4', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6']);
+const citable = (k) => !SENSIBLES.has(k) && PERTINENTES.has(k);
+/** Trois facettes notables les plus éloignées, citables à un pair et pertinentes pour la tâche. */
+export const facettesRetenues = (rel) => rel.facettes_notables.filter((f) => citable(f.k)).slice(0, 3);
+
 const GARDE_EMPLOI = 'GARDE-EMPLOI';
 const GARDE_POP = 'GARDE-POPULATION';
 const GARDE_NAT = 'GARDE-NATIONALE';
@@ -326,6 +334,10 @@ function infoDomaines(rel, faits) {
       d: x.d,
       ecart: x.ecart,
       classe: x.classe,
+      a: rel.a,
+      b: rel.b,
+      na: faits.personnes[rel.a].domaines[x.d].niveau,
+      nb: faits.personnes[rel.b].domaines[x.d].niveau,
       hi: aHaut ? rel.a : rel.b,
       lo: aHaut ? rel.b : rel.a,
       niveauHi: faits.personnes[aHaut ? rel.a : rel.b].domaines[x.d].niveau,
@@ -337,15 +349,17 @@ function infoDomaines(rel, faits) {
 
 // élision devant un code de personne commençant par une voyelle : « de AM » devient « d’AM », « que AM » devient « qu’AM »
 const elision = (t) => t.replace(/\b(de|que) (A[A-Z])\b/g, (_, m, c) => (m === 'de' ? 'd’' : 'qu’') + c).replace(/\b(De|Que) (A[A-Z])\b/g, (_, m, c) => (m === 'De' ? 'D’' : 'Qu’') + c);
-const minuscule = (t) => t.charAt(0).toLowerCase() + t.slice(1);
+// première lettre en minuscule, sauf devant un code de personne ou un sigle (AM, KB, CNDP)
+const minuscule = (t) => (/^[A-ZÉÈ]{2,}(?![\p{L}])/u.test(t) ? t : t.charAt(0).toLowerCase() + t.slice(1));
+const libelleFacette = (bib, k) => bib.facettes.find((f) => f.code === k).libelle.fr;
 const parEcart = (infos) => [...infos].sort((p, q) => q.ecart - p.ecart || DOMAINES.indexOf(p.d) - DOMAINES.indexOf(q.d));
 
-const phraseDomaine = (i) => `domaine ${i.d} (${DOM_COURT[i.d]}) : écart ${exact(i.ecart)}, ${CLASSE_FR[i.classe]} ; ${i.hi} ${NIVEAU_FR[i.niveauHi]}, ${i.lo} ${NIVEAU_FR[i.niveauLo]}`;
+const phraseDomaine = (i) => `domaine ${i.d} (${DOM_COURT[i.d]}) : écart ${exact(i.ecart)}, ${CLASSE_FR[i.classe]} ; ${i.a} ${NIVEAU_FR[i.na]}, ${i.b} ${NIVEAU_FR[i.nb]}`;
 
 const poidsDe = (rel, id) => rel.calibrage.regles.find((r) => r.id === id)?.poids;
 
 // ---------------------------------------------------------------- chapitre d'une relation
-function chapitre(ctx, rel, relCas, etat) {
+function chapitre(ctx, rel, relCas) {
   const { cas, faits, bib, regles } = ctx;
   const pa = personne(cas, rel.a);
   const pb = personne(cas, rel.b);
@@ -369,7 +383,8 @@ function chapitre(ctx, rel, relCas, etat) {
   const focusNotable = focus.length > 0;
   if (!focus.length) focus = classees.slice(0, 1);
   const ruleFocus = focusNotable ? 'ECART-notable' : `ECART-${focus[0].classe}`;
-  const top3 = rel.facettes_notables.slice(0, 3);
+  // trois facettes notables les plus éloignées parmi celles qui sont citables à un pair et pertinentes pour la tâche
+  const top3 = facettesRetenues(rel);
   const passDiff = pa.langue_passation !== pb.langue_passation;
   const echeances = cas.tache.echeances;
   const echeance = rel.interdependance === 'sequentielle' ? echeances[0] : rel.interdependance === 'reciproque' ? echeances[1] ?? echeances[0] : echeances[echeances.length - 1];
@@ -402,7 +417,7 @@ function chapitre(ctx, rel, relCas, etat) {
   if (etiquettes.length) cadre(etiquettes.join(' '), { statut: 'constate' });
   cadre(`Tâche commune, selon le cas : ${cas.tache.description}.`, { statut: 'constate' });
   cadre(
-    `Écarts entre ${rel.a} et ${rel.b}, repris des faits calculés : ${infos.map(phraseDomaine).join(' ; ')}. Facettes les plus éloignées : ${top3.map((f) => `${f.k} (écart ${exact(f.ecart)} ; ${rel.a} ${NIVEAU_FR[f.niveau_a]}, ${rel.b} ${NIVEAU_FR[f.niveau_b]})`).join(' ; ')}.`,
+    `Écarts entre ${rel.a} et ${rel.b}, repris des faits calculés : ${infos.map(phraseDomaine).join(' ; ')}. Facettes notables les plus éloignées, retenues pour la tâche : ${top3.map((f) => `${f.k} (écart ${exact(f.ecart)} ; ${rel.a} ${NIVEAU_FR[f.niveau_a]}, ${rel.b} ${NIVEAU_FR[f.niveau_b]})`).join(' ; ')}. Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : ${rel.a} (${pa.langue_passation}), ${rel.b} (${pb.langue_passation}) ; équivalence des versions non établie.`,
     { statut: 'constate' }
   );
   cadre(
@@ -481,7 +496,7 @@ function chapitre(ctx, rel, relCas, etat) {
   if (SENS_CROISE[rel.nature] && rel.sens !== 'reciproque') {
     const sc = SENS_CROISE[rel.nature];
     fri(
-      `Lecture croisée dans les deux sens, sur le domaine ${focus[0].d} : ${remplir(sc.o, vars)} ${remplir(sc.d, vars)} (règle ${sensId}).`,
+      `Lecture croisée dans les deux sens, sur le domaine ${focus[0].d} : ${(O === rel.a ? [sc.o, sc.d] : [sc.d, sc.o]).map((t) => remplir(t, vars)).join(' ')} (règle ${sensId}).`,
       { statut: 'hypothese', confiance: 'faible', verification: 'Demander à chacune des deux personnes, séparément, comment elle lit la dernière situation où les deux manières de faire se sont heurtées, puis comparer les deux lectures.' }
     );
   } else {
@@ -557,60 +572,75 @@ function chapitre(ctx, rel, relCas, etat) {
   );
 
   // ------------------------------------------------ recommandations
+  // Chaque recommandation est ancrée dans la relation (codes, facettes retenues), une échéance du cas et un risque inscrit au cas.
   const recs = [];
-  const roleO = personne(cas, O).role_equipe;
-  const respRelation = SYMETRIQUES.has(rel.nature) || rel.sens === 'reciproque' ? `${personne(cas, rel.a).role_equipe} et ${personne(cas, rel.b).role_equipe}` : roleO;
+  const roleDe = (code) => personne(cas, code).role_equipe;
+  const sym = SYMETRIQUES.has(rel.nature) || rel.sens === 'reciproque';
+  // candidats à la responsabilité : les deux rôles de la relation ; la répartition entre rôles se fait à la fin, sur l’ensemble des chapitres
+  const cand = [roleDe(rel.a), roleDe(rel.b)];
   const f0 = focus[0];
-  const donneeDom = (i) => `Écart de ${exact(i.ecart)} sur le domaine ${i.d}, ${CLASSE_FR[i.classe]} ; ${i.hi} ${NIVEAU_FR[i.niveauHi]}, ${i.lo} ${NIVEAU_FR[i.niveauLo]} (${rel.id}).`;
-  const contexte = `Relation de ${NATURE_FR[rel.nature]}, interdépendance ${INT_FR[rel.interdependance]}, tâche de nature ${cas.tache.nature} (lancement du canal de vente en ligne), orientation ${cas.strategie.orientation} (règles ${natureId}, ${intId}, ${tacheId}, ${oriId}).`;
+  const f1 = classees.find((i) => i.d !== f0.d);
+  const nE = echeances.length;
+  const e0 = echeances[0];
+  const e1 = echeances[Math.min(1, nE - 1)];
+  const eFin = echeances[nE - 1];
+  const rk = (k) => risques[k % risques.length];
+  const r0 = RISQUE_IDX[rel.nature];
+  const facettesDe = (dom) => {
+    const l = top3.filter((f) => f.k.startsWith(dom));
+    return l.length ? ` Elle s’appuie sur ${liste(l.map((f) => `la facette ${f.k} (${libelleFacette(bib, f.k)})`))}.` : ' Le domaine est lu au niveau du domaine seulement, sans citer de facette.';
+  };
+  const ancre = (texte, rk_) => `${texte} Pour ${rel.a} et ${rel.b}, elle est à situer avant l’échéance « ${rk_.e} » et répond au risque inscrit au cas : « ${rk_.r} ».`;
+  const donneeDom = (i) => `Écart de ${exact(i.ecart)} sur le domaine ${i.d}, ${CLASSE_FR[i.classe]} ; ${i.a} ${NIVEAU_FR[i.na]}, ${i.b} ${NIVEAU_FR[i.nb]} (${rel.id}).`;
+  const contexte = (e) => `Relation de ${NATURE_FR[rel.nature]} entre ${roleDe(rel.a)} (${rel.a}) et ${roleDe(rel.b)} (${rel.b}), interdépendance ${INT_FR[rel.interdependance]}, tâche de nature ${cas.tache.nature} (lancement du canal de vente en ligne), orientation ${cas.strategie.orientation}, échéance visée : « ${e} » (règles ${natureId}, ${intId}, ${tacheId}, ${oriId}).`;
+  const sansPoint = (t) => t.replace(/\.$/, '');
+  const hyp = { niveau: 'hypothese', reference_id: null };
   const ro = RECO_ORG[rel.nature];
   recs.push({
     type: 'organisation',
-    texte: ro.texte,
-    a: { donnee: donneeDom(f0), contexte, risque: ro.risque, responsable: respRelation, horizon: '30 jours', indicateur: ro.indicateur, preuve: { niveau: 'hypothese', reference_id: null } }
+    fixe: sym ? cand : [roleDe(O)],
+    texte: ancre(ro.texte, { e: e0, r: rk(r0) }),
+    a: { donnee: donneeDom(f0), contexte: contexte(e0), risque: ro.risque, responsable: 'à attribuer', horizon: '30 jours', indicateur: `${sansPoint(ro.indicateur)}, pour la relation ${rel.id}.`, preuve: hyp }
   });
   recs.push({
     type: 'coaching',
-    texte: DOM_COACH[f0.d].texte,
-    a: { donnee: donneeDom(f0), contexte, risque: 'Le coaching est perçu comme une correction attendue de l’une des deux personnes plutôt que comme un appui aux deux, ou il est engagé sans l’accord de l’une d’elles.', responsable: respRelation, horizon: '60 jours', indicateur: DOM_COACH[f0.d].indicateur, preuve: { niveau: 'hypothese', reference_id: null } }
+    cand,
+    texte: `${ancre(DOM_COACH[f0.d].texte, { e: e1, r: rk(r0 + 1) })}${facettesDe(f0.d)}`,
+    a: { donnee: donneeDom(f0), contexte: contexte(e1), risque: 'Le coaching est perçu comme une correction attendue de l’une des deux personnes plutôt que comme un appui aux deux, ou il est engagé sans l’accord de l’une d’elles.', responsable: 'à attribuer', horizon: '60 jours', indicateur: `${sansPoint(DOM_COACH[f0.d].indicateur)}, pour la relation ${rel.id}.`, preuve: hyp }
   });
-  const f1 = classees.find((i) => i.d !== f0.d);
   recs.push({
     type: 'formation',
-    texte: DOM_FORM[f1.d],
-    a: { donnee: donneeDom(f1), contexte, risque: 'L’atelier reste théorique et n’est pas relié aux échéances du cas.', responsable: respRelation, horizon: '90 jours', indicateur: 'Relevé à 90 jours : chacune des deux personnes décrit une situation réelle où elle a appliqué un des objectifs d’apprentissage, oui ou non.', preuve: { niveau: 'hypothese', reference_id: null } }
+    cand,
+    texte: `${ancre(DOM_FORM[f1.d], { e: eFin, r: rk(r0 + 2) })}${facettesDe(f1.d)}`,
+    a: { donnee: donneeDom(f1), contexte: contexte(eFin), risque: 'L’atelier reste théorique et n’est pas relié aux échéances du cas.', responsable: 'à attribuer', horizon: '90 jours', indicateur: `Relevé à 90 jours : ${rel.a} et ${rel.b} décrivent chacun une situation réelle du projet où un des objectifs d’apprentissage a été appliqué, oui ou non.`, preuve: hyp }
   });
   const ri = RECO_INT[rel.interdependance];
   recs.push({
     type: 'organisation',
-    texte: ri.texte,
-    a: { donnee: `Interdépendance ${INT_FR[rel.interdependance]} entre ${rel.a} et ${rel.b}, échéance du cas : « ${echeance} » (${rel.id}, règle ${intId}).`, contexte, risque: ri.risque, responsable: respRelation, horizon: '60 jours', indicateur: ri.indicateur, preuve: { niveau: 'source', reference_id: 'thompson-1967' } }
+    cand,
+    texte: ancre(ri.texte, { e: echeance, r: rk(r0) }),
+    a: { donnee: `Interdépendance ${INT_FR[rel.interdependance]} entre ${rel.a} et ${rel.b}, échéance du cas : « ${echeance} » (${rel.id}, règle ${intId}).`, contexte: contexte(echeance), risque: ri.risque, responsable: 'à attribuer', horizon: '60 jours', indicateur: `${sansPoint(ri.indicateur)}, pour la relation ${rel.id}.`, preuve: { niveau: 'source', reference_id: 'thompson-1967' } }
   });
   if (passDiff) {
     recs.push({
-      type: 'coaching',
-      texte: 'Traiter l’écart entre les deux personnes comme une réserve de comparaison : le vérifier en entretien dans la langue de travail de la relation avant d’en tirer une règle de fonctionnement.',
-      a: { donnee: `Langues de passation différentes : ${rel.a} en ${pa.langue_passation}, ${rel.b} en ${pb.langue_passation} (${rel.id}, règle CAL-IC-PASSATION).`, contexte, risque: 'La réserve de comparaison est oubliée et l’écart est lu comme un écart de personnalité.', responsable: respRelation, horizon: '30 jours', indicateur: 'Relevé à 30 jours : un entretien de vérification a été tenu avec chacune des deux personnes, et le compte rendu précise quels écarts sont reconnus dans le travail réel.', preuve: { niveau: 'hypothese', reference_id: null } }
+      type: 'vérification',
+      cand,
+      texte: `Tenir avec ${rel.a} (${pa.langue_passation}) et ${rel.b} (${pb.langue_passation}) un entretien de vérification dans la langue de travail de la relation : établir quels écarts ${liste(top3.map((f) => f.k))} sont reconnus dans leur travail réel avant d’en tirer une règle, et avant l’échéance « ${e0} ».`,
+      a: { donnee: `Langues de passation différentes : ${rel.a} en ${pa.langue_passation}, ${rel.b} en ${pb.langue_passation}, avec des écarts notables sur ${liste(top3.map((f) => `${f.k} (${exact(f.ecart)})`))} (${rel.id}, règle CAL-IC-PASSATION).`, contexte: contexte(e0), risque: 'La réserve de comparaison est oubliée et l’écart est lu comme un écart de personnalité.', responsable: 'à attribuer', horizon: '30 jours', indicateur: `Relevé à 30 jours : un entretien de vérification a été tenu avec ${rel.a} et avec ${rel.b}, et le compte rendu précise quels écarts de la relation ${rel.id} sont reconnus dans le travail réel.`, preuve: hyp }
     });
   }
 
   // ------------------------------------------------ rubrique 5 : recommandations (renvoi)
   const rec5 = nouvelle('reco', 5, 'recommandations (coaching, formation, organisation)');
-  const construites = recs.map((r) => {
-    etat.n += 1;
-    const id = `REC-N2-${String(etat.n).padStart(2, '0')}`;
-    return recommandation(id, 'n2', r.texte, r.a);
-  });
   recs.forEach((r, k) => {
-    const c = construites[k];
-    rec5(`Recommandation ${r.type}, horizon ${c.horizon} : ${r.texte} Indicateur : ${c.indicateur}`, {
+    rec5(`Recommandation ${r.type}, horizon ${r.a.horizon} : ${r.texte} Indicateur : ${r.a.indicateur}`, {
       statut: 'hypothese',
       confiance: 'faible',
       verification: 'Recueillir auprès des deux personnes, en entretien de calage, si l’action répond à un besoin ressenti dans leur travail commun avant de la lancer.'
     });
   });
 
-  return { sections, recommandations: construites };
+  return { sections, specs: recs };
 }
 
 // ---------------------------------------------------------------- niveau
@@ -618,9 +648,9 @@ export function construire(ctx) {
   const { cas, faits, regles } = ctx;
   const consenti = (code) => personne(cas, code).consentements?.binome === true;
   const sections = [];
-  const recommandations = [];
+  const specs = [];
   const omises = [];
-  const etat = { n: 0 };
+  const charge = {};
 
   for (const rel of faits.relations) {
     if (!(consenti(rel.a) && consenti(rel.b))) {
@@ -628,10 +658,21 @@ export function construire(ctx) {
       continue;
     }
     const relCas = cas.relations.find((r) => r.id === rel.id);
-    const c = chapitre(ctx, rel, relCas, etat);
+    const c = chapitre(ctx, rel, relCas);
     sections.push(...c.sections);
-    recommandations.push(...c.recommandations);
+    specs.push(...c.specs);
   }
+
+  for (const sp of specs) if (sp.fixe) for (const r of sp.fixe) charge[r] = (charge[r] ?? 0) + 1;
+  for (const sp of specs) {
+    if (sp.fixe) continue;
+    const [r1, r2] = sp.cand;
+    const choisi = (charge[r1] ?? 0) < (charge[r2] ?? 0) ? r1 : r2;
+    charge[choisi] = (charge[choisi] ?? 0) + 1;
+    sp.a.responsable = choisi;
+  }
+  for (const sp of specs) if (sp.fixe) sp.a.responsable = sp.fixe.join(' et ');
+  const recommandations = specs.map((sp, k) => recommandation(`REC-N2-${String(k + 1).padStart(2, '0')}`, 'n2', sp.texte, sp.a));
 
   const gen = [];
   const pg = (texte, opts) => gen.push(paragraphe(`n2-cadre-${gen.length + 1}`, texte, opts));
@@ -646,6 +687,15 @@ export function construire(ctx) {
       : 'Tous les chapitres de relation prévus par le cas sont présents : les deux personnes de chaque relation ont consenti au partage du binôme.',
     { statut: 'constate' }
   );
+
+  const roles = Object.entries(charge).sort((p, q) => q[1] - p[1] || p[0].localeCompare(q[0], 'fr'));
+  if (roles.length) {
+    const ct = cas.contraintes.find((c) => c.id === 'CT-07');
+    pg(
+      `Charge des rôles : les recommandations de ce niveau sont réparties entre les rôles du cas, du plus au moins sollicité : ${liste(roles.map(([r]) => `« ${r} »`))}. ${ct ? `La contrainte ${ct.id} du cas (« ${ct.libelle} ») impose d’échelonner les actions de chaque rôle et de les arbitrer avec le commanditaire, en commençant par celui qui est le plus sollicité.` : 'Les actions de chaque rôle sont à échelonner avec le commanditaire.'}`,
+      { statut: 'constate' }
+    );
+  }
 
   const general = { ...section('cadre', 'Cadre de lecture des relations', gen), rubrique: 0 };
   return {

@@ -4,7 +4,7 @@
       "code": "A1",
       "domaine": "A",
       "libelle": {
-        "fr": "Confiance envers les autres"
+        "fr": "Confiance accordée aux autres"
       },
       "libelle_plateforme": "Confiance",
       "affirmations_fr": [
@@ -123,7 +123,7 @@
       "code": "A2",
       "domaine": "A",
       "libelle": {
-        "fr": "Usage des autres à ses propres fins"
+        "fr": "Absence d’usage des autres à ses propres fins"
       },
       "libelle_plateforme": "Moralité",
       "affirmations_fr": [
@@ -148,7 +148,7 @@
         "fr": "Cette facette est mesurée par quatre affirmations sur ce que vous déclarez de vos propres pratiques : utiliser les autres pour vos fins, tricher pour avancer, profiter des autres, entraver leurs plans."
       },
       "avertissement": {
-        "fr": "Le libellé « Moralité » est beaucoup plus large que ce qui est mesuré : les quatre affirmations portent seulement sur ce que vous déclarez de vos pratiques, non sur votre valeur morale ni sur votre honnêteté. Ce résultat repose sur votre seule déclaration ; il ne doit jamais servir à juger une personne."
+        "fr": "Le libellé « Moralité » est beaucoup plus large que ce qui est mesuré : les quatre affirmations portent seulement sur ce que vous déclarez de vos pratiques, non sur votre valeur morale ni sur votre honnêteté. Un résultat haut décrit l’absence déclarée de ces pratiques, un résultat bas leur présence déclarée. Ce résultat repose sur votre seule déclaration ; il ne doit jamais servir à juger une personne."
       },
       "niveaux": {
         "bas": {
@@ -359,7 +359,7 @@
       "code": "A5",
       "domaine": "A",
       "libelle": {
-        "fr": "Opinion de soi et mise en avant"
+        "fr": "Retenue dans l’opinion de soi et sa mise en avant"
       },
       "libelle_plateforme": "Modestie",
       "affirmations_fr": [

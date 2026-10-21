@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { construire } from './niveau2-relations.mjs';
+import { construire, facettesRetenues } from './niveau2-relations.mjs';
 import { auditer } from '../audit/audit.mjs';
 
 const ici = (p) => fileURLToPath(new URL(p, import.meta.url));
@@ -138,7 +138,7 @@ test('seuls des constats reprennent des chiffres de faits ; les lectures restent
     assert.equal(ecarts.statut, 'constate');
     const rel = ctx.faits.relations.find((r) => r.id === id);
     for (const d of rel.domaines) assert.ok(ecarts.texte.includes(String(d.ecart).replace('.', ',')), `${id} écart ${d.d}`);
-    for (const f of rel.facettes_notables.slice(0, 3)) assert.ok(ecarts.texte.includes(f.k), `${id} facette ${f.k}`);
+    for (const f of facettesRetenues(rel)) assert.ok(ecarts.texte.includes(f.k), `${id} facette ${f.k}`);
   }
 });
 
@@ -146,11 +146,12 @@ test('les blocs de la bibliothèque (apport, coût, question) sont repris avec b
   for (const rel of ctx.faits.relations) {
     for (const rubrique of [1, 2]) {
       const avecBloc = sortie.niveau.sections.find((s) => s.relation_id === rel.id && s.rubrique === rubrique).paragraphes.filter((p) => p.bloc_ids);
-      assert.equal(avecBloc.length, 3, `${rel.id} rubrique ${rubrique} : trois facettes`);
+      assert.equal(avecBloc.length, facettesRetenues(rel).length, `${rel.id} rubrique ${rubrique} : facettes retenues`);
+      assert.ok(avecBloc.length >= 2 && avecBloc.length <= 3, `${rel.id} : deux à trois facettes`);
       avecBloc.forEach((p, i) => {
         assert.ok(p.texte.includes('bloc non relu'), p.id);
         assert.ok(p.verification.includes('«'), `${p.id} question d’entretien`);
-        const k = rel.facettes_notables[i].k;
+        const k = facettesRetenues(rel)[i].k;
         assert.ok(p.bloc_ids.every((b) => b.startsWith(`${k}/`)), `${p.id} ${p.bloc_ids}`);
         for (const b of p.bloc_ids) {
           const [code, niveau] = b.split('/');
@@ -304,4 +305,101 @@ test('le titre de chaque section de chapitre contient les deux codes de personne
     const [a, b] = s.relation_id.split('-');
     assert.ok(s.titre.startsWith(`${a} et ${b} : `), `${s.id} : ${s.titre}`);
   }
+});
+
+// ------------------------------------------------ mission corrective : relecture de contenu
+const SENSIBLES = ['N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'O3', 'O6', 'A2'];
+const tousTextes = (niveau = sortie.niveau) => niveau.sections.flatMap((s) => s.paragraphes.map((p) => ({ ...p, rel: s.relation_id, rubrique: s.rubrique })));
+
+test('I1 : jamais de bloc d’une facette sensible ni du domaine N cité à un pair ; O2 écartée (sans lien avec la tâche)', () => {
+  for (const p of tousTextes()) {
+    for (const b of p.bloc_ids ?? []) {
+      const k = b.split('/')[0];
+      assert.ok(!SENSIBLES.includes(k), `${p.id} cite le bloc sensible ${b}`);
+      assert.ok(!k.startsWith('N'), `${p.id} cite un bloc du domaine N`);
+      assert.notEqual(k, 'O2', `${p.id} cite O2`);
+    }
+    if (p.rel) for (const k of [...SENSIBLES, 'O2']) assert.ok(!new RegExp(`\b${k}\b`).test(p.texte), `${p.id} mentionne la facette ${k}`);
+  }
+  for (const rel of ctx.faits.relations) {
+    const ks = facettesRetenues(rel).map((f) => f.k);
+    assert.ok(ks.length >= 2, `${rel.id} : au moins deux facettes retenues`);
+    for (const k of ks) assert.ok(!SENSIBLES.includes(k) && k !== 'O2');
+  }
+  // le domaine N reste lu au niveau du domaine
+  assert.ok(tousTextes().some((p) => /domaine N/.test(p.texte)));
+  for (const r of sortie.recommandations) for (const k of [...SENSIBLES, 'O2']) assert.ok(!new RegExp(`\b${k}\b`).test(`${r.texte} ${r.donnee}`), `${r.id} cite ${k}`);
+});
+
+test('I7 : le cadre de chaque relation donne la langue de passation de chacun à côté de la comparaison', () => {
+  const langues = Object.fromEntries(ctx.cas.personnes.map((p) => [p.code, p.langue_passation]));
+  for (const rel of ctx.faits.relations) {
+    const p = sortie.niveau.sections.find((s) => s.relation_id === rel.id && s.rubrique === 0).paragraphes.find((x) => /^Écarts entre/.test(x.texte));
+    assert.ok(p.texte.includes(`Langues de passation : ${rel.a} (${langues[rel.a]}), ${rel.b} (${langues[rel.b]}) ; équivalence des versions non établie.`), `${rel.id}`);
+  }
+});
+
+test('I6 : chaque recommandation a un texte, une donnée et un indicateur propres à sa relation, ancrés dans une échéance et un risque du cas', () => {
+  const recs = sortie.recommandations;
+  assert.equal(new Set(recs.map((r) => r.texte)).size, recs.length);
+  assert.equal(new Set(recs.map((r) => r.indicateur)).size, recs.length);
+  assert.equal(new Set(recs.map((r) => `${r.donnee}|${r.texte}`)).size, recs.length);
+  for (const r of recs) {
+    const rel = RELATIONS.find((id) => r.donnee.includes(id));
+    const [a, b] = rel.split('-');
+    assert.ok(r.texte.includes(a) && r.texte.includes(b), `${r.id} nomme sa relation`);
+    assert.ok(ctx.cas.tache.echeances.some((e) => r.contexte.includes(e)), `${r.id} ancrée dans une échéance du cas`);
+    assert.ok(ctx.cas.tache.echeances.some((e) => r.texte.includes(e)), `${r.id} cite l’échéance dans le texte`);
+    assert.ok(ctx.cas.tache.risques.some((x) => r.texte.includes(x)) || r.texte.startsWith('Tenir avec'), `${r.id} cite un risque du cas`);
+  }
+});
+
+test('I6 : les entretiens de vérification ne sont plus du coaching', () => {
+  const langue = (c) => ctx.cas.personnes.find((p) => p.code === c).langue_passation;
+  const attendu = ctx.faits.relations.filter((r) => langue(r.a) !== langue(r.b)).length;
+  const ver = tousTextes().filter((p) => p.rubrique === 5 && /^Recommandation vérification/.test(p.texte));
+  assert.equal(ver.length, attendu);
+  assert.ok(ver.length >= 2);
+  for (const p of ver) assert.ok(/entretien de vérification/.test(p.texte));
+  for (const p of tousTextes().filter((x) => x.rubrique === 5 && /^Recommandation coaching/.test(x.texte))) assert.ok(!/entretien de vérification/.test(p.texte));
+});
+
+test('I6 : les responsabilités sont réparties entre les quatre rôles, la charge est signalée (CT-07)', () => {
+  const parRole = new Map();
+  for (const r of sortie.recommandations) for (const role of r.responsable.split(' et ')) parRole.set(role, (parRole.get(role) ?? 0) + 1);
+  assert.equal(parRole.size, 4);
+  const total = sortie.recommandations.length;
+  for (const [role, n] of parRole) assert.ok(n / total <= 0.4, `${role} porte trop de recommandations : ${n} sur ${total}`);
+  const charge = sortie.niveau.sections[0].paragraphes.map((p) => p.texte).find((t) => /^Charge des rôles/.test(t));
+  assert.ok(charge && charge.includes('CT-07') && charge.includes('sept dixièmes'));
+  for (const role of parRole.keys()) assert.ok(charge.includes(role));
+});
+
+test('mineur : jamais de code de personne ni de sigle mis en minuscule', () => {
+  const tout = JSON.stringify(sortie);
+  assert.ok(!/\b(kB|aM|sR|hT|cNDP)\b/.test(tout));
+  assert.ok(/AM et KB/.test(tout));
+});
+
+test('mineur : l’ordre des personnes suit (a, b) de la relation dans les écarts', () => {
+  for (const rel of ctx.faits.relations) {
+    const ecarts = sortie.niveau.sections.find((s) => s.relation_id === rel.id && s.rubrique === 0).paragraphes.find((x) => /^Écarts entre/.test(x.texte)).texte;
+    assert.ok(ecarts.startsWith(`Écarts entre ${rel.a} et ${rel.b}`));
+    for (const m of ecarts.matchAll(/ ; ([A-Z]{2}) [^,;]+, ([A-Z]{2}) [^,;.]+/g)) assert.deepEqual([m[1], m[2]], [rel.a, rel.b], `${rel.id} : ${m[0]}`);
+  }
+});
+
+test('mineur : les valeurs exactes de faits sont conservées pour les écarts', () => {
+  for (const rel of ctx.faits.relations) {
+    const t = texteChapitre(sortie.niveau, rel.id, 0);
+    for (const d of rel.domaines) assert.ok(t.includes(String(d.ecart).replace('.', ',')));
+  }
+});
+
+test('I5 : aucune référence à Bell ; seule la coordination selon l’interdépendance s’appuie sur une source (Thompson)', () => {
+  assert.ok(!/Bell/.test(JSON.stringify(sortie)));
+  assert.ok(sortie.recommandations.every((r) => r.preuve.reference_id !== 'bell-2007'));
+  const sources = sortie.recommandations.filter((r) => r.preuve.niveau === 'source');
+  assert.equal(sources.length, ctx.faits.relations.length);
+  assert.ok(sources.every((r) => r.preuve.reference_id === 'thompson-1967' && /Interdépendance/.test(r.donnee)));
 });

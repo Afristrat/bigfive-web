@@ -94,7 +94,7 @@
   {
    "code": "N2",
    "domaine": "N",
-   "libelle": {"fr": "Irritabilité et patience"},
+   "libelle": {"fr": "Irritabilité"},
    "libelle_plateforme": "Colère",
    "affirmations_fr": [
     {"texte": "Je me mets en colère facilement", "cotation": "directe"},
@@ -185,7 +185,7 @@
   {
    "code": "N3",
    "domaine": "N",
-   "libelle": {"fr": "Humeur et estime de soi"},
+   "libelle": {"fr": "Tristesse et doute sur soi"},
    "libelle_plateforme": "Dépression",
    "affirmations_fr": [
     {"texte": "Je me sens souvent triste", "cotation": "directe"},
@@ -276,7 +276,7 @@
   {
    "code": "N4",
    "domaine": "N",
-   "libelle": {"fr": "Réserve en situation sociale"},
+   "libelle": {"fr": "Gêne en situation sociale"},
    "libelle_plateforme": "Conscience de soi",
    "affirmations_fr": [
     {"texte": "J'éprouve de la difficulté à aborder les autres", "cotation": "directe"},
@@ -285,7 +285,7 @@
     {"texte": "Je ne suis pas dérangé par les situations sociales difficiles", "cotation": "inversée"}
    ],
    "definition": {"fr": "Cette facette porte sur l’aisance avec laquelle vous abordez des inconnus, supportez l’attention des autres et traversez des situations sociales délicates."},
-   "avertissement": {"fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur l’aisance déclarée en situation sociale, non sur la conscience de soi au sens large. Elle ne dit rien de votre valeur ni de votre état de santé."},
+   "avertissement": {"fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la gêne déclarée en situation sociale (un résultat haut décrit une gêne plus fréquente), non sur la conscience de soi au sens large. Elle ne dit rien de votre valeur ni de votre état de santé."},
    "niveaux": {
     "bas": {"fr": {
      "description": [
@@ -367,7 +367,7 @@
   {
    "code": "N5",
    "domaine": "N",
-   "libelle": {"fr": "Envies et tentations"},
+   "libelle": {"fr": "Tendance à céder aux envies"},
    "libelle_plateforme": "Immodération",
    "affirmations_fr": [
     {"texte": "Je fais des folies", "cotation": "directe"},
@@ -376,7 +376,7 @@
     {"texte": "Je suis capable de contrôler mes envies", "cotation": "inversée"}
    ],
    "definition": {"fr": "Cette facette porte sur la facilité avec laquelle vous résistez à vos envies ou vous vous laissez tenter."},
-   "avertissement": {"fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la maîtrise déclarée des envies et des tentations, sans viser aucun domaine précis. Cette lecture ne porte aucun jugement sur vos choix ni sur votre mode de vie."},
+   "avertissement": {"fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la difficulté déclarée à maîtriser ses envies et à résister aux tentations (un résultat haut décrit une tendance à y céder), sans viser aucun domaine précis. Cette lecture ne porte aucun jugement sur vos choix ni sur votre mode de vie."},
    "niveaux": {
     "bas": {"fr": {
      "description": [

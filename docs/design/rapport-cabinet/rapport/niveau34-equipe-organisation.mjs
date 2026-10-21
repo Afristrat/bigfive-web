@@ -5,7 +5,9 @@ import { paragraphe, recommandation, section, liste, fmt, DOMAINES } from './out
 
 const NB = ' ';
 const gui = (s) => `«${NB}${s}${NB}»`;
-const minusc = (s) => (s ? s[0].toLowerCase() + s.slice(1) : s);
+// Première lettre en minuscule, sauf pour un sigle (CNDP) ou un code (CT-01).
+const minusc = (s) => (!s || /^[A-ZÉ]{2,}|^\S*\d/.test(s) ? s : s[0].toLowerCase() + s.slice(1));
+const courbe = (s) => s.replace(/'/g, '’');
 
 // Libellés de domaine sans le terme refusé par l'audit pour le domaine N.
 const LIB = {
@@ -38,41 +40,31 @@ const NATURE_LIEN = {
   'co-direction': 'co-direction'
 };
 
-// Lecture des domaines couverts : phrase par côté (haut ou bas), absence de personne, ou domaine non couvert.
+// Lecture des domaines, à l'échelle du domaine entier (jamais d'une facette). Accord selon le nombre de personnes citées.
 const HYP_DOMAINE = {
   N: {
-    haut: (x) => `Pour ${x}, un niveau plutôt haut ou haut peut s'accompagner d'une vigilance marquée devant les risques et les signaux de tension. Il se peut que cette vigilance serve l'équipe si elle est reconnue comme une veille des risques, et qu'elle pèse si elle reste portée sans relais.`,
-    bas: (x) => `Pour ${x}, un niveau plutôt bas ou bas peut s'accompagner d'un aplomb plus grand sous pression. Il se peut que des signaux faibles soient alors relevés plus tard, et que d'autres personnes de l'équipe doivent les porter.`,
-    sansHaut: "Aucune personne ne se situe plutôt haut ou haut : il se peut que la veille des risques ne soit portée par aucun profil et qu'elle doive être outillée.",
-    sansBas: "Aucune personne ne se situe plutôt bas ou bas : il se peut que la tenue sous pression ne repose sur aucun point d'appui évident et qu'elle demande des rituels explicites.",
+    haut: () => "un niveau plutôt haut ou haut peut s'accompagner d'une vigilance marquée devant les risques et les signaux de tension. Il se peut que cette vigilance serve l'équipe si elle est reconnue comme une veille des risques, et qu'elle pèse si elle reste portée sans relais.",
+    bas: () => "un niveau plutôt bas ou bas peut s'accompagner d'un aplomb plus grand sous pression. Il se peut que des signaux faibles soient alors relevés plus tard, et que d'autres personnes de l'équipe doivent les porter.",
     verification: "Demander en entretien comment l'équipe repère un risque, qui en parle en premier et comment cela est reçu."
   },
   E: {
-    haut: (x) => `Pour ${x}, un niveau plutôt haut ou haut peut s'accompagner d'une aisance à entrer en contact et à animer les échanges. Il se peut que ces personnes servent de relais avec les autres sites et les parties prenantes, au risque de prendre beaucoup de place dans les échanges.`,
-    bas: (x) => `Pour ${x}, un niveau plutôt bas ou bas peut s'accompagner d'une préférence pour les échanges restreints et la réflexion préalable. Il se peut que leur contribution passe moins bien dans les réunions rapides et gagne à être sollicitée par écrit.`,
-    sansHaut: "Aucune personne ne se situe plutôt haut ou haut : il se peut que le rôle de relais auprès des autres sites ne soit tenu spontanément par personne.",
-    sansBas: "Aucune personne ne se situe plutôt bas ou bas : il se peut que la réflexion à distance des échanges soit peu représentée.",
+    haut: (n) => `un niveau plutôt haut ou haut peut s'accompagner d'une aisance à entrer en contact et à animer les échanges. Il se peut que ${n > 1 ? 'ces personnes servent' : 'cette personne serve'} de relais avec les autres sites et les parties prenantes, au risque de prendre beaucoup de place dans les échanges.`,
+    bas: (n) => `un niveau plutôt bas ou bas peut s'accompagner d'une préférence pour les échanges restreints et la réflexion préalable. Il se peut que ${n > 1 ? 'leur' : 'sa'} contribution passe moins bien dans les réunions rapides et gagne à être sollicitée par écrit.`,
     verification: "Demander à l'équipe qui prend la parole en réunion, qui contribue plutôt par écrit, et si chacun trouve sa place dans les deux formats."
   },
   O: {
-    haut: (x) => `Pour ${x}, un niveau plutôt haut ou haut peut s'accompagner d'un appétit pour la nouveauté et les alternatives. Il se peut que ces personnes proposent plus d'idées que le cadre n'en peut absorber.`,
-    bas: (x) => `Pour ${x}, un niveau plutôt bas ou bas peut s'accompagner d'une préférence pour ce qui est éprouvé. Il se peut que ces personnes servent de garde-fou contre la dispersion, et que les idées nouvelles soient accueillies avec réserve.`,
-    sansHaut: "Aucune personne ne se situe plutôt haut ou haut : il se peut que la recherche de pistes nouvelles ne soit portée par aucun profil.",
-    sansBas: "Aucune personne ne se situe plutôt bas ou bas : il se peut que le garde-fou contre la dispersion ne soit tenu par aucun profil.",
+    haut: (n) => `un niveau plutôt haut ou haut peut s'accompagner d'un appétit pour la nouveauté et les alternatives. Il se peut que ${n > 1 ? 'ces personnes proposent' : 'cette personne propose'} plus d'idées que le cadre n'en peut absorber.`,
+    bas: (n) => `un niveau plutôt bas ou bas peut s'accompagner d'une préférence pour ce qui est éprouvé. Il se peut que ${n > 1 ? 'ces personnes servent' : 'cette personne serve'} de garde-fou contre la dispersion, et que les idées nouvelles soient accueillies avec réserve.`,
     verification: "Demander ce qu'il advient d'une idée nouvelle proposée en équipe : qui la reprend, qui la freine, et pourquoi."
   },
   A: {
-    haut: (x) => `Pour ${x}, un niveau plutôt haut ou haut peut s'accompagner d'une attention à la cohésion et à la coopération. Il se peut que le désaccord s'exprime moins facilement chez ces personnes, et que la cohésion de l'équipe en dépende.`,
-    bas: (x) => `Pour ${x}, un niveau plutôt bas ou bas peut s'accompagner d'une franchise dans le désaccord et d'une priorité donnée à la tâche. Il se peut que ces personnes soient les premières à contredire, au risque de tensions relationnelles si le cadre ne l'autorise pas.`,
-    sansHaut: "Aucune personne ne se situe plutôt haut ou haut : il se peut que l'attention portée à la cohésion ne soit assumée par aucun profil.",
-    sansBas: "Aucune personne ne se situe plutôt bas ou bas : il se peut que la contradiction franche soit peu portée spontanément et qu'un rôle de contradicteur doive être confié.",
+    haut: (n) => `un niveau plutôt haut ou haut peut s'accompagner d'une attention à la cohésion et à la coopération. Il se peut que le désaccord s'exprime moins facilement chez ${n > 1 ? 'ces personnes' : 'cette personne'}, et que la cohésion de l'équipe en dépende.`,
+    bas: (n) => `un niveau plutôt bas ou bas peut s'accompagner d'une franchise dans le désaccord et d'une priorité donnée à la tâche. Il se peut que ${n > 1 ? 'ces personnes soient les premières' : 'cette personne soit la première'} à contredire, au risque de tensions relationnelles si le cadre ne l'autorise pas.`,
     verification: "Demander comment un désaccord s'est exprimé lors de la dernière décision difficile, et qui l'a formulé."
   },
   C: {
-    haut: (x) => `Pour ${x}, un niveau plutôt haut ou haut peut s'accompagner de rigueur, de suivi des engagements et de souci du détail. Il se peut que ces personnes tiennent les échéances, au risque d'une moindre souplesse quand le plan change.`,
-    bas: (x) => `Pour ${x}, un niveau plutôt bas ou bas peut s'accompagner d'une souplesse devant les changements de plan. Il se peut que le suivi fin des engagements demande alors des relais.`,
-    sansHaut: "Aucune personne ne se situe plutôt haut ou haut : il se peut que le suivi fin des engagements ne soit tenu par aucun profil.",
-    sansBas: "Aucune personne ne se situe plutôt bas ou bas : il se peut que la souplesse devant les changements de plan soit peu représentée.",
+    haut: (n) => `un niveau plutôt haut ou haut peut s'accompagner de rigueur, de suivi des engagements et de souci du détail. Il se peut que ${n > 1 ? 'ces personnes tiennent' : 'cette personne tienne'} les échéances, au risque d'une moindre souplesse quand le plan change.`,
+    bas: () => "un niveau plutôt bas ou bas peut s'accompagner d'une souplesse devant les changements de plan. Il se peut que le suivi fin des engagements demande alors des relais.",
     verification: "Demander comment l'équipe a réagi au dernier changement de plan et qui a tenu le suivi des engagements."
   }
 };
@@ -88,12 +80,12 @@ const LECTURE_TACHE = {
     domaines: ['O', 'E']
   },
   urgence: {
-    phrase: "Pour une tâche d'urgence, il se peut que la réaction à la pression et la capacité à tenir le cap pèsent davantage que les préférences de méthode.",
-    domaines: ['N', 'C']
+    phrase: "Pour une tâche d'urgence, il se peut que la capacité à tenir le cap et à suivre les engagements pèse davantage que les préférences de méthode.",
+    domaines: ['C']
   },
   projet: {
     phrase: "Pour une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l'information entre les personnes pèsent davantage que les préférences de style.",
-    domaines: ['C', 'E', 'A']
+    domaines: ['C', 'E']
   }
 };
 
@@ -131,12 +123,12 @@ export function construire(ctx) {
     utilisees.add(id);
     return NOMS_REF[id] ?? liste(r.auteurs);
   };
-  const c = (texte) => ({ texte, statut: 'constate' });
+  const c = (texte, brut = false) => ({ texte, statut: 'constate', brut });
   const h = (texte, confiance, verification) => ({ texte, statut: 'hypothese', confiance, verification });
   const sec = (k, cle, titre, specs) => {
     const id = `n${k}-${cle}`;
     const items = specs.filter(Boolean);
-    return section(id, titre, items.map((s, i) => paragraphe(`${id}-${i + 1}`, s.texte, s.statut === 'hypothese' ? { statut: 'hypothese', confiance: s.confiance, verification: s.verification } : { statut: 'constate' })));
+    return section(id, titre, items.map((s, i) => paragraphe(`${id}-${i + 1}`, s.brut ? s.texte : courbe(s.texte), s.statut === 'hypothese' ? { statut: 'hypothese', confiance: s.confiance, verification: courbe(s.verification) } : { statut: 'constate' })));
   };
 
   const toutes = cas.personnes;
@@ -155,10 +147,7 @@ export function construire(ctx) {
   });
   const pilote = (pool) => pool.find((p) => p.niveau === 'direction') ?? pool[0] ?? toutes[0];
   const roleDe = (pool, pred) => (pool.find(pred) ?? pilote(pool)).role_equipe;
-  const fonctionConformite = (pool) => {
-    const p = pool.find((x) => /conformité/i.test(`${x.perimetre_decision} ${x.fonction}`)) ?? pilote(pool);
-    return p.fonction;
-  };
+  const roleConformite = (pool) => (pool.find((x) => /conformité/i.test(`${x.perimetre_decision} ${x.fonction}`)) ?? pilote(pool)).role_equipe;
 
   const relationsP = (cas.relations ?? []).filter((r) => codesP.has(r.a) && codesP.has(r.b));
   const sansDirection = relationsP.filter((r) => r.sens === 'reciproque');
@@ -172,6 +161,7 @@ export function construire(ctx) {
   // ---------------------------------------------------------------- N3 : analyse d'équipe
   const langues = [...new Set(participants.map((p) => p.langue_passation))];
   const secPerimetre = sec(3, 'perimetre', 'Périmètre, consentements et limites', [
+    c("Document de travail du consultant, jamais remis tel quel à un supérieur hiérarchique d'une personne citée."),
     participants.length >= 2
       ? c(`Cette analyse d'équipe porte sur ${participants.length} personnes ayant consenti à l'analyse d'équipe : ${liste(participants.map((p) => p.code))}. Elle compare ces personnes entre elles, chacune sur sa propre échelle, et ne les compare à aucun autre groupe.`)
       : c(`Moins de deux personnes ont consenti à l'analyse d'équipe : aucune lecture d'équipe n'est produite. Une lecture d'équipe suppose au moins deux personnes ayant consenti.`),
@@ -189,40 +179,24 @@ export function construire(ctx) {
   ]);
 
   // Cartographie
-  const dependances = [];
-  for (const d of DOMAINES) {
-    const { hauts } = couv(d);
-    if (hauts.length === 1) dependances.push({ d, code: hauts[0] });
-  }
-  const parCode = new Map();
-  for (const x of dependances) parCode.set(x.code, [...(parCode.get(x.code) ?? []), x.d]);
-
   const phraseCouv = (d) => {
-    const cote = d === 'N' ? 'bas' : 'hauts';
-    const pos = d === 'N' ? 'plutôt bas ou bas' : 'plutôt haut ou haut';
-    const l = couv(d)[cote];
-    if (!l.length) return `aucune personne ne se situe ${pos} sur le ${dom(d)}`;
-    if (l.length === 1) return `une seule personne, ${l[0]}, se situe ${pos} sur le ${dom(d)}`;
-    return `${liste(l)} se situent ${pos} sur le ${dom(d)}`;
+    const l = couv(d).hauts;
+    if (!l.length) return `aucune personne ne se situe plutôt haut ou haut sur le ${dom(d)}`;
+    if (l.length === 1) return `une seule personne, ${l[0]}, se situe plutôt haut ou haut sur le ${dom(d)}`;
+    return `${liste(l)} se situent plutôt haut ou haut sur le ${dom(d)}`;
   };
 
   const specCarto = [
-    c("Les listes suivantes disent qui se situe où, domaine par domaine, d'après les niveaux conventionnels de chaque personne. Les personnes au milieu de l'échelle n'y figurent pas.")
+    c("Les listes suivantes disent qui se situe où, domaine par domaine, d'après les niveaux conventionnels de chaque personne. Les personnes au milieu de l'échelle n'y figurent pas. Ces niveaux sont ceux du domaine entier : pour une personne donnée, une facette peut s'écarter du niveau de son domaine, ce que le niveau 1 détaille. Les domaines de personnalité ne sont pas des fonctions d'équipe : cette cartographie décrit des préférences de contribution, non des rôles à pourvoir.")
   ];
   for (const d of DOMAINES) {
     const { hauts, bas } = couv(d);
     specCarto.push(c(`${Dom(d)} : plutôt haut ou haut pour ${hauts.length ? liste(hauts) : 'aucune personne'} ; plutôt bas ou bas pour ${bas.length ? liste(bas) : 'aucune personne'}.`));
     const H = HYP_DOMAINE[d];
-    const lecture = [hauts.length ? H.haut(liste(hauts)) : H.sansHaut, bas.length ? H.bas(liste(bas)) : H.sansBas].join(' ');
-    specCarto.push(h(lecture, 'faible', H.verification));
-  }
-  if (parCode.size) {
-    for (const [code, ds] of parCode) {
-      specCarto.push(c(`${code} est la seule personne en position plutôt haute ou haute sur ${ds.length > 1 ? 'les domaines' : 'le domaine'} ${liste(ds)}.`));
-    }
-    specCarto.push(h("Il se peut que l'équipe dépende, pour ce qui se rattache à ces domaines, d'une seule personne, et que sa disponibilité devienne un point de fragilité pour la tâche.", 'moyenne', "Demander à l'équipe qui elle sollicite en premier sur ces sujets, et ce qui se passerait en cas d'absence de cette personne."));
-  } else {
-    specCarto.push(c("Aucun domaine n'est couvert par une seule personne en position haute : aucun point de dépendance de ce type n'apparaît."));
+    const parts = [];
+    if (hauts.length) parts.push(`Pour ${liste(hauts)}, ${H.haut(hauts.length)}`);
+    if (bas.length) parts.push(`Pour ${liste(bas)}, ${H.bas(bas.length)}`);
+    if (parts.length) specCarto.push(h(parts.join(' '), 'faible', H.verification));
   }
   const secCarto = sec(3, 'cartographie', 'Cartographie des contributions', specCarto);
 
@@ -244,18 +218,21 @@ export function construire(ctx) {
   if (exclus.length) {
     specDiv.push(c("La dispersion de l'équipe n'est pas reprise ici : le moteur l'a calculée avant le retrait d'un consentement, et elle doit être recalculée sans la personne exclue avant toute lecture."));
   } else {
+    const nonDiverses = Object.keys(eq.facettes_etendue ?? {}).filter((k) => !(eq.facettes_diverses ?? []).includes(k));
     const parts = [];
     if (diverses.length) parts.push(`le moteur classe ${liste(diverses.map((d) => `le domaine ${d}`))} comme divers par leur dispersion (écart d'au moins un point, sur l'échelle de 1 à 5, entre la valeur la plus basse et la plus haute de l'équipe)`);
     if (homogenes.length) parts.push(`${liste(homogenes.map((d) => `le domaine ${d}`))} comme homogènes`);
-    let phrase = parts.length ? parts.join(' et ').replace(/^./, (x) => x.toUpperCase()) + '.' : null;
     const f = [];
-    if ((eq.facettes_homogenes ?? []).length) f.push(`Facettes homogènes : ${liste(eq.facettes_homogenes)}.`);
+    if (parts.length) f.push(parts.join(' et ').replace(/^./, (x) => x.toUpperCase()) + '.');
+    if (nonDiverses.length <= 3) {
+      f.push(`Avec ${participants.length} personnes et un seuil d'un point d'étendue, ${nonDiverses.length ? `toutes les facettes sauf ${liste(nonDiverses)}` : 'toutes les facettes'} sont classées diverses : cet indicateur ne discrimine rien ici et n'est pas utilisé comme argument d'accompagnement.`);
+    } else if ((eq.facettes_homogenes ?? []).length) f.push(`Facettes homogènes : ${liste(eq.facettes_homogenes)}.`);
     else f.push("Aucune facette n'est classée homogène.");
-    if (entre.length) f.push(`${liste(entre)} ${entre.length > 1 ? 'sont les seules facettes dont l\'étendue se situe' : 'est la seule facette dont l\'étendue se situe'} entre les deux conventions (étendue de ${liste(entre.map((k) => `${fmt(eq.facettes_etendue[k])} point${eq.facettes_etendue[k] > 1 ? 's' : ''} pour ${k}`))}).`);
-    specDiv.push(c([phrase, ...f].filter(Boolean).join(' ')));
+    if (entre.length) f.push(`${liste(entre)} ${entre.length > 1 ? "sont les seules facettes dont l'étendue se situe" : "est la seule facette dont l'étendue se situe"} entre les deux conventions (étendue de ${liste(entre.map((k) => `${fmt(eq.facettes_etendue[k])} point${eq.facettes_etendue[k] > 1 ? 's' : ''} pour ${k}`))}).`);
+    specDiv.push(c(f.join(' ')));
   }
   specDiv.push(h(
-    `Sur la composition des équipes, les travaux de ${nom('bell-2007')} (cités de mémoire, à vérifier) indiquent que les effets de la composition d'une équipe dépendent de la nature de la tâche et de son interdépendance ; il n'existe pas de mélange universel. La diversité de cette équipe se lit donc par rapport à sa tâche, et non en elle-même.`,
+    `Sur la composition des équipes, ${nom('bell-2007')} (2007, à vérifier) indique que la composition d'une équipe produit des effets variables selon le cadre d'étude. Que ces effets dépendent aussi de la nature de la tâche et de son interdépendance est un énoncé de la méthode de ce rapport, sans attribution à cette référence ; il n'existe pas de mélange universel. La diversité de cette équipe se lit donc par rapport à sa tâche, et non en elle-même.`,
     'faible',
     "Vérifier la référence avant diffusion, puis demander à l'équipe ce qui, dans sa composition, aide ou gêne son travail commun."
   ));
@@ -264,13 +241,13 @@ export function construire(ctx) {
     const clauses = L.domaines.map(phraseCouv);
     const faible = L.domaines.some((d) => couv(d)[d === 'N' ? 'bas' : 'hauts'].length <= 1);
     specDiv.push(h(
-      `${L.phrase} Dans cette équipe, ${clauses.join(' ; ')}.${faible ? ' Un domaine sans personne, ou avec une seule personne, est un angle mort ou un point de dépendance possible.' : ''}`,
+      `${L.phrase} Dans cette équipe, ${clauses.join(' ; ')}.${faible ? " Un domaine sans personne, ou avec une seule personne, en position haute est un point d'attention pour cette tâche, non une fonction manquante." : ''}`,
       'moyenne',
       "Demander à l'équipe quels moments de la tâche ont été les plus difficiles à coordonner, et à qui elle s'adresse pour y remédier."
     ));
   }
   specDiv.push(h(
-    "Si la tâche changeait de nature, la même diversité se lirait autrement : en routine, l'étendue sur l'ouverture (domaine O) compterait peu ; en création, elle deviendrait un atout à organiser ; en urgence, c'est la dispersion sur la réaction à la pression (domaine N) qui compterait ; en projet, ce sont les écarts de rythme et de suivi (domaine C) qui pèseraient aux échéances.",
+    "Si la tâche changeait de nature, la même diversité se lirait autrement : en routine, l'étendue sur l'ouverture (domaine O) compterait peu ; en création, elle deviendrait un atout à organiser ; en urgence, c'est la tenue du cap (domaine C) qui compterait ; en projet, ce sont les écarts de rythme et de suivi (domaine C) qui pèseraient aux échéances.",
     'faible',
     "Faire décrire par l'équipe un exemple récent où la même répartition aurait aidé ou gêné selon la nature de la tâche."
   ));
@@ -343,7 +320,6 @@ export function construire(ctx) {
     "Demander à l'équipe comment elle gère un retard de l'un de ses membres à l'approche d'une échéance."
   ));
   const sources = [];
-  if (parCode.size) sources.push('les domaines couverts par une seule personne');
   if (sansDirection.length) sources.push('les liens sans direction dominante');
   if (nRc) sources.push("les liens d'interdépendance réciproque");
   if (sources.length) {
@@ -372,7 +348,13 @@ export function construire(ctx) {
     org.seuil_atteint
       ? c(`Le seuil d'anonymat de ${seuil} personnes est atteint : l'effectif de ce cas est de ${n} personnes. La lecture agrégée peut être montrée ; elle ne décrit aucune personne en particulier.`)
       : c(`Le seuil d'anonymat de ${seuil} personnes n'est pas atteint : l'effectif de ce cas est de ${n} personnes. En dessous de ce seuil, un agrégat permettrait de retrouver des personnes.`),
-    !org.seuil_atteint && derogationApplicable ? c(derogation) : null,
+    !org.seuil_atteint && derogationApplicable ? c(derogation, true) : null,
+    !org.seuil_atteint && derogationApplicable
+      ? c((() => {
+        const reels = toutes.filter((p) => p.fictif === false).map((p) => p.code);
+        return reels.length ? `Précision : le cas est fictif, à l'exception du profil estimé de ${liste(reels)}, consenti (estimation, pas une mesure).` : 'Précision : le cas est entièrement fictif.';
+      })())
+      : null,
     sansConsentOrg.length
       ? c("Au moins une personne n'a pas consenti à la lecture organisationnelle : l'agrégat du moteur doit être recalculé sans elle avant toute lecture. La lecture agrégée n'est pas produite.")
       : null,
@@ -388,7 +370,7 @@ export function construire(ctx) {
   const dominants = agregatAutorise ? DOMAINES.filter((d) => estHaut(niv(d))) : [];
   const secProfils = agregatAutorise
     ? sec(4, 'profils', "Position d'ensemble de l'équipe", [
-      c("Position d'ensemble de l'équipe par domaine, d'après les niveaux conventionnels de la valeur centrale de l'équipe (échelle de 1 à 5, sans référence externe)."),
+      c("Position d'ensemble de l'équipe par domaine, d'après les niveaux conventionnels de la position d'ensemble calculée sur l'ensemble des personnes (échelle de 1 à 5, sans référence externe)."),
       ...DOMAINES.map((d) => {
         const rep = NIVEAUX_ORDRE.filter((k) => (ag.repartition?.[d]?.[k] ?? 0) > 0).map((k) => `${ag.repartition[d][k]} ${NIV_LOC[k]}`);
         return c(`${Dom(d)} : la position d'ensemble de l'équipe se situe ${NIV_LOC[niv(d)]}. Répartition des niveaux individuels : ${liste(rep)}.`);
@@ -441,13 +423,17 @@ export function construire(ctx) {
   const ctTransfert = contraintes.find((x) => /^Transfert/.test(x.libelle));
   const europeen = /européen/i.test(o.historique ?? '');
   const specCt = [
-    c(`Le droit marocain est la référence : loi 09-08 relative aux données à caractère personnel (contrôlée par la CNDP) et Code du travail (loi 65-99).${europeen ? ' Le groupe étant européen (cas), le RGPD et le règlement 2024/1689 sur l\'intelligence artificielle peuvent aussi s\'appliquer ; la règle de prudence est d\'appliquer l\'exigence la plus forte des deux cadres.' : ' Le RGPD et le règlement 2024/1689 sur l\'intelligence artificielle ne s\'appliquent que si l\'organisation y est soumise.'} Base juridique à faire instruire par Tenga Conseil avant tout usage.`),
-    ...contraintes.map((x) => c(`${x.id}, dureté ${x.durete === 'dure' ? 'dure' : 'négociable'} : ${minusc(x.libelle)}.`)),
+    c(`Le droit marocain est la référence : loi 09-08 relative aux données à caractère personnel (contrôlée par la CNDP) et Code du travail (loi 65-99).${europeen ? ' Le groupe étant européen (cas), le RGPD et le règlement 2024/1689 sur l\'intelligence artificielle peuvent aussi s\'appliquer ; la règle de prudence est d\'appliquer l\'exigence la plus forte des deux cadres.' : ' Le RGPD et le règlement 2024/1689 sur l\'intelligence artificielle ne s\'appliquent que si l\'organisation y est soumise.'} La règle selon laquelle aucune décision d'emploi ne s'appuie sur ces rapports est posée par l'outil ; son articulation avec le Code du travail (loi 65-99) est à instruire par Tenga Conseil. Base juridique à faire instruire par Tenga Conseil avant tout usage.`),
+    ...contraintes.map((x) => {
+      const dur = x.durete === 'dure' ? 'dure' : 'négociable';
+      if (/décision d'emploi/.test(x.libelle)) return c(`${x.id}, dureté ${dur} : aucune décision d'emploi ne peut s'appuyer sur ces rapports (règle posée par l'outil ; son articulation avec le Code du travail (loi 65-99) est à instruire par Tenga Conseil).`);
+      return c(`${x.id}, dureté ${dur} : ${x.libelle}.`);
+    }),
     contraintes.some((x) => x.durete === 'dure')
       ? h(`Les contraintes dures (${idsCT(contraintes.filter((x) => x.durete === 'dure'))}) ne se négocient pas : toute lecture et toute recommandation les respectent. Les contraintes réglementaires${parType('reglementation').length ? ` (${idsCT(parType('reglementation'))})` : ''} conditionnent l'usage des données et des rapports et s'instruisent avant toute action.`, 'moyenne', 'Faire confirmer par le commanditaire la dureté de chaque contrainte et son échéance.')
       : null,
     ctCNDP
-      ? h(`La contrainte ${ctCNDP.id} exige une déclaration ou une autorisation préalable avant toute analyse de relation ou d'équipe : en situation réelle, les niveaux 2 et 3 de ce rapport ne seraient exploitables qu'après cette formalité${ctTransfert ? `, de même que tout envoi de données vers le siège (${ctTransfert.id})` : ''}.`, 'moyenne', "Faire vérifier par Tenga Conseil l'état de la déclaration auprès de la CNDP et le cadre du transfert avant toute diffusion.")
+      ? h(`Le traitement dans son ensemble est soumis à déclaration ou autorisation préalable (à confirmer par Tenga Conseil) ; ${ctCNDP.id} pose en outre cette exigence avant les niveaux 2 et 3${ctTransfert ? `, et le cadre du transfert vers le siège (${ctTransfert.id}) reste à instruire avant tout envoi de données` : ''}.`, 'moyenne', "Faire vérifier par Tenga Conseil l'état de la déclaration auprès de la CNDP et le cadre du transfert avant toute diffusion.")
       : null,
     contraintes.some((x) => x.durete !== 'dure')
       ? h(
@@ -495,7 +481,7 @@ export function construire(ctx) {
       "Demander au commanditaire quelles décisions du projet peuvent être prises sans passer par la ligne ordinaire, et lesquelles non."
     ),
     h(
-      `Rôles : les rôles tenus au cas sont ${liste(roles)}. Il se peut que chacun gagne à avoir un suppléant désigné, surtout là où un domaine ne repose que sur une seule personne (niveau 3), et qu'un rôle de contradicteur soit confié là où la contradiction franche est peu représentée.`,
+      `Rôles : les rôles tenus au cas sont ${liste(roles)}. Il se peut que chacun gagne à avoir un suppléant désigné, de façon que la tâche ne dépende pas d'une seule personne pour une fonction (niveau 3).`,
       'faible',
       "Demander à chaque rôle ce qui s'arrêterait s'il était absent deux semaines, et qui prendrait le relais."
     ),
@@ -526,20 +512,18 @@ export function construire(ctx) {
   const piloteN4 = roleDe(poolN4, (p) => p.niveau === 'direction');
 
   if (participants.length >= 2) {
-    const dep = [...parCode].map(([code, ds]) => `${code} sur ${liste(ds.map((d) => `le ${dom(d)}`))}`);
+    const roles3 = participants.map((p) => `${p.code} (${minusc(p.role_equipe)})`);
     recs.push(recommandation(
       'REC-N3-1', 'n3',
-      parCode.size
-        ? `Désigner un suppléant pour chaque domaine couvert par une seule personne en position haute (${liste([...parCode].map(([code]) => code))}) et documenter ce qu'il faut savoir pour la remplacer.`
-        : "Vérifier chaque mois qu'aucun domaine ne dépend d'une seule personne en position haute, et désigner un suppléant dès qu'un tel domaine apparaît.",
+      "Désigner pour chaque rôle de l'équipe un suppléant, nommé par écrit, et documenter ce qu'il faut savoir pour le remplacer, en commençant par les rôles dont dépendent les échéances du cas.",
       {
-        donnee: parCode.size ? `Une seule personne en position plutôt haute ou haute : ${liste(dep)}.` : "Aucun domaine n'est couvert par une seule personne en position haute à ce jour.",
-        contexte: `Équipe de ${participants.length} personnes, tâche de nature ${natureFr}, échéances rapprochées au cas : une absence sur un point de dépendance pèse directement sur le calendrier.`,
+        donnee: `Rôles tenus au cas, chacun avec un périmètre de décision propre : ${liste(roles3)}.`,
+        contexte: `Équipe de ${participants.length} personnes, tâche de nature ${natureFr}, échéances rapprochées au cas : l'absence d'un rôle sans suppléant pèse directement sur le calendrier.`,
         preuve: { niveau: 'hypothese', reference_id: null },
         risque: "Une suppléance purement formelle, sans transfert réel de savoir-faire, donnerait une fausse assurance.",
         responsable: piloteN3,
         horizon: '30 jours',
-        indicateur: 'Suppléant nommé par écrit pour chaque domaine à porteur unique, vérifié à la revue des 30 jours.'
+        indicateur: 'Suppléant nommé par écrit pour chaque rôle, vérifié à la revue des 30 jours.'
       }
     ));
     recs.push(recommandation(
@@ -568,17 +552,19 @@ export function construire(ctx) {
         indicateur: `Synthèse des entretiens restituée à l'équipe, puis réponse de chaque personne à la question commune ${gui("Que se passe-t-il ici quand quelqu'un signale une erreur ?")}, relevée à 60 puis 90 jours.`
       }
     ));
-    const angles = [];
-    if (!couv('A').bas.length) angles.push('contradiction franche (domaine A)');
-    if (!couv('N').hauts.length) angles.push('veille des risques (domaine N)');
-    if (!couv('C').bas.length) angles.push('souplesse devant les changements de plan (domaine C)');
-    if (!couv('O').hauts.length) angles.push('recherche de pistes nouvelles (domaine O)');
+    const facA4 = ctx.bib?.facettes?.find((x) => x.code === 'A4')?.libelle?.fr;
+    const niveauA4 = (code) => faits.personnes?.[code]?.facettes?.A4?.niveau;
+    const a4bas = participants.filter((p) => ['bas', 'plutot_bas'].includes(niveauA4(p.code))).map((p) => p.code);
+    const a4haut = participants.filter((p) => estHaut(niveauA4(p.code))).map((p) => p.code);
+    const a4 = a4bas.length || a4haut.length
+      ? ` ; facette A4${facA4 ? ` (${facA4})` : ''} : plutôt basse ou basse pour ${a4bas.length ? liste(a4bas) : 'aucune personne'}, plutôt haute ou haute pour ${a4haut.length ? liste(a4haut) : 'aucune personne'}`
+      : '';
     recs.push(recommandation(
       'REC-N3-4', 'n3',
-      `Mettre en place une revue de risques hebdomadaire de quinze minutes, avec un rôle de contradicteur tournant, pour couvrir ce que les profils de l'équipe portent peu spontanément.`,
+      "Mettre en place une revue de risques hebdomadaire de quinze minutes, avec un rôle de contradicteur tournant, afin que les risques du cas soient discutés avant les échéances.",
       {
-        donnee: angles.length ? `Positions peu représentées dans l'équipe : ${angles.join(' ; ')}.` : "Toutes les positions examinées (contradiction, veille des risques, souplesse, recherche de pistes nouvelles) sont représentées dans l'équipe.",
-        contexte: `Tâche de nature ${natureFr}, avec des risques inscrits au cas (${(tache.risques ?? []).length} risques connus).`,
+        donnee: `${(tache.risques ?? []).length} risques sont inscrits au cas${a4}.`,
+        contexte: `Tâche de nature ${natureFr}, avec des échéances rapprochées : la facette A4 est lue ici au niveau de chaque personne (niveau 1), non à celui du domaine.`,
         preuve: { niveau: 'hypothese', reference_id: null },
         risque: "Le rôle de contradicteur peut être vécu comme une critique personnelle s'il n'est pas tournant et explicitement cadré.",
         responsable: roleDe(pN3, (p) => /exécution/i.test(p.role_equipe)),
@@ -595,7 +581,7 @@ export function construire(ctx) {
       contexte: "Le consentement est tracé par niveau de rapport : une analyse d'équipe ne peut contenir que les personnes qui y ont consenti.",
       preuve: { niveau: 'hypothese', reference_id: null },
       risque: "Une analyse qui conserverait les données d'une personne ayant retiré son consentement porterait atteinte à ce consentement.",
-      responsable: fonctionConformite(pN3),
+      responsable: roleConformite(pN3),
       horizon: '30 jours',
       indicateur: "Date du dernier recalcul comparée à la date du dernier changement de consentement, relevée avant chaque diffusion."
     }
@@ -609,7 +595,7 @@ export function construire(ctx) {
       contexte: "La plateforme interdit à l'employeur de voir un résultat individuel ; un agrégat sous le seuil permettrait de retrouver des personnes.",
       preuve: { niveau: 'hypothese', reference_id: null },
       risque: "Une dérogation étendue à un cas réel exposerait des personnes identifiables par recoupement.",
-      responsable: fonctionConformite(poolN4),
+      responsable: roleConformite(poolN4),
       horizon: '30 jours',
       indicateur: `Contrôle bloquant avant chaque génération de rapport (effectif au moins égal à ${seuil}, ou cas fictif consenti) ; nombre d'agrégats produits sous le seuil pour des cas réels, relevé à chaque génération (cible : aucun).`
     }
@@ -624,7 +610,7 @@ export function construire(ctx) {
       contexte: `Le droit marocain est la référence${europeen ? ' ; le groupe étant européen, le RGPD peut aussi s\'appliquer, et la règle de prudence retient l\'exigence la plus forte' : ''}.`,
       preuve: { niveau: 'hypothese', reference_id: null },
       risque: "Un envoi de données au siège avant que le cadre juridique soit instruit exposerait l'organisation à un manquement.",
-      responsable: fonctionConformite(poolN4),
+      responsable: roleConformite(poolN4),
       horizon: echeanceCNDP ? `30 jours (échéance du cas : ${minusc(echeanceCNDP).replace(' : ', ', ')})` : '30 jours',
       indicateur: "Statut de chaque formalité (faite, en cours, à faire), relevé à 30 jours puis avant le dépôt du dossier à la CNDP."
     }
@@ -679,5 +665,6 @@ export function construire(ctx) {
     utilisees.add(x.preuve.reference_id);
   }
 
-  return { niveaux: [n3, n4], recommandations: recs, reference_ids: [...utilisees].sort() };
+  const recsCourbes = recs.map((x) => Object.fromEntries(Object.entries(x).map(([k, v]) => [k, typeof v === 'string' && !['id', 'niveau', 'responsable'].includes(k) ? courbe(v) : v])));
+  return { niveaux: [n3, n4], recommandations: recsCourbes, reference_ids: [...utilisees].sort() };
 }

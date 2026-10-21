@@ -156,7 +156,7 @@
    "code": "N2",
    "domaine": "N",
    "libelle": {
-    "fr": "Irritabilité et patience"
+    "fr": "Irritabilité"
    },
    "libelle_plateforme": "Colère",
    "affirmations_fr": [
@@ -280,7 +280,7 @@
    "code": "N3",
    "domaine": "N",
    "libelle": {
-    "fr": "Humeur et estime de soi"
+    "fr": "Tristesse et doute sur soi"
    },
    "libelle_plateforme": "Dépression",
    "affirmations_fr": [
@@ -404,7 +404,7 @@
    "code": "N4",
    "domaine": "N",
    "libelle": {
-    "fr": "Réserve en situation sociale"
+    "fr": "Gêne en situation sociale"
    },
    "libelle_plateforme": "Conscience de soi",
    "affirmations_fr": [
@@ -429,7 +429,7 @@
     "fr": "Cette facette porte sur l’aisance avec laquelle vous abordez des inconnus, supportez l’attention des autres et traversez des situations sociales délicates."
    },
    "avertissement": {
-    "fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur l’aisance déclarée en situation sociale, non sur la conscience de soi au sens large. Elle ne dit rien de votre valeur ni de votre état de santé."
+    "fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la gêne déclarée en situation sociale (un résultat haut décrit une gêne plus fréquente), non sur la conscience de soi au sens large. Elle ne dit rien de votre valeur ni de votre état de santé."
    },
    "niveaux": {
     "bas": {
@@ -528,7 +528,7 @@
    "code": "N5",
    "domaine": "N",
    "libelle": {
-    "fr": "Envies et tentations"
+    "fr": "Tendance à céder aux envies"
    },
    "libelle_plateforme": "Immodération",
    "affirmations_fr": [
@@ -553,7 +553,7 @@
     "fr": "Cette facette porte sur la facilité avec laquelle vous résistez à vos envies ou vous vous laissez tenter."
    },
    "avertissement": {
-    "fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la maîtrise déclarée des envies et des tentations, sans viser aucun domaine précis. Cette lecture ne porte aucun jugement sur vos choix ni sur votre mode de vie."
+    "fr": "Le titre de cette facette dans l’application est plus large que son contenu : les affirmations portent sur la difficulté déclarée à maîtriser ses envies et à résister aux tentations (un résultat haut décrit une tendance à y céder), sans viser aucun domaine précis. Cette lecture ne porte aucun jugement sur vos choix ni sur votre mode de vie."
    },
    "niveaux": {
     "bas": {
@@ -2249,7 +2249,7 @@
    "code": "A1",
    "domaine": "A",
    "libelle": {
-    "fr": "Confiance envers les autres"
+    "fr": "Confiance accordée aux autres"
    },
    "libelle_plateforme": "Confiance",
    "affirmations_fr": [
@@ -2373,7 +2373,7 @@
    "code": "A2",
    "domaine": "A",
    "libelle": {
-    "fr": "Usage des autres à ses propres fins"
+    "fr": "Absence d’usage des autres à ses propres fins"
    },
    "libelle_plateforme": "Moralité",
    "affirmations_fr": [
@@ -2398,7 +2398,7 @@
     "fr": "Cette facette est mesurée par quatre affirmations sur ce que vous déclarez de vos propres pratiques : utiliser les autres pour vos fins, tricher pour avancer, profiter des autres, entraver leurs plans."
    },
    "avertissement": {
-    "fr": "Le libellé « Moralité » est beaucoup plus large que ce qui est mesuré : les quatre affirmations portent seulement sur ce que vous déclarez de vos pratiques, non sur votre valeur morale ni sur votre honnêteté. Ce résultat repose sur votre seule déclaration ; il ne doit jamais servir à juger une personne."
+    "fr": "Le libellé « Moralité » est beaucoup plus large que ce qui est mesuré : les quatre affirmations portent seulement sur ce que vous déclarez de vos pratiques, non sur votre valeur morale ni sur votre honnêteté. Un résultat haut décrit l’absence déclarée de ces pratiques, un résultat bas leur présence déclarée. Ce résultat repose sur votre seule déclaration ; il ne doit jamais servir à juger une personne."
    },
    "niveaux": {
     "bas": {
@@ -2742,7 +2742,7 @@
    "code": "A5",
    "domaine": "A",
    "libelle": {
-    "fr": "Opinion de soi et mise en avant"
+    "fr": "Retenue dans l’opinion de soi et sa mise en avant"
    },
    "libelle_plateforme": "Modestie",
    "affirmations_fr": [

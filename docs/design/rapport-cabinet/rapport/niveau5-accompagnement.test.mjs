@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { construire, FAMILLES } from './niveau5-accompagnement.mjs';
+import { construire, FAMILLES, CONDITION_CNDP } from './niveau5-accompagnement.mjs';
 import { auditer } from '../audit/audit.mjs';
 
 const lire = (p) => JSON.parse(fs.readFileSync(new URL(p, import.meta.url), 'utf-8'));
@@ -18,7 +18,7 @@ const sortie = construire(ctx());
 const { niveau, recommandations } = sortie;
 const paragraphes = niveau.sections.flatMap((s) => s.paragraphes);
 
-const ROLES = cas.personnes.flatMap((p) => [p.role_equipe, p.fonction.replace(/\s*\((?:fictif|fonction fictive)\)\s*$/, '')]);
+const ROLES = cas.personnes.flatMap((p) => [p.role_equipe, p.fonction.replace(/\s*\((?:fictif|fonction fictive)\)\s*$/, '')]).map((x) => x.replace(/'/g, '’'));
 const HORIZONS = ['30 jours', '60 jours', '90 jours', ...cas.tache.echeances];
 const famille = (r) => FAMILLES.find((f) => r.texte.startsWith(f));
 
@@ -47,11 +47,32 @@ test('les cinq familles sont présentes', () => {
   for (const r of recommandations) assert.ok(famille(r), `${r.id} sans famille`);
 });
 
+const horizonValide = (h) => HORIZONS.includes(h) || (h.startsWith(`${CONDITION_CNDP}, puis `) && HORIZONS.includes(h.slice(CONDITION_CNDP.length + 7)));
+const fondeeSurRelationOuEquipe = (r) => /^(Mentorat|Coaching de binôme|Coaching d’équipe)/.test(r.texte) || /retour d’information|planification partagée/.test(r.texte);
+const conditionnelle = (r) => r.horizon.startsWith(CONDITION_CNDP);
+
 test('horizons : 30, 60, 90 jours ou échéance du cas', () => {
-  for (const r of recommandations) assert.ok(HORIZONS.includes(r.horizon), `${r.id} : horizon « ${r.horizon} »`);
+  for (const r of recommandations) assert.ok(horizonValide(r.horizon), `${r.id} : horizon « ${r.horizon} »`);
   assert.ok(recommandations.some((r) => r.horizon === '30 jours'));
   assert.ok(recommandations.some((r) => r.horizon === '60 jours'));
   assert.ok(recommandations.some((r) => r.horizon === '90 jours'));
+});
+
+test('toute recommandation fondée sur une relation ou l’équipe est conditionnée à l’autorisation de la CNDP', () => {
+  const visees = recommandations.filter(fondeeSurRelationOuEquipe);
+  assert.ok(visees.length >= 5);
+  for (const r of visees) assert.ok(conditionnelle(r), `${r.id} : horizon « ${r.horizon} » sans condition CNDP`);
+  const cal = niveau.sections.find((s) => s.id === 'calendrier').paragraphes.map((p) => p.texte).join(' ');
+  assert.match(cal, /Actions conditionnelles à l’autorisation de la CNDP/);
+  const depart = niveau.sections.find((s) => s.id === 'depart').paragraphes.map((p) => p.texte).join(' ');
+  assert.match(depart, /conditionnée, dans le calendrier lui-même, à l’autorisation de la CNDP/);
+});
+
+test('mutation : remettre « 60 jours » nu sur le mentorat fait échouer le contrôle', () => {
+  const m = copie(recommandations.find((r) => /^Mentorat/.test(r.texte)));
+  assert.ok(conditionnelle(m));
+  m.horizon = '60 jours';
+  assert.ok(fondeeSurRelationOuEquipe(m) && !conditionnelle(m));
 });
 
 test('chaque responsable contient au moins un rôle du cas', () => {
@@ -110,7 +131,7 @@ test('la mesure d’impact donne moment de mesure et source de la donnée', () =
   assert.match(texte, /avant/);
   assert.match(texte, /après/);
   assert.match(texte, /source/i);
-  for (const i of cas.strategie.indicateurs) assert.ok(texte.includes(i), i);
+  for (const i of cas.strategie.indicateurs) assert.ok(texte.includes(i.replace(/'/g, '’')), i);
 });
 
 test('garde-fous : décision d’emploi, consentement, signature, ISO 10667, base juridique', () => {
@@ -159,6 +180,50 @@ test('sans consentement de binôme, ni mentorat ni coaching de binôme', () => {
   const r = construire(c);
   assert.ok(!r.recommandations.some((x) => /^(Mentorat|Coaching de binôme)/.test(x.texte)));
   for (const s of r.niveau.sections) assert.ok(s.paragraphes.length > 0);
+});
+
+const texteDe = (id) => niveau.sections.find((s) => s.id === id).paragraphes.map((p) => p.texte).join(' ');
+
+test('I4 : la règle sur les décisions d’emploi est posée par l’outil, non une contrainte dure du cas', () => {
+  const g = texteDe('garde-fous');
+  assert.match(g, /règle posée par l’outil/);
+  assert.match(g, /à instruire par Tenga Conseil/);
+  assert.ok(!/contrainte dure du cas \(CT-03/.test(g));
+});
+
+test('I8 : Kirkpatrick, niveaux 1 et 2 dans le plan, niveaux 3 et 4 hors plan partout', () => {
+  const cible = [texteDe('mesure'), texteDe('calendrier'), ...recommandations.filter((r) => /Kirkpatrick/.test(r.texte)).map((r) => `${r.texte} ${r.indicateur} ${r.risque}`)].join(' ');
+  assert.match(cible, /niveaux 1 et 2/);
+  assert.match(cible, /niveaux 3 et 4 (restant )?hors (du )?plan|hors du plan/);
+  assert.ok(!/niveau 3 à 30 jours|niveau 4 à 90 jours|quatre niveaux/.test(cible));
+  assert.ok(!/niveaux 3 et 4 de Kirkpatrick \(référence à vérifier\), décision/.test(cible));
+  const k = recommandations.find((r) => r.preuve.reference_id === 'kirkpatrick');
+  assert.ok(!/30 jours/.test(k.indicateur));
+});
+
+test('I6 : charge répartie, chaque indicateur a une cible, aucune échéance hors liste nommée', () => {
+  const parRole = new Map();
+  for (const r of recommandations) for (const role of ROLES) if (r.responsable.includes(role)) parRole.set(role, (parRole.get(role) ?? 0) + 1);
+  const pilote = cas.personnes.find((p) => p.role_equipe === 'Pilote du programme').role_equipe;
+  assert.ok(parRole.get(pilote) <= Math.ceil(recommandations.length / 3), `pilote ${parRole.get(pilote)}`);
+  const roles = new Set(recommandations.flatMap((r) => ROLES.filter((x) => r.responsable.includes(x))));
+  assert.ok(roles.size >= 4);
+  for (const r of recommandations) assert.match(r.indicateur, /Cible :/, r.id);
+  assert.match(texteDe('calendrier'), /Charge des responsables/);
+  const f3 = recommandations.find((r) => /planification partagée/.test(r.texte));
+  assert.ok(horizonValide(f3.horizon));
+  assert.ok(f3.indicateur.includes(cas.tache.echeances[1]));
+});
+
+test('mineurs : accords de « contact », apostrophes courbes, mention après Edmondson', () => {
+  const tout = JSON.stringify({ niveau, recommandations });
+  assert.ok(!/contact (mensuelle|quotidienne)|est (quotidienne|mensuelle)/.test(tout));
+  assert.match(tout, /contact mensuel/);
+  assert.match(tout, /Le contact est quotidien/);
+  assert.ok(!/[a-zé]'[a-zé]/i.test(tout.replace(/\\"/g, '')), 'apostrophe droite');
+  const f2 = recommandations.find((r) => /sécurité psychologique/.test(r.texte));
+  assert.match(f2.texte, /Edmondson, référence à vérifier\), en lien avec la méfiance héritée du précédent outil\./);
+  assert.ok(!/mémoire/.test(tout));
 });
 
 test('audit : 0 défaut de contenu sur un rapport factice contenant le seul niveau 5', () => {

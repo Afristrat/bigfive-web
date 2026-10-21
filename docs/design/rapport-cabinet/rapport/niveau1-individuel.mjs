@@ -41,19 +41,21 @@ const CONDITIONS = {
   }
 };
 
-// Pratique à essayer à 60 jours, par domaine de la priorité.
-const PRATIQUES = {
-  N: 'tenir un court relevé hebdomadaire des moments de tension et de ce qui les a apaisés',
-  E: 'choisir un type de réunion pour essayer une prise de parole plus ou moins fréquente et noter l’effet sur la décision',
-  O: 'choisir une idée nouvelle et un sujet à cadrer, et noter le temps consacré à chacun',
-  A: 'formuler un désaccord et une demande d’aide dans la même semaine, et noter l’accueil reçu',
-  C: 'convenir d’un point d’étape sur une tâche avec un critère de fin explicite, et noter l’écart entre l’effort engagé et le résultat'
-};
+// Le plan automatique ne cible jamais ces facettes ni le domaine N : elles se traitent en entretien.
+const FACETTES_NON_CIBLEES = new Set(['O6', 'A2', 'N3']);
+// Porteur de l’entretien de restitution : le cas ne contient pas ce rôle, le mandat le prévoit (§ 3 point 8).
+const CONSULTANT = 'Consultant qualifié désigné par Tenga Conseil';
+// Apostrophes courbes dans tout texte visible, y compris les chaînes reprises du cas.
+const typo = (t) => t.replace(/(\p{L})'(\p{L})/gu, '$1’$2');
+// Le responsable reste le rôle du cas tel quel ; les autres champs passent par typo.
+const recT = (id, niveau, texte, a) => recommandation(id, niveau, typo(texte), Object.fromEntries(Object.entries(a).map(([k, v]) => [k, typeof v === 'string' && k !== 'responsable' ? typo(v) : v])));
+const deNom = (nom) => (/^[AEIOUYHÉÈÊ]/i.test(nom) ? `d’${nom}` : `de ${nom}`);
+const deCode = (code) => (/^[AEIOUY]/.test(code) ? `d’${code}` : `de ${code}`);
 
 const regleDe = (regles, id) => {
   const r = regles.regles.find((x) => x.id === id);
   if (!r) throw new Error(`règle inconnue ${id}`);
-  return r;
+  return { ...r, texte: r.texte.replace(/(\p{L})'(\p{L})/gu, '$1’$2') };
 };
 const minuscule = (s) => s.charAt(0).toLowerCase() + s.slice(1);
 const arrondi = (x) => Math.round(x * 1000) / 1000;
@@ -84,8 +86,6 @@ function libelleFacette(bib, code) {
   return f.libelle.fr;
 }
 
-const mentionRelecture = (b) => (b.relecture === 'relue' ? 'bloc relu' : 'bloc non relu');
-
 function chapitre(ctx, p) {
   const { cas, faits, bib, regles } = ctx;
   const fp = faits.personnes[p.code];
@@ -102,16 +102,16 @@ function chapitre(ctx, p) {
   const sections = [];
   const ajouter = (suffixe, titre, items) => {
     const id = `${p.code}-${suffixe}`;
-    sections.push(section(id, titre, items.map(([texte, options], i) => paragraphe(`n1-${id}-${i + 1}`, texte, options))));
+    sections.push(section(id, typo(titre), items.map(([texte, options], i) => paragraphe(`n1-${id}-${i + 1}`, typo(texte), options.verification ? { ...options, verification: typo(options.verification) } : options))));
   };
   const hyp = (texte, confiance, verification, bloc_ids) => [texte, { statut: 'hypothese', confiance, verification, bloc_ids }];
   const con = (texte) => [texte, { statut: 'constate' }];
 
   // (0) cadre
   ajouter('cadre', `${p.code} : ${p.nom}`, [
-    con(`Chapitre privé de ${p.nom} (${p.code}). ${p.etiquette}. Fonction : ${p.fonction} ; niveau : ${p.niveau} ; ancienneté : ${p.anciennete} ; rôle dans l’équipe : ${p.role_equipe} ; périmètre de décision : ${p.perimetre_decision} ; langue de passation : ${p.langue_passation}.`),
+    con(`Chapitre privé ${deNom(p.nom)} (${p.code}). ${p.etiquette}. Fonction : ${p.fonction} ; niveau : ${p.niveau} ; ancienneté : ${p.anciennete} ; rôle dans l’équipe : ${p.role_equipe} ; périmètre de décision : ${p.perimetre_decision} ; langue de passation : ${p.langue_passation}.`),
     con('Ce chapitre n’existe que parce que la personne a consenti au niveau individuel. Aucune décision d’emploi ne peut s’appuyer sur ce chapitre. Les niveaux sont des conventions de l’outil, lues sur l’échelle de la personne elle-même : aucune comparaison à un groupe de référence n’est faite et aucune étiquette de type n’est attribuée.'),
-    con('Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes et sont repris tels quels ; chacun porte la mention « bloc non relu » tant qu’une relecture humaine n’a pas eu lieu.')
+    con('Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ». La mention « bloc non relu » est portée une fois par domaine tant qu’une relecture humaine n’a pas eu lieu.')
   ]);
 
   // (a) domaines
@@ -130,15 +130,20 @@ function chapitre(ctx, p) {
   }
   ajouter('domaines', `Chapitre ${p.code} : les cinq domaines`, paraDomaines);
 
-  // (b) 30 facettes, domaine par domaine
+  // (b) 30 facettes, domaine par domaine ; textes de la bibliothèque cités entre guillemets
   for (const l of lectures) {
-    const items = l.codes.map((c) => {
+    const nonRelus = l.codes.filter((c) => blocDe(c).relecture !== 'relue');
+    const mention = nonRelus.length === l.codes.length
+      ? 'Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu.'
+      : `Mention « bloc non relu » pour ${liste(nonRelus)} ; les autres blocs ont été relus.`;
+    const items = [con(`Facettes du domaine ${LIBELLE_DOMAINE[l.d]}. ${mention} Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.`)];
+    for (const c of l.codes) {
       const b = blocDe(c);
       const niveau = fp.facettes[c].niveau;
-      const avertissement = b.avertissement ? `Avertissement de la bibliothèque : ${b.avertissement} ` : '';
-      const texte = `${c}, ${b.libelle} : ${valeur(c)} sur l’échelle de 1 à 5, niveau ${niveauFacette(c)}. ${avertissement}${b.description.join(' ')} Apport possible : ${b.apport.join(' ')} Coût possible : ${b.cout.join(' ')} Question pour l’entretien : ${b.question} (${mentionRelecture(b)}).`;
-      return hyp(texte, niveau === 'milieu' ? 'faible' : 'moyenne', b.question, [b.id]);
-    });
+      const avertissement = b.avertissement ? ` Avertissement de la bibliothèque : « ${b.avertissement.replace(/«\s*/g, '“').replace(/\s*»/g, '”')} »` : '';
+      const texte = `${c}, ${b.libelle} : ${valeur(c)} sur l’échelle de 1 à 5, niveau ${niveauFacette(c)}.${avertissement} Description de la bibliothèque : « ${b.description.join(' ')} » Apport possible : « ${b.apport.join(' ')} » Coût possible : « ${b.cout.join(' ')} » Question pour l’entretien : « ${b.question} »`;
+      items.push(hyp(texte, niveau === 'milieu' ? 'faible' : 'moyenne', `Poser à la personne la question de la bibliothèque : « ${b.question} »`, [b.id]));
+    }
     ajouter(`facettes-${l.d}`, `Chapitre ${p.code} : facettes du domaine ${LIBELLE_DOMAINE[l.d]}`, items);
   }
 
@@ -180,15 +185,15 @@ function chapitre(ctx, p) {
   ajouter('contribution', `Chapitre ${p.code} : profil de contribution`, [
     con(`Contexte pris en compte : fonction « ${p.fonction} », périmètre de décision « ${p.perimetre_decision} », rôle dans l’équipe « ${p.role_equipe} ». Tâche commune : ${minuscule(tache.description)}, de nature « ${tache.nature} », avec pour échéances ${tache.echeances.map(minuscule).join(' ; ')}.`),
     hyp(
-      `Points d’appui possibles, d’après les cinq facettes les plus éloignées du milieu de l’échelle : ${forts.map((c) => `${c} ${lib(c)} (${niveauFacette(c)}) : ${blocDe(c).apport[0]}`).join(' ')} Il se peut que ces apports servent la tâche décrite ci-dessus dans le rôle « ${p.role_equipe} ». Règle de lecture : ${regleDe(regles, 'CONTRIB-1').texte}`,
+      `Points d’appui possibles. Ces cinq facettes sont celles que la règle ${regleDe(regles, 'CONTRIB-1').id} retient comme les plus éloignées du milieu de l’échelle. Passages de la bibliothèque, adressés à la personne : ${forts.map((c) => `${c} « ${lib(c)} » (${niveauFacette(c)}) : « ${blocDe(c).apport[0]} »`).join(' ; ')}. Il se peut que ces apports servent la tâche décrite ci-dessus dans le rôle « ${p.role_equipe} ».`,
       'faible',
       'Demander dans quelles situations de la tâche ces apports ont déjà servi, et dans lesquelles ils ont plutôt gêné.',
       idsForts
     ),
     hyp(
       couts.length
-        ? `Coûts possibles à explorer : ${forts.map((c) => `${c} : ${blocDe(c).cout[0]}`).join(' ')} Les facettes engagées dans une tension interne (${liste(couts)}) sont celles où un coût est à explorer en priorité.`
-        : `Coûts possibles à explorer : ${forts.map((c) => `${c} : ${blocDe(c).cout[0]}`).join(' ')} Aucune facette n’est engagée dans une tension interne : ces coûts sont ceux que décrit la bibliothèque pour les mêmes facettes.`,
+        ? `Coûts possibles à explorer. Passages de la bibliothèque : ${forts.map((c) => `${c} : « ${blocDe(c).cout[0]} »`).join(' ; ')}. Les facettes engagées dans une tension interne (${liste(couts)}) sont celles où un coût est à explorer en priorité.`
+        : `Coûts possibles à explorer. Passages de la bibliothèque : ${forts.map((c) => `${c} : « ${blocDe(c).cout[0]} »`).join(' ; ')}. Aucune facette n’est engagée dans une tension interne : ces coûts sont ceux que décrit la bibliothèque pour les mêmes facettes.`,
       'faible',
       'Demander quel prix la personne paie, en énergie ou en relations, lorsqu’elle met ces apports en œuvre sous pression.',
       idsForts
@@ -215,71 +220,82 @@ function chapitre(ctx, p) {
     con(`Les indices de qualité de passation (réponses manquantes, durée, régularité des réponses) ne sont pas calculés dans cette démonstration : ils sont à valider sur données réelles avant toute publication. En leur absence, la fiabilité de la réponse n’est ni affirmée ni écartée. La passation a eu lieu en ${p.langue_passation} ; l’équivalence des versions linguistiques n’étant pas établie, ce chapitre se lit sans aucune comparaison avec une autre personne.`)
   ]);
 
-  // (g) plan de développement : trois domaines aux facettes les plus écartées (ordre N, E, O, A, C en cas d’égalité)
-  const priorites = [...lectures].sort((x, y) => y.etendue - x.etendue || DOMAINES.indexOf(x.d) - DOMAINES.indexOf(y.d)).slice(0, 3);
+  // (g) plan de développement : seule une tension relevée donne une priorité (facettes distinctes) ; O6, A2, N3 et le
+  // domaine N ne sont jamais ciblés par le choix automatique ; sans tension éligible, entretien de restitution seul.
+  const eligible = (t) => t.domaine !== 'N' && !t.facettes.some((c) => FACETTES_NON_CIBLEES.has(c));
+  const utilisees = new Set();
+  const priorites = [];
+  for (const t of [...tensions].sort((x, y) => y.ecart - x.ecart)) {
+    if (priorites.length === 3 || !eligible(t) || t.facettes.some((c) => utilisees.has(c))) continue;
+    t.facettes.forEach((c) => utilisees.add(c));
+    const [a, b] = t.facettes;
+    const [haut, bas] = fp.facettes[a].moy >= fp.facettes[b].moy ? [a, b] : [b, a];
+    priorites.push({ tension: t, haut, bas, domaine: t.domaine });
+  }
+  const noteEcartees = tensions.some((t) => !eligible(t))
+    ? ` Les tensions portant sur ${liste([...FACETTES_NON_CIBLEES])} ou sur le domaine ${NOM_DOMAINE.N} ne sont pas instruites par le plan : elles se traitent en entretien.`
+    : '';
   const itemsPlan = [
-    con('Le plan de développement retient trois priorités, tirées des écarts les plus nets entre facettes d’un même domaine. Chacune est suivie à 30, 60 et 90 jours avec un consultant qualifié, et ne sert à aucune décision d’emploi.')
+    priorites.length === 0
+      ? con(`Pas de priorité de développement ; entretien de restitution seul. Aucune tension interne relevée ne désigne de piste que le plan puisse instruire : l’entretien de restitution de ce chapitre suffit à ce stade, et il ne sert à aucune décision d’emploi.${noteEcartees}`)
+      : con(`Le plan de développement retient ${['', 'une priorité', 'deux priorités', 'trois priorités'][priorites.length]}, chacune tirée d’une tension interne relevée par les règles de l’outil (facettes distinctes). Chacune est suivie à 30, 60 et 90 jours avec un consultant qualifié, et ne sert à aucune décision d’emploi.${noteEcartees}`)
   ];
-  const detailPriorites = priorites.map((l, i) => {
-    const haut = l.codesMax[0];
-    const bas = l.codesMin[0];
-    const tension = tensions.find((t) => t.domaine === l.d && t.ecart === l.etendue);
-    const nom = LIBELLE_DOMAINE[l.d];
-    const blocsPaire = [fp.facettes[haut].bloc_id, fp.facettes[bas].bloc_id];
-    const lienRegle = tension
-      ? `Cet écart correspond à la tension ${tension.id} relevée par la règle ${tension.regle}, avec ${fmt(tension.ecart)} points d’écart.`
-      : `Cet écart reste sous le seuil de ${fmt(conv.tension.ecart_min)} point qui définit une tension interne : il s’agit d’une piste de développement, non d’une tension relevée.`;
-    itemsPlan.push(hyp(
-      `Priorité ${i + 1}, domaine ${nom} : ${haut} « ${lib(haut)} » à ${valeur(haut)} (${niveauFacette(haut)}) et ${bas} « ${lib(bas)} » à ${valeur(bas)} (${niveauFacette(bas)}). ${lienRegle} Hypothèse de travail : la manière dont ces deux facettes s’expriment peut varier selon les situations.`,
-      'moyenne',
-      'Demander à la personne si cet écart lui parle et dans quelles situations elle le perçoit.',
-      blocsPaire
-    ));
+  const detailPriorites = priorites.map((pr, i) => {
+    const nom = LIBELLE_DOMAINE[pr.domaine];
+    const { haut, bas, tension } = pr;
     const bh = blocDe(haut);
+    const bb = blocDe(bas);
+    const blocsIds = [bh.id, bb.id];
+    const decrit = (c) => `${c} « ${lib(c)} » à ${valeur(c)} (${niveauFacette(c)})`;
+    const indicateurs = `à 30 jours, au moins deux situations repérées où « ${lib(haut)} » et « ${lib(bas)} » ont conduit à des comportements différents ; à 60 jours, nombre de fois où la façon convenue de limiter le coût possible de « ${lib(bas)} » a été mise en œuvre ; à 90 jours, avis de la personne sur l’utilité de cette façon de faire, noté de 1 à 5 lors du point final`;
     itemsPlan.push(hyp(
-      `À 30 jours : avec le consultant qualifié, tenir l’entretien de restitution et repérer deux situations de travail récentes où « ${lib(haut)} » et « ${lib(bas)} » ont conduit à des comportements différents ; question de départ de la bibliothèque : « ${bh.question} » (${mentionRelecture(bh)}). À 60 jours : ${PRATIQUES[l.d]}. À 90 jours : faire le point avec le consultant qualifié, relire les situations consignées, décider de conserver, d’ajuster ou d’abandonner la pratique, et fixer si la personne le souhaite une nouvelle priorité.`,
+      `Priorité ${i + 1}, domaine ${nom} : tension ${tension.id} relevée par la règle ${tension.regle}, avec ${decrit(haut)} et ${decrit(bas)}, soit ${fmt(tension.ecart)} points d’écart. Hypothèse de travail : l’apport possible de « ${lib(haut)} » (« ${bh.apport[0]} ») et le coût possible de « ${lib(bas)} » (« ${bb.cout[0]} ») peuvent se rencontrer dans une même situation de travail ; à confirmer en entretien.`,
+      'moyenne',
+      'Demander à la personne si cette lecture lui parle et dans quelles situations elle la perçoit.',
+      blocsIds
+    ));
+    itemsPlan.push(hyp(
+      `À 30 jours : avec le consultant qualifié, tenir l’entretien de restitution et repérer deux situations de travail récentes où « ${lib(haut)} » et « ${lib(bas)} » ont conduit à des comportements différents ; questions de départ de la bibliothèque : « ${bh.question} » et « ${bb.question} ». À 60 jours : choisir une situation à venir de la tâche où l’apport possible de « ${lib(haut)} » peut servir, et convenir à l’avance d’une façon de limiter le coût possible de « ${lib(bas)} ». À 90 jours : faire le point avec le consultant qualifié, relire ce qui a été repéré et essayé, décider de conserver, d’ajuster ou d’abandonner cette façon de faire, et fixer si la personne le souhaite une nouvelle priorité.`,
       'faible',
       'Faire valider par la personne que les actions sont réalistes dans son emploi du temps et utiles pour son travail.',
-      blocsPaire
+      blocsIds
     ));
     itemsPlan.push(hyp(
-      'Indicateurs : à 30 jours, au moins deux situations consignées ; à 60 jours, nombre de fois où la pratique a été essayée et effet noté dans le relevé de la personne ; à 90 jours, avis de la personne sur l’utilité de la pratique, noté de 1 à 5 lors du point final. Soutiens nécessaires : un consultant qualifié désigné par Tenga Conseil pour l’entretien et les points d’étape ; le rôle « ' + p.role_equipe + ' » pour la mise en œuvre au quotidien ; un temps réservé dans l’agenda, à négocier avec la contrainte d’équipe projet mobilisée aux sept dixièmes de son temps.',
+      `Indicateurs : ${indicateurs}. Soutiens nécessaires : un consultant qualifié désigné par Tenga Conseil pour l’entretien et les points d’étape ; le rôle « ${p.role_equipe} » pour la mise en œuvre au quotidien ; un temps réservé dans l’agenda, à négocier avec la contrainte d’équipe projet mobilisée aux sept dixièmes de son temps.`,
       'faible',
       'Demander à la personne de quel soutien elle dispose déjà et de quel temps elle peut réellement disposer.'
     ));
-    return { l, haut, bas, tension, nom };
+    return { ...pr, nom, indicateurs, coutBas: bb.cout[0] };
   });
   ajouter('plan', `Chapitre ${p.code} : plan de développement à 30, 60 et 90 jours`, itemsPlan);
 
-  // recommandations
-  const recs = detailPriorites.map(({ l, haut, bas, tension, nom }, i) => recommandation(
+  // recommandations : une par priorité, puis l’entretien de restitution porté par le consultant
+  const recs = detailPriorites.map((pr, i) => recT(
     `REC-N1-${p.code}-${i + 1}`,
     ID_NIVEAU,
-    `Conduire la priorité ${i + 1} du plan de développement (domaine ${nom}) sur 90 jours : repérer deux situations, essayer une pratique adaptée, puis faire le point avec un consultant qualifié.`,
+    `Conduire la priorité ${i + 1} du plan de développement (domaine ${pr.nom}) sur 90 jours : explorer la tension ${pr.tension.id} avec un consultant qualifié, convenir d’une façon de limiter le coût possible de « ${lib(pr.bas)} », puis faire le point.`,
     {
-      donnee: tension
-        ? `Tension ${tension.id} : écart de ${fmt(tension.ecart)} points entre ${haut} à ${valeur(haut)} et ${bas} à ${valeur(bas)}.`
-        : `Facettes du domaine ${nom} entre ${fmt(l.min)} (${bas}) et ${fmt(l.max)} (${haut}) sur l’échelle de 1 à 5.`,
-      contexte: `Chapitre privé de ${p.code}, fonction « ${p.fonction} », tâche de nature « ${tache.nature} » avec des échéances rapprochées.`,
-      risque: 'La démarche peut être vécue comme une évaluation, ce qui réveille la méfiance héritée d’un précédent outil d’évaluation et peut orienter les réponses en entretien.',
+      donnee: `Tension ${pr.tension.id} : écart de ${fmt(pr.tension.ecart)} points entre ${pr.haut} à ${valeur(pr.haut)} et ${pr.bas} à ${valeur(pr.bas)}.`,
+      contexte: `Chapitre privé ${deCode(p.code)}, fonction « ${p.fonction} », tâche de nature « ${tache.nature} » avec des échéances rapprochées.`,
+      risque: `Lire la tension ${pr.tension.id} comme un défaut à corriger plutôt que comme un point à explorer : le coût possible décrit pour « ${lib(pr.bas)} » (« ${pr.coutBas} ») deviendrait un reproche, dans un contexte où un précédent outil d’évaluation a laissé de la méfiance.`,
       responsable: p.role_equipe,
       horizon: '90 jours',
-      indicateur: 'Situations consignées à 30 jours, pratique essayée à 60 jours, avis de la personne de 1 à 5 à 90 jours.'
+      indicateur: `${pr.indicateurs[0].toUpperCase()}${pr.indicateurs.slice(1)}.`
     }
   ));
   const plusNette = [...tensions].sort((a, b) => b.ecart - a.ecart)[0];
   const eloignee = [...forts].sort((a, b) => Math.abs(fp.facettes[b].moy - 3) - Math.abs(fp.facettes[a].moy - 3))[0];
-  recs.push(recommandation(
+  recs.push(recT(
     `REC-N1-${p.code}-${recs.length + 1}`,
     ID_NIVEAU,
-    'Tenir l’entretien de restitution du chapitre individuel avec un consultant qualifié, en partant des questions des blocs de la bibliothèque et en laissant la personne corriger chaque lecture.',
+    'Tenir l’entretien de restitution du chapitre individuel, en partant des questions des blocs de la bibliothèque et en laissant la personne corriger chaque lecture.',
     {
       donnee: plusNette
         ? `Tension la plus nette : ${plusNette.id}, écart de ${fmt(plusNette.ecart)} points.`
-        : `Aucune tension interne ; facette la plus éloignée du milieu : ${eloignee} à ${valeur(eloignee)} sur l’échelle de 1 à 5.`,
-      contexte: `Les trente facettes sont lues par des blocs non relus ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.`,
-      risque: 'Un entretien mené sans la parole de la personne ferait passer des hypothèses pour des constats.',
-      responsable: p.role_equipe,
+        : `Aucune tension interne relevée ; facette la plus éloignée du milieu : ${eloignee} à ${valeur(eloignee)} sur l’échelle de 1 à 5.`,
+      contexte: `Les trente facettes ${deCode(p.code)} sont lues par des blocs non relus ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.`,
+      risque: `Un entretien mené sans la parole de la personne dans le rôle « ${p.role_equipe} » ferait passer des hypothèses pour des constats, d’autant que la passation a eu lieu en ${p.langue_passation} et que les indices de fiabilité ne sont pas calculés.`,
+      responsable: CONSULTANT,
       horizon: '30 jours',
       indicateur: 'Entretien tenu avant la fin du premier mois, avec l’avis de la personne sur la justesse de chaque domaine, noté de 1 à 5.'
     }

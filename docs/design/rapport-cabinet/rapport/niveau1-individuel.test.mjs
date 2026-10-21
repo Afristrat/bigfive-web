@@ -76,22 +76,6 @@ test('aucun consentement : un seul paragraphe qui le dit, aucune recommandation'
   for (const c of CATEGORIES_CONTENU) assert.equal(rapport.comptes[c], 0, c);
 });
 
-test('chaque chapitre : 30 facettes lues, chacune avec son bloc et la mention « bloc non relu »', () => {
-  const ctx = charger();
-  const { niveau } = construire(ctx);
-  for (const code of ['AM', 'KB', 'SR', 'HT']) {
-    const facettes = niveau.sections.filter((s) => s.id.startsWith(`${code}-facettes-`)).flatMap((s) => s.paragraphes);
-    assert.equal(facettes.length, 30, code);
-    for (const p of facettes) {
-      assert.equal(p.bloc_ids.length, 1);
-      assert.match(p.texte, /bloc non relu/);
-      assert.match(p.texte, /Question pour l’entretien/);
-    }
-    const attendus = Object.values(ctx.faits.personnes[code].facettes).map((f) => f.bloc_id).sort();
-    assert.deepEqual(facettes.map((p) => p.bloc_ids[0]).sort(), attendus);
-  }
-});
-
 test('chaque chapitre contient les cinq domaines, les tensions, la contribution, l’épanouissement, la fiabilité et le plan', () => {
   const { niveau } = construire(charger());
   for (const code of ['AM', 'KB', 'SR', 'HT']) {
@@ -130,24 +114,9 @@ test('les tensions de faits sont reprises avec le texte de leur règle', () => {
   const texte = tensions.paragraphes.map((p) => p.texte).join(' ');
   for (const t of ctx.faits.personnes.AM.tensions) assert.ok(texte.includes(t.id), t.id);
   const regleC = ctx.regles.regles.find((r) => r.id === 'TENS-C');
-  assert.ok(texte.includes(regleC.texte));
+  assert.ok(texte.includes(regleC.texte.replace(/(\p{L})'(\p{L})/gu, '$1’$2')));
   const sansTension = niveau.sections.find((s) => s.id === 'KB-tensions');
   assert.match(sansTension.paragraphes[0].texte, /Aucun couple de facettes/);
-});
-
-test('le plan de développement a 3 priorités, des jalons à 30, 60 et 90 jours, des indicateurs et des soutiens', () => {
-  const { niveau } = construire(charger());
-  for (const code of ['AM', 'KB', 'SR', 'HT']) {
-    const plan = niveau.sections.find((s) => s.id === `${code}-plan`).paragraphes.map((p) => p.texte);
-    const tout = plan.join(' ');
-    for (const k of [1, 2, 3]) assert.match(tout, new RegExp(`Priorité ${k}\\b`));
-    assert.ok(!/Priorité 4\b/.test(tout));
-    assert.equal((tout.match(/À 30 jours/g) || []).length, 3);
-    assert.equal((tout.match(/À 60 jours/g) || []).length, 3);
-    assert.equal((tout.match(/À 90 jours/g) || []).length, 3);
-    assert.equal((tout.match(/Indicateurs/g) || []).length, 3);
-    assert.equal((tout.match(/Soutiens/g) || []).length, 3);
-  }
 });
 
 test('la fiabilité dit honnêtement que les indices ne sont pas calculés', () => {
@@ -175,27 +144,6 @@ test('chaque paragraphe a un statut ; toute hypothèse a confiance et vérificat
   assert.ok(tous.some((p) => p.statut === 'constate') && tous.some((p) => p.statut === 'hypothese'));
 });
 
-test('recommandations : au moins 3 par personne, 7 attributs, responsable parmi les rôles du cas, donnée chiffrée', () => {
-  const ctx = charger();
-  const { recommandations } = construire(ctx);
-  const roles = new Set(ctx.cas.personnes.map((p) => p.role_equipe));
-  for (const code of ['AM', 'KB', 'SR', 'HT']) {
-    const recs = recommandations.filter((r) => r.id.startsWith(`REC-N1-${code}-`));
-    assert.ok(recs.length >= 3, code);
-    for (const r of recs) {
-      for (const k of ['texte', 'donnee', 'contexte', 'risque', 'responsable', 'horizon', 'indicateur']) {
-        assert.ok(typeof r[k] === 'string' && r[k].trim() !== '', `${r.id} ${k}`);
-      }
-      assert.ok(['source', 'hypothese'].includes(r.preuve.niveau));
-      if (r.preuve.niveau === 'source') assert.ok(r.preuve.reference_id);
-      assert.equal(r.niveau, 'n1-individuel');
-      assert.ok(roles.has(r.responsable), `${r.id} responsable ${r.responsable}`);
-      assert.match(r.donnee, /\d/);
-      assert.match(r.horizon, /^(30|60|90) jours$/);
-    }
-  }
-});
-
 test('tous les ids sont uniques et préfixés', () => {
   const { niveau, recommandations } = construire(charger());
   const ids = [...paragraphes(niveau).map((p) => p.id), ...niveau.sections.map((s) => s.id), ...recommandations.map((r) => r.id)];
@@ -219,7 +167,7 @@ test('la taille d’un chapitre reste raisonnable', () => {
   const { niveau } = construire(charger());
   for (const code of ['AM', 'KB', 'SR', 'HT']) {
     const n = niveau.sections.filter((s) => s.id.startsWith(`${code}-`)).flatMap((s) => s.paragraphes).reduce((t, p) => t + p.texte.length, 0);
-    assert.ok(n > 15000 && n < 50000, `${code} : ${n} caractères`);
+    assert.ok(n > 15000 && n < 55000, `${code} : ${n} caractères`);
   }
 });
 
@@ -256,4 +204,201 @@ test('mutation : un terme interdit, une comparaison à la population et une déc
   assert.ok(comptes.terme_interdit > 0);
   assert.ok(comptes.comparaison_population > 0);
   assert.ok(comptes.decision_emploi > 0);
+});
+
+
+
+const SUIVI_HUMEUR = /relevé hebdomadaire|tenir un (?:court )?relevé|journal|moments de tension/i;
+const aSuiviHumeur = (paragraphesPlan) => paragraphesPlan.some((p) => SUIVI_HUMEUR.test(p.texte));
+const planDe = (niveau, code) => niveau.sections.find((s) => s.id === `${code}-plan`).paragraphes;
+const NON_CIBLEES = ['O6', 'A2', 'N3'];
+const CONSULTANT = 'Consultant qualifié désigné par Tenga Conseil';
+
+function avecTensions(ctx, code, tensions) {
+  const c = { ...ctx, faits: structuredClone(ctx.faits) };
+  c.faits.personnes[code].tensions = tensions;
+  return c;
+}
+const tension = (a, b, ecart, regle) => ({ id: `${a}-${b}`, domaine: a[0], facettes: [a, b], ecart, regle });
+
+test('chaque chapitre : 30 facettes lues entre guillemets, chacune avec son bloc ; « bloc non relu » une fois par domaine', () => {
+  const ctx = charger();
+  const { niveau } = construire(ctx);
+  for (const code of ['AM', 'KB', 'SR', 'HT']) {
+    const sections = niveau.sections.filter((s) => s.id.startsWith(`${code}-facettes-`));
+    assert.equal(sections.length, 5);
+    for (const s of sections) {
+      assert.equal(s.paragraphes.filter((p) => /bloc non relu/.test(p.texte)).length, 1, s.id);
+      assert.match(s.paragraphes[0].texte, /bloc non relu/);
+      assert.equal(s.paragraphes[0].statut, 'constate');
+    }
+    const facettes = sections.flatMap((s) => s.paragraphes).filter((p) => p.bloc_ids);
+    assert.equal(facettes.length, 30, code);
+    for (const p of facettes) {
+      assert.equal(p.bloc_ids.length, 1);
+      assert.match(p.texte, /Question pour l’entretien : «/);
+      assert.match(p.texte, /Description de la bibliothèque : «/);
+    }
+    const attendus = Object.values(ctx.faits.personnes[code].facettes).map((f) => f.bloc_id).sort();
+    assert.deepEqual(facettes.map((p) => p.bloc_ids[0]).sort(), attendus);
+  }
+});
+
+test('plan : AM a trois priorités à 30, 60 et 90 jours ; sans tension relevée, entretien de restitution seul', () => {
+  const { niveau } = construire(charger());
+  const am = planDe(niveau, 'AM').map((p) => p.texte).join(' ');
+  for (const k of [1, 2, 3]) assert.match(am, new RegExp(`Priorité ${k}\\b`));
+  assert.ok(!/Priorité 4\b/.test(am));
+  for (const mot of ['À 30 jours', 'À 60 jours', 'À 90 jours', 'Indicateurs', 'Soutiens']) assert.equal((am.match(new RegExp(mot, 'g')) || []).length, 3, mot);
+  for (const code of ['KB', 'SR', 'HT']) {
+    const plan = planDe(niveau, code);
+    assert.equal(plan.length, 1, code);
+    assert.match(plan[0].texte, /Pas de priorité de développement ; entretien de restitution seul/);
+    assert.ok(!/Priorité \d/.test(plan[0].texte));
+  }
+});
+
+test('plan : chaque priorité est une tension relevée de faits, sans O6, A2, N3 ni domaine N, à facettes distinctes', () => {
+  const ctx = charger();
+  const { niveau } = construire(ctx);
+  const ids = new Map(ctx.faits.personnes.AM.tensions.map((t) => [t.id, t]));
+  const priorites = planDe(niveau, 'AM').filter((p) => /^Priorité \d/.test(p.texte));
+  assert.equal(priorites.length, 3);
+  const vues = new Set();
+  for (const p of priorites) {
+    const m = p.texte.match(/tension ([NEOAC]\d-[NEOAC]\d) relevée/);
+    assert.ok(m && ids.has(m[1]), p.id);
+    const t = ids.get(m[1]);
+    assert.notEqual(t.domaine, 'N');
+    for (const c of t.facettes) {
+      assert.ok(!NON_CIBLEES.includes(c), `${m[1]} cible ${c}`);
+      assert.ok(!vues.has(c), `facette ${c} réutilisée`);
+      vues.add(c);
+    }
+    assert.equal(p.bloc_ids.length, 2);
+    assert.ok(!/point d’attention/.test(p.texte));
+  }
+  assert.match(priorites[0].texte, /tension C1-C6/);
+});
+
+test('plan : mutations de faits, une tension sur O6, A2, N3 ou sur le domaine N ne donne aucune priorité ; une tension éligible en donne une', () => {
+  const ctx = charger();
+  const priorites = (c, code) => planDe(construire(c).niveau, code).filter((p) => /^Priorité \d/.test(p.texte));
+  assert.equal(priorites(avecTensions(ctx, 'KB', [tension('O5', 'O6', 2, 'TENS-O')]), 'KB').length, 0);
+  assert.equal(priorites(avecTensions(ctx, 'KB', [tension('A2', 'A3', 2, 'TENS-A')]), 'KB').length, 0);
+  assert.equal(priorites(avecTensions(ctx, 'KB', [tension('N3', 'N5', 2, 'TENS-N')]), 'KB').length, 0);
+  assert.equal(priorites(avecTensions(ctx, 'KB', [tension('N1', 'N2', 2, 'TENS-N')]), 'KB').length, 0);
+  const ecartee = planDe(construire(avecTensions(ctx, 'KB', [tension('N1', 'N2', 2, 'TENS-N')])).niveau, 'KB')[0].texte;
+  assert.match(ecartee, /ne sont pas instruites par le plan/);
+  const eligibles = priorites(avecTensions(ctx, 'KB', [tension('C1', 'C2', 2, 'TENS-C')]), 'KB');
+  assert.equal(eligibles.length, 1);
+  assert.match(eligibles[0].texte, /tension C1-C2 relevée/);
+});
+
+test('plan : l’action à 60 jours découle de la paire de facettes, jamais d’un gabarit par domaine', () => {
+  const ctx = charger();
+  const { niveau } = construire(ctx);
+  const am = planDe(niveau, 'AM');
+  const actions = am.filter((p) => /^À 30 jours/.test(p.texte));
+  assert.equal(actions.length, 3);
+  const lib = (c) => ctx.bib.facettes.find((f) => f.code === c).libelle.fr;
+  const paires = [['C1', 'C6'], ['E3', 'E2'], ['A3', 'A4']];
+  actions.forEach((p, i) => {
+    assert.equal(p.statut, 'hypothese');
+    assert.equal(p.bloc_ids.length, 2);
+    const soixante = p.texte.split('À 60 jours :')[1].split('À 90 jours')[0];
+    assert.ok(paires[i].every((c) => soixante.includes(lib(c)) || p.texte.includes(lib(c))), `paire ${i}`);
+    assert.ok(soixante.includes('coût possible de «'));
+  });
+  const tout = JSON.stringify(niveau);
+  for (const gabarit of ['choisir une idée nouvelle et un sujet à cadrer', 'formuler un désaccord et une demande d’aide', 'choisir un type de réunion', 'point d’étape sur une tâche avec un critère de fin']) {
+    assert.ok(!tout.includes(gabarit), gabarit);
+  }
+  assert.ok(!tout.includes('la manière dont ces deux facettes s’expriment'));
+  assert.ok(!tout.includes('Règle de lecture'));
+});
+
+test('plan : aucun relevé ni journal de l’état émotionnel', () => {
+  const ctx = charger();
+  const { niveau, recommandations } = construire(ctx);
+  for (const code of ['AM', 'KB', 'SR', 'HT']) assert.equal(aSuiviHumeur(planDe(niveau, code)), false, code);
+  for (const r of recommandations) assert.ok(!SUIVI_HUMEUR.test(JSON.stringify(r)), r.id);
+});
+
+test('mutation : réintroduire le relevé hebdomadaire fait échouer le contrôle', () => {
+  const { niveau } = construire(charger());
+  const plan = structuredClone(planDe(niveau, 'AM'));
+  assert.equal(aSuiviHumeur(plan), false);
+  plan[2].texte += ' À 60 jours : tenir un court relevé hebdomadaire des moments de tension et de ce qui les a apaisés.';
+  assert.equal(aSuiviHumeur(plan), true);
+});
+
+test('recommandations : 7 attributs, responsable du cas, donnée chiffrée ; AM en a 4, les autres seulement l’entretien de restitution', () => {
+  const ctx = charger();
+  const { recommandations } = construire(ctx);
+  const roles = new Set(ctx.cas.personnes.map((p) => p.role_equipe));
+  const attendu = { AM: 4, KB: 1, SR: 1, HT: 1 };
+  for (const code of Object.keys(attendu)) {
+    const recs = recommandations.filter((r) => r.id.startsWith(`REC-N1-${code}-`));
+    assert.equal(recs.length, attendu[code], code);
+    for (const r of recs) {
+      for (const k of ['texte', 'donnee', 'contexte', 'risque', 'responsable', 'horizon', 'indicateur']) {
+        assert.ok(typeof r[k] === 'string' && r[k].trim() !== '', `${r.id} ${k}`);
+      }
+      assert.ok(['source', 'hypothese'].includes(r.preuve.niveau));
+      if (r.preuve.niveau === 'source') assert.ok(r.preuve.reference_id);
+      assert.equal(r.niveau, 'n1-individuel');
+      assert.match(r.donnee, /\d/);
+      assert.match(r.horizon, /^(30|60|90) jours$/);
+    }
+    const restitution = recs[recs.length - 1];
+    assert.equal(restitution.responsable, CONSULTANT);
+    for (const r of recs.slice(0, -1)) assert.ok(roles.has(r.responsable), `${r.id} ${r.responsable}`);
+  }
+});
+
+test('recommandations : un risque propre à chaque recommandation et à chaque personne', () => {
+  const { recommandations } = construire(charger());
+  const risques = recommandations.map((r) => r.risque);
+  assert.equal(new Set(risques).size, risques.length);
+});
+
+test('« Chapitre privé d’Amine » : élision correcte du nom', () => {
+  const { niveau } = construire(charger());
+  const cadre = (code) => niveau.sections.find((s) => s.id === `${code}-cadre`).paragraphes[0].texte;
+  assert.match(cadre('AM'), /^Chapitre privé d’Amine \(estimation\)/);
+  assert.match(cadre('KB'), /^Chapitre privé de Karim B\./);
+  assert.match(cadre('HT'), /^Chapitre privé d’Hind T\./);
+  assert.ok(!JSON.stringify(niveau).includes('de Amine'));
+});
+
+test('registre : à la personne ; « vous » seulement dans les passages de la bibliothèque entre guillemets', () => {
+  const { niveau, recommandations } = construire(charger());
+  const horsGuillemets = (texte) => {
+    let profondeur = 0;
+    let sortie = '';
+    for (const ch of texte) {
+      if (ch === '«') profondeur += 1;
+      else if (ch === '»') profondeur -= 1;
+      else if (profondeur === 0) sortie += ch;
+    }
+    return sortie;
+  };
+  const tous = [...niveau.sections.flatMap((s) => s.paragraphes).flatMap((p) => [p.texte, p.verification || '']), ...recommandations.flatMap((r) => Object.values(r).filter((v) => typeof v === 'string'))];
+  for (const t of tous) assert.ok(!/(?<![\p{L}])(vous|votre|vos)(?![\p{L}])/iu.test(horsGuillemets(t)), t.slice(0, 120));
+});
+
+test('typographie : apostrophes courbes dans tous les textes écrits par le module', () => {
+  const ctx = charger();
+  const { niveau, recommandations } = construire(ctx);
+  const donneesCas = [];
+  const visiter = (v) => {
+    if (typeof v === 'string') donneesCas.push(v);
+    else if (Array.isArray(v)) v.forEach(visiter);
+    else if (v && typeof v === 'object') Object.values(v).forEach(visiter);
+  };
+  visiter(ctx.cas);
+  const nettoyer = (t) => donneesCas.filter((d) => d.includes("'")).sort((a, b) => b.length - a.length).reduce((acc, d) => acc.split(d).join(''), t);
+  const textes = [...niveau.sections.flatMap((s) => [s.titre, ...s.paragraphes.flatMap((p) => [p.texte, p.verification || ''])]), ...recommandations.flatMap((r) => Object.entries(r).filter(([k, v]) => typeof v === 'string' && k !== 'responsable').map(([, v]) => v))];
+  for (const t of textes) assert.ok(!/\p{L}'\p{L}/u.test(nettoyer(t)), t.slice(0, 160));
 });

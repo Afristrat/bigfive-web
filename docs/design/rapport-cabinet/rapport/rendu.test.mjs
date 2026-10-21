@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rendreHtml } from './rendu.mjs';
+import { AVERTISSEMENTS } from './generer-rapport.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const lire = (...p) => JSON.parse(fs.readFileSync(path.join(here, ...p), 'utf-8'));
@@ -90,12 +91,15 @@ test('aucun avatar animé : pas de classe avatar, pas de cligne ni de flotte', (
   assert.ok(!/class="avatar|\.avatar|@keyframes (cligne|flotte)|class="oeil/.test(html));
 });
 
-test('avertissements en tête, avant la navigation', () => {
-  const iAvert = html.indexOf('class="avert"');
-  assert.ok(iAvert > 0 && iAvert < html.indexOf('class="toc"'));
-  for (const motif of ['Cas fictif', 'AM est estimé', 'comparaison à une population', 'décision d\'emploi', 'non relus', 'non calibrées', 'consultant qualifié']) {
-    assert.ok(html.includes(motif), motif);
+test('avertissements en tête, avant la navigation, en une seule liste', () => {
+  const h = rendreHtml({ ...entree, rapport: { ...rapport, avertissements: AVERTISSEMENTS } });
+  const iAvert = h.indexOf('class="avert"');
+  assert.ok(iAvert > 0 && iAvert < h.indexOf('class="toc"'));
+  for (const motif of ['sont fictifs', 'profil estimé', 'aucune personne n’y est comparée', 'décision d’emploi', 'ne sont pas relus', 'non calibrées', 'consultant qualifié', 'Document de travail du consultant']) {
+    assert.ok(h.includes(motif), motif);
   }
+  assert.equal(h.split('class="avert"').length - 1, 1, 'une seule liste d’avertissements');
+  assert.equal(h.split('décision d’emploi').length - 1, 1, 'aucun avertissement répété');
 });
 
 test('visuels animés réutilisés, mouvement coupé sous reduced-motion et à l\'impression, liens internes interceptés', () => {

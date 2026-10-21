@@ -7,10 +7,23 @@ export const FAMILLES = ['Coaching', 'Mentorat', 'Formation', 'Organisation', 'M
 
 const TYPE_FR = { reglementation: 'réglementation', delai: 'délai', budget: 'budget', ressources: 'ressources', culture: 'culture', heritage: 'héritage', syndical: 'syndical' };
 const INTERDEP_FR = { 'mise-en-commun': 'mise en commun', sequentielle: 'séquentielle', reciproque: 'réciproque' };
+// Toute action fondée sur une lecture de relation ou d’équipe attend l’autorisation de la CNDP (CT-02).
+export const CONDITION_CNDP = 'après autorisation de la CNDP (dépôt au plus tard dans les 3 mois, CT-02)';
+const apresCndp = (jalon) => `${CONDITION_CNDP}, puis ${jalon}`;
 const CONSULTANT = 'consultant qualifié désigné par Tenga Conseil';
 
+const FREQ = { quotidienne: 'quotidien', mensuelle: 'mensuel' };
+const contact = (f) => FREQ[f] ?? f;
 const nomDomaine = (d) => NOM_DOMAINE[d];
 const nette = (fonction) => fonction.replace(/\s*\((?:fictif|fonction fictive)\)\s*$/, '');
+
+/** Apostrophes courbes dans tous les textes (les chaînes reprises du cas ont des apostrophes droites). */
+const courbes = (v) => {
+  if (typeof v === 'string') return v.replace(/'/g, '’');
+  if (Array.isArray(v)) return v.map(courbes);
+  if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, courbes(x)]));
+  return v;
+};
 
 export function construire({ cas, faits, bib }) {
   const lib = (code) => {
@@ -19,7 +32,7 @@ export function construire({ cas, faits, bib }) {
     return f.libelle.fr;
   };
   const facette = (code) => `${code} (${lib(code)})`;
-  const role = (code) => personne(cas, code).role_equipe;
+  const role = (code) => personne(cas, code).role_equipe.replace(/'/g, '’');
   const roles = (codes) => liste(codes.map(role));
   const resp = (codes) => `${roles(codes)}, avec le ${CONSULTANT}`;
   const ok = (codes, niveau) => codes.every((c) => personne(cas, c).consentements[niveau] === true);
@@ -92,7 +105,7 @@ export function construire({ cas, faits, bib }) {
         risque: 'La tension peut être lue comme un défaut de la personne ; le coaching reste une exploration choisie par elle, privée, sans restitution au hiérarchique sans son accord.',
         responsable: resp([tensionTop.code]),
         horizon: '30 jours',
-        indicateur: `Engagement d’essai formulé par ${tensionTop.code} à la deuxième séance, puis auto-évaluation guidée de son effet à 30 jours et à 90 jours (source : compte rendu remis à la personne seule).`
+        indicateur: `Engagement d’essai formulé par ${tensionTop.code} à la deuxième séance, puis auto-évaluation guidée de son effet à 30 jours et à 90 jours (source : compte rendu remis à la personne seule). Cible : engagement formulé avant la fin du premier mois et auto-évaluation faite à 90 jours, avant l’échéance « ${echeances[1]} ».`
       },
       ok: ok([tensionTop.code], 'individuel')
     });
@@ -104,18 +117,18 @@ export function construire({ cas, faits, bib }) {
     ajouter({
       section: 'coaching',
       paragraphe: {
-        texte: `Coaching du binôme en co-direction ${relCo.id} : cycle court de séances conjointes qui clarifie qui décide de quoi, qui informe qui, et à quel rythme. Point d’appui factuel : l’écart sur ${facette(relCo.top.k)}, de ${fmt(relCo.top.ecart)} points (niveaux ${relCo.niveauA} et ${relCo.niveauB}). Le contact est ${cas.relations.find((x) => x.id === relCo.id).frequence} et l’interdépendance ${INTERDEP_FR[relCo.interdependance]} : la clarté des règles du binôme pèse donc sur toute l’équipe. Les langues de passation étant différentes (${personne(cas, a).langue_passation} et ${personne(cas, b).langue_passation}), toute comparaison entre les deux personnes porte une réserve tant que l’équivalence des versions n’est pas établie.`,
+        texte: `Coaching du binôme en co-direction ${relCo.id} : cycle court de séances conjointes qui clarifie qui décide de quoi, qui informe qui, et à quel rythme. Point d’appui factuel : l’écart sur ${facette(relCo.top.k)}, de ${fmt(relCo.top.ecart)} points (niveaux ${relCo.niveauA} et ${relCo.niveauB}). Le contact est ${contact(cas.relations.find((x) => x.id === relCo.id).frequence)} et l’interdépendance ${INTERDEP_FR[relCo.interdependance]} : la clarté des règles du binôme pèse donc sur toute l’équipe. Les langues de passation étant différentes (${personne(cas, a).langue_passation} et ${personne(cas, b).langue_passation}), toute comparaison entre les deux personnes porte une réserve tant que l’équivalence des versions n’est pas établie.`,
         confiance: 'moyenne',
         verification: 'Faire décrire à chacune des deux personnes, séparément, trois décisions récentes du binôme et la façon dont elles ont été prises ; comparer les deux récits.'
       },
       rec: {
         texte: `Coaching de binôme : conduire pour ${relCo.id} un cycle court de séances conjointes de clarification des décisions, à partir de l’écart sur ${facette(relCo.top.k)}.`,
         donnee: `Écart de ${fmt(relCo.top.ecart)} points sur ${relCo.top.k} entre ${a} (niveau ${relCo.niveauA}) et ${b} (niveau ${relCo.niveauB}) ; co-direction, interdépendance ${INTERDEP_FR[relCo.interdependance]}.`,
-        contexte: `Contact ${cas.relations.find((x) => x.id === relCo.id).frequence} sur un projet de lancement ; langues de passation différentes, équivalence des versions non établie.`,
+        contexte: `Contact ${contact(cas.relations.find((x) => x.id === relCo.id).frequence)} sur un projet de lancement ; langues de passation différentes, équivalence des versions non établie.`,
         risque: 'Une séance conjointe peut être vécue comme un arbitrage entre les deux personnes ; le cadre se limite aux règles de fonctionnement du binôme.',
         responsable: resp([a, b]),
-        horizon: '60 jours',
-        indicateur: 'Nombre de décisions du binôme reprises après coup, relevé dans le journal de décisions du programme au départ puis à 60 jours.'
+        horizon: apresCndp('60 jours'),
+        indicateur: `Nombre de décisions du binôme reprises après coup, relevé dans le journal de décisions du programme au départ puis à 60 jours. Cible : moins de décisions reprises à 60 jours qu’au départ.`
       },
       ok: ok([a, b], 'binome')
     });
@@ -135,9 +148,9 @@ export function construire({ cas, faits, bib }) {
         donnee: `Étendue de ${fmt(large1[1])} points sur ${large1[0]} et de ${fmt(large2[1])} points sur ${large2[0]} dans l’équipe de ${cas.personnes.length} personnes.`,
         contexte: `Équipe projet répartie sur ${nSites} sites, interdépendance variable selon les relations ; ${ct('CT-07').id} limite le temps disponible.`,
         risque: 'La différence de style peut être lue comme un manque chez certains ; l’atelier part de la tâche et des règles, jamais de la valeur des personnes.',
-        responsable: resp(toutes),
-        horizon: '60 jours',
-        indicateur: 'Nombre de règles de fonctionnement adoptées par l’équipe et appliquées, relevé à l’atelier puis à 60 jours (source : charte d’équipe).'
+        responsable: resp(['KB']),
+        horizon: apresCndp('60 jours'),
+        indicateur: `Nombre de règles de fonctionnement adoptées par l’équipe et appliquées, relevé à l’atelier puis à 60 jours (source : charte d’équipe). Cible : charte d’équipe écrite et validée par chaque membre avant l’échéance « ${echeances[1]} ».`
       },
       ok: equipeOk
     });
@@ -149,18 +162,18 @@ export function construire({ cas, faits, bib }) {
     ajouter({
       section: 'mentorat',
       paragraphe: {
-        texte: `Mentorat dans la relation ${relMentorat.id} (${relMentorat.sens === 'a->b' ? `${a} accompagne ${b}` : `${b} accompagne ${a}`}, contact ${relMentorat.frequence}) : une charte courte fixe les objectifs, choisis par la personne accompagnée, la confidentialité et le rythme. L’écart sur ${facette(relMentorat.top.k)} (${fmt(relMentorat.top.ecart)} points, niveaux ${relMentorat.niveauA} et ${relMentorat.niveauB}) sert de sujet possible de conversation, jamais de grille d’évaluation. Les sujets de conformité des données, portés par la personne accompagnée, sont un terrain d’apprentissage concret pour le lancement.`,
+        texte: `Mentorat dans la relation ${relMentorat.id} (${relMentorat.sens === 'a->b' ? `${a} accompagne ${b}` : `${b} accompagne ${a}`}, contact ${contact(relMentorat.frequence)}) : une charte courte fixe les objectifs, choisis par la personne accompagnée, la confidentialité et le rythme. L’écart sur ${facette(relMentorat.top.k)} (${fmt(relMentorat.top.ecart)} points, niveaux ${relMentorat.niveauA} et ${relMentorat.niveauB}) sert de sujet possible de conversation, jamais de grille d’évaluation. Les sujets de conformité des données, portés par la personne accompagnée, sont un terrain d’apprentissage concret pour le lancement.`,
         confiance: 'moyenne',
         verification: 'Demander à la personne accompagnée trois sujets sur lesquels elle souhaite être accompagnée, avant de fixer le contenu de la charte.'
       },
       rec: {
         texte: `Mentorat : formaliser pour ${relMentorat.id} une charte de mentorat (objectifs choisis par la personne accompagnée, confidentialité, rythme) et tenir une séance par mois.`,
-        donnee: `Écart de ${fmt(relMentorat.top.ecart)} points sur ${relMentorat.top.k} entre ${a} et ${b} ; relation de mentorat, contact ${relMentorat.frequence}.`,
+        donnee: `Écart de ${fmt(relMentorat.top.ecart)} points sur ${relMentorat.top.k} entre ${a} et ${b} ; relation de mentorat, contact ${contact(relMentorat.frequence)}.`,
         contexte: 'Relation asymétrique : la personne qui accompagne oriente et décide pour l’autre dans le programme ; le mentorat doit rester distinct de la ligne de décision.',
         risque: 'Le mentorat peut glisser vers une évaluation déguisée ; la charte interdit tout compte rendu au hiérarchique sans l’accord de la personne accompagnée.',
         responsable: resp([a, b]),
-        horizon: '30 jours',
-        indicateur: 'Charte signée dans les 30 jours, puis nombre de séances tenues et objectifs atteints relevés par la personne accompagnée à 90 jours (source : carnet de mentorat privé).'
+        horizon: apresCndp('30 jours'),
+        indicateur: `Charte signée dans les 30 jours suivant l’autorisation, puis nombre de séances tenues et objectifs atteints relevés par la personne accompagnée à 90 jours (source : carnet de mentorat privé). Cible : charte signée dans le mois suivant l’autorisation, puis une séance tenue chaque mois jusqu’à l’échéance « ${echeances[1]} ».`
       },
       ok: ok([a, b], 'binome')
     });
@@ -182,8 +195,8 @@ export function construire({ cas, faits, bib }) {
         contexte: 'Dans une chaîne séquentielle, ce que l’une livre conditionne ce que l’autre peut faire : les attentes de livraison gagnent à être explicitées de part et d’autre.',
         risque: 'Les échanges peuvent tourner à la critique du travail de l’autre ; un cadre de questions ouvertes et un temps borné limitent ce risque.',
         responsable: resp([a, b]),
-        horizon: '60 jours',
-        indicateur: 'Nombre de livraisons entre les deux personnes renvoyées pour reprise, relevé avant le mentorat et à 60 jours (source : suivi des livrables du programme).'
+        horizon: apresCndp('60 jours'),
+        indicateur: `Nombre de livraisons entre les deux personnes renvoyées pour reprise, relevé avant le mentorat et à 60 jours (source : suivi des livrables du programme). Cible : moins de livraisons renvoyées à 60 jours qu’au départ.`
       },
       ok: ok([a, b], 'binome')
     });
@@ -202,9 +215,9 @@ export function construire({ cas, faits, bib }) {
       donnee: `${nSites} sites, ${nLangues} langues de travail et ${nFuseaux} fuseaux (${ct('CT-08').id}) ; objectif de réduire de moitié le délai de décision avec le siège en 18 mois.`,
       contexte: 'Les documents de pilotage du groupe sont en anglais alors que la filiale travaille en arabe, en darija et en français ; les décisions du siège sont tardives selon les risques connus de la tâche.',
       risque: 'Une formation générale sans cas réels reste sans effet sur le comportement ; les cas sont donc tirés du lancement.',
-      responsable: resp(['AM', 'KB']),
+      responsable: resp(['SR', 'KB']),
       horizon: '60 jours',
-      indicateur: 'Délai de décision entre la filiale et le siège, relevé avant la formation puis à 90 jours (source : journal des décisions du programme).'
+      indicateur: `Délai de décision entre la filiale et le siège, relevé avant la formation puis à 90 jours (source : journal des décisions du programme). Cible : délai inférieur à celui de départ à 90 jours, l’objectif du cas étant de le réduire de moitié en 18 mois.`
     },
     ok: true
   });
@@ -219,14 +232,14 @@ export function construire({ cas, faits, bib }) {
         verification: 'Recueillir par questions ouvertes, auprès de chaque membre, ce qu’il pense pouvoir dire en réunion sans crainte ; comparer ces réponses avant et après la formation.'
       },
       rec: {
-        texte: 'Formation : dispenser un module de savoir-faire comportementaux sur le retour d’information et la sécurité psychologique, en lien avec la méfiance héritée du précédent outil (référence à vérifier).',
+        texte: 'Formation : dispenser un module de savoir-faire comportementaux sur le retour d’information et la sécurité psychologique (notion d’Edmondson, référence à vérifier), en lien avec la méfiance héritée du précédent outil.',
         donnee: `Étendue de ${fmt(etenduC.N4)} points sur ${facette('N4')} dans l’équipe ; contrainte ${ct('CT-09').id} (méfiance héritée d’un précédent outil d’évaluation).`,
         contexte: 'La démarche touche aux personnes dans un climat de méfiance : la transparence sur l’usage des résultats est un préalable (règle CONTR-heritage).',
         risque: 'Le module peut être perçu comme une évaluation des comportements ; il est présenté comme un entraînement, sans restitution individuelle au hiérarchique.',
         responsable: resp(['HT']),
-        horizon: '90 jours',
+        horizon: apresCndp('90 jours'),
         preuve: { niveau: 'source', reference_id: 'edmondson-1999' },
-        indicateur: 'Réponses des membres à trois questions ouvertes sur ce qu’ils peuvent dire en réunion, relevées avant la formation et à 90 jours (source : questionnaire court anonyme de l’équipe).'
+        indicateur: `Réponses des membres à trois questions ouvertes sur ce qu’ils peuvent dire en réunion, relevées avant la formation et à 90 jours (source : questionnaire court anonyme de l’équipe). Cible : à 90 jours, plus de réponses qu’au départ indiquant que chacun peut s’exprimer en réunion sans crainte.`
       },
       ok: equipeOk
     });
@@ -246,9 +259,9 @@ export function construire({ cas, faits, bib }) {
         donnee: `Étendue de ${fmt(etenduC.C1)} points sur ${facette('C1')} et de ${fmt(etenduC.C6)} points sur ${facette('C6')} dans l’équipe ; calendrier de lancement fixé par le siège (${ct('CT-05').id}).`,
         contexte: 'La contrainte de délai est dure : les écarts de rythme entre personnes pèsent davantage à l’approche des échéances.',
         risque: 'L’atelier peut ranimer des désaccords anciens ; il porte sur le calendrier du lancement, pas sur des personnes.',
-        responsable: resp(['AM', 'KB']),
-        horizon: echeances[1] ?? '90 jours',
-        indicateur: 'Respect des jalons datés du calendrier de lancement, relevé à chaque jalon du programme (source : tableau de bord du programme).'
+        responsable: resp(['KB']),
+        horizon: apresCndp('90 jours'),
+        indicateur: `Respect des jalons datés du calendrier de lancement, relevé à chaque jalon du programme (source : tableau de bord du programme). Cible : tous les jalons datés tenus jusqu’à l’échéance « ${echeances[1]} ».`
       },
       ok: equipeOk
     });
@@ -258,7 +271,7 @@ export function construire({ cas, faits, bib }) {
   ajouter({
     section: 'organisation',
     paragraphe: {
-      texte: `Rôles et répartition des responsabilités : établir une matrice qui indique, pour chaque livrable du lancement, qui décide, qui réalise, qui est consulté et qui est informé, à partir des rôles du cas (${liste(cas.personnes.map((p) => p.role_equipe.toLowerCase()))}) et de leur périmètre de décision. Le cas compte ${cas.relations.length} relations de ${new Set(cas.relations.map((r) => r.nature)).size} natures différentes (ligne, lien fonctionnel, mentorat, client-fournisseur, pairs, co-direction) : la matrice rend explicite ce qui, aujourd’hui, dépend de la nature de chaque lien.`,
+      texte: `Rôles et répartition des responsabilités : établir une matrice qui indique, pour chaque livrable du lancement, qui décide, qui réalise, qui est consulté et qui est informé, à partir des rôles du cas (${liste(cas.personnes.map((p) => p.role_equipe.toLowerCase().replace(/'/g, '’')))}) et de leur périmètre de décision. Le cas compte ${cas.relations.length} relations de ${new Set(cas.relations.map((r) => r.nature)).size} natures différentes (ligne, lien fonctionnel, mentorat, client-fournisseur, pairs, co-direction) : la matrice rend explicite ce qui, aujourd’hui, dépend de la nature de chaque lien.`,
       confiance: 'moyenne',
       verification: 'Faire remplir la matrice séparément par chaque personne, puis relever les cases où les réponses divergent ; ces cases sont les sujets de la réunion de validation.'
     },
@@ -269,7 +282,7 @@ export function construire({ cas, faits, bib }) {
       risque: 'Une matrice trop détaillée devient une charge de plus pour une équipe mobilisée aux sept dixièmes ; elle se limite aux livrables critiques du lancement.',
       responsable: resp(['AM']),
       horizon: '30 jours',
-      indicateur: 'Nombre de cases de la matrice sans accord entre les personnes, relevé à la validation puis à 60 jours (source : matrice versionnée du programme).'
+      indicateur: `Nombre de cases de la matrice sans accord entre les personnes, relevé à la validation puis à 60 jours (source : matrice versionnée du programme). Cible : aucune case sans accord à 60 jours.`
     },
     ok: true
   });
@@ -289,7 +302,7 @@ export function construire({ cas, faits, bib }) {
       risque: 'Le siège peut ne pas s’engager sur un délai de réponse ; la règle est alors proposée comme expérimentation sur le seul site pilote.',
       responsable: resp(['AM']),
       horizon: '60 jours',
-      indicateur: 'Délai moyen de décision entre la filiale et le siège, relevé avant les règles puis à 90 jours (source : journal des décisions du programme).'
+      indicateur: `Délai moyen de décision entre la filiale et le siège, relevé avant les règles puis à 90 jours (source : journal des décisions du programme). Cible : délai inférieur à celui de départ à 90 jours, moitié du délai de départ en 18 mois (objectif du cas).`
     },
     ok: true
   });
@@ -310,7 +323,7 @@ export function construire({ cas, faits, bib }) {
       responsable: resp(['SR', 'HT']),
       horizon: '30 jours',
       preuve: { niveau: 'source', reference_id: 'thompson-1967' },
-      indicateur: 'Taux de participation aux rituels d’équipe du projet, relevé chaque mois depuis le premier rituel (source : feuilles de présence des rituels).'
+      indicateur: `Taux de participation aux rituels d’équipe du projet, relevé chaque mois depuis le premier rituel (source : feuilles de présence des rituels). Cible : chaque membre présent à chaque rituel du premier mois.`
     },
     ok: true
   });
@@ -330,7 +343,7 @@ export function construire({ cas, faits, bib }) {
       risque: 'Une information tardive ou incomplète ravive la méfiance et peut conduire à des retraits de consentement.',
       responsable: resp(['HT']),
       horizon: echeances[0] ?? '30 jours',
-      indicateur: 'Représentants du personnel informés avant diffusion (oui ou non), puis nombre de retraits de consentement, relevés à 30 jours et à 90 jours (source : registre des consentements).'
+      indicateur: `Représentants du personnel informés avant diffusion (oui ou non), puis nombre de retraits de consentement, relevés à 30 jours et à 90 jours (source : registre des consentements). Cible : représentants informés avant l’échéance « ${echeances[0]} » et aucun retrait de consentement laissé sans réponse à 90 jours.`
     },
     ok: orgOk
   });
@@ -348,9 +361,9 @@ export function construire({ cas, faits, bib }) {
       donnee: `Trois indicateurs de succès du cas : ${liste(cas.strategie.indicateurs.map((i) => i.toLowerCase()))} ; objectif de réduire de moitié le délai de décision en 18 mois.`,
       contexte: 'Sans mesure de départ, aucun changement ne peut être attribué au plan ; la mesure se fait au niveau de l’équipe, jamais d’une personne.',
       risque: 'Un changement observé peut avoir d’autres causes que le plan ; le rapport de mesure le dit et ne conclut pas à un effet.',
-      responsable: resp(['AM']),
+      responsable: resp(['KB']),
       horizon: '90 jours',
-      indicateur: 'Les trois indicateurs relevés à la référence de départ (avant le premier jour), à 60 jours et à 90 jours (source : journal des décisions, tableau de bord du lancement, feuilles de présence).'
+      indicateur: `Les trois indicateurs relevés à la référence de départ (avant le premier jour), à 60 jours et à 90 jours (source : journal des décisions, tableau de bord du lancement, feuilles de présence). Cible : trois indicateurs relevés aux trois dates, valeur de départ consignée avant le premier jour.`
     },
     ok: true
   });
@@ -359,19 +372,19 @@ export function construire({ cas, faits, bib }) {
   ajouter({
     section: 'mesure',
     paragraphe: {
-      texte: 'Évaluation des formations selon les quatre niveaux de Kirkpatrick (référence à vérifier) : niveau 1, réaction des participants, à la fin de chaque session ; niveau 2, apprentissage, par un exercice pratique avant puis après ; niveau 3, comportement, relevé à 30 jours par l’observation en situation de travail et par le témoignage de deux collègues ; niveau 4, résultats, lus dans les indicateurs d’équipe à 90 jours. Seuls les niveaux 1 et 2 sont directement atteignables avant 90 jours ; les niveaux 3 et 4 demandent un recul plus long.',
+      texte: 'Évaluation des formations selon les niveaux de Kirkpatrick (référence à vérifier) : niveau 1, réaction des participants, à la fin de chaque session ; niveau 2, apprentissage, par un exercice pratique avant puis après la session. Ces deux niveaux sont les seuls atteignables dans le plan à 90 jours. Les niveaux 3 (comportement) et 4 (résultats) demandent un recul plus long : ils sont hors du plan, à mesurer plus tard, et les indicateurs d’équipe à 90 jours ne les remplacent pas.',
       confiance: 'moyenne',
-      verification: 'Faire confirmer par le concepteur de chaque formation la forme de l’exercice du niveau 2 et les situations de travail observées au niveau 3.'
+      verification: 'Faire confirmer par le concepteur de chaque formation la forme de l’exercice du niveau 2 et le moment où les niveaux 3 et 4 seront mesurés après le plan.'
     },
     rec: {
-      texte: 'Mesure : évaluer chaque formation selon les quatre niveaux de Kirkpatrick (réaction, apprentissage, comportement, résultats), référence à vérifier.',
+      texte: 'Mesure : évaluer chaque formation aux niveaux 1 et 2 de Kirkpatrick (réaction, apprentissage), référence à vérifier, les niveaux 3 et 4 restant hors du plan.',
       donnee: `${actions.filter((a) => a.section === 'formation' && a.ok).length} formations prévues dans le plan, dans une enveloppe d’accompagnement plafonnée sur 12 mois (${ct('CT-06').id}).`,
       contexte: 'Le budget est négociable mais plafonné : l’évaluation doit coûter peu de temps et s’appuyer sur des outils courts.',
-      risque: 'Les niveaux 3 et 4 sont les plus utiles et les plus tardifs : sans suivi planifié à 30 jours et à 90 jours, l’évaluation s’arrête au niveau 1.',
-      responsable: resp(['AM', 'KB']),
+      risque: 'Les niveaux 3 et 4 sont les plus utiles et les plus tardifs : hors du plan, ils risquent de ne jamais être mesurés si personne n’en reçoit la charge après le bilan.',
+      responsable: resp(['SR']),
       horizon: '90 jours',
       preuve: { niveau: 'source', reference_id: 'kirkpatrick' },
-      indicateur: 'Pour chaque formation, niveaux 1 et 2 relevés à la session, niveau 3 à 30 jours et niveau 4 à 90 jours (source : questionnaires de session et indicateurs d’équipe).'
+      indicateur: `Pour chaque formation, niveaux 1 et 2 relevés à la session (source : questionnaires de session et exercice avant et après). Cible : niveaux 1 et 2 relevés pour chaque formation à sa session ; niveaux 3 et 4 hors plan, à planifier au bilan.`
     },
     ok: true
   });
@@ -389,9 +402,9 @@ export function construire({ cas, faits, bib }) {
       donnee: `Contrainte ${ct('CT-09').id} (méfiance héritée d’un précédent outil) et ${ct('CT-01').id} (information et consentement préalables) ; ${cas.personnes.length} personnes concernées.`,
       contexte: 'Un seuil d’anonymat de 5 personnes n’est pas atteint par l’équipe de 4 : la mesure reste qualitative et lue par le consultant, sans diffusion nominative.',
       risque: 'Avec quatre personnes, une réponse peut être reconnue ; les questions ouvertes sont relues et regroupées par le consultant avant toute restitution.',
-      responsable: resp(['HT']),
+      responsable: resp(['SR']),
       horizon: '90 jours',
-      indicateur: 'Nombre de retraits de consentement et réponses aux trois questions ouvertes, relevés avant le démarrage puis à 90 jours (source : registre des consentements et questionnaire court).'
+      indicateur: `Nombre de retraits de consentement et réponses aux trois questions ouvertes, relevés avant le démarrage puis à 90 jours (source : registre des consentements et questionnaire court). Cible : trois questions posées au départ et à 90 jours, tout retrait de consentement traité avant le jalon suivant.`
     },
     ok: equipeOk
   });
@@ -442,7 +455,7 @@ export function construire({ cas, faits, bib }) {
       : ` (effectif de ${faits.organisation.n_personnes} personnes pour un seuil d’anonymat de ${faits.organisation.seuil_anonymat} : agrégat montré par dérogation de démonstration)`;
     depart.push(c(`Adéquation organisationnelle${derog} : valeurs d’équipe pour ${liste(lecture)}, selon les conventions de l’outil. Ces valeurs se lisent avec la structure (${cas.organisation.structure}), la culture dominante (${cas.organisation.culture}) et l’orientation de ${cas.strategie.orientation} ; leur effet sur le travail de l’équipe est à instruire en entretien, et les dispositifs d’organisation du plan en tiennent compte.`));
   }
-  depart.push(c(`Contraintes dures du cas, que le plan respecte sans les négocier : ${liste(dures.map((x) => `${x.id} (${TYPE_FR[x.type] ?? x.type})`))}. La marge de manœuvre se cherche dans les contraintes négociables (${liste(cas.contraintes.filter((x) => x.durete !== 'dure').map((x) => x.id))}).`));
+  depart.push(c(`Contraintes dures du cas, que le plan respecte sans les négocier : ${liste(dures.map((x) => `${x.id} (${TYPE_FR[x.type] ?? x.type})`))}. En conséquence, toute action fondée sur une lecture de relation ou d’équipe est conditionnée, dans le calendrier lui-même, à l’autorisation de la CNDP (${ct('CT-02').id}) ; seules les actions individuelles consenties et privées, ou fondées sur les seules données du cas, démarrent avant. La marge de manœuvre se cherche dans les contraintes négociables (${liste(cas.contraintes.filter((x) => x.durete !== 'dure').map((x) => x.id))}).`));
   sections.push(section('depart', 'Point de départ : les faits qui fondent le plan', depart.map((p, k) => paragraphe(`n5-depart-${k + 1}`, p.texte, { statut: 'constate' }))));
 
   construireSection('coaching', 'Coaching individuel et d’équipe', []);
@@ -458,26 +471,39 @@ export function construire({ cas, faits, bib }) {
     return fam.length ? liste([...new Set(fam)].map((f) => f.toLowerCase())) : 'suivi des actions engagées';
   };
   cal.push({ texte: `Échéances du cas, reprises telles quelles : ${echeances.join(' ; ')}. Le plan se cale sur ces échéances et ne les modifie pas.`, statut: 'constate' });
+  const conditionnelles = retenues.filter((a) => a.rec.horizon.startsWith(CONDITION_CNDP));
+  const famillesCond = [...new Set(conditionnelles.map((a) => a.rec.texte.split(' : ')[0].toLowerCase()))];
   cal.push({
-    texte: `À 30 jours : information des représentants du personnel et clarification de la base juridique avant toute analyse de relation ou d’équipe, matrice des rôles validée, charte de mentorat signée, première mesure des indicateurs d’équipe (référence de départ) et démarrage du coaching individuel. Familles d’actions engagées : ${resume('30 jours')}. Responsables : ${roles(['AM'])} pour le pilotage, ${roles(['HT'])} pour la conformité des données, avec le ${CONSULTANT}.`,
+    texte: `À 30 jours : information des représentants du personnel, instruction de la base juridique et dépôt du dossier auprès de la CNDP (échéance du cas : dans les 3 mois), matrice des rôles validée, rituels bornés en place, première mesure des indicateurs d’équipe (référence de départ) et démarrage du coaching individuel, privé et consenti. Aucune action fondée sur une lecture de relation ou d’équipe ne démarre à ce jalon. Familles d’actions engagées : ${resume('30 jours')}. Responsables : ${roles(['AM'])} pour le pilotage, ${roles(['HT'])} pour la conformité des données, avec le ${CONSULTANT}.`,
     statut: 'hypothese', confiance: 'moyenne',
     verification: 'Vérifier avec le pilote du programme que chaque action de ce jalon a un responsable nommé et une date, et qu’aucune ne dépend d’une autorisation non encore obtenue.'
   });
   cal.push({
-    texte: `À 60 jours : formations de communication entre sites et règles de décision avec le siège en place, coaching du binôme en co-direction et d’équipe, mentorat croisé engagé, premier relevé des indicateurs. Familles d’actions engagées : ${resume('60 jours')}. Responsables : ${roles(['AM', 'KB'])} pour les règles de décision et la formation, ${roles(['SR', 'HT'])} pour le coaching du binôme, avec le ${CONSULTANT}.`,
+    texte: `À 60 jours : formation de communication entre sites et règles de décision avec le siège en place, premier relevé des indicateurs ; le dossier CNDP est déposé et son instruction suit son cours. Familles d’actions engagées : ${resume('60 jours')}. Responsables : ${roles(['AM', 'KB'])} pour les règles de décision et la formation, avec le ${CONSULTANT}.`,
     statut: 'hypothese', confiance: 'faible',
     verification: 'Vérifier en réunion de jalon que le siège a confirmé les règles de décision et que le temps de formation a pu être libéré malgré la mobilisation aux sept dixièmes.'
   });
   cal.push({
-    texte: `À 90 jours : bilan du plan, deuxième relevé des indicateurs d’équipe comparé à la référence de départ, évaluation des formations aux niveaux 3 et 4 de Kirkpatrick (référence à vérifier), décision du commanditaire sur la poursuite. Familles d’actions engagées : ${resume('90 jours')}. Responsables : ${roles(['AM'])} pour le bilan, avec le ${CONSULTANT} qui relit et signe le bilan.`,
+    texte: `À 90 jours : bilan du plan, deuxième relevé des indicateurs d’équipe comparé à la référence de départ, évaluation des formations aux niveaux 1 et 2 de Kirkpatrick (référence à vérifier), les niveaux 3 et 4 restant hors du plan, décision du commanditaire sur la poursuite. Familles d’actions engagées : ${resume('90 jours')}. Responsables : ${roles(['AM'])} pour le bilan, avec le ${CONSULTANT} qui relit et signe le bilan.`,
     statut: 'hypothese', confiance: 'faible',
     verification: 'Comparer, avec le commanditaire, les indicateurs du jalon à la référence de départ et recueillir le point de vue de chaque membre sur ce qui a changé dans le travail.'
   });
+  const charge = new Map();
+  for (const a of retenues) for (const co of toutes) if (a.rec.responsable.startsWith(roles([co])) || a.rec.responsable.includes(role(co))) charge.set(co, (charge.get(co) ?? 0) + 1);
+  const maxCharge = Math.max(...charge.values());
+  const plusChargee = [...charge].filter(([, v]) => v === maxCharge).map(([co]) => role(co));
   cal.push({
-    texte: 'Le dépôt du dossier auprès de la CNDP et son autorisation ne dépendent pas de l’équipe : si l’autorisation tarde, les actions qui exploitent des résultats de relation ou d’équipe sont reportées, et seules les actions de cadre, de formation et d’organisation se poursuivent.',
-    statut: 'hypothese', confiance: 'moyenne',
-    verification: 'Demander à la personne chargée de la conformité des données un état d’avancement du dossier à chaque jalon.'
+    texte: `Charge des responsables : l’équipe n’étant mobilisée qu’aux sept dixièmes de son temps (${ct('CT-07').id}), les responsabilités sont réparties entre les quatre rôles du cas. Le rôle le plus sollicité (${liste(plusChargee)}) porte ${maxCharge} recommandations au plus, hors le rôle d’appui du ${CONSULTANT}.`,
+    statut: 'hypothese', confiance: 'faible',
+    verification: 'Demander à chaque responsable, à chaque jalon, le temps réellement consacré aux actions du plan et réaffecter une action si ce temps dépasse ce qui était prévu.'
   });
+  if (conditionnelles.length) {
+    cal.push({
+      texte: `Actions conditionnelles à l’autorisation de la CNDP (${ct('CT-02').id}, dépôt au plus tard dans les 3 mois) : ${liste(famillesCond)}. Elles s’appuient sur des lectures de relation ou d’équipe et ne démarrent qu’après l’autorisation, aux délais écrits dans leur horizon (30, 60 ou 90 jours après l’autorisation). Si l’autorisation tarde, elles sont reportées sans autre effet sur le calendrier ; seules les actions de cadre, de formation générale et d’organisation se poursuivent. Responsable du suivi du dossier : ${roles(['HT'])}.`,
+      statut: 'hypothese', confiance: 'moyenne',
+      verification: 'Demander à la personne chargée de la conformité des données un état d’avancement du dossier à chaque jalon.'
+    });
+  }
   sections.push(section('calendrier', 'Calendrier en jalons à 30, 60 et 90 jours', cal.map((p, k) => paragraphe(`n5-calendrier-${k + 1}`, p.texte, p))));
 
   // Mesure
@@ -487,7 +513,7 @@ export function construire({ cas, faits, bib }) {
 
   // Garde-fous
   const g = [];
-  g.push(c('Aucune décision d’emploi (recrutement, promotion, licenciement, affectation) ne peut s’appuyer sur ces rapports. Cette règle est une contrainte dure du cas (CT-03, Code du travail, loi 65-99) et un garde-fou du mandat ; elle vaut pour le plan comme pour les lectures qui le fondent.'));
+  g.push(c('Aucune décision d’emploi (recrutement, promotion, licenciement, affectation) ne peut s’appuyer sur ces rapports. Il s’agit d’une règle posée par l’outil ; son articulation avec le Code du travail (loi 65-99, CT-03) est à instruire par Tenga Conseil. Elle vaut pour le plan comme pour les lectures qui le fondent.'));
   g.push(c('Consentement : les résultats du questionnaire sont des données personnelles (loi 09-08, CT-01). Information et consentement préalables des personnes, consentement distinct pour chaque niveau de rapport (individuel, binôme, équipe, organisation), retrait possible à tout moment ; aucune donnée n’est exploitée sans consentement tracé.'));
   g.push(c('Base juridique à faire instruire par Tenga Conseil avant tout usage : déclaration ou autorisation préalable du traitement auprès de la CNDP avant toute analyse de relation ou d’équipe (CT-02) ; cadre et autorisation d’un transfert de données vers le siège à l’étranger (CT-04) ; Code du travail (loi 65-99). Le RGPD et le règlement 2024/1689 ne s’appliquent que si l’organisation y est soumise, ce qui est à instruire ; la règle de prudence retenue est d’appliquer l’exigence la plus forte. Ces éléments sont des faits de cadre, non un avis juridique.'));
   g.push(c(`Relecture et signature : un ${CONSULTANT} relit et signe le plan avant toute remise. L’outil prépare et argumente, il ne conclut pas. La norme ISO 10667 (prestation d’évaluation en contexte de travail) est citée comme pratique visée, sans certification revendiquée.`));
@@ -498,8 +524,8 @@ export function construire({ cas, faits, bib }) {
   // Ordre final : départ, a, b, c, d, calendrier, mesure, garde-fous
   const ordre = ['depart', 'coaching', 'mentorat', 'formation', 'organisation', 'calendrier', 'mesure', 'garde-fous'];
   const triees = ordre.map((id) => sections.find((s) => s.id === id));
-  return {
+  return courbes({
     niveau: { id: 'n5-accompagnement', titre: 'Plan d’accompagnement intégré', sections: triees },
     recommandations
-  };
+  });
 }
