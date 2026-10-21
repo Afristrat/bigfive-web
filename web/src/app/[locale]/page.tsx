@@ -66,10 +66,6 @@ export default async function Home({ params }: HomeProps) {
       <section className='fond-points relative pb-[clamp(2.5rem,6vw,4.5rem)]'>
         <div className='relative grid items-center gap-11 min-[960px]:grid-cols-[1.05fr_.95fr] min-[960px]:gap-16'>
           <div>
-            <span className={`${chip} apparition`}>
-              <i aria-hidden='true' className='size-2 rounded-full bg-accent' />
-              {h('chip')}
-            </span>
             <h1
               className={`${title({ size: 'display' })} apparition my-[22px]`}
               style={{ animationDelay: '0.05s' }}

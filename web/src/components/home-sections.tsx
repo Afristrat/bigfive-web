@@ -152,6 +152,13 @@ export async function HomeSections({
         </ul>
       </section>
 
+      <section aria-labelledby='confiance-titre' className={section}>
+        <h2 id='confiance-titre' className={title({ size: 'section' })}>
+          {h('trust.title')}
+        </h2>
+        <p className='mt-2.5 max-w-[40em] text-texte-2'>{h('trust.text')}</p>
+      </section>
+
       <section aria-labelledby='deroulement-titre' className={section}>
         <h2 id='deroulement-titre' className={title({ size: 'section' })}>
           {h('how.title')}

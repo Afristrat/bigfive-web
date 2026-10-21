@@ -26,12 +26,10 @@ type Texts = {
 const texts: Record<MailLocale, Texts> = {
   fr: {
     subject: 'Votre lien de connexion à Tenga Assessments',
-    intro:
-      'Utilisez le bouton ci-dessous pour vous connecter à Tenga Assessments.',
+    intro: 'Voici le lien pour vous connecter.',
     action: 'Me connecter',
-    codeLabel:
-      'Si vous ouvrez ce message sur un autre appareil, saisissez ce code sur la page de connexion :',
-    note: `Le lien et le code sont valables ${LOGIN_VALIDITY_MINUTES} minutes et ne servent qu’une seule fois. Si vous n’avez pas fait cette demande, ignorez ce message.`
+    codeLabel: 'Si vous l’ouvrez sur un autre appareil, entrez ce code :',
+    note: `Le lien et le code fonctionnent une seule fois et restent valables ${LOGIN_VALIDITY_MINUTES} minutes. Ce lien n’a pas été demandé par vous ? Vous pouvez simplement ignorer ce message.`
   },
   ar: {
     subject: 'رابط الدخول إلى Tenga Assessments',
