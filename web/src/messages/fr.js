@@ -376,6 +376,48 @@ const french = {
       'Un super administrateur voit toutes les organisations et attribue tous les rôles. Si l’adresse n’a pas encore de compte, il est créé. L’ajout est inscrit au journal.',
     grant: 'Ajouter comme super administrateur',
     granted: 'Super administrateur ajouté.',
+    grantConfirmLabel: 'Confirmer l’adresse e-mail',
+    grantWorking: 'Ajout en cours…',
+    requiredLegend: 'Les champs marqués d’un astérisque (*) sont obligatoires.',
+    grantInvalid:
+      'Vérifiez les deux adresses\u00a0: elles doivent être valides et identiques. Corrigez-les, puis réessayez.',
+    grantExists:
+      'Cette adresse est déjà celle d’un super administrateur\u00a0: rien n’a été modifié.',
+    grantError:
+      'L’ajout a échoué, ou la limite horaire d’ajouts est atteinte. Réessayez dans un instant.',
+    createWorking: 'Création en cours…',
+    assignWorking: 'Attribution en cours…',
+    organizationPlaceholder: 'Choisissez une organisation',
+    rolePlaceholder: 'Choisissez un rôle',
+    removeTitle: 'Retirer un super administrateur',
+    removeIntro:
+      'Un super administrateur retiré perd l’accès à toutes les organisations. Le retrait est inscrit au journal et les autres super administrateurs en sont avertis par e-mail. Vous ne pouvez pas retirer votre propre accès.',
+    removeCaption:
+      'Super administrateurs, avec la date de leur ajout et l’action de retrait.',
+    removeColAddress: 'Adresse e-mail',
+    removeColAdded: 'Ajouté le',
+    removeColAction: 'Retrait',
+    removeYou: 'Vous',
+    removeSelfHelp:
+      'Vous ne pouvez pas retirer votre propre accès. Un autre super administrateur peut le faire.',
+    removeConfirm:
+      'Je confirme le retrait de l’accès super administrateur de {adresse}.',
+    removeButton: 'Retirer',
+    removeButtonAria: 'Retirer l’accès super administrateur de {adresse}',
+    removeWorking: 'Retrait en cours…',
+    removed: 'Accès super administrateur retiré.',
+    removeInvalid:
+      'Cochez la case de confirmation de la ligne concernée, puis réessayez.',
+    removeSelf:
+      'Vous ne pouvez pas retirer votre propre accès. Demandez à un autre super administrateur de le faire.',
+    removeAbsent:
+      'Cette personne n’est déjà plus super administrateur : rien n’a été modifié.',
+    removeForbidden:
+      'Le retrait a été refusé. Actualisez la page pour voir la liste à jour.',
+    removeError:
+      'Le retrait a échoué, ou la limite horaire de retraits est atteinte. Réessayez dans un instant.',
+    adminsUnavailable:
+      'La liste des super administrateurs n’a pas pu être lue. Actualisez la page dans un instant.',
     journalTitle: 'Journal',
     journalIntro:
       'Les 100 dernières lignes. Le journal ne contient aucune adresse e-mail.',
@@ -385,6 +427,164 @@ const french = {
     colActor: 'Acteur',
     colResource: 'Ressource',
     colQuantity: 'Quantité'
+  },
+  campaigns: {
+    title: 'Campagnes',
+    intro:
+      'Une campagne réunit les personnes invitées à répondre au questionnaire. Vous la préparez en brouillon, vous l’ouvrez pour envoyer les invitations, puis vous la clôturez.',
+    listTitle: 'Campagnes de l’organisation',
+    empty: 'Aucune campagne pour le moment.',
+    tableCaption:
+      'Campagnes de l’organisation, avec leur statut, leurs effectifs et les actions possibles.',
+    figureUnknown: 'Non disponible',
+    requiredLegend: 'Les champs marqués d’un astérisque (*) sont obligatoires.',
+    colTitle: 'Campagne',
+    colStatus: 'Statut',
+    colParticipants: 'Participants',
+    colInProgress: 'En cours',
+    colDone: 'Terminés',
+    colPending: 'Invitations en attente',
+    colActions: 'Actions',
+    statsHelp:
+      'Ces effectifs sont des totaux\u00a0: ils n’identifient personne.',
+    status: {
+      brouillon: 'Brouillon',
+      ouverte: 'Ouverte',
+      close: 'Clôturée'
+    },
+    archived:
+      'Cette organisation est archivée\u00a0: aucune campagne ne peut y être créée.',
+    createTitle: 'Créer une campagne',
+    createIntro:
+      'La campagne est créée en brouillon. Elle n’accepte aucune invitation tant que vous ne l’avez pas ouverte.',
+    titleLabel: 'Titre de la campagne',
+    titleHelp: '{max} caractères au plus.',
+    titleInvalid:
+      'Saisissez un titre de {max} caractères au plus, sans lien ni adresse, puis réessayez.',
+    languageLabel: 'Langue de la campagne',
+    create: 'Créer la campagne',
+    created:
+      'Campagne créée en brouillon. Ouvrez-la pour pouvoir envoyer les invitations.',
+    working: 'Opération en cours…',
+    open: 'Ouvrir',
+    openAria: 'Ouvrir la campagne «\u00a0{titre}\u00a0»',
+    opened:
+      'Campagne «\u00a0{titre}\u00a0» ouverte. Vous pouvez maintenant inviter des participants. Le formulaire d’invitation s’affiche sous la liste.',
+    closeWarning:
+      'Une campagne clôturée n’accepte plus de réponses. Les invitations restées sans réponse sont supprimées, avec les adresses qu’elles contiennent.',
+    closeConfirm:
+      'Je confirme la clôture\u00a0: elle est irréversible et supprime les invitations en attente.',
+    close: 'Clôturer',
+    closeAria: 'Clôturer la campagne «\u00a0{titre}\u00a0»',
+    closed: 'Campagne «\u00a0{titre}\u00a0» clôturée.',
+    invalid:
+      'La demande n’a pas pu être enregistrée. Vérifiez la saisie, puis réessayez.',
+    forbidden:
+      'Votre rôle ne permet pas cette opération. Demandez à un responsable de l’organisation de l’effectuer.',
+    conflict:
+      'Cette opération n’est plus possible dans l’état actuel de la campagne ou de l’organisation. Actualisez la page.',
+    error: 'L’opération a échoué. Réessayez dans un instant.'
+  },
+  invitations: {
+    title: 'Inviter des participants à «\u00a0{titre}\u00a0»',
+    requiredLegend: 'Les champs marqués d’un astérisque (*) sont obligatoires.',
+    addressesLabel: 'Personnes à inviter',
+    addressesHelp:
+      'Une adresse par ligne, prénom facultatif après une virgule, {max} au plus.',
+    languageLabel: 'Langue de l’invitation',
+    messageLabel: 'Message personnel (facultatif)',
+    messageHelp:
+      'Ce message est ajouté à l’invitation. Les liens ne sont pas acceptés.',
+    counter: '{count}\u00a0/\u00a0{max}',
+    counterLow: 'Attention\u00a0: moins de {remaining} caractères restants.',
+    counterFull: 'Vous avez atteint la limite de caractères.',
+    submit: 'Envoyer les invitations',
+    sending: 'Envoi en cours…',
+    summary: 'Invitations envoyées\u00a0: {sent} sur {total}.',
+    doneNone: 'Aucune invitation n’est partie.',
+    summaryFailed: 'Adresses sans invitation\u00a0: {failed}.',
+    summaryUnprocessed:
+      'Adresses non traitées, conservées dans la liste\u00a0: {unprocessed}.',
+    abortedError:
+      'Le lot s’est interrompu sur une erreur. Dans un instant, renvoyez les adresses conservées dans la liste.',
+    abortedForbidden:
+      'Le lot s’est interrompu\u00a0: votre droit d’inviter a été retiré pendant l’envoi. Demandez à un responsable de l’organisation de vous rendre ce droit.',
+    abortedClosed:
+      'Le lot s’est interrompu\u00a0: la campagne a été clôturée pendant l’envoi.',
+    failuresTitle:
+      'Ces adresses n’ont pas reçu d’invitation et restent dans la liste pour un nouvel essai\u00a0:',
+    outcome: {
+      mail_failed:
+        'L’e-mail n’est pas parti. Invitez de nouveau cette adresse dans une minute.',
+      skipped_recent:
+        'Une invitation vient d’être envoyée à cette adresse. Attendez une minute avant de la renouveler.',
+      refused: 'Cette adresse a été refusée. Vérifiez-la, puis réessayez.',
+      rate_limited: 'Limite d’envois atteinte\u00a0: réessayez dans une heure.'
+    },
+    invalid: {
+      empty: 'Saisissez au moins une adresse, une par ligne.',
+      too_many:
+        'Pas plus de {max} adresses à la fois. Retirez les lignes en trop et envoyez-les dans un second lot.',
+      address:
+        'Ces lignes ne sont pas valides. Corrigez-les ou retirez-les, puis renvoyez le lot\u00a0:',
+      message:
+        'Le message ne doit contenir ni lien, ni adresse, ni caractère invisible, et pas plus de {max} caractères. Corrigez-le, puis renvoyez le lot.'
+    },
+    forbidden:
+      'Vous ne pouvez pas inviter de participants à cette campagne. Demandez à un responsable de l’organisation.',
+    closed:
+      'Cette campagne n’est pas ouverte\u00a0: aucune invitation ne peut partir. Actualisez la page.',
+    rateLimited: 'Limite d’envois atteinte\u00a0: réessayez dans une heure.',
+    error:
+      'L’opération a échoué. Certaines invitations sont peut-être parties\u00a0: vérifiez le nombre d’invitations en attente avant de réessayer.'
+  },
+  invitation: {
+    title: 'Votre invitation',
+    invalid:
+      'Cette invitation n’est plus valable. Demandez-en une nouvelle à l’organisation qui vous a écrit.',
+    greeting: 'Bonjour {prenom},',
+    greetingNeutral: 'Bonjour,',
+    intro:
+      '{organisation} vous invite à répondre au questionnaire de personnalité de Tenga Assessments, dans le cadre de la campagne «\u00a0{campagne}\u00a0».',
+    messageTitle: 'Message joint à l’invitation',
+    expires: 'Cette invitation est valable jusqu’au {date}.',
+    acceptHelp:
+      'En l’acceptant, vous ouvrez votre espace personnel sur Tenga Assessments.',
+    button: 'Accepter l’invitation',
+    accepting: 'Ouverture…',
+    otherSession:
+      'Une autre session est déjà ouverte sur cet appareil. Ouvrez ce lien dans une fenêtre de navigation privée, ou déconnectez-vous d’abord.',
+    // Texte à valider par Amine (T13b).
+    signinRequired:
+      'Votre invitation est acceptée. Pour ouvrir votre espace, saisissez sur la page de connexion l’adresse e-mail qui a reçu l’invitation\u00a0: vous y recevrez un lien de connexion. Aucun mot de passe n’est nécessaire.',
+    signinLink: 'Aller à la connexion',
+    failed: 'L’opération n’a pas abouti. Réessayez plus tard.'
+  },
+  members: {
+    title: 'Donner un accès à l’organisation',
+    intro:
+      'Un responsable ou un consultant accède à l’organisation avec son adresse e-mail. L’accès est accordé immédiatement, sans lien d’acceptation, et la personne en est informée par e-mail.',
+    requiredLegend: 'Les champs marqués d’un astérisque (*) sont obligatoires.',
+    emailLabel: 'Adresse e-mail',
+    confirmLabel: 'Confirmation de l’adresse',
+    confirmHelp:
+      'Saisissez l’adresse une seconde fois\u00a0: une faute de frappe donnerait l’accès à une autre personne.',
+    roleLabel: 'Rôle',
+    rolePlaceholder: 'Choisissez un rôle',
+    roleHelp:
+      'Si cette adresse a déjà un accès à l’organisation, son rôle est remplacé par celui que vous choisissez.',
+    languageLabel: 'Langue de l’e-mail d’information',
+    working: 'Opération en cours…',
+    submit: 'Donner l’accès',
+    invited: 'Accès accordé. La personne a été informée par e-mail.',
+    invitedMailFailed:
+      'Accès accordé, mais l’e-mail d’information n’est pas parti. Prévenez la personne vous-même.',
+    invalid:
+      'Vérifiez le formulaire\u00a0: l’adresse doit être valide et identique dans les deux champs, et un rôle doit être choisi.',
+    forbidden:
+      'Vous ne pouvez pas donner cet accès. Contactez l’équipe Tenga si vous pensez que c’est une erreur.',
+    rateLimited: 'Limite atteinte\u00a0: réessayez dans une heure.',
+    error: 'L’opération a échoué. Réessayez plus tard.'
   },
   common: {
     and: 'et',
@@ -803,31 +1003,6 @@ const french = {
         // Lot 3 (export et suppression).
         data: 'Vous pouvez à tout moment télécharger vos données ou demander leur suppression.'
       }
-    },
-    // Gabarit de l'e-mail d'invitation d'une campagne (lot 2, avec le lot 1 pour
-    // la confidentialité et le lot 4 pour les synthèses). Variables :
-    // {organisation}, {firstName}, {group}, {total}, {link}, {contactEmail}.
-    invite: {
-      subject: 'Une invitation de {organisation}, en confiance',
-      greeting: 'Bonjour {firstName},',
-      // Lot 2.
-      intro:
-        '{organisation} a demandé à Tenga Conseil d’organiser un questionnaire de personnalité pour {group}. Une invitation à y répondre vous est adressée.',
-      // Lot 2.
-      whatYouDo:
-        'Ce que vous allez faire : lire {total} affirmations et dire dans quelle mesure elles vous décrivent. Il n’y a pas de bonne réponse et pas de limite de temps. Vous pouvez vous arrêter et reprendre.',
-      // Lot 1.
-      privacy:
-        'Ce que nous tenons à vous dire d’abord : votre résultat individuel n’est visible que de vous, du consultant Tenga affecté à {organisation} et de l’équipe d’administration de Tenga Conseil.',
-      // Lot 4.
-      groups: '{organisation} ne reçoit que des synthèses de groupe.',
-      noDiagnosis:
-        'Le questionnaire n’est ni un test de compétences, ni un diagnostic.',
-      openLink: 'Quand vous serez prêt, ouvrez ce lien : {link}',
-      question:
-        'Une question avant de commencer ? Écrivez-nous à {contactEmail}. Nous vous répondrons.',
-      closing: 'Cordialement,',
-      signature: 'Tenga Conseil'
     }
   },
   getResult: {

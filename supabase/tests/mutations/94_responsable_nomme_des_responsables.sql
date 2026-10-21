@@ -4,7 +4,7 @@ DECLARE
   d text := pg_get_functiondef('private.peut_attribuer(uuid,text)'::regprocedure);
   n text := d;
 BEGIN
-  n := replace(n, $a$p_role IN ('consultant', 'participant')$a$, $b$p_role IN ('responsable', 'consultant', 'participant')$b$);
+  n := replace(n, $a$p_role = 'participant'$a$, $b$p_role IN ('responsable', 'participant')$b$);
   IF n = d THEN
     RAISE EXCEPTION 'mutation sans effet';
   END IF;

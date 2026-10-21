@@ -1,11 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import {
+  INVITE_BATCH_MAX,
+  INVITE_LIST_MAX_CHARS,
+  INVITEE_NAME_MAX,
+  assignableRoles,
+  canManageCampaigns,
   decideOrgAccess,
   decideReadResult,
   decideTestMode,
   isInvitationLocale,
   isOrgRole,
+  memberInviteRoles,
   type OrgRole,
+  type OrgViewer,
   type ReadViewer
 } from '@/lib/access-rules';
 
@@ -236,5 +243,85 @@ describe('decideTestMode', () => {
     expect(
       decideTestMode({ memberships: [], activeOrganizationId: null })
     ).toEqual({ mode: 'denied' });
+  });
+});
+
+describe('bornes des invitations', () => {
+  it('aligne le prénom sur la contrainte de la base (80)', () => {
+    expect(INVITEE_NAME_MAX).toBe(80);
+    expect(INVITE_BATCH_MAX).toBe(25);
+    expect(INVITE_LIST_MAX_CHARS).toBe(4000);
+  });
+});
+
+const orgViewer = (role: OrgRole | null, isTengaAdmin = false): OrgViewer => ({
+  isTengaAdmin,
+  roleInOrganization: role
+});
+
+describe('canManageCampaigns', () => {
+  it('autorise un administrateur Tenga, même non membre', () => {
+    expect(canManageCampaigns(orgViewer(null, true))).toBe(true);
+  });
+
+  it('autorise le responsable de l’organisation', () => {
+    expect(canManageCampaigns(orgViewer('responsable'))).toBe(true);
+  });
+
+  it('refuse consultant, participant, non-membre et absence de session', () => {
+    expect(canManageCampaigns(orgViewer('consultant'))).toBe(false);
+    expect(canManageCampaigns(orgViewer('participant'))).toBe(false);
+    expect(canManageCampaigns(orgViewer(null))).toBe(false);
+    expect(canManageCampaigns(null)).toBe(false);
+  });
+});
+
+describe('assignableRoles', () => {
+  it('donne les trois rôles à un administrateur non membre', () => {
+    expect(assignableRoles(orgViewer(null, true))).toEqual([
+      'responsable',
+      'consultant',
+      'participant'
+    ]);
+  });
+
+  it('donne les trois rôles à un administrateur membre avec un autre rôle', () => {
+    expect(assignableRoles(orgViewer('participant', true))).toHaveLength(3);
+  });
+
+  it('ne donne que participant au responsable de l’organisation (décision I2)', () => {
+    expect(assignableRoles(orgViewer('responsable'))).toEqual(['participant']);
+  });
+
+  it('le responsable ne peut donner ni consultant ni responsable', () => {
+    const roles = assignableRoles(orgViewer('responsable'));
+    expect(roles).not.toContain('consultant');
+    expect(roles).not.toContain('responsable');
+  });
+
+  it('ne donne rien à un responsable d’une autre organisation (non membre ici)', () => {
+    expect(assignableRoles(orgViewer(null))).toEqual([]);
+  });
+
+  it('ne donne rien à un consultant, un participant ou sans session', () => {
+    expect(assignableRoles(orgViewer('consultant'))).toEqual([]);
+    expect(assignableRoles(orgViewer('participant'))).toEqual([]);
+    expect(assignableRoles(null)).toEqual([]);
+  });
+});
+
+describe('memberInviteRoles', () => {
+  it('exclut participant', () => {
+    expect(memberInviteRoles(orgViewer(null, true))).toEqual([
+      'responsable',
+      'consultant'
+    ]);
+    expect(memberInviteRoles(orgViewer('responsable'))).toEqual([]);
+  });
+
+  it('reste vide sans pouvoir', () => {
+    expect(memberInviteRoles(orgViewer('consultant'))).toEqual([]);
+    expect(memberInviteRoles(orgViewer(null))).toEqual([]);
+    expect(memberInviteRoles(null)).toEqual([]);
   });
 });

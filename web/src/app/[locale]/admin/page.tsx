@@ -5,8 +5,13 @@ import {
   RoleForm
 } from '@/components/admin-forms';
 import { title } from '@/components/primitives';
-import { loadJournal, loadOrganizations } from '@/lib/admin-data';
-import { formatDate, formatDateHeure } from '@/lib/format';
+import { TengaAdminsPanel } from '@/components/tenga-admins-panel';
+import {
+  loadJournal,
+  loadOrganizations,
+  loadTengaAdmins
+} from '@/lib/admin-data';
+import { formatDate, formatDateHeure, isoler } from '@/lib/format';
 import { requireAdmin } from '@/lib/session';
 import { Link } from '@/navigation';
 
@@ -28,13 +33,22 @@ export default async function AdminPage({ params }: Props) {
   setRequestLocale(locale);
   // 404 pour quiconque n'est pas dans private.tenga_admins (lu en base).
   const viewer = await requireAdmin(locale, '/admin');
-  const [organizations, journal] = await Promise.all([
+  const [organizations, journal, admins] = await Promise.all([
     loadOrganizations(viewer),
-    loadJournal(viewer)
+    loadJournal(viewer),
+    loadTengaAdmins(viewer)
   ]);
   const t = await getTranslations('admin');
   const roles = await getTranslations('roles');
   const account = await getTranslations('account');
+
+  const iso = (value: string): string =>
+    locale === 'ar' ? isoler(value) : value;
+  const languages = {
+    fr: account('languages.fr'),
+    ar: account('languages.ar'),
+    en: account('languages.en')
+  };
 
   const feedback = {
     invalid: t('invalid'),
@@ -140,7 +154,9 @@ export default async function AdminPage({ params }: Props) {
               slugLabel: t('slugLabel'),
               slugHelp: t('slugHelp'),
               submit: t('create'),
-              done: t('created')
+              done: t('created'),
+              working: t('createWorking'),
+              requiredLegend: t('requiredLegend')
             }}
           />
         </section>
@@ -157,20 +173,20 @@ export default async function AdminPage({ params }: Props) {
               ...feedback,
               emailLabel: t('emailLabel'),
               organizationLabel: t('organizationLabel'),
+              organizationPlaceholder: t('organizationPlaceholder'),
               roleLabel: t('roleLabel'),
+              rolePlaceholder: t('rolePlaceholder'),
               languageLabel: t('languageLabel'),
               roles: {
                 responsable: roles('responsable'),
                 consultant: roles('consultant'),
                 participant: roles('participant')
               },
-              languages: {
-                fr: account('languages.fr'),
-                ar: account('languages.ar'),
-                en: account('languages.en')
-              },
+              languages,
               submit: t('assign'),
-              done: t('assigned')
+              done: t('assigned'),
+              working: t('assignWorking'),
+              requiredLegend: t('requiredLegend')
             }}
           />
         </section>
@@ -183,20 +199,60 @@ export default async function AdminPage({ params }: Props) {
           <AdminGrantForm
             locale={locale}
             labels={{
-              ...feedback,
               emailLabel: t('emailLabel'),
               languageLabel: t('languageLabel'),
-              languages: {
-                fr: account('languages.fr'),
-                ar: account('languages.ar'),
-                en: account('languages.en')
-              },
+              languages,
+              confirmLabel: t('grantConfirmLabel'),
               submit: t('grant'),
-              done: t('granted')
+              done: t('granted'),
+              working: t('grantWorking'),
+              requiredLegend: t('requiredLegend'),
+              invalidFields: t('grantInvalid'),
+              alreadyAdmin: t('grantExists'),
+              failed: t('grantError')
             }}
           />
         </section>
       </div>
+
+      <section aria-labelledby='admins-titre'>
+        <h2 id='admins-titre' tabIndex={-1} className='text-titre-2 text-encre'>
+          {t('removeTitle')}
+        </h2>
+        <p className='mt-2 colonne-lecture text-texte-2'>{t('removeIntro')}</p>
+        {admins === null ? (
+          <p className='mt-4 text-texte-2'>{t('adminsUnavailable')}</p>
+        ) : (
+          <TengaAdminsPanel
+            locale={locale}
+            headingId='admins-titre'
+            rows={admins.map((admin) => ({
+              userId: admin.userId,
+              address: admin.adresse,
+              addedAt: formatDate(admin.ajouteLe, locale),
+              isMe: admin.estMoi,
+              confirm: t('removeConfirm', { adresse: iso(admin.adresse) }),
+              ariaLabel: t('removeButtonAria', { adresse: admin.adresse })
+            }))}
+            labels={{
+              caption: t('removeCaption'),
+              colAddress: t('removeColAddress'),
+              colAdded: t('removeColAdded'),
+              colAction: t('removeColAction'),
+              you: t('removeYou'),
+              selfHelp: t('removeSelfHelp'),
+              submit: t('removeButton'),
+              working: t('removeWorking'),
+              done: t('removed'),
+              invalid: t('removeInvalid'),
+              self: t('removeSelf'),
+              absent: t('removeAbsent'),
+              forbidden: t('removeForbidden'),
+              error: t('removeError')
+            }}
+          />
+        )}
+      </section>
 
       <section aria-labelledby='journal-titre'>
         <h2 id='journal-titre' className='text-titre-2 text-encre'>

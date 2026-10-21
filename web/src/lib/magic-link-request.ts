@@ -32,18 +32,23 @@ export function requestMagicLink(
   input: { email: string; locale: string; ip: string }
 ): MagicLinkOutcome {
   const address = input.email.trim().toLowerCase();
-  const perIp = deps.limiter.isLimited(
-    'magicLinkPerIp',
-    magicLinkLimits.perIp,
-    input.ip
-  );
-  const perAddress = deps.limiter.isLimited(
-    'magicLinkPerAddress',
-    magicLinkLimits.perAddress,
-    canonicalAddress(address)
-  );
-  if (perIp) return { status: 'rate_limited', scope: 'ip' };
-  if (perAddress) return { status: 'rate_limited', scope: 'address' };
+  // L'IP d'abord, et l'adresse n'est comptée que si l'IP passe : une IP qui
+  // inonde le service d'adresses inventées s'arrête au plafond d'IP sans jamais
+  // remplir la table des adresses (T12).
+  if (
+    deps.limiter.isLimited('magicLinkPerIp', magicLinkLimits.perIp, input.ip)
+  ) {
+    return { status: 'rate_limited', scope: 'ip' };
+  }
+  if (
+    deps.limiter.isLimited(
+      'magicLinkPerAddress',
+      magicLinkLimits.perAddress,
+      canonicalAddress(address)
+    )
+  ) {
+    return { status: 'rate_limited', scope: 'address' };
+  }
 
   deps.defer(async () => {
     try {

@@ -39,6 +39,7 @@ describe('isPrivatePath', () => {
     expect(isPrivatePath('/administrateur')).toBe(false);
     expect(isPrivatePath('/connexion')).toBe(false);
     expect(isPrivatePath('/c/abc')).toBe(false);
+    expect(isPrivatePath('/i/jeton')).toBe(false);
     expect(isPrivatePath('/')).toBe(false);
     expect(isPrivatePath('/test')).toBe(false);
   });
@@ -50,6 +51,7 @@ describe('decideRouteAccess', () => {
     expect(decide('/fr/test', false)).toEqual({ action: 'next' });
     expect(decide('/fr/connexion', false)).toEqual({ action: 'next' });
     expect(decide('/c/jeton', false)).toEqual({ action: 'next' });
+    expect(decide('/fr/i/jeton', false)).toEqual({ action: 'next' });
   });
 
   it('laisse passer une route privée avec une session', () => {

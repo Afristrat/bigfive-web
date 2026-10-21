@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getInfo, getItems } from '@bigfive-org/questions';
+import { hasLinkOrInvisible } from '@/lib/access-rules';
 
 // Bornes de taille : toute entrée de server action est validée ici avant
 // d'atteindre la base.
@@ -64,7 +65,14 @@ export const profileSchema = z.object({
 });
 
 export const organizationSchema = z.object({
-  nom: z.string().trim().min(1).max(160),
+  // Le nom part dans l'objet et le corps des courriels d'invitation : ni lien,
+  // ni adresse, ni caractère invisible (hameçonnage), comme le titre de campagne.
+  nom: z
+    .string()
+    .trim()
+    .min(1)
+    .max(160)
+    .refine((value) => !hasLinkOrInvisible(value)),
   slug: z
     .string()
     .trim()
@@ -80,7 +88,14 @@ export const roleAssignmentSchema = z.object({
   langue: z.enum(['fr', 'ar', 'en'])
 });
 
-export const adminGrantSchema = z.object({
-  email,
-  langue: z.enum(['fr', 'ar', 'en'])
-});
+// La confirmation doit redire l'adresse (casse et espaces ignorés) : un geste
+// irréversible ne part pas sur une faute de frappe ni sur un collage distrait.
+export const adminGrantSchema = z
+  .object({
+    email,
+    confirmation: z.string().max(200),
+    langue: z.enum(['fr', 'ar', 'en'])
+  })
+  .refine((value) => value.confirmation.trim().toLowerCase() === value.email, {
+    path: ['confirmation']
+  });

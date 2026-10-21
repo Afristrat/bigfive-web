@@ -85,7 +85,7 @@ const errorBody = z
   .passthrough();
 
 type CallInit = {
-  method: 'GET' | 'POST';
+  method: 'GET' | 'POST' | 'DELETE';
   bearer?: string;
   /** Requête PostgREST : sélectionne le schéma exposé. */
   postgrest?: boolean;
@@ -195,23 +195,13 @@ export type ServiceClient = {
    */
   openSession: (userId: string) => Promise<GateSession>;
   refreshSession: (refreshToken: string) => Promise<GateSession>;
-  /** Identifiant d'un compte par adresse (liste d'administration paginée), ou null. */
-  findUserId: (email: string) => Promise<string | null>;
   /** Crée un compte confirmé (inscription fermée : seule voie de naissance). */
   createUser: (email: string, langue: string) => Promise<string>;
 };
 
-const MAX_USER_PAGES = 50;
-const USERS_PER_PAGE = 200;
-
 const generatedLink = z.object({
   hashed_token: z.string().min(1),
   verification_type: z.string().optional()
-});
-const usersPage = z.object({
-  users: z.array(
-    z.object({ id: z.string().uuid(), email: z.string().nullable() })
-  )
 });
 
 export function serviceClient(): ServiceClient {
@@ -246,21 +236,6 @@ export function serviceClient(): ServiceClient {
           body: { refresh_token: refreshToken }
         })
       );
-    },
-    async findUserId(email) {
-      const wanted = email.trim().toLowerCase();
-      for (let page = 1; page <= MAX_USER_PAGES; page++) {
-        const { users } = usersPage.parse(
-          await call(
-            `/auth/v1/admin/users?page=${page}&per_page=${USERS_PER_PAGE}`,
-            { method: 'GET' }
-          )
-        );
-        const found = users.find((u) => u.email?.toLowerCase() === wanted);
-        if (found) return found.id;
-        if (users.length < USERS_PER_PAGE) return null;
-      }
-      return null;
     },
     async createUser(email, langue) {
       const created = z.object({ id: z.string().uuid() }).parse(

@@ -145,27 +145,6 @@ describe('client service', () => {
     });
   });
 
-  it('retrouve un compte par adresse (minuscules) sur plusieurs pages', async () => {
-    const page = Array.from({ length: 200 }, (_, i) => ({
-      id: `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`,
-      email: `u${i}@x.ma`
-    }));
-    fetchMock
-      .mockResolvedValueOnce(reply({ users: page }))
-      .mockResolvedValueOnce(
-        reply({ users: [{ id: USER_ID, email: 'Cible@Tenga.ma' }] })
-      );
-    await expect(serviceClient().findUserId('  cible@TENGA.ma ')).resolves.toBe(
-      USER_ID
-    );
-    expect(lastCall(1).url).toContain('page=2');
-  });
-
-  it('renvoie null quand l’adresse n’a pas de compte', async () => {
-    fetchMock.mockResolvedValue(reply({ users: [] }));
-    await expect(serviceClient().findUserId('absent@x.ma')).resolves.toBeNull();
-  });
-
   it('crée un compte confirmé, adresse en minuscules, langue en métadonnées', async () => {
     fetchMock.mockResolvedValue(reply({ id: USER_ID }));
     await expect(

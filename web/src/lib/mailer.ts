@@ -98,10 +98,11 @@ export async function sendMail({
 const multiline = (value: string): string =>
   escapeHtml(value).replace(/\r?\n/g, '<br>');
 
-/** Gabarit commun : salutation, introduction, message facultatif, bouton-lien, note. */
+/** Gabarit commun : salutation, introduction, détails, message facultatif, bouton-lien, note. */
 export function buildLinkMail({
   greeting,
   intro,
+  details,
   message,
   action,
   url,
@@ -111,6 +112,8 @@ export function buildLinkMail({
 }: {
   greeting?: string;
   intro: string;
+  /** Paragraphes échappés, entre l'introduction et le message. */
+  details?: readonly string[];
   message?: { title: string; body: string };
   action: string;
   url: string;
@@ -123,6 +126,7 @@ export function buildLinkMail({
     `<div dir="${dir}" style="font-family:Arial,sans-serif;line-height:1.5">` +
     (greeting ? `<p>${escapeHtml(greeting)}</p>` : '') +
     `<p>${escapeHtml(intro)}</p>` +
+    (details ?? []).map((detail) => `<p>${escapeHtml(detail)}</p>`).join('') +
     (message
       ? `<blockquote style="margin:12px 0;padding:8px 14px;border-inline-start:3px solid #cccccc"><strong>${escapeHtml(message.title)}</strong><br>${multiline(message.body)}</blockquote>`
       : '') +
@@ -135,6 +139,7 @@ export function buildLinkMail({
   const text = [
     greeting,
     intro,
+    ...(details ?? []),
     message ? `${message.title}\n${message.body}` : undefined,
     `${action}\n${url}`,
     code ? `${code.label}\n${code.value}` : undefined,

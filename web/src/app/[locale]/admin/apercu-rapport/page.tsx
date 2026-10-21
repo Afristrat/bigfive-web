@@ -39,8 +39,9 @@ export default async function ApercuRapportPage({ params }: Props) {
           trois profils fictifs et un profil estimé, lus à cinq niveaux
           (individuel, relations, équipe, lecture organisationnelle, plan
           d&apos;accompagnement). Ces données sont fixes, elles ne viennent pas
-          des résultats enregistrés ; les 150 textes de la bibliothèque ne sont
-          pas relus et chaque lecture est une hypothèse à vérifier en entretien.
+          des résultats enregistrés ; les 150 textes types de la bibliothèque ne
+          sont pas encore relus (le rapport en cite 85) et chaque lecture est
+          une hypothèse à confirmer en entretien.
         </p>
       </header>
       <p className='flex flex-wrap items-center gap-3 text-petit'>

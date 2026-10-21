@@ -15,7 +15,15 @@ export type SecurityEvent =
   | 'login.code_rate_limited'
   | 'login.code_failed'
   | 'login.link_failed'
-  | 'login.delivery_failed';
+  | 'login.delivery_failed'
+  | 'invitation.rate_limited'
+  | 'invitation.delivery_failed'
+  | 'invitation.accept_failed'
+  | 'invitation.accept_rate_limited'
+  | 'member.notice_failed'
+  | 'admin.grant_rate_limited'
+  | 'admin.role_rate_limited'
+  | 'admin.grant_notice_failed';
 
 /** Les champs sont typés étroitement pour qu'aucune donnée personnelle n'y entre. */
 export function logSecurityEvent(

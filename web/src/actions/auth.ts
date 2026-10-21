@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { after } from 'next/server';
 import { z } from 'zod';
-import { basePath, locales } from '@/config/site';
+import { basePath } from '@/config/site';
 import { deliverLoginLink, type IssuedLink } from '@/lib/login-delivery';
 import { localeOf } from '@/lib/locale-field';
 import { isLoginToken } from '@/lib/login-format';
@@ -12,23 +12,18 @@ import { requestMagicLink } from '@/lib/magic-link-request';
 import { sendMail } from '@/lib/mailer';
 import { holdUntil } from '@/lib/min-duration';
 import { getClientIp, sharedLimiter } from '@/lib/rate-limit';
-import { DEFAULT_AFTER_LOGIN } from '@/lib/route-guard';
-import { localizedPath, safeInternalPath } from '@/lib/safe-path';
+import { localizedPath } from '@/lib/safe-path';
 import { logSecurityEvent } from '@/lib/security-log';
 import { applyCookies } from '@/lib/session';
 import {
   ACCESS_COOKIE,
-  NEXT_COOKIE,
   REFRESH_COOKIE,
-  type CookieSpec,
-  clearedNextCookie,
   clearedSessionCookies,
-  nextCookie,
-  resolveNext,
-  sessionCookies
+  nextCookie
 } from '@/lib/session-cookies';
 import { codeLimits } from '@/lib/sliding-window';
-import { GatewayError, serviceClient, userClient } from '@/lib/supabase/server';
+import { reasonOf, startSession } from '@/lib/start-session';
+import { serviceClient, userClient } from '@/lib/supabase/server';
 import { loginCodeSchema, loginRequestSchema } from '@/schemas';
 
 export type LoginState =
@@ -60,15 +55,6 @@ const issue = async (address: string): Promise<IssuedLink | null> => {
   );
   return rows[0] ?? null;
 };
-
-// Raison journalisée : le nom de l'erreur (et le code HTTP de la passerelle),
-// jamais son message ni son corps, qui pourraient citer une adresse.
-const reasonOf = (error: unknown): string =>
-  error instanceof GatewayError
-    ? `${error.name}:${error.status}`
-    : error instanceof Error
-      ? error.name
-      : 'unknown';
 
 /**
  * Demande de lien. Tout le travail variable (lecture en base, envoi) part après
@@ -123,34 +109,6 @@ export async function requestLoginLink(
   return result;
 }
 
-/** Ouvre la session GoTrue du compte validé par la base, puis va à la destination. */
-async function startSession(
-  userId: string,
-  locale: string,
-  ip: string,
-  hold: () => Promise<void> = async () => undefined
-): Promise<AuthFormState> {
-  let specs: CookieSpec[];
-  try {
-    specs = sessionCookies(await serviceClient().openSession(userId));
-  } catch (error) {
-    logSecurityEvent('login.link_failed', { ip, reason: reasonOf(error) });
-    await hold();
-    return { status: 'failed' };
-  }
-  const wanted = (await cookies()).get(NEXT_COOKIE)?.value;
-  // Langue venue d'un champ de formulaire : inconnue = langue par défaut.
-  const known = locales.includes(locale) ? locale : 'en';
-  await hold();
-  await applyCookies([...specs, clearedNextCookie()]);
-  redirect(
-    safeInternalPath(
-      localizedPath(known, resolveNext(wanted, DEFAULT_AFTER_LOGIN)),
-      '/'
-    )
-  );
-}
-
 /** Clic sur le bouton de /c/{jeton} : seul moment où le jeton est consommé. */
 export async function consumeLoginLink(
   _previous: AuthFormState,
@@ -174,7 +132,9 @@ export async function consumeLoginLink(
     logSecurityEvent('login.link_failed', { ip, reason: 'unknown_or_expired' });
     return { status: 'failed' };
   }
-  return startSession(userId, localeOf(formData.get('locale')), ip);
+  return startSession(userId, localeOf(formData.get('locale')), ip, {
+    failureEvent: 'login.link_failed'
+  });
 }
 
 /** Saisie du code à 6 chiffres (autre appareil que celui du lien). */
@@ -220,7 +180,10 @@ export async function consumeLoginCode(
     logSecurityEvent('login.code_failed', { ip, reason: 'wrong_or_expired' });
     return settle({ status: 'failed' });
   }
-  return startSession(userId, parsed.data.locale, ip, hold);
+  return startSession(userId, parsed.data.locale, ip, {
+    failureEvent: 'login.link_failed',
+    hold
+  });
 }
 
 /**

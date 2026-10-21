@@ -95,6 +95,31 @@ describe('buildLinkMail', () => {
     expect(html).toContain('href="https://x.example/?a=&quot;1&quot;&amp;b=2"');
   });
 
+  it('insère les paragraphes de détail échappés entre l’introduction et le message', () => {
+    const { html, text } = buildLinkMail({
+      ...base,
+      details: ['Détail <un>', 'Détail "deux"'],
+      message: { title: 'Titre', body: 'Corps' }
+    });
+    expect(html).toContain(
+      '<p>Détail &lt;un&gt;</p><p>Détail &quot;deux&quot;</p>'
+    );
+    expect(html).not.toContain('<un>');
+    expect(html.indexOf('Voici')).toBeLessThan(html.indexOf('Détail &lt;un'));
+    expect(html.indexOf('Détail &quot;deux')).toBeLessThan(
+      html.indexOf('<blockquote')
+    );
+    expect(text).toBe(
+      'Voici votre lien.\n\nDétail <un>\n\nDétail "deux"\n\nTitre\nCorps\n\nSe connecter\nhttps://tenga.example/c/abc\n\nValable 15 minutes.'
+    );
+  });
+
+  it('reste identique sans détails, absents ou vides', () => {
+    const reference = buildLinkMail(base);
+    expect(buildLinkMail({ ...base, details: [] })).toEqual(reference);
+    expect(buildLinkMail({ ...base, details: undefined })).toEqual(reference);
+  });
+
   it('affiche le code à saisir, de gauche à droite, en HTML et en texte', () => {
     const { html, text } = buildLinkMail({
       ...base,

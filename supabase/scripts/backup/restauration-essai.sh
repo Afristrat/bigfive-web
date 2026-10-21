@@ -201,6 +201,11 @@ ATTENDU="$(cat "$DUMP.comptes")"
 IMAGE="$(docker inspect -f '{{.Config.Image}}' "$CONT" 2>/dev/null || true)"
 [ -n "$IMAGE" ] || IMAGE="$(jq -r '.image // empty' "$DUMP.meta")"
 [ -n "$IMAGE" ] || echouer image_introuvable
+# Les options de démarrage du serveur en service (`-c cron.timezone=Africa/Casablanca`, etc.) ne
+# sont pas dans la base mais sur la ligne de commande du conteneur : le témoin les reprend, sinon
+# il retombe sur les défauts de l'image (constaté le 2026-10-20 : cron.timezone GMT, 2 tests rouges).
+# Découpage volontaire par espaces : les arguments de la commande n'en contiennent pas.
+ARGS_SERVEUR="$(docker inspect -f '{{range .Config.Cmd}}{{.}} {{end}}' "$CONT" 2>/dev/null || true)"
 docker rm -f -v "$TEMOIN" >/dev/null 2>&1 || true
 MDP="verif-$(date +%s)-$$-$(od -An -N6 -tx1 /dev/urandom | tr -d ' \n')"
 # Le mot de passe passe par l'environnement, jamais par la ligne de commande. Témoin sans
@@ -208,7 +213,7 @@ MDP="verif-$(date +%s)-$$-$(od -An -N6 -tx1 /dev/urandom | tr -d ' \n')"
 # exige pour passer de root à postgres (chown du répertoire de données, setuid/setgid).
 POSTGRES_PASSWORD="$MDP" docker run -d --name "$TEMOIN" --network none --memory 768m --memory-swap 768m --pids-limit 256 \
   --cap-drop ALL --cap-add CHOWN --cap-add DAC_OVERRIDE --cap-add FOWNER --cap-add SETUID --cap-add SETGID \
-  --security-opt no-new-privileges -e POSTGRES_PASSWORD "$IMAGE" >/dev/null 2>>"$JOURNAL" || echouer temoin_non_demarre
+  --security-opt no-new-privileges -e POSTGRES_PASSWORD "$IMAGE" $ARGS_SERVEUR >/dev/null 2>>"$JOURNAL" || echouer temoin_non_demarre
 # L'entrypoint de l'image démarre un serveur TEMPORAIRE pour son initialisation puis le
 # redémarre : `pg_isready` répond déjà pendant le premier, et une restauration lancée à cet
 # instant meurt avec lui. Trois réponses consécutives, deux secondes d'écart.

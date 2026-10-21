@@ -78,9 +78,15 @@ private.liens_connexion|liens_insertion_owner|INSERT|tenga_owner
 private.liens_connexion|liens_lecture_owner|SELECT|tenga_owner
 private.liens_connexion|liens_modification_owner|UPDATE|tenga_owner
 private.liens_connexion|liens_suppression_owner|DELETE|tenga_owner
+private.plafonds_invitations|plafonds_insertion_owner|INSERT|tenga_owner
+private.plafonds_invitations|plafonds_lecture_owner|SELECT|tenga_owner
+private.plafonds_invitations|plafonds_suppression_owner|DELETE|tenga_owner
 private.settings|settings_lecture|SELECT|tenga_owner
 private.settings|settings_modification|UPDATE|tenga_owner
-private.tenga_admins|tenga_admins_lecture_owner|SELECT|tenga_owner$f$,
+private.tenga_admins|tenga_admins_insertion_owner|INSERT|tenga_owner
+private.tenga_admins|tenga_admins_lecture_owner|SELECT|tenga_owner
+private.tenga_admins|tenga_admins_suppression_owner|DELETE|tenga_owner
+private.tenga_admins|tenga_admins_verrou_owner|UPDATE|tenga_owner$f$,
   'liste figée des règles de app et private');
 
 SELECT is(
@@ -121,8 +127,10 @@ app.affecter_membre>authenticated
 app.ajouter_admin_tenga>authenticated
 app.attribuer_role>authenticated
 app.clore_campagne>authenticated
+app.compte_par_adresse>service_role
 app.consommer_code_connexion>service_role
 app.consommer_lien_connexion>service_role
+app.consommer_plafond_invitation>service_role
 app.consulter_invitation>service_role
 app.creer_campagne>authenticated
 app.creer_groupe>authenticated
@@ -136,12 +144,14 @@ app.informer_responsable>authenticated
 app.inviter>authenticated
 app.lire_journal>authenticated
 app.lire_resultat_individuel>authenticated
+app.lister_administrateurs_tenga>authenticated
 app.mes_resultats>authenticated
 app.mettre_a_jour_profil>authenticated
 app.mon_role>authenticated
 app.ouvrir_campagne>authenticated
 app.renommer_groupe>authenticated
 app.retirer_admin_tenga>authenticated
+app.retirer_compte_sans_appartenance>service_role
 app.retirer_membre>authenticated
 app.retirer_role>authenticated
 app.soumettre_resultat>authenticated

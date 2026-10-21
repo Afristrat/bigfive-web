@@ -1,6 +1,9 @@
 -- Règle d'Amine du 20/10/2026 (migration 0007) : qui invite attribue ; nul ne
 -- modifie son propre rôle ; un responsable ne touche pas au rôle d'un autre
 -- responsable ; il reste toujours un administrateur Tenga.
+-- Décision I2 (migration 0012) : le responsable n'attribue plus que le rôle
+-- participant ; consultant et responsable relèvent de l'administrateur Tenga
+-- (le détail est éprouvé par 36_responsable_participants_seuls.sql).
 -- (Enveloppé dans une transaction annulée par scripts/test-sql.sh.)
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(40);
@@ -55,18 +58,18 @@ SELECT is((SELECT private.peut_attribuer('b1000000-0000-4000-8000-00000000000a',
 SELECT is(pg_temp.comme('b0000000-0000-4000-8000-000000000008', 'authenticated', $q$select private.peut_attribuer('b1000000-0000-4000-8000-00000000000b', 'responsable')::text$q$),
   'ERR:42501:permission denied for schema private', 'la fonction privée n''est pas appelable par l''API');
 
--- ===== Le responsable attribue consultant et participant dans SON organisation =====
+-- ===== Le responsable attribue participant dans SON organisation (consultant refusé, décision I2) =====
 SELECT is(pg_temp.comme('b0000000-0000-4000-8000-000000000003', 'authenticated',
   $q$select app.attribuer_role('b0000000-0000-4000-8000-000000000009', 'b1000000-0000-4000-8000-00000000000a', 'participant')::text$q$),
   '', 'responsable : donne participant à une personne sans rôle, dans son organisation');
 SELECT is(pg_temp.comme('b0000000-0000-4000-8000-000000000003', 'authenticated',
   $q$select app.attribuer_role('b0000000-0000-4000-8000-000000000009', 'b1000000-0000-4000-8000-00000000000a', 'consultant')::text$q$),
-  '', 'responsable : promeut ce participant consultant');
+  'ERR:42501:Réservé à un administrateur Tenga ou au responsable de l''organisation', 'responsable : ne promeut pas ce participant consultant (I2)');
 SELECT is((SELECT role FROM app.memberships WHERE user_id = 'b0000000-0000-4000-8000-000000000009' AND organization_id = 'b1000000-0000-4000-8000-00000000000a'),
-  'consultant', 'le rôle posé est bien consultant');
+  'participant', 'le rôle est resté participant après le refus');
 SELECT is(pg_temp.comme('b0000000-0000-4000-8000-000000000003', 'authenticated',
   $q$select app.attribuer_role('b0000000-0000-4000-8000-000000000009', 'b1000000-0000-4000-8000-00000000000a', 'participant')::text$q$),
-  '', 'responsable : rétrograde consultant en participant');
+  '', 'responsable : rejouer participant reste permis');
 
 -- ===== Ce que le responsable ne peut PAS faire =====
 SELECT is(pg_temp.comme('b0000000-0000-4000-8000-000000000003', 'authenticated',

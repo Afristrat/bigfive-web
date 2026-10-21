@@ -15,13 +15,17 @@ const avecChiffresLatins = (locale: string): string =>
 export const formatNombre = (valeur: number, locale: string): string =>
   new Intl.NumberFormat(avecChiffresLatins(locale)).format(valeur);
 
+// `timeZone` : fuseau IANA de lecture (« Africa/Casablanca » pour une date
+// montrée à une personne au Maroc) ; sans lui, celui du serveur.
 export const formatDate = (
   date: Date | string | number,
-  locale: string
+  locale: string,
+  timeZone?: string
 ): string =>
   new Intl.DateTimeFormat(avecChiffresLatins(locale), {
     dateStyle: 'long',
-    numberingSystem: 'latn'
+    numberingSystem: 'latn',
+    timeZone
   }).format(new Date(date));
 
 export const formatDateHeure = (

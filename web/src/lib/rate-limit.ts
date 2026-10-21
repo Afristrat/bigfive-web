@@ -43,8 +43,8 @@ export async function getClientIp(): Promise<string> {
 /**
  * Fenêtre glissante par action et par sujet (IP du client par défaut, ou une
  * clé fournie). Renvoie true si la requête courante dépasse le plafond (elle
- * n'est alors pas comptée). Quand la table est pleine malgré le nettoyage,
- * toute nouvelle clé est refusée.
+ * n'est alors pas comptée). Quand la table de l'action est pleine malgré le
+ * nettoyage, la clé la plus ancienne est évincée (jamais de refus de clé nouvelle).
  */
 export async function isRateLimited(
   action: string,

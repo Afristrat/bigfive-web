@@ -33,6 +33,12 @@ describe('format', () => {
     expect(formatDate(Date.UTC(2026, 9, 19, 12), 'fr')).toBe('19 octobre 2026');
   });
 
+  it('lit la date au fuseau demandé, pas à celui du serveur', () => {
+    const tard = Date.UTC(2026, 9, 19, 23, 30);
+    expect(formatDate(tard, 'fr', 'UTC')).toBe('19 octobre 2026');
+    expect(formatDate(tard, 'fr', 'Africa/Casablanca')).toBe('20 octobre 2026');
+  });
+
   it('isole un segment latin par les marques FSI et PDI', () => {
     const isole = isoler('contact@tenga.ma');
     expect(isole.codePointAt(0)).toBe(0x2068);

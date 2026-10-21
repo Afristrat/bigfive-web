@@ -6,17 +6,21 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      // Espace privé et liens de connexion : jamais indexés.
+      // Espace privé, liens de connexion et d'invitation : jamais indexés.
       disallow: [
         '/admin',
         '/mon-compte',
         '/connexion',
         '/c/',
+        '/i/',
+        '/o/',
         '/api/',
         '/*/admin',
         '/*/mon-compte',
         '/*/connexion',
-        '/*/c/'
+        '/*/c/',
+        '/*/i/',
+        '/*/o/'
       ]
     },
     sitemap: `${basePath}/sitemap.xml`

@@ -13,6 +13,9 @@
 -- Principe, objet par objet : retirer tout droit à PUBLIC et à tous les rôles autres que le
 -- propriétaire, puis réaccorder exactement les droits de la source. Les droits du propriétaire
 -- sont ceux par défaut (acldefault). Sortie : une instruction par ligne, déterministe.
+-- Droits de colonne (pg_attribute.attacl, p. ex. auth.users posé par les migrations 0002 et
+-- 0004) : reproduits, par « GRANT ... (colonnes) ON TABLE ». Sans eux, l'inventaire (lignes C)
+-- voit une divergence, constatée le 2026-10-20 sur tenga-sb-preprod (4 lignes, restauration rejetée).
 -- Limite assumée : les droits accordés par un rôle autre que le propriétaire (ré-octroi) ne
 -- sont pas reproduits ; l'inventaire (lignes C) le verrait comme une divergence.
 with objets as (
@@ -60,8 +63,24 @@ octrois as (
     from objets o cross join lateral aclexplode(o.acl) a
    where a.grantee <> o.proprio
    group by o.ord, o.genre, o.cible, o.portee, a.grantee, a.is_grantable
+),
+colonnes as (
+  -- un groupe par (table, droit, bénéficiaire, option) : la liste des colonnes est agrégée
+  select 25 as ord, 2 as sous, format('%I.%I', n.nspname, c.relname) as cible, 'TABLE' as genre,
+         format('GRANT %s (%s) ON TABLE %I.%I TO %s%s', a.privilege_type,
+                string_agg(quote_ident(x.attname), ', ' order by x.attnum),
+                n.nspname, c.relname,
+                case when a.grantee = 0 then 'PUBLIC' else quote_ident(pg_get_userbyid(a.grantee)) end,
+                case when a.is_grantable then ' WITH GRANT OPTION' else '' end) as instruction
+    from pg_attribute x
+    join pg_class c on c.oid = x.attrelid
+    join pg_namespace n on n.oid = c.relnamespace
+    cross join lateral aclexplode(x.attacl) a
+   where x.attacl is not null and not x.attisdropped
+     and c.relkind in ('r', 'p', 'v', 'm', 'f') and n.nspname !~ '^pg_' and n.nspname <> 'information_schema'
+   group by n.nspname, c.relname, a.privilege_type, a.grantee, a.is_grantable
 )
 select instruction || ';' from (
-  select * from retraits union all select * from octrois
+  select * from retraits union all select * from octrois union all select * from colonnes
 ) t
 order by ord, genre, cible, sous, instruction collate "C";

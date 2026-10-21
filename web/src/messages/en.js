@@ -338,8 +338,8 @@ const english = {
     title: 'Administration',
     intro:
       'Reserved for Tenga administrators. Every action is written to the log.',
-    organizationsTitle: 'Organizations',
-    empty: 'No organization yet.',
+    organizationsTitle: 'Organisations',
+    empty: 'No organisation yet.',
     colName: 'Name',
     colSlug: 'URL identifier',
     colStatus: 'Status',
@@ -351,20 +351,20 @@ const english = {
       active: 'Active',
       archivee: 'Archived'
     },
-    createTitle: 'Create an organization',
+    createTitle: 'Create an organisation',
     nameLabel: 'Name',
     slugLabel: 'URL identifier',
     slugHelp: 'Lowercase letters, digits and hyphens; 3 to 40 characters.',
-    create: 'Create the organization',
-    created: 'Organization created.',
+    create: 'Create the organisation',
+    created: 'Organisation created.',
     exists: 'This identifier is already in use.',
     invalid: 'Check the fields: they do not match the expected format.',
     error: 'The operation failed. Try again in a moment.',
     assignTitle: 'Assign a role',
     assignIntro:
-      'One role per person and per organization. If the address has no account yet, one is created.',
+      'One role per person and per organisation. If the address has no account yet, one is created.',
     emailLabel: 'E-mail address',
-    organizationLabel: 'Organization',
+    organizationLabel: 'Organisation',
     roleLabel: 'Role',
     languageLabel: 'Language of the person',
     assign: 'Assign the role',
@@ -374,6 +374,48 @@ const english = {
       'A super administrator sees every organisation and can assign every role. If the address has no account yet, one is created. The addition is recorded in the log.',
     grant: 'Add as super administrator',
     granted: 'Super administrator added.',
+    grantConfirmLabel: 'Confirm the e-mail address',
+    grantWorking: 'Adding…',
+    requiredLegend: 'Fields marked with an asterisk (*) are required.',
+    grantInvalid:
+      'Check both addresses: they must be valid and identical. Correct them, then try again.',
+    grantExists:
+      'This address already belongs to a super administrator: nothing was changed.',
+    grantError:
+      'The addition failed, or the hourly limit of additions was reached. Try again in a moment.',
+    createWorking: 'Creating…',
+    assignWorking: 'Assigning…',
+    organizationPlaceholder: 'Choose an organisation',
+    rolePlaceholder: 'Choose a role',
+    removeTitle: 'Remove a super administrator',
+    removeIntro:
+      'A removed super administrator loses access to every organisation. The removal is recorded in the log and the other super administrators are notified by e-mail. You cannot remove your own access.',
+    removeCaption:
+      'Super administrators, with the date they were added and the removal action.',
+    removeColAddress: 'E-mail address',
+    removeColAdded: 'Added on',
+    removeColAction: 'Removal',
+    removeYou: 'You',
+    removeSelfHelp:
+      'You cannot remove your own access. Another super administrator can do it.',
+    removeConfirm:
+      'I confirm the removal of super administrator access for {adresse}.',
+    removeButton: 'Remove',
+    removeButtonAria: 'Remove super administrator access for {adresse}',
+    removeWorking: 'Removing…',
+    removed: 'Super administrator access removed.',
+    removeInvalid:
+      'Tick the confirmation box on the relevant row, then try again.',
+    removeSelf:
+      'You cannot remove your own access. Ask another super administrator to do it.',
+    removeAbsent:
+      'This person is no longer a super administrator: nothing was changed.',
+    removeForbidden:
+      'The removal was refused. Refresh the page to see the up-to-date list.',
+    removeError:
+      'The removal failed, or the hourly limit of removals was reached. Try again in a moment.',
+    adminsUnavailable:
+      'The list of super administrators could not be read. Refresh the page in a moment.',
     journalTitle: 'Log',
     journalIntro: 'The last 100 lines. The log contains no e-mail address.',
     journalEmpty: 'The log is empty.',
@@ -382,6 +424,162 @@ const english = {
     colActor: 'Actor',
     colResource: 'Resource',
     colQuantity: 'Quantity'
+  },
+  campaigns: {
+    title: 'Campaigns',
+    intro:
+      'A campaign brings together the people invited to answer the questionnaire. You prepare it as a draft, open it to send invitations, then close it.',
+    listTitle: 'Organisation campaigns',
+    empty: 'No campaign yet.',
+    tableCaption:
+      'Organisation campaigns, with their status, their headcounts and the actions available.',
+    figureUnknown: 'Not available',
+    requiredLegend: 'Fields marked with an asterisk (*) are required.',
+    colTitle: 'Campaign',
+    colStatus: 'Status',
+    colParticipants: 'Participants',
+    colInProgress: 'In progress',
+    colDone: 'Completed',
+    colPending: 'Pending invitations',
+    colActions: 'Actions',
+    statsHelp: 'These figures are totals: they do not identify anyone.',
+    status: {
+      brouillon: 'Draft',
+      ouverte: 'Open',
+      close: 'Closed'
+    },
+    archived:
+      'This organisation is archived: no campaign can be created in it.',
+    createTitle: 'Create a campaign',
+    createIntro:
+      'The campaign is created as a draft. It accepts no invitation until you open it.',
+    titleLabel: 'Campaign title',
+    titleHelp: 'Up to {max} characters.',
+    titleInvalid:
+      'Enter a title of {max} characters or fewer, with no link or address, then try again.',
+    languageLabel: 'Campaign language',
+    create: 'Create the campaign',
+    created:
+      'Campaign created as a draft. Open it to be able to send invitations.',
+    working: 'Working…',
+    open: 'Open',
+    openAria: 'Open the campaign “{titre}”',
+    opened:
+      'Campaign “{titre}” opened. You can now invite participants. The invitation form is shown below the list.',
+    closeWarning:
+      'A closed campaign no longer accepts answers. Invitations left unanswered are deleted, along with the addresses they contain.',
+    closeConfirm:
+      'I confirm the closure: it cannot be undone and deletes pending invitations.',
+    close: 'Close',
+    closeAria: 'Close the campaign “{titre}”',
+    closed: 'Campaign “{titre}” closed.',
+    invalid:
+      'The request could not be saved. Check what you entered, then try again.',
+    forbidden:
+      'Your role does not allow this operation. Ask a manager of the organisation to do it.',
+    conflict:
+      'This operation is no longer possible in the current state of the campaign or organisation. Refresh the page.',
+    error: 'The operation failed. Try again in a moment.'
+  },
+  invitations: {
+    title: 'Invite participants to “{titre}”',
+    requiredLegend: 'Fields marked with an asterisk (*) are required.',
+    addressesLabel: 'People to invite',
+    addressesHelp:
+      'One address per line, first name optional after a comma, {max} at most.',
+    languageLabel: 'Invitation language',
+    messageLabel: 'Personal message (optional)',
+    messageHelp:
+      'This message is added to the invitation. Links are not accepted.',
+    counter: '{count} / {max}',
+    counterLow: 'Warning: fewer than {remaining} characters left.',
+    counterFull: 'You have reached the character limit.',
+    submit: 'Send the invitations',
+    sending: 'Sending…',
+    summary: 'Invitations sent: {sent} of {total}.',
+    doneNone: 'No invitation was sent.',
+    summaryFailed: 'Addresses without an invitation: {failed}.',
+    summaryUnprocessed:
+      'Addresses not processed, kept in the list: {unprocessed}.',
+    abortedError:
+      'The batch stopped on an error. Send the addresses kept in the list again in a moment.',
+    abortedForbidden:
+      'The batch stopped: your right to invite was withdrawn while it was being sent. Ask a manager of the organisation to restore it.',
+    abortedClosed:
+      'The batch stopped: the campaign was closed while it was being sent.',
+    failuresTitle:
+      'These addresses did not receive an invitation and stay in the list for another try:',
+    outcome: {
+      mail_failed:
+        'The e-mail was not sent. Invite this address again in a minute.',
+      skipped_recent:
+        'An invitation was just sent to this address. Wait a minute before renewing it.',
+      refused: 'This address was refused. Check it, then try again.',
+      rate_limited: 'Sending limit reached: try again in an hour.'
+    },
+    invalid: {
+      empty: 'Enter at least one address, one per line.',
+      too_many:
+        'No more than {max} addresses at a time. Remove the extra lines and send them in a second batch.',
+      address:
+        'These lines are not valid. Correct or remove them, then send the batch again:',
+      message:
+        'The message must not contain a link, an address or an invisible character, and must be {max} characters or fewer. Correct it, then send the batch again.'
+    },
+    forbidden:
+      'You cannot invite participants to this campaign. Ask a manager of the organisation.',
+    closed:
+      'This campaign is not open: no invitation can be sent. Refresh the page.',
+    rateLimited: 'Sending limit reached: try again in an hour.',
+    error:
+      'The operation failed. Some invitations may have been sent: check the number of pending invitations before trying again.'
+  },
+  invitation: {
+    title: 'Your invitation',
+    invalid:
+      'This invitation is no longer valid. Ask the organisation that wrote to you for a new one.',
+    greeting: 'Hello {prenom},',
+    greetingNeutral: 'Hello,',
+    intro:
+      '{organisation} invites you to answer the Tenga Assessments personality questionnaire, as part of the campaign “{campagne}”.',
+    messageTitle: 'Message attached to the invitation',
+    expires: 'This invitation is valid until {date}.',
+    acceptHelp:
+      'By accepting it, you open your personal space on Tenga Assessments.',
+    button: 'Accept the invitation',
+    accepting: 'Opening…',
+    otherSession:
+      'Another session is already open on this device. Open this link in a private browsing window, or sign out first.',
+    signinRequired:
+      'Your invitation is accepted. To open your space, enter the e-mail address that received the invitation on the sign-in page: you will be sent a sign-in link. No password is needed.',
+    signinLink: 'Go to sign-in',
+    failed: 'The operation did not complete. Try again later.'
+  },
+  members: {
+    title: 'Give access to the organisation',
+    intro:
+      'A manager or a consultant reaches the organisation with their e-mail address. Access is granted immediately, with no acceptance link, and the person is informed by e-mail.',
+    requiredLegend: 'Fields marked with an asterisk (*) are required.',
+    emailLabel: 'E-mail address',
+    confirmLabel: 'Confirm the address',
+    confirmHelp:
+      'Enter the address a second time: a typing error would give access to someone else.',
+    roleLabel: 'Role',
+    rolePlaceholder: 'Choose a role',
+    roleHelp:
+      'If this address already has access to the organisation, its role is replaced by the one you choose.',
+    languageLabel: 'Language of the information e-mail',
+    working: 'Working…',
+    submit: 'Give access',
+    invited: 'Access granted. The person has been informed by e-mail.',
+    invitedMailFailed:
+      'Access granted, but the information e-mail was not sent. Let the person know yourself.',
+    invalid:
+      'Check the form: the address must be valid and identical in both fields, and a role must be chosen.',
+    forbidden:
+      'You cannot give this access. Contact the Tenga team if you think this is a mistake.',
+    rateLimited: 'Limit reached: try again in an hour.',
+    error: 'The operation failed. Try again later.'
   },
   common: {
     and: 'and',
@@ -800,31 +998,6 @@ const english = {
         // Lot 3 (export and deletion).
         data: 'You can download your data at any time or ask for it to be deleted.'
       }
-    },
-    // Campaign invitation email template (lot 2, with lot 1 for privacy and
-    // lot 4 for summaries). Variables: {organisation}, {firstName}, {group},
-    // {total}, {link}, {contactEmail}.
-    invite: {
-      subject: 'An invitation from {organisation}, in confidence',
-      greeting: 'Hello {firstName},',
-      // Lot 2.
-      intro:
-        '{organisation} has asked Tenga Conseil to run a personality questionnaire for {group}. You are invited to take part.',
-      // Lot 2.
-      whatYouDo:
-        'What you will do: read {total} statements and say how well each describes you. There is no right answer and no time limit. You can stop and resume.',
-      // Lot 1.
-      privacy:
-        'What we want to tell you first: your individual result is visible only to you, to the Tenga consultant assigned to {organisation} and to the Tenga Conseil administration team.',
-      // Lot 4.
-      groups: '{organisation} receives only group summaries.',
-      noDiagnosis:
-        'The questionnaire is neither a test of skills nor a diagnosis.',
-      openLink: 'When you are ready, open this link: {link}',
-      question:
-        'A question before you start? Write to us at {contactEmail}. We will answer.',
-      closing: 'Kind regards,',
-      signature: 'Tenga Conseil'
     }
   },
   getResult: {

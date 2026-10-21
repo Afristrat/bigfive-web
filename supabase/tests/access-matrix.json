@@ -1,6 +1,6 @@
 {
   "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 5 : objets des lots 1 (socle), 2 (campagnes, invitations, passation), 3 (mes résultats) et 4 (groupes, composition, agrégats photographiés). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 (lot 1), 14 à 19 (lots 2 et 3), 24 à 26 (lot 4) et 27 à 31 (migration 0006 : groupe porté par l'invitation) transcrivent ces cellules (identités simulées, rôle réel).",
-  "version": 7,
+  "version": 8,
   "personnages": [
     {
       "id": "anonyme",
@@ -226,7 +226,7 @@
           "admin_tenga": "autorise"
         }
       },
-      "note": "Seule fonction qui crée des rôles (verrou 4). Version 6 (règle d'Amine du 20/10, migration 0007) : qui invite attribue. L'administrateur Tenga attribue tout rôle partout ; le responsable attribue consultant et participant dans SON organisation seulement, jamais responsable, et ne touche pas au rôle d'un autre responsable. Nul ne modifie son propre rôle, administrateur compris. Consultant et participant n'attribuent rien."
+      "note": "Seule fonction qui crée des rôles (verrou 4). Version 7 (décision I2, migration 0012, qui amende la règle d'Amine du 20/10 de la migration 0007) : qui invite attribue, mais le responsable n'attribue plus que participant. L'administrateur Tenga attribue tout rôle partout ; le responsable attribue le rôle participant dans SON organisation seulement, jamais consultant ni responsable, et ne touche pas au rôle d'un autre responsable. Nul ne modifie son propre rôle, administrateur compris. Consultant et participant n'attribuent rien."
     },
     {
       "objet": "app.retirer_role",
@@ -247,7 +247,7 @@
           "admin_tenga": "autorise"
         }
       },
-      "note": "Version 7 (migration 0008) : un administrateur Tenga en ajoute un autre, compte existant seulement ; refus 42501 à toute autre personne ; journalisé (admin.ajouter), sans adresse."
+      "note": "Version 8 (migration 0008) : un administrateur Tenga en ajoute un autre, compte existant seulement ; refus 42501 à toute autre personne ; journalisé (admin.ajouter), sans adresse."
     },
     {
       "objet": "app.retirer_admin_tenga",
@@ -257,7 +257,17 @@
           "admin_tenga": "autorise"
         }
       },
-      "note": "Version 7 (migration 0008) : un administrateur Tenga en retire un autre, jamais lui-même ; la dernière ligne de private.tenga_admins reste protégée par le déclencheur de la migration 0007 ; journalisé (admin.retirer)."
+      "note": "Version 8 (migration 0008) : un administrateur Tenga en retire un autre, jamais lui-même ; la dernière ligne de private.tenga_admins reste protégée par le déclencheur de la migration 0007 ; journalisé (admin.retirer)."
+    },
+    {
+      "objet": "app.lister_administrateurs_tenga",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Migration 0010 : un administrateur Tenga liste les administrateurs (identifiant, adresse, date d'ajout, indicateur de sa propre ligne), rien d'autre ; refus 42501 à toute autre personne ; chaque consultation est journalisée (admin.lister), sans adresse."
     },
     {
       "objet": "app.lire_journal",
