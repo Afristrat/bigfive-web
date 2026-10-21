@@ -50,7 +50,7 @@
       "rules": { "no-restricted-imports": "off" }
     },
     {
-      "files": ["src/lib/supabase/server.ts"],
+      "files": ["src/lib/supabase/server.ts", "tests/**/*.ts"],
       "rules": { "no-restricted-syntax": "off" }
     }
   ]
