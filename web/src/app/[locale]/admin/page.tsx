@@ -1,5 +1,9 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { OrganizationForm, RoleForm } from '@/components/admin-forms';
+import {
+  AdminGrantForm,
+  OrganizationForm,
+  RoleForm
+} from '@/components/admin-forms';
 import { title } from '@/components/primitives';
 import { loadJournal, loadOrganizations } from '@/lib/admin-data';
 import { formatDate, formatDateHeure } from '@/lib/format';
@@ -167,6 +171,28 @@ export default async function AdminPage({ params }: Props) {
               },
               submit: t('assign'),
               done: t('assigned')
+            }}
+          />
+        </section>
+
+        <section aria-labelledby='super-titre' className='carte'>
+          <h2 id='super-titre' className='text-titre-2 text-encre'>
+            {t('grantTitle')}
+          </h2>
+          <p className='mt-2 text-texte-2'>{t('grantIntro')}</p>
+          <AdminGrantForm
+            locale={locale}
+            labels={{
+              ...feedback,
+              emailLabel: t('emailLabel'),
+              languageLabel: t('languageLabel'),
+              languages: {
+                fr: account('languages.fr'),
+                ar: account('languages.ar'),
+                en: account('languages.en')
+              },
+              submit: t('grant'),
+              done: t('granted')
             }}
           />
         </section>

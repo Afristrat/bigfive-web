@@ -371,6 +371,11 @@ const french = {
     languageLabel: 'Langue de la personne',
     assign: 'Attribuer le rôle',
     assigned: 'Rôle attribué.',
+    grantTitle: 'Ajouter un super administrateur',
+    grantIntro:
+      'Un super administrateur voit toutes les organisations et attribue tous les rôles. Si l’adresse n’a pas encore de compte, il est créé. L’ajout est inscrit au journal.',
+    grant: 'Ajouter comme super administrateur',
+    granted: 'Super administrateur ajouté.',
     journalTitle: 'Journal',
     journalIntro:
       'Les 100 dernières lignes. Le journal ne contient aucune adresse e-mail.',

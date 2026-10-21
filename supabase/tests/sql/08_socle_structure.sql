@@ -118,6 +118,7 @@ SELECT is(
     WHERE n.nspname IN ('app', 'private') AND has_function_privilege(r.rol, p.oid, 'EXECUTE')),
   $f$app.accepter_invitation>service_role
 app.affecter_membre>authenticated
+app.ajouter_admin_tenga>authenticated
 app.attribuer_role>authenticated
 app.clore_campagne>authenticated
 app.consommer_code_connexion>service_role
@@ -140,6 +141,7 @@ app.mettre_a_jour_profil>authenticated
 app.mon_role>authenticated
 app.ouvrir_campagne>authenticated
 app.renommer_groupe>authenticated
+app.retirer_admin_tenga>authenticated
 app.retirer_membre>authenticated
 app.retirer_role>authenticated
 app.soumettre_resultat>authenticated

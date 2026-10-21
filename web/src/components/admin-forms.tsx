@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import {
+  addTengaAdmin,
   assignRole,
   createOrganization,
   type AdminState
@@ -28,7 +29,7 @@ function StatusNotice({
   labels
 }: {
   state: AdminState;
-  success: 'created' | 'assigned';
+  success: 'created' | 'assigned' | 'granted';
   labels: Feedback & { done: string };
 }) {
   if (state.status === 'idle') return null;
@@ -200,6 +201,70 @@ export function RoleForm({
           color='primary'
           isLoading={pending}
           isDisabled={organizations.length === 0}
+          className={submitButtonClass}
+        >
+          {labels.submit}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+export type AdminGrantFormLabels = Feedback & {
+  emailLabel: string;
+  languageLabel: string;
+  languages: Record<'fr' | 'ar' | 'en', string>;
+  submit: string;
+  done: string;
+};
+
+export function AdminGrantForm({
+  locale,
+  labels
+}: {
+  locale: string;
+  labels: AdminGrantFormLabels;
+}) {
+  const [state, formAction, pending] = useActionState(addTengaAdmin, {
+    status: 'idle'
+  } as AdminState);
+  return (
+    <form action={formAction} className='mt-5 flex flex-col gap-5'>
+      <input type='hidden' name='locale' value={locale} />
+      <Input
+        name='email'
+        type='email'
+        label={labels.emailLabel}
+        labelPlacement='outside'
+        placeholder=' '
+        autoComplete='off'
+        isRequired
+        variant='bordered'
+        classNames={inputClassNames}
+      />
+      <div className='max-w-md'>
+        <label htmlFor='grant-langue' className={labelClass}>
+          {labels.languageLabel}
+        </label>
+        <select
+          id='grant-langue'
+          name='langue'
+          defaultValue={locale === 'ar' || locale === 'en' ? locale : 'fr'}
+          className={selectClass}
+        >
+          {(['fr', 'ar', 'en'] as const).map((code) => (
+            <option key={code} value={code} lang={code}>
+              {labels.languages[code]}
+            </option>
+          ))}
+        </select>
+      </div>
+      <StatusNotice state={state} success='granted' labels={labels} />
+      <div>
+        <Button
+          type='submit'
+          color='primary'
+          isLoading={pending}
           className={submitButtonClass}
         >
           {labels.submit}

@@ -79,3 +79,8 @@ export const roleAssignmentSchema = z.object({
   role: z.enum(['responsable', 'consultant', 'participant']),
   langue: z.enum(['fr', 'ar', 'en'])
 });
+
+export const adminGrantSchema = z.object({
+  email,
+  langue: z.enum(['fr', 'ar', 'en'])
+});

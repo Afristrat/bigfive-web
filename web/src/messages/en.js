@@ -369,6 +369,11 @@ const english = {
     languageLabel: 'Language of the person',
     assign: 'Assign the role',
     assigned: 'Role assigned.',
+    grantTitle: 'Add a super administrator',
+    grantIntro:
+      'A super administrator sees every organisation and can assign every role. If the address has no account yet, one is created. The addition is recorded in the log.',
+    grant: 'Add as super administrator',
+    granted: 'Super administrator added.',
     journalTitle: 'Log',
     journalIntro: 'The last 100 lines. The log contains no e-mail address.',
     journalEmpty: 'The log is empty.',
