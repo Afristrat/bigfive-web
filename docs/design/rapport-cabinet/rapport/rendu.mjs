@@ -192,7 +192,7 @@ export function rendreHtml({ rapport, cas, faits, profils, bib, variante } = {})
   const titre = 'Rapport cabinet : ' + (cas?.organisation?.nom ?? 'cas de démonstration');
   const etiquette = r.etiquette_fictif ?? cas?.etiquette ?? '';
   const meta = `Version du rapport ${esc(r.version ?? 'non renseignée')} · empreinte des entrées ${esc(r.empreinte_entrees ?? 'non renseignée')}`;
-  const tete = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(titre)}</title>`
+  const tete = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:"><title>${esc(titre)}</title>`
     + (docx ? '' : `<style>${CSS}</style><script>${SCRIPT_TETE}</script>`) + '</head>';
   const corps = `<body><main><h1>${esc(titre)}</h1>${etiquette ? `<p><span class="etiq">${esc(etiquette)}</span></p>` : ''}`
     + (docx ? '' : '<div class="outils"><button id="imprimer" type="button">Imprimer ou enregistrer en PDF</button></div>')

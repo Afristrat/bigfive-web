@@ -4601,7 +4601,7 @@
       },
       {
        "id": "n3-cartographie-2",
-       "texte": "Domaine N (réactivité émotionnelle) : plutôt haut ou haut pour HT ; plutôt bas ou bas pour AM et KB.",
+       "texte": "Domaine N (névrosisme) : plutôt haut ou haut pour HT ; plutôt bas ou bas pour AM et KB.",
        "statut": "constate"
       },
       {
@@ -4913,7 +4913,7 @@
       },
       {
        "id": "n4-profils-2",
-       "texte": "Domaine N (réactivité émotionnelle) : la position d'ensemble de l'équipe se situe au milieu de l'échelle. Répartition des niveaux individuels : 2 au niveau plutôt bas, 1 au milieu de l'échelle et 1 au niveau plutôt haut.",
+       "texte": "Domaine N (névrosisme) : la position d'ensemble de l'équipe se situe au milieu de l'échelle. Répartition des niveaux individuels : 2 au niveau plutôt bas, 1 au milieu de l'échelle et 1 au niveau plutôt haut.",
        "statut": "constate"
       },
       {
@@ -6093,7 +6093,7 @@
    "id": "REC-N3-1",
    "niveau": "n3",
    "texte": "Désigner un suppléant pour chaque domaine couvert par une seule personne en position haute (HT) et documenter ce qu'il faut savoir pour la remplacer.",
-   "donnee": "Une seule personne en position plutôt haute ou haute : HT sur le domaine N (réactivité émotionnelle) et le domaine A (orientation vers autrui, agréabilité).",
+   "donnee": "Une seule personne en position plutôt haute ou haute : HT sur le domaine N (névrosisme) et le domaine A (orientation vers autrui, agréabilité).",
    "contexte": "Équipe de 4 personnes, tâche de nature projet à échéances, échéances rapprochées au cas : une absence sur un point de dépendance pèse directement sur le calendrier.",
    "preuve": {
     "niveau": "hypothese",

@@ -251,3 +251,8 @@ test('faux positif évité : le nom du domaine « Névrosisme » n’est pas une
   const r = run(avecTexte('Le domaine Névrosisme est au milieu de l’échelle pour KB.'));
   assert.equal(r.comptes.terme_interdit ?? 0, 0, JSON.stringify(r.defauts));
 });
+
+test('mutation rouge : une source inventée écrite « Nom année » sans virgule est signalée', () => {
+  rouge(avecTexte('Voir Smith 2019 pour le détail.'), 'references');
+  rouge(avecTexte('Selon Durand 2021, la composition compte.'), 'references');
+});

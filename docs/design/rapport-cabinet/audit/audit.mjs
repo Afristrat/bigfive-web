@@ -194,7 +194,7 @@ function citationsDe(texte, ctx) {
   for (const [nom, refId] of ctx.auteurs) {
     if (new RegExp(`${deb}${nom.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}${fin}`, 'u').test(texte)) trouvees.push({ refId, nom, annee: null });
   }
-  const motifAnnee = /(?<![\p{L}])([A-ZÉ][\p{L}'’-]+)(?:\s+et\s+(?:[A-ZÉ][\p{L}'’-]+|al\.))?\s*(?:,|\()\s*((?:1[5-9]|20)\d{2})(?!\d)/gu;
+  const motifAnnee = /(?<![\p{L}])([A-ZÉ][\p{L}'’-]+)(?:\s+et\s+(?:[A-ZÉ][\p{L}'’-]+|al\.))?(?:\s*[,(]\s*|\s+)((?:1[5-9]|20)\d{2})(?!\d)/gu;
   for (const m of texte.matchAll(motifAnnee)) {
     const nom = m[1];
     if (ctx.exclus.has(nom)) continue;

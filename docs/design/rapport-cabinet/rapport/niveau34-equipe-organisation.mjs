@@ -9,7 +9,7 @@ const minusc = (s) => (s ? s[0].toLowerCase() + s.slice(1) : s);
 
 // Libellés de domaine sans le terme refusé par l'audit pour le domaine N.
 const LIB = {
-  N: 'réactivité émotionnelle',
+  N: 'névrosisme',
   E: 'énergie relationnelle, extraversion',
   O: 'ouverture',
   A: 'orientation vers autrui, agréabilité',

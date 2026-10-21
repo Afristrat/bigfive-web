@@ -118,3 +118,11 @@ test('variante docx : ni svg, ni script, ni style', () => {
   assert.ok(!/<svg|<script|<style/.test(d));
   assert.ok(d.includes('id="n1-individuel"') && d.includes('<dt>Donnée</dt>'));
 });
+
+test('le document porte une politique CSP qui ferme toute sortie réseau', async () => {
+  const { rendreHtml } = await import('./rendu.mjs');
+  const rapport = JSON.parse(fs.readFileSync(new URL('./fixtures/rapport-rendu.json', import.meta.url), 'utf-8'));
+  const html = rendreHtml({ rapport, cas: { organisation: { nom: 'X (fictif)' }, etiquette: 'FICTIF' }, faits: {}, profils: [], bib: { facettes: [] } });
+  assert.match(html, /Content-Security-Policy" content="default-src 'none'/);
+  assert.doesNotMatch(html, /connect-src|img-src https?:/);
+});

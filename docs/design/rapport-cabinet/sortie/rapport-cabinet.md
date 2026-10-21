@@ -6093,7 +6093,7 @@ Les listes suivantes disent qui se situe où, domaine par domaine, d'après les 
 
 Constaté
 
-Domaine N (réactivité émotionnelle) : plutôt haut ou haut pour HT ; plutôt bas ou bas pour AM et KB.
+Domaine N (névrosisme) : plutôt haut ou haut pour HT ; plutôt bas ou bas pour AM et KB.
 
 Hypothèse
 
@@ -6392,7 +6392,7 @@ Soumettre cette liste à l'équipe et lui demander lesquels de ces points elle r
 #### Désigner un suppléant pour chaque domaine couvert par une seule personne en position haute (HT) et documenter ce qu'il faut savoir pour la remplacer.
 
 Donnée  
-Une seule personne en position plutôt haute ou haute : HT sur le domaine N (réactivité émotionnelle) et le domaine A (orientation vers autrui, agréabilité).
+Une seule personne en position plutôt haute ou haute : HT sur le domaine N (névrosisme) et le domaine A (orientation vers autrui, agréabilité).
 
 Contexte  
 Équipe de 4 personnes, tâche de nature projet à échéances, échéances rapprochées au cas : une absence sur un point de dépendance pèse directement sur le calendrier.
@@ -6528,7 +6528,7 @@ Position d'ensemble de l'équipe par domaine, d'après les niveaux conventionnel
 
 Constaté
 
-Domaine N (réactivité émotionnelle) : la position d'ensemble de l'équipe se situe au milieu de l'échelle. Répartition des niveaux individuels : 2 au niveau plutôt bas, 1 au milieu de l'échelle et 1 au niveau plutôt haut.
+Domaine N (névrosisme) : la position d'ensemble de l'équipe se situe au milieu de l'échelle. Répartition des niveaux individuels : 2 au niveau plutôt bas, 1 au milieu de l'échelle et 1 au niveau plutôt haut.
 
 Constaté
 
