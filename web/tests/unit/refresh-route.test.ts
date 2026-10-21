@@ -34,6 +34,37 @@ beforeEach(() => {
   getUser.mockReset().mockResolvedValue({ id: 'u', email: 'a@b.ma' });
 });
 
+describe('redirection derrière le proxy', () => {
+  // Régression du 21/10 : dans le conteneur, request.url vaut http://0.0.0.0:3000 ;
+  // la redirection partait vers cette adresse et la session n'était jamais renouvelée.
+  const interne = (next: string) =>
+    GET(
+      new NextRequest(
+        `http://0.0.0.0:3000/api/session/refresh?next=${encodeURIComponent(next)}`,
+        { headers: { cookie: `${REFRESH_COOKIE}=rt` } }
+      )
+    );
+
+  it('renvoie vers l’adresse publique après un renouvellement réussi', async () => {
+    vi.stubEnv('SITE_URL', 'https://tenga.test');
+    const response = await interne('/fr/admin?x=1');
+    const location = new URL(response.headers.get('location') ?? '');
+    expect(location.origin).toBe('https://tenga.test');
+    expect(location.pathname + location.search).toBe('/fr/admin?x=1');
+    vi.unstubAllEnvs();
+  });
+
+  it('renvoie vers l’adresse publique quand le renouvellement échoue', async () => {
+    vi.stubEnv('SITE_URL', 'https://tenga.test');
+    refreshSession.mockRejectedValue(new Error('refus'));
+    const response = await interne('/fr/admin');
+    const location = new URL(response.headers.get('location') ?? '');
+    expect(location.origin).toBe('https://tenga.test');
+    expect(location.pathname).toBe('/fr/connexion');
+    vi.unstubAllEnvs();
+  });
+});
+
 describe('refreshTarget', () => {
   it('refuse toute route d’API, avec ou sans langue, et la boucle sur soi-même', () => {
     for (const v of [

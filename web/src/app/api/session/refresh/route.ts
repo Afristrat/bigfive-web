@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { locales } from '@/config/site';
+import { basePath, locales } from '@/config/site';
 import { isRefreshRequestAllowed, refreshTarget } from '@/lib/refresh-guard';
 import { splitLocale } from '@/lib/route-guard';
 import { localizedPath } from '@/lib/safe-path';
@@ -11,6 +11,19 @@ import {
 import { serviceClient, userClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
+
+/**
+ * Derrière le proxy, `request.url` porte l'adresse INTERNE du conteneur
+ * (http://0.0.0.0:3000) : une redirection absolue bâtie dessus envoie le
+ * navigateur vers une adresse qui n'existe pas, et la session n'est jamais
+ * renouvelée. La redirection part donc toujours de l'adresse publique.
+ */
+function publicUrl(pathname: string, search: string): URL {
+  const url = new URL(process.env.SITE_URL || basePath);
+  url.pathname = pathname;
+  url.search = search;
+  return url;
+}
 
 function withCookies(
   response: NextResponse,
@@ -40,9 +53,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   );
   const { locale, rest } = splitLocale(next, locales);
   const toLogin = (): NextResponse => {
-    const url = request.nextUrl.clone();
-    url.pathname = localizedPath(locale, '/connexion');
-    url.search = `?next=${encodeURIComponent(rest)}`;
+    const url = publicUrl(
+      localizedPath(locale, '/connexion'),
+      `?next=${encodeURIComponent(rest)}`
+    );
     return withCookies(NextResponse.redirect(url), clearedSessionCookies());
   };
 
@@ -52,11 +66,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const session = await serviceClient().refreshSession(refreshToken);
     // Contrôle de bout en bout : un jeton neuf que GoTrue refuse ferait boucler.
     if (!(await userClient(session.accessToken).getUser())) return toLogin();
-    const url = request.nextUrl.clone();
     // `next` a passé safeInternalPath : il se résout sur la même origine.
     const target = new URL(next, 'http://internal.invalid');
-    url.pathname = target.pathname;
-    url.search = target.search;
+    const url = publicUrl(target.pathname, target.search);
     return withCookies(NextResponse.redirect(url), sessionCookies(session));
   } catch {
     console.warn(JSON.stringify({ event: 'session.refresh_failed' }));
