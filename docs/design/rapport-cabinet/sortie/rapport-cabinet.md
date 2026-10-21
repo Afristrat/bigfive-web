@@ -4,12 +4,14 @@ CAS FICTIF DE DÉMONSTRATION
 
 Version du rapport rapport-cabinet-1.0 · empreinte des entrées 3dfdf6225f1196568e81bcbbd3adeb291e939fb4e2b96878f28eada9070a8458
 
+**Version de travail, à relire avant remise.** 85 textes types en attente de relecture, 12 références à contrôler. Relecture et signature : à faire.
+
 **À lire avant tout.**
 
 - Cas de démonstration : l’organisation, KB, SR et HT sont fictifs. AM est un profil estimé, pas une mesure ni un fictif : seules les réponses de la personne font foi.
 - Ce rapport est préparé par des scripts à partir de faits calculés et de textes rédigés d’avance. Il ne formule aucune prévision et ne classe personne ; faute de référentiel établi pour ce questionnaire, aucune personne n’y est comparée à d’autres personnes que celles du cas.
 - Aucune décision d’emploi (recrutement, promotion, licenciement, affectation) ne peut s’appuyer sur ce rapport.
-- Les blocs de la bibliothèque de textes ne sont pas relus par un humain. Les niveaux et les écarts sont des conventions de l’outil, non calibrées. Les références citées sont non vérifiées à la date du rapport.
+- Les niveaux et les écarts sont des conventions de l’outil, non calibrées.
 - Toute lecture est une hypothèse, avec son niveau de confiance et la façon de la vérifier en entretien. Un consultant qualifié désigné par Tenga Conseil relit et signe avant tout usage.
 - Document de travail du consultant : il réunit des chapitres privés et des lectures de relation, il n’est jamais remis tel quel à un supérieur hiérarchique d’une personne citée.
 
@@ -29,7 +31,7 @@ Ce chapitre n’existe que parce que la personne a consenti au niveau individuel
 
 Constaté
 
-Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ». La mention « bloc non relu » est portée une fois par domaine tant qu’une relecture humaine n’a pas eu lieu.
+Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ».
 
 ### Chapitre AM : les cinq domaines
 
@@ -107,7 +109,7 @@ Demander à la personne si cette lecture correspond à son expérience du travai
 
 Constaté
 
-Facettes du domaine Névrosisme. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Névrosisme. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -119,7 +121,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui, selon les périodes, fait passer votre inquiétude d’un niveau à l’autre ? »
 
-Bloc de la bibliothèque : `N1/milieu` bloc non relu
+Texte type de la bibliothèque : `N1/milieu`
 
 Hypothèse
 
@@ -131,7 +133,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles circonstances votre patience tient-elle, et dans lesquelles cède-t-elle ? »
 
-Bloc de la bibliothèque : `N2/milieu` bloc non relu
+Texte type de la bibliothèque : `N2/milieu`
 
 Hypothèse
 
@@ -143,7 +145,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations vous arrive-t-il de douter de vous, et comment en sortez-vous ? »
 
-Bloc de la bibliothèque : `N3/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `N3/plutot_bas`
 
 Hypothèse
 
@@ -155,7 +157,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quels contextes aborder quelqu’un vous demande-t-il un effort, et lesquels sont plus naturels pour vous ? »
 
-Bloc de la bibliothèque : `N4/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `N4/plutot_bas`
 
 Hypothèse
 
@@ -167,7 +169,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui fait pencher votre décision d’un côté ou de l’autre quand une envie se présente ? »
 
-Bloc de la bibliothèque : `N5/milieu` bloc non relu
+Texte type de la bibliothèque : `N5/milieu`
 
 Hypothèse
 
@@ -179,13 +181,13 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles situations font exception, et qu’ont-elles en commun ? »
 
-Bloc de la bibliothèque : `N6/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `N6/plutot_bas`
 
 ### Chapitre AM : facettes du domaine Extraversion
 
 Constaté
 
-Facettes du domaine Extraversion. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Extraversion. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -197,7 +199,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Parmi vos nombreux contacts, lesquels comptent le plus pour vous, et comment les entretenez-vous ? »
 
-Bloc de la bibliothèque : `E1/haut` bloc non relu
+Texte type de la bibliothèque : `E1/haut`
 
 Hypothèse
 
@@ -209,7 +211,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous fait préférer la compagnie nombreuse un jour et le calme un autre ? »
 
-Bloc de la bibliothèque : `E2/milieu` bloc non relu
+Texte type de la bibliothèque : `E2/milieu`
 
 Hypothèse
 
@@ -221,7 +223,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations est-il utile pour vous de laisser quelqu’un d’autre diriger ? »
 
-Bloc de la bibliothèque : `E3/haut` bloc non relu
+Texte type de la bibliothèque : `E3/haut`
 
 Hypothèse
 
@@ -233,7 +235,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Que se passe-t-il pour vous quand vous devez ralentir ou attendre sans rien faire ? »
 
-Bloc de la bibliothèque : `E4/haut` bloc non relu
+Texte type de la bibliothèque : `E4/haut`
 
 Hypothèse
 
@@ -245,7 +247,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment décidez-vous de vous lancer ou non quand une situation vous attire par son intensité ? »
 
-Bloc de la bibliothèque : `E5/haut` bloc non relu
+Texte type de la bibliothèque : `E5/haut`
 
 Hypothèse
 
@@ -257,13 +259,13 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment réagissez-vous quand votre entourage ne partage pas votre humeur du moment ? »
 
-Bloc de la bibliothèque : `E6/haut` bloc non relu
+Texte type de la bibliothèque : `E6/haut`
 
 ### Chapitre AM : facettes du domaine Ouverture
 
 Constaté
 
-Facettes du domaine Ouverture. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Ouverture. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -275,7 +277,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quels repères vous aident à revenir au présent quand vos pensées vous emportent ? »
 
-Bloc de la bibliothèque : `O1/haut` bloc non relu
+Texte type de la bibliothèque : `O1/haut`
 
 Hypothèse
 
@@ -287,7 +289,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment partagez-vous ce que vous percevez avec des personnes moins attentives à la beauté ? »
 
-Bloc de la bibliothèque : `O2/haut` bloc non relu
+Texte type de la bibliothèque : `O2/haut`
 
 Hypothèse
 
@@ -299,7 +301,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles habitudes vous aident à vous ressourcer après une période émotionnellement chargée ? »
 
-Bloc de la bibliothèque : `O3/haut` bloc non relu
+Texte type de la bibliothèque : `O3/haut`
 
 Hypothèse
 
@@ -311,7 +313,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment faites-vous pour mener à terme une tâche qui n’a plus rien de nouveau ? »
 
-Bloc de la bibliothèque : `O4/haut` bloc non relu
+Texte type de la bibliothèque : `O4/haut`
 
 Hypothèse
 
@@ -323,7 +325,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quels moyens utilisez-vous pour rendre vos idées accessibles à ceux qui préfèrent le concret ? »
 
-Bloc de la bibliothèque : `O5/haut` bloc non relu
+Texte type de la bibliothèque : `O5/haut`
 
 Hypothèse
 
@@ -335,13 +337,13 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Sur quels sujets vos convictions sont-elles les plus arrêtées, et sur lesquels restent-elles ouvertes ? »
 
-Bloc de la bibliothèque : `O6/milieu` bloc non relu
+Texte type de la bibliothèque : `O6/milieu`
 
 ### Chapitre AM : facettes du domaine Agréabilité
 
 Constaté
 
-Facettes du domaine Agréabilité. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Agréabilité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -353,7 +355,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations faites-vous confiance d’emblée, et dans lesquelles préférez-vous vérifier ? »
 
-Bloc de la bibliothèque : `A1/milieu` bloc non relu
+Texte type de la bibliothèque : `A1/milieu`
 
 Hypothèse
 
@@ -365,7 +367,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment arbitrez-vous entre un avantage personnel et l’intérêt d’un collègue ? »
 
-Bloc de la bibliothèque : `A2/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `A2/plutot_bas`
 
 Hypothèse
 
@@ -377,7 +379,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations est-il utile pour vous de limiter votre disponibilité envers les autres ? »
 
-Bloc de la bibliothèque : `A3/haut` bloc non relu
+Texte type de la bibliothèque : `A3/haut`
 
 Hypothèse
 
@@ -389,7 +391,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations votre réaction a-t-elle été plus vive que vous ne l’auriez souhaité ? »
 
-Bloc de la bibliothèque : `A4/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `A4/plutot_bas`
 
 Hypothèse
 
@@ -401,7 +403,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations jugez-vous utile de mettre vos réalisations en avant, et dans lesquelles préférez-vous les taire ? »
 
-Bloc de la bibliothèque : `A5/milieu` bloc non relu
+Texte type de la bibliothèque : `A5/milieu`
 
 Hypothèse
 
@@ -413,13 +415,13 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment préservez-vous votre énergie face à des situations de détresse ? »
 
-Bloc de la bibliothèque : `A6/haut` bloc non relu
+Texte type de la bibliothèque : `A6/haut`
 
 ### Chapitre AM : facettes du domaine Conscience
 
 Constaté
 
-Facettes du domaine Conscience. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -431,7 +433,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles informations extérieures vous amèneraient à réviser votre jugement sur la qualité de votre travail ? »
 
-Bloc de la bibliothèque : `C1/haut` bloc non relu
+Texte type de la bibliothèque : `C1/haut`
 
 Hypothèse
 
@@ -443,7 +445,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui change pour vous quand un lieu reste en désordre malgré vos efforts ? »
 
-Bloc de la bibliothèque : `C2/haut` bloc non relu
+Texte type de la bibliothèque : `C2/haut`
 
 Hypothèse
 
@@ -455,7 +457,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Que faites-vous lorsque deux règles ou deux engagements se contredisent ? »
 
-Bloc de la bibliothèque : `C3/haut` bloc non relu
+Texte type de la bibliothèque : `C3/haut`
 
 Hypothèse
 
@@ -467,7 +469,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Que se passerait-il, pour vous et pour votre travail, si vous réduisiez pendant un temps votre niveau d’investissement ? »
 
-Bloc de la bibliothèque : `C4/haut` bloc non relu
+Texte type de la bibliothèque : `C4/haut`
 
 Hypothèse
 
@@ -479,7 +481,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Que se passe-t-il pour vous quand un plan préparé avec soin doit être abandonné ? »
 
-Bloc de la bibliothèque : `C5/haut` bloc non relu
+Texte type de la bibliothèque : `C5/haut`
 
 Hypothèse
 
@@ -491,7 +493,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Pour quelles décisions prenez-vous le temps de réfléchir, et pour lesquelles préférez-vous agir directement ? »
 
-Bloc de la bibliothèque : `C6/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `C6/plutot_bas`
 
 ### Chapitre AM : tensions internes
 
@@ -509,7 +511,7 @@ moyenne
 Vérification  
 Demander deux situations récentes où ces facettes ont conduit à des comportements différents, et ce qui a fait la différence.
 
-Bloc de la bibliothèque : `E2/milieu` `E3/haut` `E4/haut` bloc non relu
+Texte type de la bibliothèque : `E2/milieu` `E3/haut` `E4/haut`
 
 Constaté
 
@@ -525,7 +527,7 @@ moyenne
 Vérification  
 Demander deux situations récentes où ces facettes ont conduit à des comportements différents, et ce qui a fait la différence.
 
-Bloc de la bibliothèque : `O5/haut` `O6/milieu` bloc non relu
+Texte type de la bibliothèque : `O5/haut` `O6/milieu`
 
 Constaté
 
@@ -541,7 +543,7 @@ moyenne
 Vérification  
 Demander deux situations récentes où ces facettes ont conduit à des comportements différents, et ce qui a fait la différence.
 
-Bloc de la bibliothèque : `A2/plutot_bas` `A3/haut` `A6/haut` `A4/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `A2/plutot_bas` `A3/haut` `A6/haut` `A4/plutot_bas`
 
 Constaté
 
@@ -557,7 +559,7 @@ moyenne
 Vérification  
 Demander deux situations récentes où ces facettes ont conduit à des comportements différents, et ce qui a fait la différence.
 
-Bloc de la bibliothèque : `C1/haut` `C6/plutot_bas` `C2/haut` `C3/haut` `C4/haut` `C5/haut` bloc non relu
+Texte type de la bibliothèque : `C1/haut` `C6/plutot_bas` `C2/haut` `C3/haut` `C4/haut` `C5/haut`
 
 ### Chapitre AM : profil de contribution
 
@@ -575,7 +577,7 @@ faible
 Vérification  
 Demander dans quelles situations de la tâche ces apports ont déjà servi, et dans lesquelles ils ont plutôt gêné.
 
-Bloc de la bibliothèque : `E3/haut` `E4/haut` `O5/haut` `C1/haut` `C3/haut` bloc non relu
+Texte type de la bibliothèque : `E3/haut` `E4/haut` `O5/haut` `C1/haut` `C3/haut`
 
 Hypothèse
 
@@ -587,7 +589,7 @@ faible
 Vérification  
 Demander quel prix la personne paie, en énergie ou en relations, lorsqu’elle met ces apports en œuvre sous pression.
 
-Bloc de la bibliothèque : `E3/haut` `E4/haut` `O5/haut` `C1/haut` `C3/haut` bloc non relu
+Texte type de la bibliothèque : `E3/haut` `E4/haut` `O5/haut` `C1/haut` `C3/haut`
 
 Hypothèse
 
@@ -673,7 +675,7 @@ moyenne
 Vérification  
 Demander à la personne si cette lecture lui parle et dans quelles situations elle la perçoit.
 
-Bloc de la bibliothèque : `C1/haut` `C6/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `C1/haut` `C6/plutot_bas`
 
 Hypothèse
 
@@ -685,7 +687,7 @@ faible
 Vérification  
 Faire valider par la personne que les actions sont réalistes dans son emploi du temps et utiles pour son travail.
 
-Bloc de la bibliothèque : `C1/haut` `C6/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `C1/haut` `C6/plutot_bas`
 
 Hypothèse
 
@@ -707,7 +709,7 @@ moyenne
 Vérification  
 Demander à la personne si cette lecture lui parle et dans quelles situations elle la perçoit.
 
-Bloc de la bibliothèque : `E3/haut` `E2/milieu` bloc non relu
+Texte type de la bibliothèque : `E3/haut` `E2/milieu`
 
 Hypothèse
 
@@ -719,7 +721,7 @@ faible
 Vérification  
 Faire valider par la personne que les actions sont réalistes dans son emploi du temps et utiles pour son travail.
 
-Bloc de la bibliothèque : `E3/haut` `E2/milieu` bloc non relu
+Texte type de la bibliothèque : `E3/haut` `E2/milieu`
 
 Hypothèse
 
@@ -741,7 +743,7 @@ moyenne
 Vérification  
 Demander à la personne si cette lecture lui parle et dans quelles situations elle la perçoit.
 
-Bloc de la bibliothèque : `A3/haut` `A4/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `A3/haut` `A4/plutot_bas`
 
 Hypothèse
 
@@ -753,7 +755,7 @@ faible
 Vérification  
 Faire valider par la personne que les actions sont réalistes dans son emploi du temps et utiles pour son travail.
 
-Bloc de la bibliothèque : `A3/haut` `A4/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `A3/haut` `A4/plutot_bas`
 
 Hypothèse
 
@@ -779,7 +781,7 @@ Ce chapitre n’existe que parce que la personne a consenti au niveau individuel
 
 Constaté
 
-Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ». La mention « bloc non relu » est portée une fois par domaine tant qu’une relecture humaine n’a pas eu lieu.
+Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ».
 
 ### Chapitre KB : les cinq domaines
 
@@ -857,7 +859,7 @@ Demander à la personne si cette lecture correspond à son expérience du travai
 
 Constaté
 
-Facettes du domaine Névrosisme. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Névrosisme. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -869,7 +871,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles situations réveillent votre appréhension, et que faites-vous alors ? »
 
-Bloc de la bibliothèque : `N1/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `N1/plutot_bas`
 
 Hypothèse
 
@@ -881,7 +883,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles circonstances vous font perdre patience, et que faites-vous alors ? »
 
-Bloc de la bibliothèque : `N2/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `N2/plutot_bas`
 
 Hypothèse
 
@@ -893,7 +895,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui contribue, selon vous, à ce que vous vous sentiez à l’aise avec vous-même ? »
 
-Bloc de la bibliothèque : `N3/bas` bloc non relu
+Texte type de la bibliothèque : `N3/bas`
 
 Hypothèse
 
@@ -905,7 +907,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quels contextes aborder quelqu’un vous demande-t-il un effort, et lesquels sont plus naturels pour vous ? »
 
-Bloc de la bibliothèque : `N4/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `N4/plutot_bas`
 
 Hypothèse
 
@@ -917,7 +919,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles circonstances vous font céder à une envie, et comment vivez-vous ensuite ce moment ? »
 
-Bloc de la bibliothèque : `N5/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `N5/plutot_bas`
 
 Hypothèse
 
@@ -929,13 +931,13 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quand la pression monte-t-elle pour vous, et à quoi le remarquez-vous ? »
 
-Bloc de la bibliothèque : `N6/bas` bloc non relu
+Texte type de la bibliothèque : `N6/bas`
 
 ### Chapitre KB : facettes du domaine Extraversion
 
 Constaté
 
-Facettes du domaine Extraversion. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Extraversion. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -947,7 +949,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment choisissez-vous les relations que vous entretenez dans la durée ? »
 
-Bloc de la bibliothèque : `E1/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `E1/plutot_haut`
 
 Hypothèse
 
@@ -959,7 +961,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous fait préférer la compagnie nombreuse un jour et le calme un autre ? »
 
-Bloc de la bibliothèque : `E2/milieu` bloc non relu
+Texte type de la bibliothèque : `E2/milieu`
 
 Hypothèse
 
@@ -971,7 +973,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment vous assurez-vous que chacun a pu s’exprimer avant que vous ne tranchiez ? »
 
-Bloc de la bibliothèque : `E3/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `E3/plutot_haut`
 
 Hypothèse
 
@@ -983,7 +985,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment décidez-vous de ce que vous acceptez ou refusez quand votre agenda est déjà chargé ? »
 
-Bloc de la bibliothèque : `E4/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `E4/plutot_haut`
 
 Hypothèse
 
@@ -995,7 +997,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Selon quels critères décidez-vous qu’une prise de risque en vaut la peine ? »
 
-Bloc de la bibliothèque : `E5/milieu` bloc non relu
+Texte type de la bibliothèque : `E5/milieu`
 
 Hypothèse
 
@@ -1007,13 +1009,13 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui fait pencher votre humeur du côté du plaisir ou de la réserve selon les jours ? »
 
-Bloc de la bibliothèque : `E6/milieu` bloc non relu
+Texte type de la bibliothèque : `E6/milieu`
 
 ### Chapitre KB : facettes du domaine Ouverture
 
 Constaté
 
-Facettes du domaine Ouverture. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Ouverture. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -1025,7 +1027,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « À quelles occasions laissez-vous volontiers votre esprit vagabonder ? »
 
-Bloc de la bibliothèque : `O1/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `O1/plutot_bas`
 
 Hypothèse
 
@@ -1037,7 +1039,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles formes d’art ou de beauté vous touchent, et lesquelles ne vous disent rien ? »
 
-Bloc de la bibliothèque : `O2/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `O2/plutot_bas`
 
 Hypothèse
 
@@ -1049,7 +1051,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations laissez-vous vos émotions s’exprimer, et dans lesquelles les gardez-vous pour vous ? »
 
-Bloc de la bibliothèque : `O3/milieu` bloc non relu
+Texte type de la bibliothèque : `O3/milieu`
 
 Hypothèse
 
@@ -1061,7 +1063,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous convainc d’essayer une méthode nouvelle ? »
 
-Bloc de la bibliothèque : `O4/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `O4/plutot_bas`
 
 Hypothèse
 
@@ -1073,7 +1075,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Sur quels sujets une réflexion théorique vous paraît-elle utile ? »
 
-Bloc de la bibliothèque : `O5/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `O5/plutot_bas`
 
 Hypothèse
 
@@ -1085,13 +1087,13 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Sur quels sujets vos convictions sont-elles les plus arrêtées, et sur lesquels restent-elles ouvertes ? »
 
-Bloc de la bibliothèque : `O6/milieu` bloc non relu
+Texte type de la bibliothèque : `O6/milieu`
 
 ### Chapitre KB : facettes du domaine Agréabilité
 
 Constaté
 
-Facettes du domaine Agréabilité. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Agréabilité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -1103,7 +1105,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment décidez-vous qu’une information mérite d’être vérifiée malgré votre confiance ? »
 
-Bloc de la bibliothèque : `A1/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `A1/plutot_haut`
 
 Hypothèse
 
@@ -1115,7 +1117,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations vous autorisez-vous à passer avant un autre, et dans lesquelles y renoncez-vous ? »
 
-Bloc de la bibliothèque : `A2/milieu` bloc non relu
+Texte type de la bibliothèque : `A2/milieu`
 
 Hypothèse
 
@@ -1127,7 +1129,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment protégez-vous le temps nécessaire à vos propres priorités quand on vous sollicite ? »
 
-Bloc de la bibliothèque : `A3/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `A3/plutot_haut`
 
 Hypothèse
 
@@ -1139,7 +1141,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment décidez-vous d’exprimer un désaccord ou de le laisser passer ? »
 
-Bloc de la bibliothèque : `A4/milieu` bloc non relu
+Texte type de la bibliothèque : `A4/milieu`
 
 Hypothèse
 
@@ -1151,7 +1153,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations jugez-vous utile de mettre vos réalisations en avant, et dans lesquelles préférez-vous les taire ? »
 
-Bloc de la bibliothèque : `A5/milieu` bloc non relu
+Texte type de la bibliothèque : `A5/milieu`
 
 Hypothèse
 
@@ -1163,13 +1165,13 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment conciliez-vous votre souci des personnes en difficulté et les contraintes d’une décision ? »
 
-Bloc de la bibliothèque : `A6/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `A6/plutot_haut`
 
 ### Chapitre KB : facettes du domaine Conscience
 
 Constaté
 
-Facettes du domaine Conscience. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -1181,7 +1183,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles informations extérieures vous amèneraient à réviser votre jugement sur la qualité de votre travail ? »
 
-Bloc de la bibliothèque : `C1/haut` bloc non relu
+Texte type de la bibliothèque : `C1/haut`
 
 Hypothèse
 
@@ -1193,7 +1195,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui change pour vous quand un lieu reste en désordre malgré vos efforts ? »
 
-Bloc de la bibliothèque : `C2/haut` bloc non relu
+Texte type de la bibliothèque : `C2/haut`
 
 Hypothèse
 
@@ -1205,7 +1207,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Que faites-vous lorsque deux règles ou deux engagements se contredisent ? »
 
-Bloc de la bibliothèque : `C3/haut` bloc non relu
+Texte type de la bibliothèque : `C3/haut`
 
 Hypothèse
 
@@ -1217,7 +1219,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Que se passerait-il, pour vous et pour votre travail, si vous réduisiez pendant un temps votre niveau d’investissement ? »
 
-Bloc de la bibliothèque : `C4/haut` bloc non relu
+Texte type de la bibliothèque : `C4/haut`
 
 Hypothèse
 
@@ -1229,7 +1231,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Que se passe-t-il pour vous quand un plan préparé avec soin doit être abandonné ? »
 
-Bloc de la bibliothèque : `C5/haut` bloc non relu
+Texte type de la bibliothèque : `C5/haut`
 
 Hypothèse
 
@@ -1241,7 +1243,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment savez-vous que vous avez assez réfléchi pour passer à l’action ? »
 
-Bloc de la bibliothèque : `C6/haut` bloc non relu
+Texte type de la bibliothèque : `C6/haut`
 
 ### Chapitre KB : tensions internes
 
@@ -1265,7 +1267,7 @@ faible
 Vérification  
 Demander dans quelles situations de la tâche ces apports ont déjà servi, et dans lesquelles ils ont plutôt gêné.
 
-Bloc de la bibliothèque : `C2/haut` `C3/haut` `N3/bas` `N6/bas` `C1/haut` bloc non relu
+Texte type de la bibliothèque : `C2/haut` `C3/haut` `N3/bas` `N6/bas` `C1/haut`
 
 Hypothèse
 
@@ -1277,7 +1279,7 @@ faible
 Vérification  
 Demander quel prix la personne paie, en énergie ou en relations, lorsqu’elle met ces apports en œuvre sous pression.
 
-Bloc de la bibliothèque : `C2/haut` `C3/haut` `N3/bas` `N6/bas` `C1/haut` bloc non relu
+Texte type de la bibliothèque : `C2/haut` `C3/haut` `N3/bas` `N6/bas` `C1/haut`
 
 Hypothèse
 
@@ -1367,7 +1369,7 @@ Ce chapitre n’existe que parce que la personne a consenti au niveau individuel
 
 Constaté
 
-Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ». La mention « bloc non relu » est portée une fois par domaine tant qu’une relecture humaine n’a pas eu lieu.
+Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ».
 
 ### Chapitre SR : les cinq domaines
 
@@ -1445,7 +1447,7 @@ Demander à la personne si cette lecture correspond à son expérience du travai
 
 Constaté
 
-Facettes du domaine Névrosisme. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Névrosisme. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -1457,7 +1459,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui, selon les périodes, fait passer votre inquiétude d’un niveau à l’autre ? »
 
-Bloc de la bibliothèque : `N1/milieu` bloc non relu
+Texte type de la bibliothèque : `N1/milieu`
 
 Hypothèse
 
@@ -1469,7 +1471,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous aide à retrouver votre patience quand une contrariété s’installe ? »
 
-Bloc de la bibliothèque : `N2/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `N2/plutot_haut`
 
 Hypothèse
 
@@ -1481,7 +1483,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui fait varier votre humeur et le regard que vous portez sur vous d’une période à l’autre ? »
 
-Bloc de la bibliothèque : `N3/milieu` bloc non relu
+Texte type de la bibliothèque : `N3/milieu`
 
 Hypothèse
 
@@ -1493,7 +1495,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Avec quelles personnes ou dans quels lieux votre aisance change-t-elle le plus ? »
 
-Bloc de la bibliothèque : `N4/milieu` bloc non relu
+Texte type de la bibliothèque : `N4/milieu`
 
 Hypothèse
 
@@ -1505,7 +1507,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quels domaines suivre vos envies vous convient-il, et dans lesquels aimeriez-vous vous donner un cadre ? »
 
-Bloc de la bibliothèque : `N5/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `N5/plutot_haut`
 
 Hypothèse
 
@@ -1517,13 +1519,13 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles circonstances votre façon de réagir change-t-elle le plus ? »
 
-Bloc de la bibliothèque : `N6/milieu` bloc non relu
+Texte type de la bibliothèque : `N6/milieu`
 
 ### Chapitre SR : facettes du domaine Extraversion
 
 Constaté
 
-Facettes du domaine Extraversion. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Extraversion. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -1535,7 +1537,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Parmi vos nombreux contacts, lesquels comptent le plus pour vous, et comment les entretenez-vous ? »
 
-Bloc de la bibliothèque : `E1/haut` bloc non relu
+Texte type de la bibliothèque : `E1/haut`
 
 Hypothèse
 
@@ -1547,7 +1549,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment vivez-vous les périodes où vous avez peu de monde autour de vous ? »
 
-Bloc de la bibliothèque : `E2/haut` bloc non relu
+Texte type de la bibliothèque : `E2/haut`
 
 Hypothèse
 
@@ -1559,7 +1561,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment vous assurez-vous que chacun a pu s’exprimer avant que vous ne tranchiez ? »
 
-Bloc de la bibliothèque : `E3/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `E3/plutot_haut`
 
 Hypothèse
 
@@ -1571,7 +1573,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Que se passe-t-il pour vous quand vous devez ralentir ou attendre sans rien faire ? »
 
-Bloc de la bibliothèque : `E4/haut` bloc non relu
+Texte type de la bibliothèque : `E4/haut`
 
 Hypothèse
 
@@ -1583,7 +1585,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment décidez-vous de vous lancer ou non quand une situation vous attire par son intensité ? »
 
-Bloc de la bibliothèque : `E5/haut` bloc non relu
+Texte type de la bibliothèque : `E5/haut`
 
 Hypothèse
 
@@ -1595,13 +1597,13 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment réagissez-vous quand votre entourage ne partage pas votre humeur du moment ? »
 
-Bloc de la bibliothèque : `E6/haut` bloc non relu
+Texte type de la bibliothèque : `E6/haut`
 
 ### Chapitre SR : facettes du domaine Ouverture
 
 Constaté
 
-Facettes du domaine Ouverture. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Ouverture. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -1613,7 +1615,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quels repères vous aident à revenir au présent quand vos pensées vous emportent ? »
 
-Bloc de la bibliothèque : `O1/haut` bloc non relu
+Texte type de la bibliothèque : `O1/haut`
 
 Hypothèse
 
@@ -1625,7 +1627,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment partagez-vous ce que vous percevez avec des personnes moins attentives à la beauté ? »
 
-Bloc de la bibliothèque : `O2/haut` bloc non relu
+Texte type de la bibliothèque : `O2/haut`
 
 Hypothèse
 
@@ -1637,7 +1639,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles habitudes vous aident à vous ressourcer après une période émotionnellement chargée ? »
 
-Bloc de la bibliothèque : `O3/haut` bloc non relu
+Texte type de la bibliothèque : `O3/haut`
 
 Hypothèse
 
@@ -1649,7 +1651,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment faites-vous pour mener à terme une tâche qui n’a plus rien de nouveau ? »
 
-Bloc de la bibliothèque : `O4/haut` bloc non relu
+Texte type de la bibliothèque : `O4/haut`
 
 Hypothèse
 
@@ -1661,7 +1663,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quels moyens utilisez-vous pour rendre vos idées accessibles à ceux qui préfèrent le concret ? »
 
-Bloc de la bibliothèque : `O5/haut` bloc non relu
+Texte type de la bibliothèque : `O5/haut`
 
 Hypothèse
 
@@ -1673,13 +1675,13 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles règles ou quels principes tenez-vous pour non négociables, malgré votre ouverture ? »
 
-Bloc de la bibliothèque : `O6/haut` bloc non relu
+Texte type de la bibliothèque : `O6/haut`
 
 ### Chapitre SR : facettes du domaine Agréabilité
 
 Constaté
 
-Facettes du domaine Agréabilité. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Agréabilité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -1691,7 +1693,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations faites-vous confiance d’emblée, et dans lesquelles préférez-vous vérifier ? »
 
-Bloc de la bibliothèque : `A1/milieu` bloc non relu
+Texte type de la bibliothèque : `A1/milieu`
 
 Hypothèse
 
@@ -1703,7 +1705,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment arbitrez-vous entre un avantage personnel et l’intérêt d’un collègue ? »
 
-Bloc de la bibliothèque : `A2/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `A2/plutot_bas`
 
 Hypothèse
 
@@ -1715,7 +1717,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment décidez-vous d’aider quelqu’un ou de consacrer votre temps à autre chose ? »
 
-Bloc de la bibliothèque : `A3/milieu` bloc non relu
+Texte type de la bibliothèque : `A3/milieu`
 
 Hypothèse
 
@@ -1727,7 +1729,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment décidez-vous d’exprimer un désaccord ou de le laisser passer ? »
 
-Bloc de la bibliothèque : `A4/milieu` bloc non relu
+Texte type de la bibliothèque : `A4/milieu`
 
 Hypothèse
 
@@ -1739,7 +1741,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations jugez-vous utile de mettre vos réalisations en avant, et dans lesquelles préférez-vous les taire ? »
 
-Bloc de la bibliothèque : `A5/milieu` bloc non relu
+Texte type de la bibliothèque : `A5/milieu`
 
 Hypothèse
 
@@ -1751,13 +1753,13 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quels cas la difficulté d’autrui vous mobilise-t-elle, et dans quels cas vous laisse-t-elle plus en retrait ? »
 
-Bloc de la bibliothèque : `A6/milieu` bloc non relu
+Texte type de la bibliothèque : `A6/milieu`
 
 ### Chapitre SR : facettes du domaine Conscience
 
 Constaté
 
-Facettes du domaine Conscience. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -1769,7 +1771,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Pour quelles tâches votre confiance change-t-elle le plus, et qu’est-ce qui la fait varier ? »
 
-Bloc de la bibliothèque : `C1/milieu` bloc non relu
+Texte type de la bibliothèque : `C1/milieu`
 
 Hypothèse
 
@@ -1781,7 +1783,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quels lieux ou à quels moments tenez-vous le plus à l’ordre ? »
 
-Bloc de la bibliothèque : `C2/milieu` bloc non relu
+Texte type de la bibliothèque : `C2/milieu`
 
 Hypothèse
 
@@ -1793,7 +1795,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quels contextes tenez-vous un engagement ou une règle sans aucune marge, et dans lesquels vous en accordez-vous une ? »
 
-Bloc de la bibliothèque : `C3/milieu` bloc non relu
+Texte type de la bibliothèque : `C3/milieu`
 
 Hypothèse
 
@@ -1805,7 +1807,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment décidez-vous de ce qui mérite un effort supplémentaire et de ce qui n’en mérite pas ? »
 
-Bloc de la bibliothèque : `C4/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `C4/plutot_haut`
 
 Hypothèse
 
@@ -1817,7 +1819,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles périodes tenez-vous le plus régulièrement vos engagements, et qu’ont-elles en commun ? »
 
-Bloc de la bibliothèque : `C5/milieu` bloc non relu
+Texte type de la bibliothèque : `C5/milieu`
 
 Hypothèse
 
@@ -1829,7 +1831,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Pour quelles décisions prenez-vous le temps de réfléchir, et pour lesquelles préférez-vous agir directement ? »
 
-Bloc de la bibliothèque : `C6/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `C6/plutot_bas`
 
 ### Chapitre SR : tensions internes
 
@@ -1853,7 +1855,7 @@ faible
 Vérification  
 Demander dans quelles situations de la tâche ces apports ont déjà servi, et dans lesquelles ils ont plutôt gêné.
 
-Bloc de la bibliothèque : `O1/haut` `O4/haut` `E5/haut` `E6/haut` `O2/haut` bloc non relu
+Texte type de la bibliothèque : `O1/haut` `O4/haut` `E5/haut` `E6/haut` `O2/haut`
 
 Hypothèse
 
@@ -1865,7 +1867,7 @@ faible
 Vérification  
 Demander quel prix la personne paie, en énergie ou en relations, lorsqu’elle met ces apports en œuvre sous pression.
 
-Bloc de la bibliothèque : `O1/haut` `O4/haut` `E5/haut` `E6/haut` `O2/haut` bloc non relu
+Texte type de la bibliothèque : `O1/haut` `O4/haut` `E5/haut` `E6/haut` `O2/haut`
 
 Hypothèse
 
@@ -1955,7 +1957,7 @@ Ce chapitre n’existe que parce que la personne a consenti au niveau individuel
 
 Constaté
 
-Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ». La mention « bloc non relu » est portée une fois par domaine tant qu’une relecture humaine n’a pas eu lieu.
+Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ».
 
 ### Chapitre HT : les cinq domaines
 
@@ -2033,7 +2035,7 @@ Demander à la personne si cette lecture correspond à son expérience du travai
 
 Constaté
 
-Facettes du domaine Névrosisme. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Névrosisme. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -2045,7 +2047,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quels appuis (personnes, méthodes, rythme de travail) vous aident aujourd’hui quand l’inquiétude s’installe ? »
 
-Bloc de la bibliothèque : `N1/haut` bloc non relu
+Texte type de la bibliothèque : `N1/haut`
 
 Hypothèse
 
@@ -2057,7 +2059,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous aide à retrouver votre patience quand une contrariété s’installe ? »
 
-Bloc de la bibliothèque : `N2/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `N2/plutot_haut`
 
 Hypothèse
 
@@ -2069,7 +2071,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quels moments ou quelles personnes vous aident à retrouver confiance en vous ? »
 
-Bloc de la bibliothèque : `N3/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `N3/plutot_haut`
 
 Hypothèse
 
@@ -2081,7 +2083,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quels aménagements (préparation, présence d’une personne connue, format) vous aident à vous exprimer plus facilement ? »
 
-Bloc de la bibliothèque : `N4/haut` bloc non relu
+Texte type de la bibliothèque : `N4/haut`
 
 Hypothèse
 
@@ -2093,7 +2095,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui fait pencher votre décision d’un côté ou de l’autre quand une envie se présente ? »
 
-Bloc de la bibliothèque : `N5/milieu` bloc non relu
+Texte type de la bibliothèque : `N5/milieu`
 
 Hypothèse
 
@@ -2105,13 +2107,13 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous aide à retrouver vos repères quand les événements s’accumulent ? »
 
-Bloc de la bibliothèque : `N6/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `N6/plutot_haut`
 
 ### Chapitre HT : facettes du domaine Extraversion
 
 Constaté
 
-Facettes du domaine Extraversion. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Extraversion. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -2123,7 +2125,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous met à l’aise avec une personne que vous ne connaissez pas encore ? »
 
-Bloc de la bibliothèque : `E1/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E1/plutot_bas`
 
 Hypothèse
 
@@ -2135,7 +2137,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui fait d’un grand rassemblement un moment que vous appréciez, quand c’est le cas ? »
 
-Bloc de la bibliothèque : `E2/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E2/plutot_bas`
 
 Hypothèse
 
@@ -2147,7 +2149,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous décide à prendre la direction quand vous le faites ? »
 
-Bloc de la bibliothèque : `E3/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E3/plutot_bas`
 
 Hypothèse
 
@@ -2159,7 +2161,7 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui détermine, selon les périodes, si vous remplissez votre emploi du temps ou si vous le laissez respirer ? »
 
-Bloc de la bibliothèque : `E4/milieu` bloc non relu
+Texte type de la bibliothèque : `E4/milieu`
 
 Hypothèse
 
@@ -2171,7 +2173,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelle part d’incertitude vous convient dans votre travail et dans vos loisirs ? »
 
-Bloc de la bibliothèque : `E5/bas` bloc non relu
+Texte type de la bibliothèque : `E5/bas`
 
 Hypothèse
 
@@ -2183,13 +2185,13 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles circonstances ressentez-vous le plus de plaisir ou de légèreté ? »
 
-Bloc de la bibliothèque : `E6/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E6/plutot_bas`
 
 ### Chapitre HT : facettes du domaine Ouverture
 
 Constaté
 
-Facettes du domaine Ouverture. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Ouverture. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -2201,7 +2203,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment faites-vous pour que vos idées arrivent jusqu’à une décision ou une action ? »
 
-Bloc de la bibliothèque : `O1/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `O1/plutot_haut`
 
 Hypothèse
 
@@ -2213,7 +2215,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment partagez-vous ce que vous percevez avec des personnes moins attentives à la beauté ? »
 
-Bloc de la bibliothèque : `O2/haut` bloc non relu
+Texte type de la bibliothèque : `O2/haut`
 
 Hypothèse
 
@@ -2225,7 +2227,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Quelles habitudes vous aident à vous ressourcer après une période émotionnellement chargée ? »
 
-Bloc de la bibliothèque : `O3/haut` bloc non relu
+Texte type de la bibliothèque : `O3/haut`
 
 Hypothèse
 
@@ -2237,7 +2239,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment trouvez-vous de l’intérêt dans les tâches qui reviennent régulièrement ? »
 
-Bloc de la bibliothèque : `O4/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `O4/plutot_haut`
 
 Hypothèse
 
@@ -2249,7 +2251,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment décidez-vous qu’une réflexion a suffisamment avancé pour passer à l’action ? »
 
-Bloc de la bibliothèque : `O5/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `O5/plutot_haut`
 
 Hypothèse
 
@@ -2261,13 +2263,13 @@ faible
 Vérification  
 Poser à la personne la question de la bibliothèque : « Sur quels sujets vos convictions sont-elles les plus arrêtées, et sur lesquels restent-elles ouvertes ? »
 
-Bloc de la bibliothèque : `O6/milieu` bloc non relu
+Texte type de la bibliothèque : `O6/milieu`
 
 ### Chapitre HT : facettes du domaine Agréabilité
 
 Constaté
 
-Facettes du domaine Agréabilité. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Agréabilité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -2279,7 +2281,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations vérifier ce qu’on vous dit vous paraît-il utile malgré votre confiance ? »
 
-Bloc de la bibliothèque : `A1/haut` bloc non relu
+Texte type de la bibliothèque : `A1/haut`
 
 Hypothèse
 
@@ -2291,7 +2293,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous aiderait à défendre vos intérêts sans craindre de nuire à quelqu’un ? »
 
-Bloc de la bibliothèque : `A2/haut` bloc non relu
+Texte type de la bibliothèque : `A2/haut`
 
 Hypothèse
 
@@ -2303,7 +2305,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations est-il utile pour vous de limiter votre disponibilité envers les autres ? »
 
-Bloc de la bibliothèque : `A3/haut` bloc non relu
+Texte type de la bibliothèque : `A3/haut`
 
 Hypothèse
 
@@ -2315,7 +2317,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous permettrait d’exprimer un désaccord important sans que la relation en souffre ? »
 
-Bloc de la bibliothèque : `A4/haut` bloc non relu
+Texte type de la bibliothèque : `A4/haut`
 
 Hypothèse
 
@@ -2327,7 +2329,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui vous aiderait à présenter vos réalisations quand le contexte l’exige ? »
 
-Bloc de la bibliothèque : `A5/haut` bloc non relu
+Texte type de la bibliothèque : `A5/haut`
 
 Hypothèse
 
@@ -2339,13 +2341,13 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment préservez-vous votre énergie face à des situations de détresse ? »
 
-Bloc de la bibliothèque : `A6/haut` bloc non relu
+Texte type de la bibliothèque : `A6/haut`
 
 ### Chapitre HT : facettes du domaine Conscience
 
 Constaté
 
-Facettes du domaine Conscience. Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -2357,7 +2359,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Comment vérifiez-vous, au-delà de votre propre impression, que votre travail répond à ce qui est attendu ? »
 
-Bloc de la bibliothèque : `C1/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `C1/plutot_haut`
 
 Hypothèse
 
@@ -2369,7 +2371,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Qu’est-ce qui change pour vous quand un lieu reste en désordre malgré vos efforts ? »
 
-Bloc de la bibliothèque : `C2/haut` bloc non relu
+Texte type de la bibliothèque : `C2/haut`
 
 Hypothèse
 
@@ -2381,7 +2383,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Que faites-vous lorsque deux règles ou deux engagements se contredisent ? »
 
-Bloc de la bibliothèque : `C3/haut` bloc non relu
+Texte type de la bibliothèque : `C3/haut`
 
 Hypothèse
 
@@ -2393,7 +2395,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Que se passerait-il, pour vous et pour votre travail, si vous réduisiez pendant un temps votre niveau d’investissement ? »
 
-Bloc de la bibliothèque : `C4/haut` bloc non relu
+Texte type de la bibliothèque : `C4/haut`
 
 Hypothèse
 
@@ -2405,7 +2407,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations est-il utile pour vous de lâcher le plan prévu ? »
 
-Bloc de la bibliothèque : `C5/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `C5/plutot_haut`
 
 Hypothèse
 
@@ -2417,7 +2419,7 @@ moyenne
 Vérification  
 Poser à la personne la question de la bibliothèque : « Dans quelles situations vous arrive-t-il d’agir plus vite que d’habitude, et qu’en retirez-vous ? »
 
-Bloc de la bibliothèque : `C6/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `C6/plutot_haut`
 
 ### Chapitre HT : tensions internes
 
@@ -2441,7 +2443,7 @@ faible
 Vérification  
 Demander dans quelles situations de la tâche ces apports ont déjà servi, et dans lesquelles ils ont plutôt gêné.
 
-Bloc de la bibliothèque : `A2/haut` `A4/haut` `A6/haut` `N4/haut` `E5/bas` bloc non relu
+Texte type de la bibliothèque : `A2/haut` `A4/haut` `A6/haut` `N4/haut` `E5/bas`
 
 Hypothèse
 
@@ -2453,7 +2455,7 @@ faible
 Vérification  
 Demander quel prix la personne paie, en énergie ou en relations, lorsqu’elle met ces apports en œuvre sous pression.
 
-Bloc de la bibliothèque : `A2/haut` `A4/haut` `A6/haut` `N4/haut` `E5/bas` bloc non relu
+Texte type de la bibliothèque : `A2/haut` `A4/haut` `A6/haut` `N4/haut` `E5/bas`
 
 Hypothèse
 
@@ -2606,7 +2608,7 @@ Donnée
 Tension la plus nette : C1-C6, écart de 3 points.
 
 Contexte  
-Les trente facettes d’AM sont lues par des blocs non relus ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.
+Les trente facettes d’AM sont lues par des textes types de la bibliothèque ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.
 
 Preuve  
 Hypothèse, sans source
@@ -2629,7 +2631,7 @@ Donnée
 Aucune tension interne relevée ; facette la plus éloignée du milieu : C2 à 4,5 sur l’échelle de 1 à 5.
 
 Contexte  
-Les trente facettes de KB sont lues par des blocs non relus ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.
+Les trente facettes de KB sont lues par des textes types de la bibliothèque ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.
 
 Preuve  
 Hypothèse, sans source
@@ -2652,7 +2654,7 @@ Donnée
 Aucune tension interne relevée ; facette la plus éloignée du milieu : O1 à 4,75 sur l’échelle de 1 à 5.
 
 Contexte  
-Les trente facettes de SR sont lues par des blocs non relus ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.
+Les trente facettes de SR sont lues par des textes types de la bibliothèque ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.
 
 Preuve  
 Hypothèse, sans source
@@ -2675,7 +2677,7 @@ Donnée
 Aucune tension interne relevée ; facette la plus éloignée du milieu : A2 à 4,5 sur l’échelle de 1 à 5.
 
 Contexte  
-Les trente facettes de HT sont lues par des blocs non relus ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.
+Les trente facettes de HT sont lues par des textes types de la bibliothèque ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.
 
 Preuve  
 Hypothèse, sans source
@@ -2691,6 +2693,8 @@ Horizon
 
 Indicateur  
 Entretien tenu avant la fin du premier mois, avec l’avis de la personne sur la justesse de chaque domaine, noté de 1 à 5.
+
+Textes types de ce chapitre : relecture en attente
 
 ## Analyse des relations (binômes)
 
@@ -2814,7 +2818,7 @@ Demander aux deux personnes quelles qualités la tâche exige le plus d’elles 
 
 Hypothèse
 
-Apport possible sur la facette O5 (Curiosité intellectuelle), écart 3. Pour AM, niveau haut (bloc O5/haut, bloc non relu) : « Vous pouvez éclairer un problème par des angles que le groupe n’avait pas envisagés. » Pour KB, niveau plutôt bas (bloc O5/plutot_bas, bloc non relu) : « Vous pouvez relier une idée à son application. » (règle ECART-notable).
+Apport possible sur la facette O5 (Curiosité intellectuelle), écart 3. Pour AM, niveau haut (bloc O5/haut) : « Vous pouvez éclairer un problème par des angles que le groupe n’avait pas envisagés. » Pour KB, niveau plutôt bas (bloc O5/plutot_bas) : « Vous pouvez relier une idée à son application. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -2822,11 +2826,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Quels moyens utilisez-vous pour rendre vos idées accessibles à ceux qui préfèrent le concret ? » et à KB : « Sur quels sujets une réflexion théorique vous paraît-elle utile ? »
 
-Bloc de la bibliothèque : `O5/haut` `O5/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `O5/haut` `O5/plutot_bas`
 
 Hypothèse
 
-Apport possible sur la facette C6 (Réflexion avant d’agir), écart 2. Pour AM, niveau plutôt bas (bloc C6/plutot_bas, bloc non relu) : « Vous pouvez décider rapidement lorsque la situation l’exige. » Pour KB, niveau haut (bloc C6/haut, bloc non relu) : « Vous pouvez éviter des erreurs qu’un examen préalable permet de repérer. » (règle ECART-notable).
+Apport possible sur la facette C6 (Réflexion avant d’agir), écart 2. Pour AM, niveau plutôt bas (bloc C6/plutot_bas) : « Vous pouvez décider rapidement lorsque la situation l’exige. » Pour KB, niveau haut (bloc C6/haut) : « Vous pouvez éviter des erreurs qu’un examen préalable permet de repérer. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -2834,11 +2838,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Pour quelles décisions prenez-vous le temps de réfléchir, et pour lesquelles préférez-vous agir directement ? » et à KB : « Comment savez-vous que vous avez assez réfléchi pour passer à l’action ? »
 
-Bloc de la bibliothèque : `C6/plutot_bas` `C6/haut` bloc non relu
+Texte type de la bibliothèque : `C6/plutot_bas` `C6/haut`
 
 Hypothèse
 
-Apport possible sur la facette O4 (Goût de la variété), écart 1,75. Pour AM, niveau haut (bloc O4/haut, bloc non relu) : « Vous pouvez essayer des approches inédites là où les habitudes sont installées. » Pour KB, niveau plutôt bas (bloc O4/plutot_bas, bloc non relu) : « Vous pouvez adopter une nouveauté quand son intérêt est démontré. » (règle ECART-notable).
+Apport possible sur la facette O4 (Goût de la variété), écart 1,75. Pour AM, niveau haut (bloc O4/haut) : « Vous pouvez essayer des approches inédites là où les habitudes sont installées. » Pour KB, niveau plutôt bas (bloc O4/plutot_bas) : « Vous pouvez adopter une nouveauté quand son intérêt est démontré. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -2846,7 +2850,7 @@ faible
 Vérification  
 Poser en entretien à AM : « Comment faites-vous pour mener à terme une tâche qui n’a plus rien de nouveau ? » et à KB : « Qu’est-ce qui vous convainc d’essayer une méthode nouvelle ? »
 
-Bloc de la bibliothèque : `O4/haut` `O4/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `O4/haut` `O4/plutot_bas`
 
 ### AM et KB : frictions probables sur la tâche
 
@@ -2894,7 +2898,7 @@ Demander aux deux personnes quelles échéances du cas leur paraissent les plus 
 
 Hypothèse
 
-Coût possible sur la facette O5 (Curiosité intellectuelle), écart 3. Pour AM, niveau haut (bloc O5/haut, bloc non relu) : « Il se peut que l’exploration d’idées prenne le pas sur la décision à prendre. » Pour KB, niveau plutôt bas (bloc O5/plutot_bas, bloc non relu) : « Un débat d’idées peut être écourté avant d’avoir porté ses fruits. » (règle ECART-notable).
+Coût possible sur la facette O5 (Curiosité intellectuelle), écart 3. Pour AM, niveau haut (bloc O5/haut) : « Il se peut que l’exploration d’idées prenne le pas sur la décision à prendre. » Pour KB, niveau plutôt bas (bloc O5/plutot_bas) : « Un débat d’idées peut être écourté avant d’avoir porté ses fruits. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -2902,11 +2906,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Quels moyens utilisez-vous pour rendre vos idées accessibles à ceux qui préfèrent le concret ? » et à KB : « Sur quels sujets une réflexion théorique vous paraît-elle utile ? »
 
-Bloc de la bibliothèque : `O5/haut` `O5/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `O5/haut` `O5/plutot_bas`
 
 Hypothèse
 
-Coût possible sur la facette C6 (Réflexion avant d’agir), écart 2. Pour AM, niveau plutôt bas (bloc C6/plutot_bas, bloc non relu) : « Il se peut que des détails vous échappent dans les décisions prises dans l’urgence. » Pour KB, niveau haut (bloc C6/haut, bloc non relu) : « Il se peut que le besoin de réfléchir longuement retarde une décision pour laquelle une action rapide aurait suffi. » (règle ECART-notable).
+Coût possible sur la facette C6 (Réflexion avant d’agir), écart 2. Pour AM, niveau plutôt bas (bloc C6/plutot_bas) : « Il se peut que des détails vous échappent dans les décisions prises dans l’urgence. » Pour KB, niveau haut (bloc C6/haut) : « Il se peut que le besoin de réfléchir longuement retarde une décision pour laquelle une action rapide aurait suffi. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -2914,11 +2918,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Pour quelles décisions prenez-vous le temps de réfléchir, et pour lesquelles préférez-vous agir directement ? » et à KB : « Comment savez-vous que vous avez assez réfléchi pour passer à l’action ? »
 
-Bloc de la bibliothèque : `C6/plutot_bas` `C6/haut` bloc non relu
+Texte type de la bibliothèque : `C6/plutot_bas` `C6/haut`
 
 Hypothèse
 
-Coût possible sur la facette O4 (Goût de la variété), écart 1,75. Pour AM, niveau haut (bloc O4/haut, bloc non relu) : « Il se peut que vous quittiez une méthode éprouvée avant d’en avoir tiré le bénéfice. » Pour KB, niveau plutôt bas (bloc O4/plutot_bas, bloc non relu) : « Il se peut que vous attendiez longtemps avant d’essayer une approche nouvelle. » (règle ECART-notable).
+Coût possible sur la facette O4 (Goût de la variété), écart 1,75. Pour AM, niveau haut (bloc O4/haut) : « Il se peut que vous quittiez une méthode éprouvée avant d’en avoir tiré le bénéfice. » Pour KB, niveau plutôt bas (bloc O4/plutot_bas) : « Il se peut que vous attendiez longtemps avant d’essayer une approche nouvelle. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -2926,7 +2930,7 @@ faible
 Vérification  
 Poser en entretien à AM : « Comment faites-vous pour mener à terme une tâche qui n’a plus rien de nouveau ? » et à KB : « Qu’est-ce qui vous convainc d’essayer une méthode nouvelle ? »
 
-Bloc de la bibliothèque : `O4/haut` `O4/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `O4/haut` `O4/plutot_bas`
 
 ### AM et KB : règles de fonctionnement proposées
 
@@ -3180,7 +3184,7 @@ Demander aux deux personnes quelles qualités la tâche exige le plus d’elles 
 
 Hypothèse
 
-Apport possible sur la facette C1 (Confiance déclarée dans sa maîtrise des tâches), écart 2. Pour AM, niveau haut (bloc C1/haut, bloc non relu) : « Votre confiance peut vous permettre d’entreprendre des tâches exigeantes et d’entraîner d’autres personnes. » Pour SR, niveau milieu de l’échelle (bloc C1/milieu, bloc non relu) : « Vous pouvez ajuster votre assurance à la difficulté réelle de la tâche. » (règle ECART-notable).
+Apport possible sur la facette C1 (Confiance déclarée dans sa maîtrise des tâches), écart 2. Pour AM, niveau haut (bloc C1/haut) : « Votre confiance peut vous permettre d’entreprendre des tâches exigeantes et d’entraîner d’autres personnes. » Pour SR, niveau milieu de l’échelle (bloc C1/milieu) : « Vous pouvez ajuster votre assurance à la difficulté réelle de la tâche. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3188,11 +3192,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Quelles informations extérieures vous amèneraient à réviser votre jugement sur la qualité de votre travail ? » et à SR : « Pour quelles tâches votre confiance change-t-elle le plus, et qu’est-ce qui la fait varier ? »
 
-Bloc de la bibliothèque : `C1/haut` `C1/milieu` bloc non relu
+Texte type de la bibliothèque : `C1/haut` `C1/milieu`
 
 Hypothèse
 
-Apport possible sur la facette C3 (Respect des engagements et des règles), écart 1,75. Pour AM, niveau haut (bloc C3/haut, bloc non relu) : « Vous pouvez servir de repère dans un groupe où les engagements comptent beaucoup. » Pour SR, niveau milieu de l’échelle (bloc C3/milieu, bloc non relu) : « Vous pouvez distinguer les règles qui comptent de celles qui peuvent être adaptées. » (règle ECART-notable).
+Apport possible sur la facette C3 (Respect des engagements et des règles), écart 1,75. Pour AM, niveau haut (bloc C3/haut) : « Vous pouvez servir de repère dans un groupe où les engagements comptent beaucoup. » Pour SR, niveau milieu de l’échelle (bloc C3/milieu) : « Vous pouvez distinguer les règles qui comptent de celles qui peuvent être adaptées. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3200,11 +3204,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Que faites-vous lorsque deux règles ou deux engagements se contredisent ? » et à SR : « Dans quels contextes tenez-vous un engagement ou une règle sans aucune marge, et dans lesquels vous en accordez-vous une ? »
 
-Bloc de la bibliothèque : `C3/haut` `C3/milieu` bloc non relu
+Texte type de la bibliothèque : `C3/haut` `C3/milieu`
 
 Hypothèse
 
-Apport possible sur la facette E3 (Affirmation de soi), écart 1,5. Pour AM, niveau haut (bloc E3/haut, bloc non relu) : « Vous pouvez rassembler un groupe autour d’un objectif sans attendre qu’on vous le demande. » Pour SR, niveau plutôt haut (bloc E3/plutot_haut, bloc non relu) : « Vous pouvez donner un cap quand un groupe tâtonne. » (règle ECART-notable).
+Apport possible sur la facette E3 (Affirmation de soi), écart 1,5. Pour AM, niveau haut (bloc E3/haut) : « Vous pouvez rassembler un groupe autour d’un objectif sans attendre qu’on vous le demande. » Pour SR, niveau plutôt haut (bloc E3/plutot_haut) : « Vous pouvez donner un cap quand un groupe tâtonne. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3212,7 +3216,7 @@ faible
 Vérification  
 Poser en entretien à AM : « Dans quelles situations est-il utile pour vous de laisser quelqu’un d’autre diriger ? » et à SR : « Comment vous assurez-vous que chacun a pu s’exprimer avant que vous ne tranchiez ? »
 
-Bloc de la bibliothèque : `E3/haut` `E3/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `E3/haut` `E3/plutot_haut`
 
 ### AM et SR : frictions probables sur la tâche
 
@@ -3270,7 +3274,7 @@ Vérifier en entretien, avec exemples de situations réelles, que l’écart dé
 
 Hypothèse
 
-Coût possible sur la facette C1 (Confiance déclarée dans sa maîtrise des tâches), écart 2. Pour AM, niveau haut (bloc C1/haut, bloc non relu) : « Il se peut que vous mesuriez mal vos limites ou la complexité d’une situation nouvelle. » Pour SR, niveau milieu de l’échelle (bloc C1/milieu, bloc non relu) : « Votre confiance peut varier d’une tâche à l’autre, ce qui peut rendre votre posture moins lisible pour autrui. » (règle ECART-notable).
+Coût possible sur la facette C1 (Confiance déclarée dans sa maîtrise des tâches), écart 2. Pour AM, niveau haut (bloc C1/haut) : « Il se peut que vous mesuriez mal vos limites ou la complexité d’une situation nouvelle. » Pour SR, niveau milieu de l’échelle (bloc C1/milieu) : « Votre confiance peut varier d’une tâche à l’autre, ce qui peut rendre votre posture moins lisible pour autrui. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3278,11 +3282,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Quelles informations extérieures vous amèneraient à réviser votre jugement sur la qualité de votre travail ? » et à SR : « Pour quelles tâches votre confiance change-t-elle le plus, et qu’est-ce qui la fait varier ? »
 
-Bloc de la bibliothèque : `C1/haut` `C1/milieu` bloc non relu
+Texte type de la bibliothèque : `C1/haut` `C1/milieu`
 
 Hypothèse
 
-Coût possible sur la facette C3 (Respect des engagements et des règles), écart 1,75. Pour AM, niveau haut (bloc C3/haut, bloc non relu) : « Il se peut que vous ayez du mal à comprendre un écart à la règle quand il a des raisons légitimes. » Pour SR, niveau milieu de l’échelle (bloc C3/milieu, bloc non relu) : « Votre manière de traiter une règle peut varier d’un contexte à l’autre, ce qui peut surprendre votre entourage. » (règle ECART-notable).
+Coût possible sur la facette C3 (Respect des engagements et des règles), écart 1,75. Pour AM, niveau haut (bloc C3/haut) : « Il se peut que vous ayez du mal à comprendre un écart à la règle quand il a des raisons légitimes. » Pour SR, niveau milieu de l’échelle (bloc C3/milieu) : « Votre manière de traiter une règle peut varier d’un contexte à l’autre, ce qui peut surprendre votre entourage. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3290,11 +3294,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Que faites-vous lorsque deux règles ou deux engagements se contredisent ? » et à SR : « Dans quels contextes tenez-vous un engagement ou une règle sans aucune marge, et dans lesquels vous en accordez-vous une ? »
 
-Bloc de la bibliothèque : `C3/haut` `C3/milieu` bloc non relu
+Texte type de la bibliothèque : `C3/haut` `C3/milieu`
 
 Hypothèse
 
-Coût possible sur la facette E3 (Affirmation de soi), écart 1,5. Pour AM, niveau haut (bloc E3/haut, bloc non relu) : « Il se peut que d’autres renoncent à proposer parce que la place est déjà occupée. » Pour SR, niveau plutôt haut (bloc E3/plutot_haut, bloc non relu) : « Il se peut que vos interlocuteurs n’aient pas le temps de proposer avant que vous ayez avancé. » (règle ECART-notable).
+Coût possible sur la facette E3 (Affirmation de soi), écart 1,5. Pour AM, niveau haut (bloc E3/haut) : « Il se peut que d’autres renoncent à proposer parce que la place est déjà occupée. » Pour SR, niveau plutôt haut (bloc E3/plutot_haut) : « Il se peut que vos interlocuteurs n’aient pas le temps de proposer avant que vous ayez avancé. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3302,7 +3306,7 @@ faible
 Vérification  
 Poser en entretien à AM : « Dans quelles situations est-il utile pour vous de laisser quelqu’un d’autre diriger ? » et à SR : « Comment vous assurez-vous que chacun a pu s’exprimer avant que vous ne tranchiez ? »
 
-Bloc de la bibliothèque : `E3/haut` `E3/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `E3/haut` `E3/plutot_haut`
 
 ### AM et SR : règles de fonctionnement proposées
 
@@ -3556,7 +3560,7 @@ Demander aux deux personnes quelles qualités la tâche exige le plus d’elles 
 
 Hypothèse
 
-Apport possible sur la facette E3 (Affirmation de soi), écart 3. Pour AM, niveau haut (bloc E3/haut, bloc non relu) : « Vous pouvez rassembler un groupe autour d’un objectif sans attendre qu’on vous le demande. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas, bloc non relu) : « Vous pouvez écouter avant de trancher. » (règle ECART-notable).
+Apport possible sur la facette E3 (Affirmation de soi), écart 3. Pour AM, niveau haut (bloc E3/haut) : « Vous pouvez rassembler un groupe autour d’un objectif sans attendre qu’on vous le demande. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas) : « Vous pouvez écouter avant de trancher. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3564,11 +3568,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Dans quelles situations est-il utile pour vous de laisser quelqu’un d’autre diriger ? » et à HT : « Qu’est-ce qui vous décide à prendre la direction quand vous le faites ? »
 
-Bloc de la bibliothèque : `E3/haut` `E3/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E3/haut` `E3/plutot_bas`
 
 Hypothèse
 
-Apport possible sur la facette A4 (Coopération), écart 2,5. Pour AM, niveau plutôt bas (bloc A4/plutot_bas, bloc non relu) : « Vous pouvez aborder un sujet délicat plutôt que de l’éviter. » Pour HT, niveau haut (bloc A4/haut, bloc non relu) : « Vous pouvez maintenir des relations de travail stables, même quand la discussion est difficile. » (règle ECART-notable).
+Apport possible sur la facette A4 (Coopération), écart 2,5. Pour AM, niveau plutôt bas (bloc A4/plutot_bas) : « Vous pouvez aborder un sujet délicat plutôt que de l’éviter. » Pour HT, niveau haut (bloc A4/haut) : « Vous pouvez maintenir des relations de travail stables, même quand la discussion est difficile. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3576,11 +3580,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Dans quelles situations votre réaction a-t-elle été plus vive que vous ne l’auriez souhaité ? » et à HT : « Qu’est-ce qui vous permettrait d’exprimer un désaccord important sans que la relation en souffre ? »
 
-Bloc de la bibliothèque : `A4/plutot_bas` `A4/haut` bloc non relu
+Texte type de la bibliothèque : `A4/plutot_bas` `A4/haut`
 
 Hypothèse
 
-Apport possible sur la facette E4 (Niveau d’activité), écart 2,25. Pour AM, niveau haut (bloc E4/haut, bloc non relu) : « Vous pouvez avancer sur de nombreux sujets en parallèle et maintenir une cadence soutenue. » Pour HT, niveau milieu de l’échelle (bloc E4/milieu, bloc non relu) : « Vous pouvez tenir un emploi du temps chargé ou un rythme calme selon les périodes. » (règle ECART-notable).
+Apport possible sur la facette E4 (Niveau d’activité), écart 2,25. Pour AM, niveau haut (bloc E4/haut) : « Vous pouvez avancer sur de nombreux sujets en parallèle et maintenir une cadence soutenue. » Pour HT, niveau milieu de l’échelle (bloc E4/milieu) : « Vous pouvez tenir un emploi du temps chargé ou un rythme calme selon les périodes. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3588,7 +3592,7 @@ faible
 Vérification  
 Poser en entretien à AM : « Que se passe-t-il pour vous quand vous devez ralentir ou attendre sans rien faire ? » et à HT : « Qu’est-ce qui détermine, selon les périodes, si vous remplissez votre emploi du temps ou si vous le laissez respirer ? »
 
-Bloc de la bibliothèque : `E4/haut` `E4/milieu` bloc non relu
+Texte type de la bibliothèque : `E4/haut` `E4/milieu`
 
 ### AM et HT : frictions probables sur la tâche
 
@@ -3646,7 +3650,7 @@ Demander aux deux personnes quelles échéances du cas leur paraissent les plus 
 
 Hypothèse
 
-Coût possible sur la facette E3 (Affirmation de soi), écart 3. Pour AM, niveau haut (bloc E3/haut, bloc non relu) : « Il se peut que d’autres renoncent à proposer parce que la place est déjà occupée. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas, bloc non relu) : « Il se peut que d’autres occupent la place de direction par défaut. » (règle ECART-notable).
+Coût possible sur la facette E3 (Affirmation de soi), écart 3. Pour AM, niveau haut (bloc E3/haut) : « Il se peut que d’autres renoncent à proposer parce que la place est déjà occupée. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas) : « Il se peut que d’autres occupent la place de direction par défaut. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3654,11 +3658,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Dans quelles situations est-il utile pour vous de laisser quelqu’un d’autre diriger ? » et à HT : « Qu’est-ce qui vous décide à prendre la direction quand vous le faites ? »
 
-Bloc de la bibliothèque : `E3/haut` `E3/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E3/haut` `E3/plutot_bas`
 
 Hypothèse
 
-Coût possible sur la facette A4 (Coopération), écart 2,5. Pour AM, niveau plutôt bas (bloc A4/plutot_bas, bloc non relu) : « Il se peut que certaines de vos réactions soient interprétées plus durement que vous ne le pensiez. » Pour HT, niveau haut (bloc A4/haut, bloc non relu) : « Un désaccord important peut rester sans réponse parce que la confrontation est évitée. » (règle ECART-notable).
+Coût possible sur la facette A4 (Coopération), écart 2,5. Pour AM, niveau plutôt bas (bloc A4/plutot_bas) : « Il se peut que certaines de vos réactions soient interprétées plus durement que vous ne le pensiez. » Pour HT, niveau haut (bloc A4/haut) : « Un désaccord important peut rester sans réponse parce que la confrontation est évitée. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3666,11 +3670,11 @@ faible
 Vérification  
 Poser en entretien à AM : « Dans quelles situations votre réaction a-t-elle été plus vive que vous ne l’auriez souhaité ? » et à HT : « Qu’est-ce qui vous permettrait d’exprimer un désaccord important sans que la relation en souffre ? »
 
-Bloc de la bibliothèque : `A4/plutot_bas` `A4/haut` bloc non relu
+Texte type de la bibliothèque : `A4/plutot_bas` `A4/haut`
 
 Hypothèse
 
-Coût possible sur la facette E4 (Niveau d’activité), écart 2,25. Pour AM, niveau haut (bloc E4/haut, bloc non relu) : « Il se peut que le repos vous paraisse difficile, même quand il serait utile. » Pour HT, niveau milieu de l’échelle (bloc E4/milieu, bloc non relu) : « Votre rythme peut paraître irrégulier à ceux qui attendent une cadence constante. » (règle ECART-notable).
+Coût possible sur la facette E4 (Niveau d’activité), écart 2,25. Pour AM, niveau haut (bloc E4/haut) : « Il se peut que le repos vous paraisse difficile, même quand il serait utile. » Pour HT, niveau milieu de l’échelle (bloc E4/milieu) : « Votre rythme peut paraître irrégulier à ceux qui attendent une cadence constante. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3678,7 +3682,7 @@ faible
 Vérification  
 Poser en entretien à AM : « Que se passe-t-il pour vous quand vous devez ralentir ou attendre sans rien faire ? » et à HT : « Qu’est-ce qui détermine, selon les périodes, si vous remplissez votre emploi du temps ou si vous le laissez respirer ? »
 
-Bloc de la bibliothèque : `E4/haut` `E4/milieu` bloc non relu
+Texte type de la bibliothèque : `E4/haut` `E4/milieu`
 
 ### AM et HT : règles de fonctionnement proposées
 
@@ -3938,7 +3942,7 @@ Demander aux deux personnes quelles qualités la tâche exige le plus d’elles 
 
 Hypothèse
 
-Apport possible sur la facette O4 (Goût de la variété), écart 2,5. Pour KB, niveau plutôt bas (bloc O4/plutot_bas, bloc non relu) : « Vous pouvez adopter une nouveauté quand son intérêt est démontré. » Pour SR, niveau haut (bloc O4/haut, bloc non relu) : « Vous pouvez essayer des approches inédites là où les habitudes sont installées. » (règle ECART-notable).
+Apport possible sur la facette O4 (Goût de la variété), écart 2,5. Pour KB, niveau plutôt bas (bloc O4/plutot_bas) : « Vous pouvez adopter une nouveauté quand son intérêt est démontré. » Pour SR, niveau haut (bloc O4/haut) : « Vous pouvez essayer des approches inédites là où les habitudes sont installées. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3946,11 +3950,11 @@ faible
 Vérification  
 Poser en entretien à KB : « Qu’est-ce qui vous convainc d’essayer une méthode nouvelle ? » et à SR : « Comment faites-vous pour mener à terme une tâche qui n’a plus rien de nouveau ? »
 
-Bloc de la bibliothèque : `O4/plutot_bas` `O4/haut` bloc non relu
+Texte type de la bibliothèque : `O4/plutot_bas` `O4/haut`
 
 Hypothèse
 
-Apport possible sur la facette O5 (Curiosité intellectuelle), écart 2. Pour KB, niveau plutôt bas (bloc O5/plutot_bas, bloc non relu) : « Vous pouvez relier une idée à son application. » Pour SR, niveau haut (bloc O5/haut, bloc non relu) : « Vous pouvez éclairer un problème par des angles que le groupe n’avait pas envisagés. » (règle ECART-notable).
+Apport possible sur la facette O5 (Curiosité intellectuelle), écart 2. Pour KB, niveau plutôt bas (bloc O5/plutot_bas) : « Vous pouvez relier une idée à son application. » Pour SR, niveau haut (bloc O5/haut) : « Vous pouvez éclairer un problème par des angles que le groupe n’avait pas envisagés. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3958,11 +3962,11 @@ faible
 Vérification  
 Poser en entretien à KB : « Sur quels sujets une réflexion théorique vous paraît-elle utile ? » et à SR : « Quels moyens utilisez-vous pour rendre vos idées accessibles à ceux qui préfèrent le concret ? »
 
-Bloc de la bibliothèque : `O5/plutot_bas` `O5/haut` bloc non relu
+Texte type de la bibliothèque : `O5/plutot_bas` `O5/haut`
 
 Hypothèse
 
-Apport possible sur la facette C2 (Organisation et rangement), écart 1,75. Pour KB, niveau haut (bloc C2/haut, bloc non relu) : « Vous pouvez créer autour de vous un cadre matériel stable, où chacun retrouve ses repères. » Pour SR, niveau milieu de l’échelle (bloc C2/milieu, bloc non relu) : « Vous pouvez ajuster votre niveau d’ordre à l’usage que vous faites d’un lieu. » (règle ECART-notable).
+Apport possible sur la facette C2 (Organisation et rangement), écart 1,75. Pour KB, niveau haut (bloc C2/haut) : « Vous pouvez créer autour de vous un cadre matériel stable, où chacun retrouve ses repères. » Pour SR, niveau milieu de l’échelle (bloc C2/milieu) : « Vous pouvez ajuster votre niveau d’ordre à l’usage que vous faites d’un lieu. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -3970,7 +3974,7 @@ faible
 Vérification  
 Poser en entretien à KB : « Qu’est-ce qui change pour vous quand un lieu reste en désordre malgré vos efforts ? » et à SR : « Dans quels lieux ou à quels moments tenez-vous le plus à l’ordre ? »
 
-Bloc de la bibliothèque : `C2/haut` `C2/milieu` bloc non relu
+Texte type de la bibliothèque : `C2/haut` `C2/milieu`
 
 ### KB et SR : frictions probables sur la tâche
 
@@ -4038,7 +4042,7 @@ Vérifier en entretien, avec exemples de situations réelles, que l’écart dé
 
 Hypothèse
 
-Coût possible sur la facette O4 (Goût de la variété), écart 2,5. Pour KB, niveau plutôt bas (bloc O4/plutot_bas, bloc non relu) : « Il se peut que vous attendiez longtemps avant d’essayer une approche nouvelle. » Pour SR, niveau haut (bloc O4/haut, bloc non relu) : « Il se peut que vous quittiez une méthode éprouvée avant d’en avoir tiré le bénéfice. » (règle ECART-notable).
+Coût possible sur la facette O4 (Goût de la variété), écart 2,5. Pour KB, niveau plutôt bas (bloc O4/plutot_bas) : « Il se peut que vous attendiez longtemps avant d’essayer une approche nouvelle. » Pour SR, niveau haut (bloc O4/haut) : « Il se peut que vous quittiez une méthode éprouvée avant d’en avoir tiré le bénéfice. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4046,11 +4050,11 @@ faible
 Vérification  
 Poser en entretien à KB : « Qu’est-ce qui vous convainc d’essayer une méthode nouvelle ? » et à SR : « Comment faites-vous pour mener à terme une tâche qui n’a plus rien de nouveau ? »
 
-Bloc de la bibliothèque : `O4/plutot_bas` `O4/haut` bloc non relu
+Texte type de la bibliothèque : `O4/plutot_bas` `O4/haut`
 
 Hypothèse
 
-Coût possible sur la facette O5 (Curiosité intellectuelle), écart 2. Pour KB, niveau plutôt bas (bloc O5/plutot_bas, bloc non relu) : « Un débat d’idées peut être écourté avant d’avoir porté ses fruits. » Pour SR, niveau haut (bloc O5/haut, bloc non relu) : « Il se peut que l’exploration d’idées prenne le pas sur la décision à prendre. » (règle ECART-notable).
+Coût possible sur la facette O5 (Curiosité intellectuelle), écart 2. Pour KB, niveau plutôt bas (bloc O5/plutot_bas) : « Un débat d’idées peut être écourté avant d’avoir porté ses fruits. » Pour SR, niveau haut (bloc O5/haut) : « Il se peut que l’exploration d’idées prenne le pas sur la décision à prendre. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4058,11 +4062,11 @@ faible
 Vérification  
 Poser en entretien à KB : « Sur quels sujets une réflexion théorique vous paraît-elle utile ? » et à SR : « Quels moyens utilisez-vous pour rendre vos idées accessibles à ceux qui préfèrent le concret ? »
 
-Bloc de la bibliothèque : `O5/plutot_bas` `O5/haut` bloc non relu
+Texte type de la bibliothèque : `O5/plutot_bas` `O5/haut`
 
 Hypothèse
 
-Coût possible sur la facette C2 (Organisation et rangement), écart 1,75. Pour KB, niveau haut (bloc C2/haut, bloc non relu) : « Il se peut que vous éprouviez de l’inconfort dans un lieu en désordre que vous ne maîtrisez pas. » Pour SR, niveau milieu de l’échelle (bloc C2/milieu, bloc non relu) : « Votre niveau d’ordre peut varier d’un lieu ou d’une période à l’autre, ce qui peut dérouter vos proches. » (règle ECART-notable).
+Coût possible sur la facette C2 (Organisation et rangement), écart 1,75. Pour KB, niveau haut (bloc C2/haut) : « Il se peut que vous éprouviez de l’inconfort dans un lieu en désordre que vous ne maîtrisez pas. » Pour SR, niveau milieu de l’échelle (bloc C2/milieu) : « Votre niveau d’ordre peut varier d’un lieu ou d’une période à l’autre, ce qui peut dérouter vos proches. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4070,7 +4074,7 @@ faible
 Vérification  
 Poser en entretien à KB : « Qu’est-ce qui change pour vous quand un lieu reste en désordre malgré vos efforts ? » et à SR : « Dans quels lieux ou à quels moments tenez-vous le plus à l’ordre ? »
 
-Bloc de la bibliothèque : `C2/haut` `C2/milieu` bloc non relu
+Texte type de la bibliothèque : `C2/haut` `C2/milieu`
 
 ### KB et SR : règles de fonctionnement proposées
 
@@ -4330,7 +4334,7 @@ Demander aux deux personnes quelles qualités la tâche exige le plus d’elles 
 
 Hypothèse
 
-Apport possible sur la facette E3 (Affirmation de soi), écart 1,75. Pour KB, niveau plutôt haut (bloc E3/plutot_haut, bloc non relu) : « Vous pouvez donner un cap quand un groupe tâtonne. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas, bloc non relu) : « Vous pouvez écouter avant de trancher. » (règle ECART-notable).
+Apport possible sur la facette E3 (Affirmation de soi), écart 1,75. Pour KB, niveau plutôt haut (bloc E3/plutot_haut) : « Vous pouvez donner un cap quand un groupe tâtonne. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas) : « Vous pouvez écouter avant de trancher. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4338,11 +4342,11 @@ faible
 Vérification  
 Poser en entretien à KB : « Comment vous assurez-vous que chacun a pu s’exprimer avant que vous ne tranchiez ? » et à HT : « Qu’est-ce qui vous décide à prendre la direction quand vous le faites ? »
 
-Bloc de la bibliothèque : `E3/plutot_haut` `E3/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E3/plutot_haut` `E3/plutot_bas`
 
 Hypothèse
 
-Apport possible sur la facette O5 (Curiosité intellectuelle), écart 1,75. Pour KB, niveau plutôt bas (bloc O5/plutot_bas, bloc non relu) : « Vous pouvez relier une idée à son application. » Pour HT, niveau plutôt haut (bloc O5/plutot_haut, bloc non relu) : « Vous pouvez apporter du recul et des cadres de réflexion à un groupe. » (règle ECART-notable).
+Apport possible sur la facette O5 (Curiosité intellectuelle), écart 1,75. Pour KB, niveau plutôt bas (bloc O5/plutot_bas) : « Vous pouvez relier une idée à son application. » Pour HT, niveau plutôt haut (bloc O5/plutot_haut) : « Vous pouvez apporter du recul et des cadres de réflexion à un groupe. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4350,11 +4354,11 @@ faible
 Vérification  
 Poser en entretien à KB : « Sur quels sujets une réflexion théorique vous paraît-elle utile ? » et à HT : « Comment décidez-vous qu’une réflexion a suffisamment avancé pour passer à l’action ? »
 
-Bloc de la bibliothèque : `O5/plutot_bas` `O5/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `O5/plutot_bas` `O5/plutot_haut`
 
 Hypothèse
 
-Apport possible sur la facette O4 (Goût de la variété), écart 1,25. Pour KB, niveau plutôt bas (bloc O4/plutot_bas, bloc non relu) : « Vous pouvez adopter une nouveauté quand son intérêt est démontré. » Pour HT, niveau plutôt haut (bloc O4/plutot_haut, bloc non relu) : « Vous pouvez apporter un souffle nouveau à une équipe installée dans ses habitudes. » (règle ECART-notable).
+Apport possible sur la facette O4 (Goût de la variété), écart 1,25. Pour KB, niveau plutôt bas (bloc O4/plutot_bas) : « Vous pouvez adopter une nouveauté quand son intérêt est démontré. » Pour HT, niveau plutôt haut (bloc O4/plutot_haut) : « Vous pouvez apporter un souffle nouveau à une équipe installée dans ses habitudes. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4362,7 +4366,7 @@ faible
 Vérification  
 Poser en entretien à KB : « Qu’est-ce qui vous convainc d’essayer une méthode nouvelle ? » et à HT : « Comment trouvez-vous de l’intérêt dans les tâches qui reviennent régulièrement ? »
 
-Bloc de la bibliothèque : `O4/plutot_bas` `O4/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `O4/plutot_bas` `O4/plutot_haut`
 
 ### KB et HT : frictions probables sur la tâche
 
@@ -4420,7 +4424,7 @@ Demander aux deux personnes quelles échéances du cas leur paraissent les plus 
 
 Hypothèse
 
-Coût possible sur la facette E3 (Affirmation de soi), écart 1,75. Pour KB, niveau plutôt haut (bloc E3/plutot_haut, bloc non relu) : « Il se peut que vos interlocuteurs n’aient pas le temps de proposer avant que vous ayez avancé. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas, bloc non relu) : « Il se peut que d’autres occupent la place de direction par défaut. » (règle ECART-notable).
+Coût possible sur la facette E3 (Affirmation de soi), écart 1,75. Pour KB, niveau plutôt haut (bloc E3/plutot_haut) : « Il se peut que vos interlocuteurs n’aient pas le temps de proposer avant que vous ayez avancé. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas) : « Il se peut que d’autres occupent la place de direction par défaut. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4428,11 +4432,11 @@ faible
 Vérification  
 Poser en entretien à KB : « Comment vous assurez-vous que chacun a pu s’exprimer avant que vous ne tranchiez ? » et à HT : « Qu’est-ce qui vous décide à prendre la direction quand vous le faites ? »
 
-Bloc de la bibliothèque : `E3/plutot_haut` `E3/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E3/plutot_haut` `E3/plutot_bas`
 
 Hypothèse
 
-Coût possible sur la facette O5 (Curiosité intellectuelle), écart 1,75. Pour KB, niveau plutôt bas (bloc O5/plutot_bas, bloc non relu) : « Un débat d’idées peut être écourté avant d’avoir porté ses fruits. » Pour HT, niveau plutôt haut (bloc O5/plutot_haut, bloc non relu) : « Une discussion théorique peut vous retenir plus longtemps que le projet ne le permet. » (règle ECART-notable).
+Coût possible sur la facette O5 (Curiosité intellectuelle), écart 1,75. Pour KB, niveau plutôt bas (bloc O5/plutot_bas) : « Un débat d’idées peut être écourté avant d’avoir porté ses fruits. » Pour HT, niveau plutôt haut (bloc O5/plutot_haut) : « Une discussion théorique peut vous retenir plus longtemps que le projet ne le permet. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4440,11 +4444,11 @@ faible
 Vérification  
 Poser en entretien à KB : « Sur quels sujets une réflexion théorique vous paraît-elle utile ? » et à HT : « Comment décidez-vous qu’une réflexion a suffisamment avancé pour passer à l’action ? »
 
-Bloc de la bibliothèque : `O5/plutot_bas` `O5/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `O5/plutot_bas` `O5/plutot_haut`
 
 Hypothèse
 
-Coût possible sur la facette O4 (Goût de la variété), écart 1,25. Pour KB, niveau plutôt bas (bloc O4/plutot_bas, bloc non relu) : « Il se peut que vous attendiez longtemps avant d’essayer une approche nouvelle. » Pour HT, niveau plutôt haut (bloc O4/plutot_haut, bloc non relu) : « Il se peut que vous perdiez de l’intérêt pour une tâche qui devient répétitive. » (règle ECART-notable).
+Coût possible sur la facette O4 (Goût de la variété), écart 1,25. Pour KB, niveau plutôt bas (bloc O4/plutot_bas) : « Il se peut que vous attendiez longtemps avant d’essayer une approche nouvelle. » Pour HT, niveau plutôt haut (bloc O4/plutot_haut) : « Il se peut que vous perdiez de l’intérêt pour une tâche qui devient répétitive. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4452,7 +4456,7 @@ faible
 Vérification  
 Poser en entretien à KB : « Qu’est-ce qui vous convainc d’essayer une méthode nouvelle ? » et à HT : « Comment trouvez-vous de l’intérêt dans les tâches qui reviennent régulièrement ? »
 
-Bloc de la bibliothèque : `O4/plutot_bas` `O4/plutot_haut` bloc non relu
+Texte type de la bibliothèque : `O4/plutot_bas` `O4/plutot_haut`
 
 ### KB et HT : règles de fonctionnement proposées
 
@@ -4712,7 +4716,7 @@ Demander aux deux personnes quelles qualités la tâche exige le plus d’elles 
 
 Hypothèse
 
-Apport possible sur la facette E1 (Aisance à nouer des liens), écart 1,75. Pour SR, niveau haut (bloc E1/haut, bloc non relu) : « Vous pouvez créer rapidement un climat de confiance dans un groupe nouvellement formé. » Pour HT, niveau plutôt bas (bloc E1/plutot_bas, bloc non relu) : « Vous pouvez construire des relations durables à partir de quelques échanges choisis. » (règle ECART-notable).
+Apport possible sur la facette E1 (Aisance à nouer des liens), écart 1,75. Pour SR, niveau haut (bloc E1/haut) : « Vous pouvez créer rapidement un climat de confiance dans un groupe nouvellement formé. » Pour HT, niveau plutôt bas (bloc E1/plutot_bas) : « Vous pouvez construire des relations durables à partir de quelques échanges choisis. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4720,11 +4724,11 @@ faible
 Vérification  
 Poser en entretien à SR : « Parmi vos nombreux contacts, lesquels comptent le plus pour vous, et comment les entretenez-vous ? » et à HT : « Qu’est-ce qui vous met à l’aise avec une personne que vous ne connaissez pas encore ? »
 
-Bloc de la bibliothèque : `E1/haut` `E1/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E1/haut` `E1/plutot_bas`
 
 Hypothèse
 
-Apport possible sur la facette E3 (Affirmation de soi), écart 1,5. Pour SR, niveau plutôt haut (bloc E3/plutot_haut, bloc non relu) : « Vous pouvez donner un cap quand un groupe tâtonne. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas, bloc non relu) : « Vous pouvez écouter avant de trancher. » (règle ECART-notable).
+Apport possible sur la facette E3 (Affirmation de soi), écart 1,5. Pour SR, niveau plutôt haut (bloc E3/plutot_haut) : « Vous pouvez donner un cap quand un groupe tâtonne. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas) : « Vous pouvez écouter avant de trancher. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4732,11 +4736,11 @@ faible
 Vérification  
 Poser en entretien à SR : « Comment vous assurez-vous que chacun a pu s’exprimer avant que vous ne tranchiez ? » et à HT : « Qu’est-ce qui vous décide à prendre la direction quand vous le faites ? »
 
-Bloc de la bibliothèque : `E3/plutot_haut` `E3/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E3/plutot_haut` `E3/plutot_bas`
 
 Hypothèse
 
-Apport possible sur la facette A4 (Coopération), écart 1,5. Pour SR, niveau milieu de l’échelle (bloc A4/milieu, bloc non relu) : « Vous pouvez choisir entre exprimer un désaccord et le laisser passer. » Pour HT, niveau haut (bloc A4/haut, bloc non relu) : « Vous pouvez maintenir des relations de travail stables, même quand la discussion est difficile. » (règle ECART-notable).
+Apport possible sur la facette A4 (Coopération), écart 1,5. Pour SR, niveau milieu de l’échelle (bloc A4/milieu) : « Vous pouvez choisir entre exprimer un désaccord et le laisser passer. » Pour HT, niveau haut (bloc A4/haut) : « Vous pouvez maintenir des relations de travail stables, même quand la discussion est difficile. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4744,7 +4748,7 @@ faible
 Vérification  
 Poser en entretien à SR : « Comment décidez-vous d’exprimer un désaccord ou de le laisser passer ? » et à HT : « Qu’est-ce qui vous permettrait d’exprimer un désaccord important sans que la relation en souffre ? »
 
-Bloc de la bibliothèque : `A4/milieu` `A4/haut` bloc non relu
+Texte type de la bibliothèque : `A4/milieu` `A4/haut`
 
 ### SR et HT : frictions probables sur la tâche
 
@@ -4812,7 +4816,7 @@ Vérifier en entretien, avec exemples de situations réelles, que l’écart dé
 
 Hypothèse
 
-Coût possible sur la facette E1 (Aisance à nouer des liens), écart 1,75. Pour SR, niveau haut (bloc E1/haut, bloc non relu) : « Il se peut que l’on vous sollicite de toutes parts, au détriment de votre temps de récupération. » Pour HT, niveau plutôt bas (bloc E1/plutot_bas, bloc non relu) : « Il se peut que des occasions de rencontre passent parce que vous attendez de vous sentir à l’aise. » (règle ECART-notable).
+Coût possible sur la facette E1 (Aisance à nouer des liens), écart 1,75. Pour SR, niveau haut (bloc E1/haut) : « Il se peut que l’on vous sollicite de toutes parts, au détriment de votre temps de récupération. » Pour HT, niveau plutôt bas (bloc E1/plutot_bas) : « Il se peut que des occasions de rencontre passent parce que vous attendez de vous sentir à l’aise. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4820,11 +4824,11 @@ faible
 Vérification  
 Poser en entretien à SR : « Parmi vos nombreux contacts, lesquels comptent le plus pour vous, et comment les entretenez-vous ? » et à HT : « Qu’est-ce qui vous met à l’aise avec une personne que vous ne connaissez pas encore ? »
 
-Bloc de la bibliothèque : `E1/haut` `E1/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E1/haut` `E1/plutot_bas`
 
 Hypothèse
 
-Coût possible sur la facette E3 (Affirmation de soi), écart 1,5. Pour SR, niveau plutôt haut (bloc E3/plutot_haut, bloc non relu) : « Il se peut que vos interlocuteurs n’aient pas le temps de proposer avant que vous ayez avancé. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas, bloc non relu) : « Il se peut que d’autres occupent la place de direction par défaut. » (règle ECART-notable).
+Coût possible sur la facette E3 (Affirmation de soi), écart 1,5. Pour SR, niveau plutôt haut (bloc E3/plutot_haut) : « Il se peut que vos interlocuteurs n’aient pas le temps de proposer avant que vous ayez avancé. » Pour HT, niveau plutôt bas (bloc E3/plutot_bas) : « Il se peut que d’autres occupent la place de direction par défaut. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4832,11 +4836,11 @@ faible
 Vérification  
 Poser en entretien à SR : « Comment vous assurez-vous que chacun a pu s’exprimer avant que vous ne tranchiez ? » et à HT : « Qu’est-ce qui vous décide à prendre la direction quand vous le faites ? »
 
-Bloc de la bibliothèque : `E3/plutot_haut` `E3/plutot_bas` bloc non relu
+Texte type de la bibliothèque : `E3/plutot_haut` `E3/plutot_bas`
 
 Hypothèse
 
-Coût possible sur la facette A4 (Coopération), écart 1,5. Pour SR, niveau milieu de l’échelle (bloc A4/milieu, bloc non relu) : « Votre façon de réagir peut sembler difficile à anticiper. » Pour HT, niveau haut (bloc A4/haut, bloc non relu) : « Un désaccord important peut rester sans réponse parce que la confrontation est évitée. » (règle ECART-notable).
+Coût possible sur la facette A4 (Coopération), écart 1,5. Pour SR, niveau milieu de l’échelle (bloc A4/milieu) : « Votre façon de réagir peut sembler difficile à anticiper. » Pour HT, niveau haut (bloc A4/haut) : « Un désaccord important peut rester sans réponse parce que la confrontation est évitée. » (règle ECART-notable).
 
 Confiance  
 faible
@@ -4844,7 +4848,7 @@ faible
 Vérification  
 Poser en entretien à SR : « Comment décidez-vous d’exprimer un désaccord ou de le laisser passer ? » et à HT : « Qu’est-ce qui vous permettrait d’exprimer un désaccord important sans que la relation en souffre ? »
 
-Bloc de la bibliothèque : `A4/milieu` `A4/haut` bloc non relu
+Texte type de la bibliothèque : `A4/milieu` `A4/haut`
 
 ### SR et HT : règles de fonctionnement proposées
 
@@ -5088,7 +5092,7 @@ Contexte
 Relation de ligne hiérarchique directe entre Pilote du programme (AM) et Garant de l’exécution (KB), interdépendance séquentielle, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Dépôt du dossier CNDP : dans les 3 mois » (règles CAL-NAT-ligne, CAL-INT-sequentielle, CAL-TACHE-projet, CAL-ORI-croissance).
 
 Preuve  
-Source : [thompson-1967](#ref-thompson-1967) (à vérifier)
+Source : [thompson-1967](#ref-thompson-1967) (source à contrôler)
 
 Risque  
 Le point de passage est placé trop près de l’échéance pour permettre d’absorber un décalage.
@@ -5180,7 +5184,7 @@ Contexte
 Relation de lien fonctionnel entre Pilote du programme (AM) et Porteuse de l’innovation (SR), interdépendance réciproque, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Pilote sur un seul site : dans les 6 mois » (règles CAL-NAT-fonctionnel, CAL-INT-reciproque, CAL-TACHE-projet, CAL-ORI-croissance).
 
 Preuve  
-Source : [thompson-1967](#ref-thompson-1967) (à vérifier)
+Source : [thompson-1967](#ref-thompson-1967) (source à contrôler)
 
 Risque  
 Le point d’ajustement devient une réunion de plus et se vide de contenu.
@@ -5295,7 +5299,7 @@ Contexte
 Relation de mentorat entre Pilote du programme (AM) et Garante de la relation client (HT), interdépendance mise en commun, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Lancement : dans les 9 mois » (règles CAL-NAT-mentorat, CAL-INT-mise-en-commun, CAL-TACHE-projet, CAL-ORI-croissance).
 
 Preuve  
-Source : [thompson-1967](#ref-thompson-1967) (à vérifier)
+Source : [thompson-1967](#ref-thompson-1967) (source à contrôler)
 
 Risque  
 Le critère commun est posé trop tard et les deux contributions divergent à l’assemblage.
@@ -5387,7 +5391,7 @@ Contexte
 Relation de client-fournisseur interne entre Garant de l’exécution (KB) et Porteuse de l’innovation (SR), interdépendance séquentielle, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Dépôt du dossier CNDP : dans les 3 mois » (règles CAL-NAT-client-fournisseur, CAL-INT-sequentielle, CAL-TACHE-projet, CAL-ORI-croissance).
 
 Preuve  
-Source : [thompson-1967](#ref-thompson-1967) (à vérifier)
+Source : [thompson-1967](#ref-thompson-1967) (source à contrôler)
 
 Risque  
 Le point de passage est placé trop près de l’échéance pour permettre d’absorber un décalage.
@@ -5502,7 +5506,7 @@ Contexte
 Relation de pairs entre Garant de l’exécution (KB) et Garante de la relation client (HT), interdépendance mise en commun, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Lancement : dans les 9 mois » (règles CAL-NAT-pairs, CAL-INT-mise-en-commun, CAL-TACHE-projet, CAL-ORI-croissance).
 
 Preuve  
-Source : [thompson-1967](#ref-thompson-1967) (à vérifier)
+Source : [thompson-1967](#ref-thompson-1967) (source à contrôler)
 
 Risque  
 Le critère commun est posé trop tard et les deux contributions divergent à l’assemblage.
@@ -5594,7 +5598,7 @@ Contexte
 Relation de co-direction entre Porteuse de l’innovation (SR) et Garante de la relation client (HT), interdépendance réciproque, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Pilote sur un seul site : dans les 6 mois » (règles CAL-NAT-co-direction, CAL-INT-reciproque, CAL-TACHE-projet, CAL-ORI-croissance).
 
 Preuve  
-Source : [thompson-1967](#ref-thompson-1967) (à vérifier)
+Source : [thompson-1967](#ref-thompson-1967) (source à contrôler)
 
 Risque  
 Le point d’ajustement devient une réunion de plus et se vide de contenu.
@@ -5630,6 +5634,8 @@ Horizon
 
 Indicateur  
 Relevé à 30 jours : un entretien de vérification a été tenu avec SR et avec HT, et le compte rendu précise quels écarts de la relation SR-HT sont reconnus dans le travail réel.
+
+Textes types de ce chapitre : relecture en attente
 
 ## Analyse d’équipe
 
@@ -5743,7 +5749,7 @@ Constaté
 
 Constaté
 
-Parmi les 6 liens entre personnes ayant consenti à l’analyse d’équipe, l’interdépendance de la tâche est de mise en commun pour 2, de séquence pour 2 et de réciprocité pour 2 (typologie de Thompson, référence à vérifier).
+Parmi les 6 liens entre personnes ayant consenti à l’analyse d’équipe, l’interdépendance de la tâche est de mise en commun pour 2, de séquence pour 2 et de réciprocité pour 2 (typologie de Thompson).
 
 Constaté
 
@@ -5751,7 +5757,7 @@ Le moteur classe le domaine N, le domaine E, le domaine O, le domaine A et le do
 
 Hypothèse
 
-Sur la composition des équipes, Bell (2007, à vérifier) indique que la composition d’une équipe produit des effets variables selon le cadre d’étude. Que ces effets dépendent aussi de la nature de la tâche et de son interdépendance est un énoncé de la méthode de ce rapport, sans attribution à cette référence ; il n’existe pas de mélange universel. La diversité de cette équipe se lit donc par rapport à sa tâche, et non en elle-même.
+Sur la composition des équipes, Bell (2007) indique que la composition d’une équipe produit des effets variables selon le cadre d’étude. Que ces effets dépendent aussi de la nature de la tâche et de son interdépendance est un énoncé de la méthode de ce rapport, sans attribution à cette référence ; il n’existe pas de mélange universel. La diversité de cette équipe se lit donc par rapport à sa tâche, et non en elle-même.
 
 Confiance  
 faible
@@ -5863,7 +5869,7 @@ Faire retracer par l’équipe le parcours de la dernière décision importante 
 
 Constaté
 
-Les profils mesurent des préférences de comportement ; ils ne mesurent pas la sécurité psychologique, c’est-à-dire la croyance partagée qu’on peut prendre la parole, signaler une erreur ou poser une question sans risque (notion d’Edmondson, référence à vérifier). Elle s’instruit par entretien et par observation, jamais par déduction à partir d’un profil.
+Les profils mesurent des préférences de comportement ; ils ne mesurent pas la sécurité psychologique, c’est-à-dire la croyance partagée qu’on peut prendre la parole, signaler une erreur ou poser une question sans risque (notion d’Edmondson). Elle s’instruit par entretien et par observation, jamais par déduction à partir d’un profil.
 
 Constaté
 
@@ -5977,7 +5983,7 @@ Contexte
 Tâche de nature projet à échéances avec des échéances du cas, dans une équipe à disponibilité limitée.
 
 Preuve  
-Source : [thompson-1967](#ref-thompson-1967) (à vérifier)
+Source : [thompson-1967](#ref-thompson-1967) (source à contrôler)
 
 Risque  
 Le rituel peut devenir une formalité de plus, dans une équipe mobilisée à temps partiel.
@@ -6000,7 +6006,7 @@ Contexte
 Les profils ne mesurent pas la sécurité psychologique : seule l’instruction par entretien et observation permet de la lire.
 
 Preuve  
-Source : [edmondson-1999](#ref-edmondson-1999) (à vérifier)
+Source : [edmondson-1999](#ref-edmondson-1999) (source à contrôler)
 
 Risque  
 Des entretiens menés par un supérieur direct peuvent biaiser les réponses (désirabilité sociale).
@@ -6120,11 +6126,11 @@ Confronter cette position d’ensemble à la perception du commanditaire et de l
 
 Constaté
 
-Configuration saisie au cas : structure « bureaucratie mécaniste » (Mintzberg, à vérifier), culture dominante « hiérarchie » (Cameron et Quinn, à vérifier), orientation des objectifs « croissance » (March, à vérifier).
+Configuration saisie au cas : structure « bureaucratie mécaniste » (Mintzberg), culture dominante « hiérarchie » (Cameron et Quinn), orientation des objectifs « croissance » (March).
 
 Hypothèse
 
-Orientation stratégique = croissance. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Faits : domaine E, niveau plutôt haut (valeur d’équipe 3,48) ; domaine O, niveau plutôt haut (valeur d’équipe 3,64). Cadre de lecture : distinction entre exploration et exploitation de March, référence à vérifier.
+Orientation stratégique = croissance. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Faits : domaine E, niveau plutôt haut (valeur d’équipe 3,48) ; domaine O, niveau plutôt haut (valeur d’équipe 3,64). Cadre de lecture : distinction entre exploration et exploitation de March.
 
 Confiance  
 moyenne
@@ -6134,7 +6140,7 @@ Confirmer en entretien avec le commanditaire et avec des membres de l’équipe 
 
 Hypothèse
 
-Structure = bureaucratie mécaniste. Dans une bureaucratie mécaniste, les processus standardisés dominent : il se peut que la rigueur soit directement valorisée et que l’appétit pour la nouveauté demande des espaces dédiés pour s’exprimer. À confirmer en entretien. Faits : domaine C, niveau plutôt haut (valeur d’équipe 3,80) ; domaine O, niveau plutôt haut (valeur d’équipe 3,64). Cadre de lecture : configurations de Mintzberg, référence à vérifier.
+Structure = bureaucratie mécaniste. Dans une bureaucratie mécaniste, les processus standardisés dominent : il se peut que la rigueur soit directement valorisée et que l’appétit pour la nouveauté demande des espaces dédiés pour s’exprimer. À confirmer en entretien. Faits : domaine C, niveau plutôt haut (valeur d’équipe 3,80) ; domaine O, niveau plutôt haut (valeur d’équipe 3,64). Cadre de lecture : configurations de Mintzberg.
 
 Confiance  
 moyenne
@@ -6144,7 +6150,7 @@ Confirmer en entretien avec le commanditaire et avec des membres de l’équipe 
 
 Hypothèse
 
-Culture dominante = hiérarchie. Une culture de hiérarchie valorise la maîtrise des processus et la stabilité : il se peut que la rigueur y soit valorisée et que les profils plus ouverts à la nouveauté aient besoin d’un cadre pour proposer. À confirmer en entretien. Faits : domaine C, niveau plutôt haut (valeur d’équipe 3,80) ; domaine O, niveau plutôt haut (valeur d’équipe 3,64). Cadre de lecture : modèle des valeurs concurrentes de Cameron et Quinn, référence à vérifier.
+Culture dominante = hiérarchie. Une culture de hiérarchie valorise la maîtrise des processus et la stabilité : il se peut que la rigueur y soit valorisée et que les profils plus ouverts à la nouveauté aient besoin d’un cadre pour proposer. À confirmer en entretien. Faits : domaine C, niveau plutôt haut (valeur d’équipe 3,80) ; domaine O, niveau plutôt haut (valeur d’équipe 3,64). Cadre de lecture : modèle des valeurs concurrentes de Cameron et Quinn.
 
 Confiance  
 moyenne
@@ -6164,7 +6170,7 @@ Demander au commanditaire quelle part des objectifs relève de la nouveauté et 
 
 Hypothèse
 
-Les lectures de structure et de culture valorisent la maîtrise des processus, quand l’orientation sollicite la nouveauté. En position d’ensemble, le domaine C (rigueur et constance, conscience) se situe au niveau plutôt haut et le domaine O (ouverture) au niveau plutôt haut : l’ensemble dispose, au niveau agrégé, des deux ressources. Selon le modèle de congruence (Nadler et Tushman, à vérifier), la question porte alors moins sur les profils que sur l’espace laissé à l’ouverture dans un cadre de processus standardisés.
+Les lectures de structure et de culture valorisent la maîtrise des processus, quand l’orientation sollicite la nouveauté. En position d’ensemble, le domaine C (rigueur et constance, conscience) se situe au niveau plutôt haut et le domaine O (ouverture) au niveau plutôt haut : l’ensemble dispose, au niveau agrégé, des deux ressources. Selon le modèle de congruence (Nadler et Tushman), la question porte alors moins sur les profils que sur l’espace laissé à l’ouverture dans un cadre de processus standardisés.
 
 Confiance  
 faible
@@ -6264,7 +6270,7 @@ Autonomie encadrée : le siège valide le budget et les choix d’outils, la fil
 
 Constaté
 
-Culture d’organisation de la maison mère : marché ; de la filiale : clan ; culture dominante saisie pour l’organisation : hiérarchie (quadrants de Cameron et Quinn, références à vérifier). Ce sont des cultures d’entités, jamais des traits attribués à une personne.
+Culture d’organisation de la maison mère : marché ; de la filiale : clan ; culture dominante saisie pour l’organisation : hiérarchie (quadrants de Cameron et Quinn). Ce sont des cultures d’entités, jamais des traits attribués à une personne.
 
 Hypothèse
 
@@ -6318,7 +6324,7 @@ Demander, pour trois décisions récentes, quelle logique (siège, filiale, mét
 
 Constaté
 
-Piège 1, les grilles culturelles nationales : celles de Hofstede, de l’étude GLOBE (House et al.), de Meyer (carte culturelle) et de Hall (contexte élevé ou faible) décrivent des tendances de pays, non des personnes. Les appliquer à un individu est une erreur de raisonnement (erreur écologique). À l’usage, elles ne servent qu’à lire les règles du jeu d’une organisation et les frottements entre ses sites. Références à vérifier.
+Piège 1, les grilles culturelles nationales : celles de Hofstede, de l’étude GLOBE (House et al.), de Meyer (carte culturelle) et de Hall (contexte élevé ou faible) décrivent des tendances de pays, non des personnes. Les appliquer à un individu est une erreur de raisonnement (erreur écologique). À l’usage, elles ne servent qu’à lire les règles du jeu d’une organisation et les frottements entre ses sites.
 
 Constaté
 
@@ -6450,7 +6456,7 @@ Contexte
 Une orientation de croissance dans une organisation à processus standardisés demande d’exploiter l’existant et d’explorer le nouveau à la fois.
 
 Preuve  
-Source : [march-1991](#ref-march-1991) (à vérifier)
+Source : [march-1991](#ref-march-1991) (source à contrôler)
 
 Risque  
 L’espace dédié peut devenir une boîte à idées sans suite et décourager l’ouverture.
@@ -6583,7 +6589,7 @@ Relever, avant la formation, trois demandes de décision récentes adressées au
 
 Hypothèse
 
-Formation 2, savoir-faire comportementaux de donner et de recevoir un retour d’information dans un climat de confiance. Objectifs d’apprentissage : formuler un fait observable plutôt qu’une interprétation, accueillir une remarque sans la lire comme un jugement, poser une règle d’équipe sur les erreurs. Modalités : un atelier de demi-journée en équipe puis deux exercices courts en binôme. La notion de sécurité psychologique, issue des travaux d’Edmondson (référence à vérifier), sert de fil conducteur. Le contexte justifie ce choix : un précédent outil d’évaluation a laissé de la méfiance (CT-09) et l’étendue de l’équipe sur N4 (Gêne en situation sociale) est de 2,25 points.
+Formation 2, savoir-faire comportementaux de donner et de recevoir un retour d’information dans un climat de confiance. Objectifs d’apprentissage : formuler un fait observable plutôt qu’une interprétation, accueillir une remarque sans la lire comme un jugement, poser une règle d’équipe sur les erreurs. Modalités : un atelier de demi-journée en équipe puis deux exercices courts en binôme. La notion de sécurité psychologique, issue des travaux d’Edmondson, sert de fil conducteur. Le contexte justifie ce choix : un précédent outil d’évaluation a laissé de la méfiance (CT-09) et l’étendue de l’équipe sur N4 (Gêne en situation sociale) est de 2,25 points.
 
 Confiance  
 faible
@@ -6625,7 +6631,7 @@ Relever, sur les décisions des derniers mois, le délai entre la demande et la 
 
 Hypothèse
 
-Rituels : un point court quotidien pour les relations d’interdépendance réciproque, un point hebdomadaire d’équipe, une revue mensuelle des décisions et un bilan à chaque jalon. Dans une interdépendance réciproque, le travail de l’un devient tour à tour l’entrée et la sortie du travail de l’autre : l’ajustement mutuel y est plus fréquent, d’après la typologie de Thompson (référence à vérifier). Chaque rituel a une durée bornée, un ordre du jour fixe et un compte rendu d’une page, pour respecter le temps disponible (CT-07).
+Rituels : un point court quotidien pour les relations d’interdépendance réciproque, un point hebdomadaire d’équipe, une revue mensuelle des décisions et un bilan à chaque jalon. Dans une interdépendance réciproque, le travail de l’un devient tour à tour l’entrée et la sortie du travail de l’autre : l’ajustement mutuel y est plus fréquent, d’après la typologie de Thompson. Chaque rituel a une durée bornée, un ordre du jour fixe et un compte rendu d’une page, pour respecter le temps disponible (CT-07).
 
 Confiance  
 moyenne
@@ -6671,7 +6677,7 @@ Vérifier en réunion de jalon que le siège a confirmé les règles de décisio
 
 Hypothèse
 
-À 90 jours : bilan du plan, deuxième relevé des indicateurs d’équipe comparé à la référence de départ, évaluation des formations aux niveaux 1 et 2 de Kirkpatrick (référence à vérifier), les niveaux 3 et 4 restant hors du plan, décision du commanditaire sur la poursuite. Familles d’actions engagées : mesure. Responsables : Pilote du programme pour le bilan, avec le consultant qualifié désigné par Tenga Conseil qui relit et signe le bilan.
+À 90 jours : bilan du plan, deuxième relevé des indicateurs d’équipe comparé à la référence de départ, évaluation des formations aux niveaux 1 et 2 de Kirkpatrick, les niveaux 3 et 4 restant hors du plan, décision du commanditaire sur la poursuite. Familles d’actions engagées : mesure. Responsables : Pilote du programme pour le bilan, avec le consultant qualifié désigné par Tenga Conseil qui relit et signe le bilan.
 
 Confiance  
 faible
@@ -6717,7 +6723,7 @@ Faire valider par le commanditaire la définition de chaque indicateur et la sou
 
 Hypothèse
 
-Évaluation des formations selon les niveaux de Kirkpatrick (référence à vérifier) : niveau 1, réaction des participants, à la fin de chaque session ; niveau 2, apprentissage, par un exercice pratique avant puis après la session. Ces deux niveaux sont les seuls atteignables dans le plan à 90 jours. Les niveaux 3 (comportement) et 4 (résultats) demandent un recul plus long : ils sont hors du plan, à mesurer plus tard, et les indicateurs d’équipe à 90 jours ne les remplacent pas.
+Évaluation des formations selon les niveaux de Kirkpatrick : niveau 1, réaction des participants, à la fin de chaque session ; niveau 2, apprentissage, par un exercice pratique avant puis après la session. Ces deux niveaux sont les seuls atteignables dans le plan à 90 jours. Les niveaux 3 (comportement) et 4 (résultats) demandent un recul plus long : ils sont hors du plan, à mesurer plus tard, et les indicateurs d’équipe à 90 jours ne les remplacent pas.
 
 Confiance  
 moyenne
@@ -6901,7 +6907,7 @@ Horizon
 Indicateur  
 Délai de décision entre la filiale et le siège, relevé avant la formation puis à 90 jours (source : journal des décisions du programme). Cible : délai inférieur à celui de départ à 90 jours, l’objectif du cas étant de le réduire de moitié en 18 mois.
 
-#### Formation : dispenser un module de savoir-faire comportementaux sur le retour d’information et la sécurité psychologique (notion d’Edmondson, référence à vérifier), en lien avec la méfiance héritée du précédent outil.
+#### Formation : dispenser un module de savoir-faire comportementaux sur le retour d’information et la sécurité psychologique (notion d’Edmondson), en lien avec la méfiance héritée du précédent outil.
 
 Donnée  
 Étendue de 2,25 points sur N4 (Gêne en situation sociale) dans l’équipe ; contrainte CT-09 (méfiance héritée d’un précédent outil d’évaluation).
@@ -6910,7 +6916,7 @@ Contexte
 La démarche touche aux personnes dans un climat de méfiance : la transparence sur l’usage des résultats est un préalable (règle CONTR-heritage).
 
 Preuve  
-Source : [edmondson-1999](#ref-edmondson-1999) (à vérifier)
+Source : [edmondson-1999](#ref-edmondson-1999) (source à contrôler)
 
 Risque  
 Le module peut être perçu comme une évaluation des comportements ; il est présenté comme un entraînement, sans restitution individuelle au hiérarchique.
@@ -6993,7 +6999,7 @@ Horizon
 Indicateur  
 Délai moyen de décision entre la filiale et le siège, relevé avant les règles puis à 90 jours (source : journal des décisions du programme). Cible : délai inférieur à celui de départ à 90 jours, moitié du délai de départ en 18 mois (objectif du cas).
 
-#### Organisation : instaurer des rituels bornés (point court, point hebdomadaire, revue mensuelle des décisions, bilan de jalon), plus fréquents là où l’interdépendance est réciproque (référence à vérifier).
+#### Organisation : instaurer des rituels bornés (point court, point hebdomadaire, revue mensuelle des décisions, bilan de jalon), plus fréquents là où l’interdépendance est réciproque.
 
 Donnée  
 2 relations à interdépendance réciproque sur 6 ; indicateur du cas : taux de participation aux rituels d’équipe du projet.
@@ -7002,7 +7008,7 @@ Contexte
 Équipe répartie entre Casablanca et Dubaï avec un point hebdomadaire avec Paris ; temps disponible limité (CT-07).
 
 Preuve  
-Source : [thompson-1967](#ref-thompson-1967) (à vérifier)
+Source : [thompson-1967](#ref-thompson-1967) (source à contrôler)
 
 Risque  
 Des rituels trop nombreux alourdissent le travail ; chaque rituel est supprimé s’il n’a pas produit de décision durant deux jalons.
@@ -7062,7 +7068,7 @@ Horizon
 Indicateur  
 Les trois indicateurs relevés à la référence de départ (avant le premier jour), à 60 jours et à 90 jours (source : journal des décisions, tableau de bord du lancement, feuilles de présence). Cible : trois indicateurs relevés aux trois dates, valeur de départ consignée avant le premier jour.
 
-#### Mesure : évaluer chaque formation aux niveaux 1 et 2 de Kirkpatrick (réaction, apprentissage), référence à vérifier, les niveaux 3 et 4 restant hors du plan.
+#### Mesure : évaluer chaque formation aux niveaux 1 et 2 de Kirkpatrick (réaction, apprentissage), les niveaux 3 et 4 restant hors du plan.
 
 Donnée  
 3 formations prévues dans le plan, dans une enveloppe d’accompagnement plafonnée sur 12 mois (CT-06).
@@ -7071,7 +7077,7 @@ Contexte
 Le budget est négociable mais plafonné : l’évaluation doit coûter peu de temps et s’appuyer sur des outils courts.
 
 Preuve  
-Source : [kirkpatrick](#ref-kirkpatrick) (à vérifier)
+Source : [kirkpatrick](#ref-kirkpatrick) (source à contrôler)
 
 Risque  
 Les niveaux 3 et 4 sont les plus utiles et les plus tardifs : hors du plan, ils risquent de ne jamais être mesurés si personne n’en reçoit la charge après le bilan.
@@ -7110,19 +7116,21 @@ Nombre de retraits de consentement et réponses aux trois questions ouvertes, re
 
 ## Références
 
-- Bell, 2007, Journal of Applied Psychology (à vérifier)
-- Edmondson, 1999, Administrative Science Quarterly (à vérifier)
-- Mintzberg, 1979 (à vérifier)
-- Cameron et Quinn, 1999 (à vérifier)
-- Nadler et Tushman, 1980 (à vérifier)
-- Thompson, 1967 (à vérifier)
-- March, 1991 (à vérifier)
-- Kirkpatrick (évaluation des formations) (à vérifier)
-- Hofstede (dimensions culturelles nationales) (à vérifier)
-- House et al., 2004 (étude GLOBE) (à vérifier)
-- Meyer, 2014, The Culture Map (à vérifier)
-- Hall, 1976, Beyond Culture (à vérifier)
+| Référence                                         | Source contrôlée |
+|---------------------------------------------------|------------------|
+| Bell, 2007, Journal of Applied Psychology         | Non              |
+| Edmondson, 1999, Administrative Science Quarterly | Non              |
+| Mintzberg, 1979                                   | Non              |
+| Cameron et Quinn, 1999                            | Non              |
+| Nadler et Tushman, 1980                           | Non              |
+| Thompson, 1967                                    | Non              |
+| March, 1991                                       | Non              |
+| Kirkpatrick (évaluation des formations)           | Non              |
+| Hofstede (dimensions culturelles nationales)      | Non              |
+| House et al., 2004 (étude GLOBE)                  | Non              |
+| Meyer, 2014, The Culture Map                      | Non              |
+| Hall, 1976, Beyond Culture                        | Non              |
 
-Références non vérifiées à la date du rapport : à vérifier avant toute citation externe.
+« Non » : la référence est citée de mémoire et sa source n'a pas été contrôlée. À contrôler avant toute citation externe.
 
 Rapport produit par script à partir des faits du moteur ; aucun nombre n'est calculé par un modèle.

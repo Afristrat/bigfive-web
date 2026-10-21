@@ -142,14 +142,15 @@ test('seuls des constats reprennent des chiffres de faits ; les lectures restent
   }
 });
 
-test('les blocs de la bibliothèque (apport, coût, question) sont repris avec bloc_ids et la mention « bloc non relu »', () => {
+test('les blocs de la bibliothèque (apport, coût, question) sont repris avec bloc_ids, sans mention de relecture dans la prose', () => {
   for (const rel of ctx.faits.relations) {
     for (const rubrique of [1, 2]) {
       const avecBloc = sortie.niveau.sections.find((s) => s.relation_id === rel.id && s.rubrique === rubrique).paragraphes.filter((p) => p.bloc_ids);
       assert.equal(avecBloc.length, facettesRetenues(rel).length, `${rel.id} rubrique ${rubrique} : facettes retenues`);
       assert.ok(avecBloc.length >= 2 && avecBloc.length <= 3, `${rel.id} : deux à trois facettes`);
       avecBloc.forEach((p, i) => {
-        assert.ok(p.texte.includes('bloc non relu'), p.id);
+        assert.ok(!/non relus?/.test(p.texte), p.id);
+        assert.ok(p.texte.includes(`bloc ${p.bloc_ids[0]}`), p.id);
         assert.ok(p.verification.includes('«'), `${p.id} question d’entretien`);
         const k = facettesRetenues(rel)[i].k;
         assert.ok(p.bloc_ids.every((b) => b.startsWith(`${k}/`)), `${p.id} ${p.bloc_ids}`);
@@ -259,7 +260,7 @@ const rapportFactice = (niveau, recommandations) => {
     avertissements: [],
     niveaux: [niveau],
     recommandations,
-    references: ids.map((id) => ({ id, citation: ctx.refs.references.find((x) => x.id === id)?.citation ?? id, statut: 'à vérifier' }))
+    references: ids.map((id) => ({ id, citation: ctx.refs.references.find((x) => x.id === id)?.citation ?? id, statut: 'source à contrôler' }))
   };
 };
 const CATEGORIES_CONTENU = ['chiffre_absent_des_entrees', 'terme_interdit', 'comparaison_population', 'pourcentage_compatibilite', 'decision_emploi', 'moyenne_nationale_a_personne', 'references'];

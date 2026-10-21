@@ -2,6 +2,7 @@
 // auditer({rapport, faits, cas, profils, references}) -> { defauts: [{categorie, id, extrait, message}], comptes }
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { sourceControlee, STATUT_SOURCE_A_CONTROLER, STATUT_SOURCE_CONTROLEE } from '../rapport/outils.mjs';
 
 export const CATEGORIES = [
   'chiffre_absent_des_entrees',
@@ -18,7 +19,7 @@ export const STRUCTUREL = JSON.parse(
 );
 
 const NIVEAUX_REQUIS = ['n1-individuel', 'n2-relations', 'n3-equipe', 'n4-organisation', 'n5-accompagnement'];
-const CLES_TECHNIQUES = new Set(['id', 'version', 'empreinte_entrees', 'bloc_ids', 'reference_id', 'niveau', 'statut', 'confiance']);
+const CLES_TECHNIQUES = new Set(['id', 'version', 'empreinte_entrees', 'bloc_ids', 'reference_id', 'niveau', 'statut', 'confiance', 'relecture', 'relue_par', 'relue_le', 'controlee_par', 'controlee_le']);
 const MOIS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
 const L = '\\p{L}';
@@ -208,7 +209,12 @@ function citationsDe(texte, ctx) {
 }
 
 // ---------------------------------------------------------------- audit
-export function auditer({ rapport, faits, cas, profils, references }) {
+/**
+ * html (facultatif) : le HTML rendu du rapport. S'il est fourni, l'audit exige aussi que le statut de contrôle de
+ * chaque référence soit VISIBLE dans la liste des références (ligne, colonne « Source contrôlée ») et que le bandeau
+ * de tête annonce le nombre exact de références à contrôler tant qu'il en reste.
+ */
+export function auditer({ rapport, faits, cas, profils, references, html }) {
   const defauts = [];
   const ajouter = (categorie, id, ext, message) => defauts.push({ categorie, id, extrait: extrait(ext), message });
   const textes = textesVisibles(rapport);
@@ -290,7 +296,29 @@ export function auditer({ rapport, faits, cas, profils, references }) {
   const dansRapport = new Map((rapport?.references ?? []).map((r) => [r.id, r]));
   for (const r of rapport?.references ?? []) {
     if (!autorisees.has(r.id)) ajouter('references', `references/${r.id}`, r.citation ?? r.id, 'référence hors de la liste autorisée');
-    if (typeof r.statut !== 'string' || !r.statut.includes('à vérifier')) ajouter('references', `references/${r.id}`, r.citation ?? r.id, 'mention « à vérifier » absente');
+    if (r.statut !== STATUT_SOURCE_A_CONTROLER && r.statut !== STATUT_SOURCE_CONTROLEE) {
+      ajouter('references', `references/${r.id}`, r.citation ?? r.id, `statut de contrôle de la source absent ou invalide (« ${STATUT_SOURCE_A_CONTROLER} » ou « ${STATUT_SOURCE_CONTROLEE} » attendu)`);
+    } else if (r.statut === STATUT_SOURCE_CONTROLEE) {
+      if (!sourceControlee(r)) ajouter('references', `references/${r.id}`, r.citation ?? r.id, 'source contrôlée sans contrôleur nommé ou sans date ISO');
+      else if (autorisees.has(r.id) && !sourceControlee(autorisees.get(r.id))) ajouter('references', `references/${r.id}`, r.citation ?? r.id, 'contrôle revendiqué par le rapport mais absent du registre des références autorisées');
+    } else if (autorisees.has(r.id) && sourceControlee(autorisees.get(r.id))) {
+      ajouter('references', `references/${r.id}`, r.citation ?? r.id, 'source contrôlée dans le registre mais présentée « à contrôler » dans le rapport');
+    }
+  }
+  if (typeof html === 'string') {
+    const aControler = (rapport?.references ?? []).filter((r) => !sourceControlee(r));
+    const bandeau = /<div class="bandeau[^"]*" id="bandeau-relecture"[^>]*>([\s\S]*?)<\/div>/.exec(html)?.[1] ?? '';
+    if (!bandeau) ajouter('references', 'rendu/bandeau', 'bandeau de relecture', 'bandeau de relecture absent du rendu');
+    else if (aControler.length) {
+      const attendu = `${aControler.length} référence${aControler.length > 1 ? 's' : ''} à contrôler`;
+      if (!bandeau.includes(attendu)) ajouter('references', 'rendu/bandeau', bandeau.replace(/<[^>]+>/g, ''), `bandeau sans le compteur « ${attendu} »`);
+    }
+    if ((rapport?.references ?? []).length && !/<th[^>]*>Source contrôlée<\/th>/.test(html)) ajouter('references', 'rendu/references', 'liste des références', 'colonne « Source contrôlée » absente de la liste des références');
+    for (const r of rapport?.references ?? []) {
+      const ligne = new RegExp(`<tr id="ref-${r.id.replace(/[^A-Za-z0-9_-]/g, '_')}"[^>]*>([^]*?)</tr>`).exec(html)?.[1] ?? '';
+      const attendu = sourceControlee(r) ? 'oui' : 'non';
+      if (!ligne.includes(`data-controle="${attendu}"`)) ajouter('references', `rendu/references/${r.id}`, r.citation ?? r.id, `statut de contrôle « ${attendu === 'oui' ? 'contrôlée' : 'à contrôler'} » non visible dans la liste des références`);
+    }
   }
   for (const { id, texte } of textes) {
     const dansListe = id.startsWith('references/');

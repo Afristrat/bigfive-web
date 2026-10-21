@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { auditer, CATEGORIES } from './audit.mjs';
+import { rendreHtml } from '../rapport/rendu.mjs';
 
 const ici = (p) => fileURLToPath(new URL(p, import.meta.url));
 const lire = (p) => JSON.parse(readFileSync(ici(p), 'utf8'));
@@ -100,14 +101,31 @@ test('mutation rouge references : auteur et année hors liste', () => {
   rouge(avecTexte('Voir Smith et al. pour le détail.'), 'references');
   rouge(avecTexte('Voir Edmondson, 2005 pour le détail.'), 'references');
 });
-test('mutation rouge references : mention « à vérifier » retirée', () => {
+test('mutation rouge references : statut de contrôle retiré ou invalide', () => {
+  for (const statut of ['vérifiée', 'à vérifier', undefined]) {
+    const r = copie(sain);
+    if (statut === undefined) delete r.references[0].statut; else r.references[0].statut = statut;
+    rouge(r, 'references');
+  }
+});
+test('mutation rouge references : « source contrôlée » sans contrôleur, sans date ou absente du registre', () => {
   const r = copie(sain);
-  r.references[0].statut = 'vérifiée';
+  r.references[0].statut = 'source contrôlée';
   rouge(r, 'references');
+  r.references[0].controlee_par = 'Amine Mansouri';
+  rouge(r, 'references');
+  r.references[0].controlee_le = '2026-10-22';
+  rouge(r, 'references'); // contrôle revendiqué mais le registre ne le porte pas
+  const registre = copie(references);
+  Object.assign(registre.references.find((x) => x.id === r.references[0].id), { statut: 'source contrôlée', controlee_par: 'Amine Mansouri', controlee_le: '2026-10-22' });
+  assert.deepEqual(auditer({ rapport: r, faits, cas, profils, references: registre }).defauts, []);
+  // l'inverse : le registre porte le contrôle, le rapport présente encore « à contrôler »
+  const r2 = copie(sain);
+  assert.ok(auditer({ rapport: r2, faits, cas, profils, references: registre }).comptes.references > 0);
 });
 test('mutation rouge references : id hors liste', () => {
   const r = copie(sain);
-  r.references.push({ id: 'dupont-2020', citation: 'Dupont, 2020', statut: 'à vérifier' });
+  r.references.push({ id: 'dupont-2020', citation: 'Dupont, 2020', statut: 'source à contrôler' });
   rouge(r, 'references');
 });
 test('mutation rouge references : référence citée mais absente de references', () => {
@@ -127,7 +145,7 @@ test('référence interculturelle citée sans liste : défaut ; avec liste et me
   const texte = 'La carte culturelle de Meyer éclaire les frottements entre sites.';
   rouge(avecTexte(texte), 'references');
   const r = avecTexte(texte);
-  r.references.push({ id: 'meyer-2014', citation: 'Meyer, 2014, The Culture Map', statut: 'à vérifier' });
+  r.references.push({ id: 'meyer-2014', citation: 'Meyer, 2014, The Culture Map', statut: 'source à contrôler' });
   vert(r);
 });
 
@@ -255,4 +273,55 @@ test('faux positif évité : le nom du domaine « Névrosisme » n’est pas une
 test('mutation rouge : une source inventée écrite « Nom année » sans virgule est signalée', () => {
   rouge(avecTexte('Voir Smith 2019 pour le détail.'), 'references');
   rouge(avecTexte('Selon Durand 2021, la composition compte.'), 'references');
+});
+
+// ------------------------------------------------ visibilité du statut de contrôle dans le rendu (option html)
+const fusion = (rapport, html) => auditer({ rapport, faits, cas, profils, references, html });
+const rendu = (rapport) => rendreHtml({ rapport, cas: { organisation: { nom: 'X (fictif)' }, etiquette: 'FICTIF' }, faits: {}, profils: [], bib: { facettes: [] } });
+
+test('rendu : le statut de contrôle de chaque référence est visible dans la liste et dans le bandeau (audit vert)', () => {
+  const r = copie(sain);
+  assert.deepEqual(fusion(r, rendu(r)).defauts, []);
+});
+
+test('mutation rouge rendu : bandeau absent, compteur faux, colonne ou cellule de statut retirées', () => {
+  const r = copie(sain);
+  const html = rendu(r);
+  const n = r.references.length;
+  const mutations = {
+    'bandeau absent': html.replace('id="bandeau-relecture"', 'id="autre"'),
+    'compteur faux': html.replace(`${n} références à contrôler`, `${n + 1} références à contrôler`),
+    'colonne retirée': html.replace('<th scope="col">Source contrôlée</th>', '<th scope="col">Autre</th>'),
+    'cellule retirée': html.replace('data-controle="non"', 'data-x="non"'),
+    'cellule inversée': html.replace('data-controle="non"', 'data-controle="oui"')
+  };
+  for (const [nom, h] of Object.entries(mutations)) {
+    assert.notEqual(h, html, nom);
+    assert.ok(fusion(r, h).comptes.references > 0, nom);
+  }
+});
+
+test('rendu : une référence contrôlée est vue « oui » et le bandeau ne réclame plus que celles qui restent', () => {
+  const r = copie(sain);
+  const registre = copie(references);
+  Object.assign(registre.references.find((x) => x.id === r.references[0].id), { statut: 'source contrôlée', controlee_par: 'Amine Mansouri', controlee_le: '2026-10-22' });
+  Object.assign(r.references[0], { statut: 'source contrôlée', controlee_par: 'Amine Mansouri', controlee_le: '2026-10-22' });
+  const html = rendu(r);
+  assert.ok(html.includes('data-controle="oui"') && html.includes('1 référence à contrôler'));
+  assert.deepEqual(auditer({ rapport: r, faits, cas, profils, references: registre, html }).defauts, []);
+});
+
+test('CLI avec --html : audit du rendu, code 0 puis code 1 si le compteur du bandeau est faux', () => {
+  const dossier = mkdtempSync(join(tmpdir(), 'audit-html-'));
+  const r = copie(sain);
+  const rapportChemin = join(dossier, 'rapport.json');
+  writeFileSync(rapportChemin, JSON.stringify(r));
+  const html = rendu(r);
+  const bon = join(dossier, 'bon.html');
+  const mauvais = join(dossier, 'mauvais.html');
+  writeFileSync(bon, html);
+  writeFileSync(mauvais, html.replace(`${r.references.length} références à contrôler`, '0 référence à contrôler'));
+  const lancer = (h) => spawnSync(process.execPath, [ici('./audit-cli.mjs'), rapportChemin, ici('./fixtures/faits.json'), ici('./fixtures/cas.json'), ici('./fixtures/profils.json'), ici('../references-autorisees.json'), '--html', h], { encoding: 'utf8' });
+  assert.equal(lancer(bon).status, 0, lancer(bon).stdout);
+  assert.equal(lancer(mauvais).status, 1);
 });

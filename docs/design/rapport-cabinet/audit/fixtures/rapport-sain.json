@@ -24,6 +24,6 @@
     { "id": "r2", "niveau": "n5-accompagnement", "texte": "Prévoir une séance de coaching sur la prise de parole.", "donnee": "Facette E6 de KB à 3,25.", "contexte": "Site de Casablanca.", "preuve": { "niveau": "hypothese", "reference_id": null }, "risque": "Séance perçue comme une évaluation.", "responsable": "Consultant qualifié", "horizon": "60 jours", "indicateur": "Retour de KB en entretien." }
   ],
   "references": [
-    { "id": "edmondson-1999", "citation": "Edmondson, 1999, Administrative Science Quarterly", "statut": "à vérifier" },
-    { "id": "kirkpatrick", "citation": "Kirkpatrick (évaluation des formations)", "statut": "à vérifier" }
+    { "id": "edmondson-1999", "citation": "Edmondson, 1999, Administrative Science Quarterly", "statut": "source à contrôler" },
+    { "id": "kirkpatrick", "citation": "Kirkpatrick (évaluation des formations)", "statut": "source à contrôler" }
   ] }

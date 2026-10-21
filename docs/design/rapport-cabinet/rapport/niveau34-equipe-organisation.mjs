@@ -213,7 +213,7 @@ export function construire(ctx) {
   const specDiv = [
     c(`Tâche de l'équipe : ${minusc(tache.description)}. Nature de la tâche saisie au cas : ${natureFr}.`),
     c(`Échéances du cas : ${(tache.echeances ?? []).join(' ; ')}.`),
-    c(`Parmi les ${nRel} liens entre personnes ayant consenti à l'analyse d'équipe, l'interdépendance de la tâche est de mise en commun pour ${nMc}, de séquence pour ${nSq} et de réciprocité pour ${nRc} (typologie de ${nom('thompson-1967')}, référence à vérifier).`)
+    c(`Parmi les ${nRel} liens entre personnes ayant consenti à l'analyse d'équipe, l'interdépendance de la tâche est de mise en commun pour ${nMc}, de séquence pour ${nSq} et de réciprocité pour ${nRc} (typologie de ${nom('thompson-1967')}).`)
   ];
   if (exclus.length) {
     specDiv.push(c("La dispersion de l'équipe n'est pas reprise ici : le moteur l'a calculée avant le retrait d'un consentement, et elle doit être recalculée sans la personne exclue avant toute lecture."));
@@ -232,7 +232,7 @@ export function construire(ctx) {
     specDiv.push(c(f.join(' ')));
   }
   specDiv.push(h(
-    `Sur la composition des équipes, ${nom('bell-2007')} (2007, à vérifier) indique que la composition d'une équipe produit des effets variables selon le cadre d'étude. Que ces effets dépendent aussi de la nature de la tâche et de son interdépendance est un énoncé de la méthode de ce rapport, sans attribution à cette référence ; il n'existe pas de mélange universel. La diversité de cette équipe se lit donc par rapport à sa tâche, et non en elle-même.`,
+    `Sur la composition des équipes, ${nom('bell-2007')} (2007) indique que la composition d'une équipe produit des effets variables selon le cadre d'étude. Que ces effets dépendent aussi de la nature de la tâche et de son interdépendance est un énoncé de la méthode de ce rapport, sans attribution à cette référence ; il n'existe pas de mélange universel. La diversité de cette équipe se lit donc par rapport à sa tâche, et non en elle-même.`,
     'faible',
     "Vérifier la référence avant diffusion, puis demander à l'équipe ce qui, dans sa composition, aide ou gêne son travail commun."
   ));
@@ -291,7 +291,7 @@ export function construire(ctx) {
   if (hier.length) facteurs.push(`des liens de ligne ou de mentorat au sein de l'équipe (${ids(hier)})`);
   if (langues.length > 1) facteurs.push('des langues de passation différentes');
   const secSecu = sec(3, 'securite-psychologique', 'Sécurité psychologique à instruire', [
-    c(`Les profils mesurent des préférences de comportement ; ils ne mesurent pas la sécurité psychologique, c'est-à-dire la croyance partagée qu'on peut prendre la parole, signaler une erreur ou poser une question sans risque (notion d'${nom('edmondson-1999')}, référence à vérifier). Elle s'instruit par entretien et par observation, jamais par déduction à partir d'un profil.`),
+    c(`Les profils mesurent des préférences de comportement ; ils ne mesurent pas la sécurité psychologique, c'est-à-dire la croyance partagée qu'on peut prendre la parole, signaler une erreur ou poser une question sans risque (notion d'${nom('edmondson-1999')}). Elle s'instruit par entretien et par observation, jamais par déduction à partir d'un profil.`),
     facteurs.length ? c(`Éléments du cas qui invitent à l'instruire : ${facteurs.join(' ; ')}.`) : null,
     h(
       `Il se peut que la prise de parole sur les erreurs, les doutes et les désaccords soit freinée là où ces éléments se combinent${hier.length ? `, en particulier dans les liens où une personne oriente ou décide pour l'autre (${ids(hier)})` : ''}. Cette hypothèse est la plus fragile de ce niveau : elle ne repose sur aucune donnée de profil.`,
@@ -392,10 +392,10 @@ export function construire(ctx) {
   let secAdeq = null;
   if (agregatAutorise) {
     const spec = [
-      c(`Configuration saisie au cas : structure ${gui(o.structure)} (${nom('mintzberg-1979')}, à vérifier), culture dominante ${gui(o.culture)} (${nom('cameron-quinn-1999')}, à vérifier), orientation des objectifs ${gui(strat.orientation)} (${nom('march-1991')}, à vérifier).`)
+      c(`Configuration saisie au cas : structure ${gui(o.structure)} (${nom('mintzberg-1979')}), culture dominante ${gui(o.culture)} (${nom('cameron-quinn-1999')}), orientation des objectifs ${gui(strat.orientation)} (${nom('march-1991')}).`)
     ];
     for (const x of lectures) {
-      spec.push(h(`${x.lecture} Cadre de lecture : ${cadre(x.regle)}, référence à vérifier.`, 'moyenne', "Confirmer en entretien avec le commanditaire et avec des membres de l'équipe que la configuration décrite correspond à ce qu'ils vivent."));
+      spec.push(h(`${x.lecture} Cadre de lecture : ${cadre(x.regle)}.`, 'moyenne', "Confirmer en entretien avec le commanditaire et avec des membres de l'équipe que la configuration décrite correspond à ce qu'ils vivent."));
     }
     if (structureRigide) {
       spec.push(h(
@@ -404,13 +404,13 @@ export function construire(ctx) {
         "Demander au commanditaire quelle part des objectifs relève de la nouveauté et quelle part de l'amélioration de l'existant."
       ));
       spec.push(h(
-        `Les lectures de structure et de culture valorisent la maîtrise des processus, quand l'orientation sollicite la nouveauté. En position d'ensemble, le ${dom('C')} se situe ${NIV_LOC[niv('C')]} et le ${dom('O')} ${NIV_LOC[niv('O')]} : ${estHaut(niv('C')) && estHaut(niv('O')) ? "l'ensemble dispose, au niveau agrégé, des deux ressources." : "les deux ressources ne sont pas toutes deux en position haute au niveau agrégé."} Selon le modèle de congruence (${nom('nadler-tushman-1980')}, à vérifier), la question porte alors moins sur les profils que sur l'espace laissé à l'ouverture dans un cadre de processus standardisés.`,
+        `Les lectures de structure et de culture valorisent la maîtrise des processus, quand l'orientation sollicite la nouveauté. En position d'ensemble, le ${dom('C')} se situe ${NIV_LOC[niv('C')]} et le ${dom('O')} ${NIV_LOC[niv('O')]} : ${estHaut(niv('C')) && estHaut(niv('O')) ? "l'ensemble dispose, au niveau agrégé, des deux ressources." : "les deux ressources ne sont pas toutes deux en position haute au niveau agrégé."} Selon le modèle de congruence (${nom('nadler-tushman-1980')}), la question porte alors moins sur les profils que sur l'espace laissé à l'ouverture dans un cadre de processus standardisés.`,
         'faible',
         "Demander où, dans le fonctionnement actuel, une proposition nouvelle peut être faite, qui la reçoit et en combien de temps elle obtient une réponse."
       ));
     } else {
       spec.push(h(
-        `Selon le modèle de congruence (${nom('nadler-tushman-1980')}, à vérifier), l'enjeu est l'accord entre les profils, la structure, la culture et les objectifs : les lectures ci-dessus montrent des accords et des tensions à instruire.`,
+        `Selon le modèle de congruence (${nom('nadler-tushman-1980')}), l'enjeu est l'accord entre les profils, la structure, la culture et les objectifs : les lectures ci-dessus montrent des accords et des tensions à instruire.`,
         'faible',
         "Demander au commanditaire où il observe aujourd'hui un accord ou un frottement entre la façon de travailler de l'équipe et ce que l'organisation attend d'elle."
       ));
@@ -456,13 +456,13 @@ export function construire(ctx) {
       c("Ce volet est lu au niveau de l'organisation et de ses sites seulement : aucune tendance de pays n'est appliquée à une personne, et rien dans ce volet ne décrit un individu."),
       c(`Sites en présence : ${liste(ic.sites)}. Langues de travail : ${liste(ic.langues_travail)}. Fuseaux horaires concernés : ${liste(ic.fuseaux)}.`),
       c([ic.rapport_siege_filiale, ic.part_expatries, ic.travail_reparti].filter(Boolean).map((x) => `${x}.`).join(' ')),
-      cmm && cloc ? c(`Culture d'organisation de la maison mère : ${cmm} ; de la filiale : ${cloc} ; culture dominante saisie pour l'organisation : ${o.culture} (quadrants de ${nom('cameron-quinn-1999')}, références à vérifier). Ce sont des cultures d'entités, jamais des traits attribués à une personne.`) : null,
+      cmm && cloc ? c(`Culture d'organisation de la maison mère : ${cmm} ; de la filiale : ${cloc} ; culture dominante saisie pour l'organisation : ${o.culture} (quadrants de ${nom('cameron-quinn-1999')}). Ce sont des cultures d'entités, jamais des traits attribués à une personne.`) : null,
       (ic.sites ?? []).length > 1 ? h("Il se peut que des frictions viennent des règles du jeu propres à chaque site (circuits de décision, rituels, horaires) plutôt que des personnes. Le rapport entre le siège et la filiale encadre la marge de décision locale : il se peut que les délais de validation pèsent sur le calendrier du lancement.", 'moyenne', "Demander à chaque site comment une décision se prend chez lui, et combien de temps prend une validation du siège.") : null,
       (ic.langues_travail ?? []).length > 1 ? h(`Plusieurs langues de travail coexistent (${ic.langues_travail.length} ici) : il se peut que le choix de la langue selon le type d'échange (décision, documents de pilotage, échanges informels) mérite une règle explicite.`, 'moyenne', "Demander dans quelle langue se prennent les décisions, s'écrivent les documents et se tiennent les échanges informels, et ce qui se perd à chaque passage d'une langue à l'autre.") : null,
       (ic.fuseaux ?? []).length > 1 ? h("Le travail est réparti entre plusieurs fuseaux horaires : il se peut que les réunions et les validations demandent des règles de communication asynchrone.", 'moyenne', "Demander quelles réunions tombent hors des heures de travail d'un site, et ce qui est décidé par écrit.") : null,
       ic.part_expatries ? h("Des postes de direction sont occupés par des expatriés du groupe : il se peut que les références de fonctionnement du siège et celles de la filiale se rencontrent dans l'équipe de direction.", 'faible', "Demander à l'équipe de direction quelles habitudes de travail du siège et de la filiale se contredisent, et comment elles sont arbitrées.") : null,
       cmm && cloc && cmm !== cloc ? h(`Deux logiques de culture d'organisation coexistent, celle de la maison mère (${cmm}) et celle de la filiale (${cloc}), au-dessus de la culture dominante saisie (${o.culture}) : il se peut que la logique de la maison mère s'impose sur le budget et les outils, et celle de la filiale sur l'exécution. Le calibrage doit dire laquelle s'applique à chaque situation étudiée.`, 'faible', "Demander, pour trois décisions récentes, quelle logique (siège, filiale, métier) a finalement prévalu et pourquoi.") : null,
-      c(`Piège 1, les grilles culturelles nationales : celles de ${nom('hofstede')}, de l'étude GLOBE (${nom('house-2004')}), de ${nom('meyer-2014')} (carte culturelle) et de ${nom('hall-1976')} (contexte élevé ou faible) décrivent des tendances de pays, non des personnes. Les appliquer à un individu est une erreur de raisonnement (erreur écologique). À l'usage, elles ne servent qu'à lire les règles du jeu d'une organisation et les frottements entre ses sites. Références à vérifier.`),
+      c(`Piège 1, les grilles culturelles nationales : celles de ${nom('hofstede')}, de l'étude GLOBE (${nom('house-2004')}), de ${nom('meyer-2014')} (carte culturelle) et de ${nom('hall-1976')} (contexte élevé ou faible) décrivent des tendances de pays, non des personnes. Les appliquer à un individu est une erreur de raisonnement (erreur écologique). À l'usage, elles ne servent qu'à lire les règles du jeu d'une organisation et les frottements entre ses sites.`),
       c(`Piège 2, les styles de réponse : la façon de répondre à un questionnaire (tendance à acquiescer, à éviter les extrêmes) peut varier selon la langue de passation. Tant que l'équivalence des versions n'est pas établie, comparer des personnes ayant répondu dans des langues différentes demande de la prudence, et la langue de passation est indiquée à côté de toute comparaison. Dans ce cas, ${passations.length > 1 ? `les langues de passation sont ${liste(passations)}` : `la langue de passation est ${passations[0]}`}.`),
       c("Piège 3, la coexistence des cultures : dans un groupe, la culture de la maison mère, celle de la filiale et celle des métiers coexistent. Toute lecture doit dire laquelle s'applique à la situation étudiée (par exemple une équipe projet répartie entre plusieurs sites), faute de quoi elle mélange des règles du jeu différentes.")
     ];

@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { sourceControlee, instantaneBlocs, STATUT_SOURCE_A_CONTROLER, STATUT_SOURCE_CONTROLEE } from './outils.mjs';
 
 const ici = path.dirname(fileURLToPath(import.meta.url));
 const racine = path.resolve(ici, '..');
@@ -16,7 +17,7 @@ export const AVERTISSEMENTS = [
   'Cas de démonstration : l’organisation, KB, SR et HT sont fictifs. AM est un profil estimé, pas une mesure ni un fictif : seules les réponses de la personne font foi.',
   'Ce rapport est préparé par des scripts à partir de faits calculés et de textes rédigés d’avance. Il ne formule aucune prévision et ne classe personne ; faute de référentiel établi pour ce questionnaire, aucune personne n’y est comparée à d’autres personnes que celles du cas.',
   'Aucune décision d’emploi (recrutement, promotion, licenciement, affectation) ne peut s’appuyer sur ce rapport.',
-  'Les blocs de la bibliothèque de textes ne sont pas relus par un humain. Les niveaux et les écarts sont des conventions de l’outil, non calibrées. Les références citées sont non vérifiées à la date du rapport.',
+  'Les niveaux et les écarts sont des conventions de l’outil, non calibrées.',
   'Toute lecture est une hypothèse, avec son niveau de confiance et la façon de la vérifier en entretien. Un consultant qualifié désigné par Tenga Conseil relit et signe avant tout usage.',
   'Document de travail du consultant : il réunit des chapitres privés et des lectures de relation, il n’est jamais remis tel quel à un supérieur hiérarchique d’une personne citée.'
 ];
@@ -29,7 +30,10 @@ function referencesCitees(refs, textes, recommandations) {
     const noms = [...r.auteurs, ...(r.id === 'house-2004' ? ['GLOBE'] : [])];
     if (noms.some((nom) => new RegExp(`\\b${nom}\\b`).test(tout))) ids.add(r.id);
   }
-  return refs.references.filter((r) => ids.has(r.id)).map((r) => ({ id: r.id, citation: r.citation, statut: 'à vérifier' }));
+  // Le statut vient du registre : « source contrôlée » seulement avec un contrôleur nommé ET une date, sinon « source à contrôler ».
+  return refs.references.filter((r) => ids.has(r.id)).map((r) => (sourceControlee(r)
+    ? { id: r.id, citation: r.citation, statut: STATUT_SOURCE_CONTROLEE, controlee_par: r.controlee_par, controlee_le: r.controlee_le }
+    : { id: r.id, citation: r.citation, statut: STATUT_SOURCE_A_CONTROLER }));
 }
 
 function toutesLesChaines(valeur, sortie = []) {
@@ -70,6 +74,8 @@ export function assembler(ctx, modules) {
     recommandations: courbes(recommandations, ''),
     references: []
   };
+  // État de relecture des textes types cités, figé avec le rapport (la bibliothèque peut évoluer ensuite).
+  if (ctx.bib) rapport.relecture = { blocs: instantaneBlocs(ctx.bib, rapport.niveaux) };
   rapport.references = referencesCitees(ctx.refs, toutesLesChaines({ niveaux: rapport.niveaux, recommandations: rapport.recommandations }), rapport.recommandations);
   return rapport;
 }

@@ -37,6 +37,8 @@ export function bloc(bib, code, niveau) {
     libelle: f.libelle.fr,
     avertissement: f.avertissement ? f.avertissement.fr : null,
     relecture: n.relecture,
+    relue_par: n.relue_par ?? null,
+    relue_le: n.relue_le ?? null,
     description: b.description.map((t) => accorder(t)),
     apport: b.apport.map((t) => accorder(t)),
     cout: b.cout.map((t) => accorder(t)),
@@ -91,4 +93,64 @@ export function personne(cas, code) {
   const p = cas.personnes.find((x) => x.code === code);
   if (!p) throw new Error(`personne inconnue ${code}`);
   return p;
+}
+
+// ---------------------------------------------------------------- relecture et contrôle des sources
+// Un bloc est « relu » seulement avec un relecteur nommé ET une date ISO réelle ; une source est « contrôlée »
+// de la même façon. Toute autre combinaison compte comme « en attente » : un oubli ne peut jamais passer pour une relecture.
+export const STATUT_SOURCE_A_CONTROLER = 'source à contrôler';
+export const STATUT_SOURCE_CONTROLEE = 'source contrôlée';
+const nomPose = (v) => typeof v === 'string' && v.trim() !== '';
+export const dateIso = (v) => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v;
+/** « 2026-10-21 » -> « 21/10/2026 ». */
+export const dateFr = (iso) => iso.split('-').reverse().join('/');
+export const blocRelu = (b) => b?.relecture === 'relue' && nomPose(b.relue_par) && dateIso(b.relue_le);
+export const sourceControlee = (r) => r?.statut === STATUT_SOURCE_CONTROLEE && nomPose(r.controlee_par) && dateIso(r.controlee_le);
+
+/** État de relecture d'un bloc « N6/haut » dans la bibliothèque, ou null s'il n'y est pas. */
+export function etatBlocBib(bib, id) {
+  const [code, niveau] = String(id).split('/');
+  const n = bib?.facettes?.find((x) => x.code === code)?.niveaux?.[niveau];
+  return n ? { relecture: n.relecture, relue_par: n.relue_par ?? null, relue_le: n.relue_le ?? null } : null;
+}
+
+/** Identifiants de blocs cités par un niveau du rapport, sans doublon. */
+export const blocsCitesDuNiveau = (niveau) => [...new Set((niveau?.sections ?? []).flatMap((s) => (s.paragraphes ?? []).flatMap((p) => p.bloc_ids ?? [])))];
+
+/** Instantané de l'état de relecture des blocs cités (porté par le rapport, signé avec lui). */
+export function instantaneBlocs(bib, niveaux) {
+  const ids = [...new Set(niveaux.flatMap(blocsCitesDuNiveau))].sort();
+  return Object.fromEntries(ids.map((id) => [id, etatBlocBib(bib, id) ?? { relecture: 'non relue', relue_par: null, relue_le: null }]));
+}
+
+/**
+ * Bilan de relecture d'un rapport : tous les compteurs sont CALCULÉS ici, jamais écrits en dur.
+ * L'état d'un bloc vient de rapport.relecture.blocs, à défaut de la bibliothèque, à défaut « non relue ».
+ */
+export function bilanRelecture(rapport, bib) {
+  const instantane = rapport?.relecture?.blocs ?? {};
+  const etat = (id) => instantane[id] ?? etatBlocBib(bib, id) ?? { relecture: 'non relue' };
+  const tous = new Set();
+  const parNiveau = {};
+  for (const n of rapport?.niveaux ?? []) {
+    const ids = blocsCitesDuNiveau(n);
+    ids.forEach((i) => tous.add(i));
+    parNiveau[n.id] = { cites: ids.length, enAttente: ids.filter((i) => !blocRelu(etat(i))).length };
+  }
+  const relus = [...tous].map(etat).filter(blocRelu);
+  const refs = rapport?.references ?? [];
+  const controlees = refs.filter(sourceControlee);
+  const signatures = [...relus.map((b) => [b.relue_par, b.relue_le]), ...controlees.map((r) => [r.controlee_par, r.controlee_le])];
+  const textesEnAttente = tous.size - relus.length;
+  const referencesEnAttente = refs.length - controlees.length;
+  return {
+    textes: tous.size,
+    textesEnAttente,
+    references: refs.length,
+    referencesEnAttente,
+    parNiveau,
+    relecteurs: [...new Set(signatures.map((s) => s[0].trim()))].sort(),
+    date: signatures.map((s) => s[1]).sort().at(-1) ?? null,
+    complet: textesEnAttente === 0 && referencesEnAttente === 0 && signatures.length > 0
+  };
 }

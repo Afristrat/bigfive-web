@@ -33,7 +33,7 @@ function rapportFactice(r, refs) {
     recommandations: r.recommandations,
     references: r.reference_ids.map((id) => {
       const ref = refs.references.find((x) => x.id === id);
-      return { id, citation: ref.citation, statut: 'à vérifier' };
+      return { id, citation: ref.citation, statut: 'source à contrôler' };
     })
   };
 }
@@ -234,7 +234,7 @@ test('références : seulement des reference_id autorisés, et chaque auteur cit
   }
   for (const id of ['edmondson-1999', 'thompson-1967', 'mintzberg-1979', 'cameron-quinn-1999', 'march-1991']) assert.ok(r.reference_ids.includes(id), id);
   assert.match(texteDe(r.niveaux[0]), /Edmondson/);
-  assert.match(texteDe(r.niveaux[0]), /à vérifier/);
+  assert.doesNotMatch(texteDe(r.niveaux[0]), /référence à vérifier|, à vérifier\)/, 'le statut de contrôle vit dans la liste des références, pas dans la prose');
 });
 
 test('interculturel lu au niveau des organisations et des sites, jamais d’une personne', () => {
@@ -402,7 +402,7 @@ test('I4 : règle d’emploi posée par l’outil, et loi 09-08 / CNDP formulée
 test('I5 : Bell est cité pour le cadre d’étude, l’énoncé sur la tâche vient de la méthode du rapport', () => {
   const r = construire(base());
   const t = texteN3(r);
-  assert.match(t, /Bell \(2007, à vérifier\) indique que la composition d'une équipe produit des effets variables selon le cadre d'étude/);
+  assert.match(t, /Bell \(2007\) indique que la composition d'une équipe produit des effets variables selon le cadre d'étude/);
   assert.ok(!/cités de mémoire/.test(t));
   assert.match(t, /énoncé de la méthode de ce rapport, sans attribution à cette référence/);
   assert.ok(!/Bell[^.]*dépendent de la nature de la tâche/.test(t));

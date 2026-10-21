@@ -60,7 +60,9 @@ Chaque niveau, écart, tension se justifie par une règle de `moteur/regles.json
                                   "confiance": "faible|moyenne|elevee", "verification": "<façon de vérifier en entretien>", "bloc_ids": [..] } ] } ] } ],
   "recommandations": [ { "id", "niveau": "n1..n5", "texte", "donnee", "contexte", "preuve": { "niveau": "source|hypothese", "reference_id": null|"<id de references-autorisees.json>" },
                          "risque", "responsable", "horizon", "indicateur" } ],
-  "references": [ { "id": "<id de references-autorisees.json>", "citation", "statut": "à vérifier" } ] }
+  "references": [ { "id": "<id de references-autorisees.json>", "citation", "statut": "source à contrôler" | "source contrôlée" (+ "controlee_par", "controlee_le" ISO obligatoires pour « source contrôlée ») } ],
+  "relecture": { "blocs": { "<N6/haut>": { "relecture": "non relue" | "relue", "relue_par", "relue_le" } } } }  // instantané des blocs cités, figé par le générateur
+// Audit (option html) : le statut de contrôle de chaque référence doit être visible dans la liste des références (colonne « Source contrôlée ») et le bandeau doit annoncer le nombre exact de références à contrôler.
 ```
 Toute chaîne de ce fichier est « texte visible » pour l'audit.
 

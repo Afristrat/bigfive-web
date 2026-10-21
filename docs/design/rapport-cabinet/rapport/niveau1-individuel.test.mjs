@@ -221,15 +221,14 @@ function avecTensions(ctx, code, tensions) {
 }
 const tension = (a, b, ecart, regle) => ({ id: `${a}-${b}`, domaine: a[0], facettes: [a, b], ecart, regle });
 
-test('chaque chapitre : 30 facettes lues entre guillemets, chacune avec son bloc ; « bloc non relu » une fois par domaine', () => {
+test('chaque chapitre : 30 facettes lues entre guillemets, chacune avec son bloc ; aucune mention de relecture dans la prose', () => {
   const ctx = charger();
   const { niveau } = construire(ctx);
   for (const code of ['AM', 'KB', 'SR', 'HT']) {
     const sections = niveau.sections.filter((s) => s.id.startsWith(`${code}-facettes-`));
     assert.equal(sections.length, 5);
     for (const s of sections) {
-      assert.equal(s.paragraphes.filter((p) => /bloc non relu/.test(p.texte)).length, 1, s.id);
-      assert.match(s.paragraphes[0].texte, /bloc non relu/);
+      assert.equal(s.paragraphes.filter((p) => /non relus?|relecture|à vérifier/.test(p.texte)).length, 0, s.id);
       assert.equal(s.paragraphes[0].statut, 'constate');
     }
     const facettes = sections.flatMap((s) => s.paragraphes).filter((p) => p.bloc_ids);

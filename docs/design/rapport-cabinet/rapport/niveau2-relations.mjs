@@ -475,8 +475,8 @@ function chapitre(ctx, rel, relCas) {
     const bhb = bloc(bib, f.k, f.niveau_b);
     const memeBloc = bha.id === bhb.id;
     const texteApport = memeBloc
-      ? `Apport possible sur la facette ${f.k} (${bha.libelle}), niveau ${NIVEAU_FR[f.niveau_a]} pour ${rel.a} et pour ${rel.b} (bloc ${bha.id}, bloc non relu) : « ${bha.apport[0]} »`
-      : `Apport possible sur la facette ${f.k} (${bha.libelle}), écart ${exact(f.ecart)}. Pour ${rel.a}, niveau ${NIVEAU_FR[f.niveau_a]} (bloc ${bha.id}, bloc non relu) : « ${bha.apport[0]} » Pour ${rel.b}, niveau ${NIVEAU_FR[f.niveau_b]} (bloc ${bhb.id}, bloc non relu) : « ${bhb.apport[0]} »`;
+      ? `Apport possible sur la facette ${f.k} (${bha.libelle}), niveau ${NIVEAU_FR[f.niveau_a]} pour ${rel.a} et pour ${rel.b} (bloc ${bha.id}) : « ${bha.apport[0]} »`
+      : `Apport possible sur la facette ${f.k} (${bha.libelle}), écart ${exact(f.ecart)}. Pour ${rel.a}, niveau ${NIVEAU_FR[f.niveau_a]} (bloc ${bha.id}) : « ${bha.apport[0]} » Pour ${rel.b}, niveau ${NIVEAU_FR[f.niveau_b]} (bloc ${bhb.id}) : « ${bhb.apport[0]} »`;
     syn(`${texteApport} (règle ECART-notable).`, {
       statut: 'hypothese',
       confiance: 'faible',
@@ -525,8 +525,8 @@ function chapitre(ctx, rel, relCas) {
     const bhb = bloc(bib, f.k, f.niveau_b);
     const memeBloc = bha.id === bhb.id;
     const t = memeBloc
-      ? `Coût possible sur la facette ${f.k} (${bha.libelle}), niveau ${NIVEAU_FR[f.niveau_a]} pour ${rel.a} et pour ${rel.b} (bloc ${bha.id}, bloc non relu) : « ${bha.cout[0]} »`
-      : `Coût possible sur la facette ${f.k} (${bha.libelle}), écart ${exact(f.ecart)}. Pour ${rel.a}, niveau ${NIVEAU_FR[f.niveau_a]} (bloc ${bha.id}, bloc non relu) : « ${bha.cout[0]} » Pour ${rel.b}, niveau ${NIVEAU_FR[f.niveau_b]} (bloc ${bhb.id}, bloc non relu) : « ${bhb.cout[0]} »`;
+      ? `Coût possible sur la facette ${f.k} (${bha.libelle}), niveau ${NIVEAU_FR[f.niveau_a]} pour ${rel.a} et pour ${rel.b} (bloc ${bha.id}) : « ${bha.cout[0]} »`
+      : `Coût possible sur la facette ${f.k} (${bha.libelle}), écart ${exact(f.ecart)}. Pour ${rel.a}, niveau ${NIVEAU_FR[f.niveau_a]} (bloc ${bha.id}) : « ${bha.cout[0]} » Pour ${rel.b}, niveau ${NIVEAU_FR[f.niveau_b]} (bloc ${bhb.id}) : « ${bhb.cout[0]} »`;
     fri(`${t} (règle ECART-notable).`, {
       statut: 'hypothese',
       confiance: 'faible',

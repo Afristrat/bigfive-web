@@ -32,11 +32,30 @@ def pilote_fr():
     return out
 
 
+def relectures_publiees():
+    """Blocs déjà relus dans facettes.json publié : {(code, niveau): bloc}. Une relecture ne survit à une reconstruction que si le texte français du bloc n'a pas changé."""
+    chemin = os.path.join(ici, "facettes.json")
+    if not os.path.exists(chemin):
+        return {}
+    return {(f["code"], n): f["niveaux"][n] for f in charger("facettes.json")["facettes"] for n in c.NIVEAUX if f["niveaux"][n].get("relecture") == c.STATUT_RELU}
+
+
 def marquer(facettes):
+    relus = relectures_publiees()
     for f in facettes:
         for n in c.NIVEAUX:
-            f["niveaux"][n]["relecture"] = c.STATUT_BLOC
+            avant = relus.get((f["code"], n))
+            bloc = f["niveaux"][n]
+            if avant and avant.get("fr") == bloc.get("fr"):
+                bloc.update(relecture=c.STATUT_RELU, relue_par=avant.get("relue_par"), relue_le=avant.get("relue_le"))
+            else:
+                bloc["relecture"] = c.STATUT_BLOC
     return facettes
+
+
+def statut(facettes):
+    nb = sum(1 for f in facettes for n in c.NIVEAUX if f["niveaux"][n].get("relecture") != c.STATUT_RELU)
+    return f"ébauche, {nb} blocs non relus : relecture humaine requise avant tout usage (§ 7.2 étape 7)" if nb else "tous les blocs sont relus (relecteur et date portés par chaque bloc)"
 
 
 def entete(facettes, complete):
@@ -44,7 +63,7 @@ def entete(facettes, complete):
     return {
         "version": "bib-0.3", "date": "2026-10-21", "langues": ["fr"], "relecture_requise": True, "complete": complete,
         "accord": p["accord"], "niveaux_ordre": p["niveaux_ordre"], "sources": p["sources"],
-        "statut": "ébauche, 150 blocs non relus : relecture humaine requise avant tout usage (§ 7.2 étape 7)",
+        "statut": statut(facettes),
         "facettes": facettes,
     }
 

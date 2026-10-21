@@ -196,7 +196,8 @@ test('I8 : Kirkpatrick, niveaux 1 et 2 dans le plan, niveaux 3 et 4 hors plan pa
   assert.match(cible, /niveaux 1 et 2/);
   assert.match(cible, /niveaux 3 et 4 (restant )?hors (du )?plan|hors du plan/);
   assert.ok(!/niveau 3 à 30 jours|niveau 4 à 90 jours|quatre niveaux/.test(cible));
-  assert.ok(!/niveaux 3 et 4 de Kirkpatrick \(référence à vérifier\), décision/.test(cible));
+  assert.ok(!/niveaux 3 et 4 de Kirkpatrick, décision/.test(cible));
+  assert.ok(!/à vérifier/.test(cible), 'aucune mention de contrôle dans la prose');
   const k = recommandations.find((r) => r.preuve.reference_id === 'kirkpatrick');
   assert.ok(!/30 jours/.test(k.indicateur));
 });
@@ -222,7 +223,7 @@ test('mineurs : accords de « contact », apostrophes courbes, mention après Ed
   assert.match(tout, /Le contact est quotidien/);
   assert.ok(!/[a-zé]'[a-zé]/i.test(tout.replace(/\\"/g, '')), 'apostrophe droite');
   const f2 = recommandations.find((r) => /sécurité psychologique/.test(r.texte));
-  assert.match(f2.texte, /Edmondson, référence à vérifier\), en lien avec la méfiance héritée du précédent outil\./);
+  assert.match(f2.texte, /Edmondson\), en lien avec la méfiance héritée du précédent outil\./);
   assert.ok(!/mémoire/.test(tout));
 });
 
@@ -266,6 +267,6 @@ function rapportFactice(n, recs) {
     avertissements: [],
     niveaux: [n],
     recommandations: recs,
-    references: refs.references.filter((r) => ids.includes(r.id)).map((r) => ({ id: r.id, citation: r.citation, statut: 'à vérifier' }))
+    references: refs.references.filter((r) => ids.includes(r.id)).map((r) => ({ id: r.id, citation: r.citation, statut: 'source à contrôler' }))
   };
 }

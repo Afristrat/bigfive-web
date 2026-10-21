@@ -111,7 +111,7 @@ function chapitre(ctx, p) {
   ajouter('cadre', `${p.code} : ${p.nom}`, [
     con(`Chapitre privé ${deNom(p.nom)} (${p.code}). ${p.etiquette}. Fonction : ${p.fonction} ; niveau : ${p.niveau} ; ancienneté : ${p.anciennete} ; rôle dans l’équipe : ${p.role_equipe} ; périmètre de décision : ${p.perimetre_decision} ; langue de passation : ${p.langue_passation}.`),
     con('Ce chapitre n’existe que parce que la personne a consenti au niveau individuel. Aucune décision d’emploi ne peut s’appuyer sur ce chapitre. Les niveaux sont des conventions de l’outil, lues sur l’échelle de la personne elle-même : aucune comparaison à un groupe de référence n’est faite et aucune étiquette de type n’est attribuée.'),
-    con('Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ». La mention « bloc non relu » est portée une fois par domaine tant qu’une relecture humaine n’a pas eu lieu.')
+    con('Chaque lecture qui suit est une hypothèse à confirmer en entretien, avec un niveau de confiance et une façon de la vérifier. Les textes des facettes viennent de la bibliothèque de textes : ils sont cités entre guillemets et introduits comme tels, car ils s’adressent directement à la personne, alors que le reste du chapitre parle de « la personne ».')
   ]);
 
   // (a) domaines
@@ -132,11 +132,7 @@ function chapitre(ctx, p) {
 
   // (b) 30 facettes, domaine par domaine ; textes de la bibliothèque cités entre guillemets
   for (const l of lectures) {
-    const nonRelus = l.codes.filter((c) => blocDe(c).relecture !== 'relue');
-    const mention = nonRelus.length === l.codes.length
-      ? 'Les six blocs de la bibliothèque cités ci-dessous portent la mention « bloc non relu » : aucune relecture humaine n’a encore eu lieu.'
-      : `Mention « bloc non relu » pour ${liste(nonRelus)} ; les autres blocs ont été relus.`;
-    const items = [con(`Facettes du domaine ${LIBELLE_DOMAINE[l.d]}. ${mention} Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.`)];
+    const items = [con(`Facettes du domaine ${LIBELLE_DOMAINE[l.d]}. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.`)];
     for (const c of l.codes) {
       const b = blocDe(c);
       const niveau = fp.facettes[c].niveau;
@@ -293,7 +289,7 @@ function chapitre(ctx, p) {
       donnee: plusNette
         ? `Tension la plus nette : ${plusNette.id}, écart de ${fmt(plusNette.ecart)} points.`
         : `Aucune tension interne relevée ; facette la plus éloignée du milieu : ${eloignee} à ${valeur(eloignee)} sur l’échelle de 1 à 5.`,
-      contexte: `Les trente facettes ${deCode(p.code)} sont lues par des blocs non relus ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.`,
+      contexte: `Les trente facettes ${deCode(p.code)} sont lues par des textes types de la bibliothèque ; la fiabilité de la réponse n’est pas encore calculée, et le rapport prépare le travail d’un consultant qualifié.`,
       risque: `Un entretien mené sans la parole de la personne dans le rôle « ${p.role_equipe} » ferait passer des hypothèses pour des constats, d’autant que la passation a eu lieu en ${p.langue_passation} et que les indices de fiabilité ne sont pas calculés.`,
       responsable: CONSULTANT,
       horizon: '30 jours',

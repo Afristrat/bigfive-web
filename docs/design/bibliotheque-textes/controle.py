@@ -11,7 +11,7 @@ Usage :
 Accord : un texte peut contenir des marqueurs {masculin|féminin|sans accord}. accorder(texte, 'm'|'f'|'n')
 choisit l'alternative ; une valeur absente ou inconnue donne 'n'. Chaque phrase est contrôlée dans ses trois formes.
 """
-import copy, json, re, sys
+import copy, datetime, json, re, sys
 
 NIVEAUX = ["bas", "plutot_bas", "milieu", "plutot_haut", "haut"]
 NIVEAU_FR = {"bas": "Bas", "plutot_bas": "Plutôt bas", "milieu": "Milieu de l’échelle",
@@ -19,7 +19,30 @@ NIVEAU_FR = {"bas": "Bas", "plutot_bas": "Plutôt bas", "milieu": "Milieu de l�
 NIVEAU_AR = {"bas": "منخفض", "plutot_bas": "منخفض نسبيًّا", "milieu": "قرب المنتصف",
              "plutot_haut": "مرتفع نسبيًّا", "haut": "مرتفع"}
 ACCORDS = ("m", "f", "n")
-STATUT_BLOC = "non relue"  # tout bloc d'une bibliothèque à relecture requise porte cette mention
+STATUT_BLOC = "non relue"  # tout bloc d'une bibliothèque à relecture requise porte l'une des deux mentions
+STATUT_RELU = "relue"      # « relue » exige relue_par (nom du relecteur) ET relue_le (date ISO AAAA-MM-JJ)
+
+
+def date_iso(v):
+    """Vrai pour une date calendaire réelle au format AAAA-MM-JJ."""
+    if not isinstance(v, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", v): return False
+    try: datetime.date.fromisoformat(v)
+    except ValueError: return False
+    return True
+
+
+def controle_relecture(niv, ref):
+    """Défauts de la mention de relecture d'un bloc : « non relue » ou « relue », jamais « relue » sans relecteur et sans date."""
+    st = niv.get("relecture")
+    par, le = niv.get("relue_par"), niv.get("relue_le")
+    if st == STATUT_RELU:
+        out = []
+        if not (isinstance(par, str) and par.strip()): out.append(f"{ref} : bloc « {STATUT_RELU} » sans relue_par (nom du relecteur)")
+        if not date_iso(le): out.append(f"{ref} : bloc « {STATUT_RELU} » sans relue_le valide (date AAAA-MM-JJ)")
+        return out
+    if st == STATUT_BLOC:
+        return [f"{ref} : relue_par ou relue_le posé sur un bloc « {STATUT_BLOC} »"] if (par or le) else []
+    return [f"{ref} : mention « {STATUT_BLOC} » ou « {STATUT_RELU} » absente du bloc"]
 INDEX_ACCORD = {"m": 0, "f": 1, "n": 2}
 
 MARQUEUR = re.compile(r"\{([^{}]*)\}")
@@ -130,8 +153,8 @@ def controler(lib):
         for n in NIVEAUX:
             niv = f["niveaux"][n]
             vus = set()
-            if lib.get("relecture_requise") and niv.get("relecture") != STATUT_BLOC:
-                d(f"{code}/{n} : mention « {STATUT_BLOC} » absente du bloc")
+            if lib.get("relecture_requise"):
+                for x in controle_relecture(niv, f"{code}/{n}"): d(x)
             for lg in langs:
                 b = niv.get(lg)
                 if not b:
@@ -220,7 +243,7 @@ def rendre_md(lib):
             a("")
         for n in NIVEAUX:
             niv = f["niveaux"][n]
-            a(f"### {f['code']} · {NIVEAU_FR[n]}" + (f" / {NIVEAU_AR[n]}" if "ar" in langues(lib) else "") + (f" ({niv['relecture']})" if niv.get("relecture") else ""))
+            a(f"### {f['code']} · {NIVEAU_FR[n]}" + (f" / {NIVEAU_AR[n]}" if "ar" in langues(lib) else "") + (f" ({niv['relecture']}" + (f" par {niv['relue_par']} le {niv['relue_le']}" if niv.get("relecture") == STATUT_RELU else "") + ")" if niv.get("relecture") else ""))
             a("")
             for lg, titres in (("fr", ("Description", "Ce que cela peut apporter", "Ce que cela peut coûter", "Question pour l’entretien")),
                                 ("ar", ("الوصف", "ما قد يتيحه ذلك", "ما قد يكلّفه ذلك", "سؤال للجلسة"))):
@@ -299,6 +322,13 @@ def autotest(lib):
     if lib.get("relecture_requise"):
         m("mention « non relue » retirée d’un bloc", lambda l: F(l, 5)["niveaux"]["milieu"].pop("relecture"))
         m("mention « relue » posée sans relecteur", lambda l: F(l, 6)["niveaux"]["haut"].__setitem__("relecture", "relue"))
+        m("mention « relue » avec relecteur mais sans date", lambda l: F(l, 6)["niveaux"]["bas"].update(relecture="relue", relue_par="Nezha Bentara"))
+        m("mention « relue » avec date mais sans relecteur", lambda l: F(l, 7)["niveaux"]["bas"].update(relecture="relue", relue_le="2026-10-21"))
+        m("mention « relue » avec relecteur blanc", lambda l: F(l, 8)["niveaux"]["bas"].update(relecture="relue", relue_par="  ", relue_le="2026-10-21"))
+        m("mention « relue » avec date impossible", lambda l: F(l, 9)["niveaux"]["bas"].update(relecture="relue", relue_par="Nezha Bentara", relue_le="2026-13-45"))
+        m("mention « relue » avec date non ISO", lambda l: F(l, 9)["niveaux"]["haut"].update(relecture="relue", relue_par="Nezha Bentara", relue_le="21/10/2026"))
+        m("relecteur posé sur un bloc « non relue »", lambda l: F(l, 10)["niveaux"]["bas"].__setitem__("relue_par", "Nezha Bentara"))
+        m("mention de relecture inconnue", lambda l: F(l, 11)["niveaux"]["bas"].__setitem__("relecture", "validée"))
     if lib.get("complete"):
         m("facette manquante", lambda l: l["facettes"].pop())
         m("facette en double", lambda l: l["facettes"].append(copy.deepcopy(l["facettes"][0])))
@@ -314,6 +344,12 @@ def autotest(lib):
         m("chiffre seulement dans la forme masculine", lambda l: modifier(l, lambda t: re.sub(r"\{([^{}|]*)\|([^{}|]*)\|([^{}|]*)\}", lambda x: "{%s 3|%s|%s}" % (x.group(1), x.group(2), x.group(3)), t, count=1)))
         m("marqueur imbriqué", lambda l: modifier(l, lambda t: t.replace("{", "{{", 1)))
     ok = True
+    if lib.get("relecture_requise"):  # une relecture complète ne doit PAS être refusée (contrôle positif)
+        bonne = copy.deepcopy(lib)
+        F(bonne, 12)["niveaux"]["milieu"].update(relecture="relue", relue_par="Nezha Bentara", relue_le="2026-10-21")
+        refus = controler(bonne)
+        print(f"  bloc « relue » complet (relecteur et date) : {'accepté (attendu)' if not refus else 'REFUSÉ : ' + str(refus)}")
+        if refus: ok = False
     for nom, fn in muts:
         copie = copy.deepcopy(lib)
         try:

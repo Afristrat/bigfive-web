@@ -227,12 +227,12 @@ export function construire({ cas, faits, bib }) {
     ajouter({
       section: 'formation',
       paragraphe: {
-        texte: `Formation 2, savoir-faire comportementaux de donner et de recevoir un retour d’information dans un climat de confiance. Objectifs d’apprentissage : formuler un fait observable plutôt qu’une interprétation, accueillir une remarque sans la lire comme un jugement, poser une règle d’équipe sur les erreurs. Modalités : un atelier de demi-journée en équipe puis deux exercices courts en binôme. La notion de sécurité psychologique, issue des travaux d’Edmondson (référence à vérifier), sert de fil conducteur. Le contexte justifie ce choix : un précédent outil d’évaluation a laissé de la méfiance (${ct('CT-09').id}) et l’étendue de l’équipe sur ${facette('N4')} est de ${fmt(etenduC.N4)} points.`,
+        texte: `Formation 2, savoir-faire comportementaux de donner et de recevoir un retour d’information dans un climat de confiance. Objectifs d’apprentissage : formuler un fait observable plutôt qu’une interprétation, accueillir une remarque sans la lire comme un jugement, poser une règle d’équipe sur les erreurs. Modalités : un atelier de demi-journée en équipe puis deux exercices courts en binôme. La notion de sécurité psychologique, issue des travaux d’Edmondson, sert de fil conducteur. Le contexte justifie ce choix : un précédent outil d’évaluation a laissé de la méfiance (${ct('CT-09').id}) et l’étendue de l’équipe sur ${facette('N4')} est de ${fmt(etenduC.N4)} points.`,
         confiance: 'faible',
         verification: 'Recueillir par questions ouvertes, auprès de chaque membre, ce qu’il pense pouvoir dire en réunion sans crainte ; comparer ces réponses avant et après la formation.'
       },
       rec: {
-        texte: 'Formation : dispenser un module de savoir-faire comportementaux sur le retour d’information et la sécurité psychologique (notion d’Edmondson, référence à vérifier), en lien avec la méfiance héritée du précédent outil.',
+        texte: 'Formation : dispenser un module de savoir-faire comportementaux sur le retour d’information et la sécurité psychologique (notion d’Edmondson), en lien avec la méfiance héritée du précédent outil.',
         donnee: `Étendue de ${fmt(etenduC.N4)} points sur ${facette('N4')} dans l’équipe ; contrainte ${ct('CT-09').id} (méfiance héritée d’un précédent outil d’évaluation).`,
         contexte: 'La démarche touche aux personnes dans un climat de méfiance : la transparence sur l’usage des résultats est un préalable (règle CONTR-heritage).',
         risque: 'Le module peut être perçu comme une évaluation des comportements ; il est présenté comme un entraînement, sans restitution individuelle au hiérarchique.',
@@ -311,12 +311,12 @@ export function construire({ cas, faits, bib }) {
   ajouter({
     section: 'organisation',
     paragraphe: {
-      texte: `Rituels : un point court quotidien pour les relations d’interdépendance ${INTERDEP_FR.reciproque}, un point hebdomadaire d’équipe, une revue mensuelle des décisions et un bilan à chaque jalon. Dans une interdépendance réciproque, le travail de l’un devient tour à tour l’entrée et la sortie du travail de l’autre : l’ajustement mutuel y est plus fréquent, d’après la typologie de Thompson (référence à vérifier). Chaque rituel a une durée bornée, un ordre du jour fixe et un compte rendu d’une page, pour respecter le temps disponible (${ct('CT-07').id}).`,
+      texte: `Rituels : un point court quotidien pour les relations d’interdépendance ${INTERDEP_FR.reciproque}, un point hebdomadaire d’équipe, une revue mensuelle des décisions et un bilan à chaque jalon. Dans une interdépendance réciproque, le travail de l’un devient tour à tour l’entrée et la sortie du travail de l’autre : l’ajustement mutuel y est plus fréquent, d’après la typologie de Thompson. Chaque rituel a une durée bornée, un ordre du jour fixe et un compte rendu d’une page, pour respecter le temps disponible (${ct('CT-07').id}).`,
       confiance: 'moyenne',
       verification: 'Demander à chaque membre quels échanges lui font perdre du temps et lesquels débloquent le travail, avant de fixer le calendrier des rituels.'
     },
     rec: {
-      texte: 'Organisation : instaurer des rituels bornés (point court, point hebdomadaire, revue mensuelle des décisions, bilan de jalon), plus fréquents là où l’interdépendance est réciproque (référence à vérifier).',
+      texte: 'Organisation : instaurer des rituels bornés (point court, point hebdomadaire, revue mensuelle des décisions, bilan de jalon), plus fréquents là où l’interdépendance est réciproque.',
       donnee: `${cas.relations.filter((r) => r.interdependance === 'reciproque').length} relations à interdépendance réciproque sur ${cas.relations.length} ; indicateur du cas : taux de participation aux rituels d’équipe du projet.`,
       contexte: 'Équipe répartie entre Casablanca et Dubaï avec un point hebdomadaire avec Paris ; temps disponible limité (CT-07).',
       risque: 'Des rituels trop nombreux alourdissent le travail ; chaque rituel est supprimé s’il n’a pas produit de décision durant deux jalons.',
@@ -372,12 +372,12 @@ export function construire({ cas, faits, bib }) {
   ajouter({
     section: 'mesure',
     paragraphe: {
-      texte: 'Évaluation des formations selon les niveaux de Kirkpatrick (référence à vérifier) : niveau 1, réaction des participants, à la fin de chaque session ; niveau 2, apprentissage, par un exercice pratique avant puis après la session. Ces deux niveaux sont les seuls atteignables dans le plan à 90 jours. Les niveaux 3 (comportement) et 4 (résultats) demandent un recul plus long : ils sont hors du plan, à mesurer plus tard, et les indicateurs d’équipe à 90 jours ne les remplacent pas.',
+      texte: 'Évaluation des formations selon les niveaux de Kirkpatrick : niveau 1, réaction des participants, à la fin de chaque session ; niveau 2, apprentissage, par un exercice pratique avant puis après la session. Ces deux niveaux sont les seuls atteignables dans le plan à 90 jours. Les niveaux 3 (comportement) et 4 (résultats) demandent un recul plus long : ils sont hors du plan, à mesurer plus tard, et les indicateurs d’équipe à 90 jours ne les remplacent pas.',
       confiance: 'moyenne',
       verification: 'Faire confirmer par le concepteur de chaque formation la forme de l’exercice du niveau 2 et le moment où les niveaux 3 et 4 seront mesurés après le plan.'
     },
     rec: {
-      texte: 'Mesure : évaluer chaque formation aux niveaux 1 et 2 de Kirkpatrick (réaction, apprentissage), référence à vérifier, les niveaux 3 et 4 restant hors du plan.',
+      texte: 'Mesure : évaluer chaque formation aux niveaux 1 et 2 de Kirkpatrick (réaction, apprentissage), les niveaux 3 et 4 restant hors du plan.',
       donnee: `${actions.filter((a) => a.section === 'formation' && a.ok).length} formations prévues dans le plan, dans une enveloppe d’accompagnement plafonnée sur 12 mois (${ct('CT-06').id}).`,
       contexte: 'Le budget est négociable mais plafonné : l’évaluation doit coûter peu de temps et s’appuyer sur des outils courts.',
       risque: 'Les niveaux 3 et 4 sont les plus utiles et les plus tardifs : hors du plan, ils risquent de ne jamais être mesurés si personne n’en reçoit la charge après le bilan.',
@@ -484,7 +484,7 @@ export function construire({ cas, faits, bib }) {
     verification: 'Vérifier en réunion de jalon que le siège a confirmé les règles de décision et que le temps de formation a pu être libéré malgré la mobilisation aux sept dixièmes.'
   });
   cal.push({
-    texte: `À 90 jours : bilan du plan, deuxième relevé des indicateurs d’équipe comparé à la référence de départ, évaluation des formations aux niveaux 1 et 2 de Kirkpatrick (référence à vérifier), les niveaux 3 et 4 restant hors du plan, décision du commanditaire sur la poursuite. Familles d’actions engagées : ${resume('90 jours')}. Responsables : ${roles(['AM'])} pour le bilan, avec le ${CONSULTANT} qui relit et signe le bilan.`,
+    texte: `À 90 jours : bilan du plan, deuxième relevé des indicateurs d’équipe comparé à la référence de départ, évaluation des formations aux niveaux 1 et 2 de Kirkpatrick, les niveaux 3 et 4 restant hors du plan, décision du commanditaire sur la poursuite. Familles d’actions engagées : ${resume('90 jours')}. Responsables : ${roles(['AM'])} pour le bilan, avec le ${CONSULTANT} qui relit et signe le bilan.`,
     statut: 'hypothese', confiance: 'faible',
     verification: 'Comparer, avec le commanditaire, les indicateurs du jalon à la référence de départ et recueillir le point de vue de chaque membre sur ce qui a changé dans le travail.'
   });
