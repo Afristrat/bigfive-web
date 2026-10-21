@@ -142,7 +142,8 @@ export const SCRIPT_MOUVEMENT = `
   if (reduit || !('IntersectionObserver' in window)) { tous.forEach(montrer); }
   else {
     var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { montrer(en.target); io.unobserve(en.target); } }); }, { threshold: 0.12 });
-    tous.forEach(function (e) { io.observe(e); });
+    // Un bloc plus haut que deux écrans n'atteindra jamais 12 % de visibilité (une section de niveau fait des dizaines de milliers de pixels) : il resterait transparent. On l'affiche d'emblée ; ses éléments animés internes gardent leur propre observation.
+    tous.forEach(function (e) { if (e.offsetHeight > window.innerHeight * 2) { e.classList.add('vu'); } else { io.observe(e); } });
   }
   function toutMontrer() { tous.forEach(function (e) { e.classList.add('vu'); e.querySelectorAll('[data-count]').forEach(function (n) { n.textContent = n.getAttribute('data-count'); }); }); }
   // Dans un iframe srcdoc, un lien #ancre se résout contre l'adresse de la page parente et la recharge dans le cadre :
