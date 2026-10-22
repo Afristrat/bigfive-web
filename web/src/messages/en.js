@@ -154,28 +154,46 @@ const english = {
     seo: {
       title: 'About Tenga Assessments',
       description:
-        'Tenga Assessments is the personality questionnaire service of Tenga Conseil, a Moroccan consulting firm.'
+        'The personality questionnaire service of Tenga Conseil, a Moroccan consulting firm: a public-domain instrument, sources you can consult, limits stated in writing.'
     },
     title: 'About',
-    p1: 'Tenga Conseil is a Moroccan consulting firm. Tenga Assessments is its personality questionnaire service, offered to the organisations the firm supports: executive teams, human resources teams, consultants.',
-    p2: 'We chose an instrument whose method is public and whose every source can be consulted, because a tool that touches the person must be open to scrutiny. It is the IPIP-NEO-120 by John A. Johnson (2014), drawn from the International Personality Item Pool and placed in the public domain. It describes personality according to the five major factors: openness to experience, conscientiousness, extraversion, agreeableness and neuroticism, detailed in thirty facets.',
-    p3: 'It is available in French, Arabic and English. A few statements have been reworded; each one keeps the facet measured and the scoring direction of the original question. This version has not been the subject of any validation study: we say so rather than let you guess.',
-    p4: 'The results describe habitual behavioural tendencies. They do not measure skills and are not a diagnosis. Our rule fits in four words: understand before you judge.',
-    contact_faq:
-      'A question? Please read the <link>frequently asked questions</link> first.',
-    contact_email:
-      'If you cannot find the answer there, write to us at {email}.'
+    headline: 'A questionnaire whose every source can be checked.',
+    lead: 'Tenga Assessments is the personality questionnaire service of Tenga Conseil, a Moroccan consulting firm. We offer it to the organisations we support: executive teams, human resources teams, consultants.',
+    instrument: {
+      title: 'The instrument',
+      text: 'The questionnaire is the IPIP-NEO-120 by John A. Johnson (2014), drawn from the International Personality Item Pool and placed in the public domain. We chose it because its method is published and every one of its sources can be consulted. A tool that touches the person must be open to scrutiny.'
+    },
+    model: {
+      title: 'What it describes',
+      text: 'Five broad factors of personality, detailed in thirty facets: openness to experience, conscientiousness, extraversion, agreeableness and neuroticism.'
+    },
+    languages: {
+      title: 'Three languages',
+      text: 'You can answer it in French, Arabic or English. We reworded a few statements; each one keeps the facet measured and the scoring direction of the original question.'
+    },
+    limits: {
+      title: 'What it does not claim',
+      text: 'This version has not been the subject of any validation study. The results describe habitual behavioural tendencies, based on your own answers. It is neither a skills test nor a diagnosis.'
+    },
+    rule: 'Our rule',
+    contact: {
+      title: 'A question?'
+    },
+    contact_faq: 'Start with the <link>frequently asked questions</link>.',
+    contact_email: 'If the answer is not there, write to us at {email}.'
   },
   faq: {
     title: 'Frequently asked questions',
+    lead: 'Before you answer the questionnaire, and after: short answers, straight to the point.',
     error: {
-      question: 'An error appeared on the site: what should I do?',
-      answer: 'Describe what happened by email to {email}.'
+      question: 'The site shows an error. What should I do?',
+      answer:
+        'Write to us at {email}, saying which page you were on, what you were doing and the message displayed.'
     },
     print: {
       question: 'How do I print my results?',
       answer:
-        'From the results page, use your browser’s print function, or save the page as a PDF.'
+        'Open your results page, then use your browser’s print function or save the page as a PDF.'
     },
     science: {
       question: 'Is it scientific?',
@@ -190,17 +208,17 @@ const english = {
     source: {
       question: 'Where do the questions come from?',
       answer:
-        'The questions and the scoring come from the International Personality Item Pool (ipip.ori.org), in the public domain: the IPIP-NEO-120 by John A. Johnson (2014). Tenga Conseil reworded a few statements, without changing what each question measures.'
+        'From the public domain. The questions and the scoring are those of the IPIP-NEO-120 by John A. Johnson (2014), drawn from the International Personality Item Pool (ipip.ori.org). Tenga Conseil reworded a few statements, without changing what each question measures.'
     },
     answers: {
       question: 'Are there right and wrong answers?',
       answer:
-        'No. Each statement describes a way of being. Answer according to how you usually are, not how you would like to be.'
+        'No. Each statement describes a way of being, neither a strength nor a flaw. Answer according to how you usually are, not how you would like to be.'
     },
     diagnosis: {
       question: 'Does the questionnaire make a diagnosis?',
       answer:
-        'No. It describes behavioural tendencies based on your own answers. It is not a test of skills or intelligence, nor a health examination.'
+        'No. It describes behavioural tendencies based on your own answers. It is not a skills test, an intelligence test or a health examination.'
     }
   },
   toolbar: {
@@ -327,13 +345,13 @@ const english = {
       totpFailed: 'Wrong or expired code. Start again with your password.'
     },
     connect: {
-      title: 'Confirm sign-in',
+      title: 'Open your session',
       intro:
-        'Click the button to open your session. The link can be used only once.',
+        'One click on the button opens your session. The link works only once.',
       button: 'Open my session',
       opening: 'Opening…',
       error:
-        'This link is invalid, has expired or was already used. Request a new one.',
+        'This link no longer works: it is invalid, has expired or has already been used. Request a new one.',
       newLink: 'Request a new link'
     }
   },
@@ -810,9 +828,14 @@ const english = {
     }
   },
   articles: {
-    back: 'Back to articles',
+    back: 'All articles',
     readingTime: '{minutes} min read',
-    empty: 'No article has been published in this language yet.'
+    empty: 'No article has been published in this language yet.',
+    lead: 'Reading on personality and psychology.',
+    inEnglish: 'These articles are written in English.',
+    related: 'Read next',
+    tags: 'Topics',
+    share: 'Share on {reseau}'
   },
   notFound: {
     title: 'This page does not exist',

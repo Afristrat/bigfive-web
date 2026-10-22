@@ -1,0 +1,65 @@
+/* Pages d'articles : typographie de lecture et compléments au moteur de
+   mouvement global, mêmes courbes. Seuls clip-path, transform et opacity
+   s'animent ; rien sous « réduire les animations », rien à l'impression. */
+
+/* Image d'ouverture d'un article : un rideau qui monte depuis le bas. */
+.image {
+  animation: rideau 1000ms var(--courbe) 260ms both;
+}
+@keyframes rideau {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+/* Corps d'article : un cran au-dessus du texte courant, interligne de lecture
+   longue ; chaque intertitre ouvre une section sous un filet. */
+.corps {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.corps > h2 {
+  padding-top: 2rem;
+  border-top: 1px solid rgb(var(--c-trait));
+}
+.corps img {
+  border-radius: 10px;
+}
+
+/* Corps d'article : chaque bloc monte en entrant dans la fenêtre, piloté par le
+   défilement lui-même (aucun script). Un bloc n'est jamais estompé une fois
+   entré : l'animation s'achève avant qu'il n'atteigne le cinquième de l'écran. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .corps > * {
+      animation: corps-monte var(--courbe) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 90%;
+    }
+  }
+}
+@keyframes corps-monte {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image {
+    animation: none;
+  }
+}
+@media print {
+  .image,
+  .corps > * {
+    animation: none !important;
+  }
+}
