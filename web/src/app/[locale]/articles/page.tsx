@@ -1,7 +1,7 @@
 import { compareDesc } from 'date-fns';
 import { allPosts } from 'contentlayer/generated';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { subtitle, title } from '@/components/primitives';
+import { title } from '@/components/primitives';
 import { MotsCinetiques } from '@/components/home-sections';
 import { PostListItem } from '@/components/post-list-item';
 import { Link } from '@/navigation';
@@ -21,7 +21,6 @@ export default async function ArticlesPage({ params }: ArticlesProps) {
   const { locale } = await params;
   setRequestLocale(locale);
   const toolbar = await getTranslations('toolbar');
-  const frontpage = await getTranslations('frontpage');
   const articles = await getTranslations('articles');
   const notFound = await getTranslations('notFound');
 
@@ -33,19 +32,27 @@ export default async function ArticlesPage({ params }: ArticlesProps) {
 
   // Le plus récent ouvre la liste en grand ; les suivants montent au défilement,
   // décalés par groupes de trois pour que ceux qui entrent ensemble se suivent.
+  // Hors de leur langue, les articles sont annoncés comme rédigés en anglais.
   return (
     <div>
-      <h1 className={title({ size: 'display' })}>
-        <MotsCinetiques texte={toolbar('articles')} />
-      </h1>
-      <p
-        style={{ ['--i' as string]: 1 }}
-        className={subtitle({ class: 'apparait-tard' })}
-      >
-        {frontpage('posts.subtitle')}
-      </p>
+      <header className='grid gap-x-8 gap-y-6 pb-12 lg:grid-cols-12 lg:items-end'>
+        <h1 className={`${title({ size: 'display' })} lg:col-span-7`}>
+          <MotsCinetiques texte={toolbar('articles')} />
+        </h1>
+        <div
+          style={{ ['--i' as string]: 1 }}
+          className='apparait-tard lg:col-span-5'
+        >
+          <p className='text-chapo text-texte-2'>{articles('lead')}</p>
+          {posts.length > 0 && translationLocale !== locale && (
+            <p className='mt-2 text-petit text-texte-3'>
+              {articles('inEnglish')}
+            </p>
+          )}
+        </div>
+      </header>
       {posts.length > 0 ? (
-        <ul className='mt-10 divide-y divide-trait border-t-2 border-encre'>
+        <ul className='divide-y divide-trait border-t-2 border-encre'>
           {posts.map((post, index) => (
             <PostListItem
               key={post._id}

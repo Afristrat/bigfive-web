@@ -1,7 +1,5 @@
 import { allPosts } from 'contentlayer/generated';
 import { getTranslations } from 'next-intl/server';
-import { User } from '@nextui-org/user';
-import { Chip, Divider } from '@nextui-org/react';
 import { Image } from '@nextui-org/image';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -90,80 +88,120 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
     .slice(0, 3)
     .map(({ post }) => post);
 
+  // Contenu affiché hors de sa langue (repli sur l'anglais) : balisé dans sa
+  // langue et son sens de lecture ; l'interface autour reste dans la langue de
+  // la page.
+  const langue = currentPost.locale === locale ? undefined : currentPost.locale;
+  const sens = langue ? 'auto' : undefined;
+
+  // Mise en page de lecture : une seule colonne à la mesure du texte. Le titre
+  // monte mot à mot, la description de l'article sert de chapeau, l'image se
+  // dévoile en rideau, le corps monte bloc à bloc au défilement.
   return (
     <article className='mx-auto max-w-3xl'>
       {/* Le chevron « suivant » retourné de 180 degrés pointe vers l'arrière ;
           son retournement RTL par défaut le fait pointer à droite en arabe. */}
       <Link
         href='/articles'
-        className='inline-flex items-center gap-1 text-petit text-texte-2 hover:text-encre'
+        className='inline-flex min-h-11 items-center gap-1 text-petit text-texte-2 hover:text-encre'
       >
         <ChevronRightLinearIcon className='rotate-180' size={16} />
         {t('back')}
       </Link>
-      <h1 className={title({ class: 'mt-6' })}>
-        <MotsCinetiques texte={currentPost.title} />
-      </h1>
-      <p
-        style={{ ['--i' as string]: 0 }}
-        className='apparait-tard mt-4 flex flex-wrap gap-x-4 text-petit text-texte-3'
-      >
-        <time dateTime={currentPost.date}>
-          {formatDate(currentPost.date, locale)}
-        </time>
-        <span>
-          {t('readingTime', {
-            minutes: formatNombre(
-              calculateReadingTime(currentPost.body.raw),
-              locale
-            )
-          })}
-        </span>
-      </p>
+      <header className='mt-6'>
+        <h1
+          lang={langue}
+          dir={sens}
+          className={title({ class: 'text-balance' })}
+        >
+          <MotsCinetiques texte={currentPost.title} />
+        </h1>
+        <p
+          lang={langue}
+          dir={sens}
+          style={{ ['--i' as string]: 0 }}
+          className='apparait-tard mt-6 text-chapo text-texte-2'
+        >
+          {currentPost.description}
+        </p>
+        <div
+          style={{ ['--i' as string]: 1 }}
+          className='apparait-tard mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-y border-trait py-2'
+        >
+          <p className='flex flex-wrap gap-x-4 text-petit text-texte-3'>
+            <span className='font-medium text-encre'>
+              {currentPost.author.name}
+            </span>
+            <time dateTime={currentPost.date}>
+              {formatDate(currentPost.date, locale)}
+            </time>
+            <span>
+              {t('readingTime', {
+                minutes: formatNombre(
+                  calculateReadingTime(currentPost.body.raw),
+                  locale
+                )
+              })}
+            </span>
+          </p>
+          <ShareArticle
+            slug={slug}
+            label={(reseau) => t('share', { reseau })}
+          />
+        </div>
+      </header>
       {currentPost.image && (
         <Image
           src={currentPost.image}
-          alt={currentPost.title}
+          alt=''
           height={600}
           width={1200}
           removeWrapper
-          className={`${styles.image} mt-8 aspect-video w-full rounded-panneau object-cover`}
+          className={`${styles.image} mt-10 aspect-video w-full rounded-panneau object-cover`}
         />
       )}
-      <Divider className='mt-8 bg-trait' />
       <div
-        style={{ ['--i' as string]: 1 }}
-        className='apparait-tard mt-4 flex w-full items-center justify-between gap-4'
-      >
-        <User
-          name={currentPost.author.name}
-          avatarProps={{ src: currentPost.author.avatar }}
-          description={currentPost.author.username}
-        />
-        <ShareArticle slug={slug} />
-      </div>
-      <Divider className='mt-4 bg-trait' />
-      <div
-        className={`${styles.corps} texte-riche mt-10`}
+        lang={langue}
+        dir={sens}
+        className={`${styles.corps} texte-riche mx-auto mt-12 colonne-lecture`}
         dangerouslySetInnerHTML={{ __html: currentPost.body.html }}
       />
-      <div data-reveal='monte' className='mt-8 flex flex-wrap gap-2'>
-        {currentPost.tags.split(', ').map((tag) => (
-          <Chip key={tag} variant='flat' radius='sm'>
-            {tag}
-          </Chip>
-        ))}
-      </div>
-      <ul className='mt-16 divide-y divide-trait border-t border-trait'>
-        {relevantPosts.map((post, index) => (
-          <PostListItem
-            key={post._id}
-            post={post}
-            locale={locale}
-            rang={index}
-          />
-        ))}
-      </ul>
+      <section
+        aria-labelledby='themes'
+        data-reveal='monte'
+        className='mx-auto mt-12 colonne-lecture border-t border-trait pt-6'
+      >
+        <h2 id='themes' className='text-petit font-medium text-texte-3'>
+          {t('tags')}
+        </h2>
+        <ul
+          role='list'
+          lang={langue}
+          dir={sens}
+          className='mt-3 flex flex-wrap gap-x-5 gap-y-2 text-petit text-texte-2'
+        >
+          {currentPost.tags.split(', ').map((tag) => (
+            <li key={tag}>{tag}</li>
+          ))}
+        </ul>
+      </section>
+      {relevantPosts.length > 0 && (
+        <section aria-labelledby='a-lire' className='mt-20'>
+          <h2 id='a-lire' className='text-titre-2 text-encre'>
+            {t('related')}
+          </h2>
+          <ul className='mt-4 divide-y divide-trait border-t-2 border-encre'>
+            {relevantPosts.map((post, index) => (
+              <PostListItem
+                key={post._id}
+                post={post}
+                locale={locale}
+                rang={index}
+              />
+            ))}
+          </ul>
+        </section>
+      )}
     </article>
   );
 };

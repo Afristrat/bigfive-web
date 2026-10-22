@@ -59,7 +59,7 @@ export function MotsCinetiques({ texte }: { texte: string }): ReactElement {
 }
 
 // Phrases d'un paragraphe, pour les révéler ligne à ligne.
-export const phrases = (texte: string): string[] =>
+const phrases = (texte: string): string[] =>
   texte.split(/(?<=[.!?؟])\s+/).filter(Boolean);
 
 export async function HomeSections({

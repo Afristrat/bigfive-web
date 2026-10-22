@@ -1,4 +1,4 @@
-/* Pages éditoriales (à propos, FAQ, articles) : compléments au moteur de
+/* Pages d'articles : typographie de lecture et compléments au moteur de
    mouvement global, mêmes courbes. Seuls clip-path, transform et opacity
    s'animent ; rien sous « réduire les animations », rien à l'impression. */
 
@@ -13,6 +13,20 @@
   to {
     clip-path: inset(0);
   }
+}
+
+/* Corps d'article : un cran au-dessus du texte courant, interligne de lecture
+   longue ; chaque intertitre ouvre une section sous un filet. */
+.corps {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.corps > h2 {
+  padding-top: 2rem;
+  border-top: 1px solid rgb(var(--c-trait));
+}
+.corps img {
+  border-radius: 10px;
 }
 
 /* Corps d'article : chaque bloc monte en entrant dans la fenêtre, piloté par le

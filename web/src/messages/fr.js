@@ -151,27 +151,46 @@ const french = {
     seo: {
       title: 'À propos de Tenga Assessments',
       description:
-        'Tenga Assessments est le service de questionnaires de personnalité de Tenga Conseil, cabinet de conseil marocain.'
+        'Le service de questionnaires de personnalité de Tenga Conseil, cabinet de conseil marocain : un instrument du domaine public, des sources consultables, des limites écrites noir sur blanc.'
     },
     title: 'À propos',
-    p1: 'Tenga Conseil est un cabinet de conseil marocain. Tenga Assessments est son service de questionnaires de personnalité, proposé aux organisations que le cabinet accompagne : directions, équipes de ressources humaines, consultants.',
-    p2: 'Nous avons choisi un instrument dont la méthode est publique et dont chaque source peut être consultée, parce qu’un outil qui touche à la personne doit pouvoir être contrôlé. C’est l’IPIP-NEO-120 de John A. Johnson (2014), issu de l’International Personality Item Pool et placé dans le domaine public. Il décrit la personnalité selon les cinq grands facteurs : ouverture à l’expérience, conscienciosité, extraversion, agréabilité et névrosisme, détaillés en trente facettes.',
-    p3: 'Il est proposé en français, en arabe et en anglais. Quelques formulations ont été retouchées ; chacune conserve la facette mesurée et le sens de cotation de la question d’origine. Cette version n’a fait l’objet d’aucune étude de validation : nous le disons, plutôt que de le laisser deviner.',
-    p4: 'Les résultats décrivent des tendances habituelles de comportement. Ils ne mesurent pas des compétences et ne constituent pas un diagnostic. Notre règle tient en quatre mots : comprendre avant de juger.',
-    contact_faq:
-      'Une question ? Consultez d’abord les <link>questions fréquentes</link>.',
-    contact_email: 'Si vous n’y trouvez pas la réponse, écrivez-nous à {email}.'
+    headline: 'Un questionnaire dont chaque source se vérifie.',
+    lead: 'Tenga Assessments est le service de questionnaires de personnalité de Tenga Conseil, cabinet de conseil marocain. Nous le proposons aux organisations que nous accompagnons : directions, équipes de ressources humaines, consultants.',
+    instrument: {
+      title: 'L’instrument',
+      text: 'Le questionnaire est l’IPIP-NEO-120 de John A. Johnson (2014), tiré de l’International Personality Item Pool et placé dans le domaine public. Nous l’avons choisi parce que sa méthode est publiée et que chacune de ses sources peut être consultée. Un outil qui touche à la personne doit pouvoir être contrôlé.'
+    },
+    model: {
+      title: 'Ce qu’il décrit',
+      text: 'Cinq grands facteurs de la personnalité, détaillés en trente facettes : l’ouverture à l’expérience, la conscienciosité, l’extraversion, l’agréabilité et le névrosisme.'
+    },
+    languages: {
+      title: 'Trois langues',
+      text: 'Vous pouvez y répondre en français, en arabe ou en anglais. Nous avons retouché quelques formulations ; chacune garde la facette mesurée et le sens de cotation de la question d’origine.'
+    },
+    limits: {
+      title: 'Ce qu’il ne prétend pas',
+      text: 'Cette version n’a fait l’objet d’aucune étude de validation. Les résultats décrivent des tendances habituelles de comportement, d’après vos propres réponses. Ce n’est ni un test de compétences ni un diagnostic.'
+    },
+    rule: 'Notre règle',
+    contact: {
+      title: 'Une question ?'
+    },
+    contact_faq: 'Commencez par les <link>questions fréquentes</link>.',
+    contact_email: 'Si la réponse n’y est pas, écrivez-nous à {email}.'
   },
   faq: {
     title: 'Questions fréquentes',
+    lead: 'Avant de répondre au questionnaire, et après : des réponses courtes, sans détour.',
     error: {
-      question: 'Une erreur s’est affichée sur le site : que faire ?',
-      answer: 'Décrivez-nous ce qui s’est passé par e-mail à {email}.'
+      question: 'Le site affiche une erreur. Que faire ?',
+      answer:
+        'Écrivez-nous à {email} en précisant la page concernée, ce que vous étiez en train de faire et le message affiché.'
     },
     print: {
       question: 'Comment imprimer mes résultats ?',
       answer:
-        'Depuis la page de résultats, utilisez la fonction d’impression de votre navigateur, ou enregistrez la page au format PDF.'
+        'Ouvrez la page de vos résultats, puis lancez l’impression de votre navigateur ou enregistrez la page au format PDF.'
     },
     science: {
       question: 'Est-ce scientifique ?',
@@ -186,17 +205,17 @@ const french = {
     source: {
       question: 'D’où viennent les questions ?',
       answer:
-        'Les questions et le calcul des scores proviennent de l’International Personality Item Pool (ipip.ori.org), placé dans le domaine public : il s’agit de l’IPIP-NEO-120 de John A. Johnson (2014). Tenga Conseil a retouché quelques formulations, sans changer ce que mesure chaque question.'
+        'Du domaine public. Les questions et le calcul des scores sont ceux de l’IPIP-NEO-120 de John A. Johnson (2014), issu de l’International Personality Item Pool (ipip.ori.org). Tenga Conseil a retouché quelques formulations, sans changer ce que mesure chaque question.'
     },
     answers: {
       question: 'Y a-t-il de bonnes et de mauvaises réponses ?',
       answer:
-        'Non. Chaque affirmation décrit une manière d’être. Répondez selon ce qui vous ressemble habituellement, pas selon ce que vous aimeriez être.'
+        'Non. Chaque affirmation décrit une manière d’être, ni qualité ni défaut. Répondez selon ce qui vous ressemble d’habitude, pas selon ce que vous aimeriez être.'
     },
     diagnosis: {
-      question: 'Le questionnaire établit-il un diagnostic ?',
+      question: 'Le questionnaire pose-t-il un diagnostic ?',
       answer:
-        'Non. Il décrit des tendances de comportement d’après vos propres réponses. Il n’est pas un test de compétences, d’intelligence ni un examen de santé.'
+        'Non. Il décrit des tendances de comportement d’après vos propres réponses. Ce n’est ni un test de compétences, ni un test d’intelligence, ni un examen de santé.'
     }
   },
   toolbar: {
@@ -325,13 +344,13 @@ const french = {
         'Code incorrect ou expiré. Recommencez avec votre mot de passe.'
     },
     connect: {
-      title: 'Confirmer la connexion',
+      title: 'Ouvrir votre session',
       intro:
-        'Cliquez sur le bouton pour ouvrir votre session. Le lien ne sert qu’une seule fois.',
+        'Un clic sur le bouton ouvre votre session. Le lien ne sert qu’une seule fois.',
       button: 'Ouvrir ma session',
       opening: 'Ouverture…',
       error:
-        'Ce lien est invalide, expiré ou déjà utilisé. Demandez-en un nouveau.',
+        'Ce lien ne fonctionne plus : il n’est pas valide, il a expiré ou il a déjà servi. Demandez-en un nouveau.',
       newLink: 'Demander un nouveau lien'
     }
   },
@@ -816,9 +835,14 @@ const french = {
     }
   },
   articles: {
-    back: 'Retour aux articles',
+    back: 'Tous les articles',
     readingTime: '{minutes} min de lecture',
-    empty: 'Aucun article n’est encore publié dans cette langue.'
+    empty: 'Aucun article n’est encore publié dans cette langue.',
+    lead: 'Lectures sur la personnalité et la psychologie.',
+    inEnglish: 'Ces articles sont rédigés en anglais.',
+    related: 'À lire ensuite',
+    tags: 'Thèmes',
+    share: 'Partager sur {reseau}'
   },
   notFound: {
     title: 'Page introuvable',
