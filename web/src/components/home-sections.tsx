@@ -14,6 +14,10 @@ import { DomainCode, domainCodes, domainLabel } from '@/lib/domain-labels';
 import { formatNombre, localeRegionale } from '@/lib/format';
 import { Link } from '@/navigation';
 
+// Le titre cinétique vit dans son propre module (utilisable côté client) ; les
+// pages qui l'importaient d'ici continuent de le trouver.
+export { MotsCinetiques } from '@/components/mots-cinetiques';
+
 interface HomeSectionProps {
   locale: string;
 }
