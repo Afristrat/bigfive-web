@@ -47,3 +47,8 @@ export async function loadAccount(viewer: Viewer): Promise<Account> {
     })
   };
 }
+
+/** Un code TOTP est-il vérifié sur le compte de la personne connectée ? */
+export async function hasVerifiedTotp(viewer: Viewer): Promise<boolean> {
+  return (await userClient(viewer.accessToken).verifiedTotpFactor()) !== null;
+}

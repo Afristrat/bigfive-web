@@ -295,6 +295,23 @@ const french = {
       'Ce code est incorrect ou expiré. Demandez un nouveau lien de connexion.',
     linkError:
       'Ce lien de connexion est invalide ou a expiré. Demandez-en un nouveau.',
+    password: {
+      summary: 'Administrateur Tenga : me connecter avec un mot de passe',
+      emailLabel: 'Adresse e-mail',
+      passwordLabel: 'Mot de passe',
+      submit: 'Me connecter',
+      checking: 'Vérification…',
+      failed:
+        'Connexion impossible. Vérifiez vos identifiants ou recevez un lien de connexion par e-mail.',
+      invalid: 'Saisissez votre adresse e-mail et votre mot de passe.',
+      totpTitle: 'Code de vérification',
+      totpIntro:
+        'Saisissez le code à 6 chiffres affiché par votre application d’authentification.',
+      totpLabel: 'Code à 6 chiffres',
+      totpSubmit: 'Valider le code',
+      totpFailed:
+        'Code incorrect ou expiré. Recommencez avec votre mot de passe.'
+    },
     connect: {
       title: 'Confirmer la connexion',
       intro:
@@ -327,6 +344,50 @@ const french = {
     error: 'Le profil n’a pas pu être enregistré. Réessayez dans un instant.',
     rolesTitle: 'Vos rôles',
     noRoles: 'Aucun rôle pour le moment.',
+    security: {
+      title: 'Sécurité de la connexion',
+      intro:
+        'Réservé aux administrateurs Tenga. Le mot de passe exige un code d’authentification à chaque connexion ; le lien de connexion par e-mail reste disponible en secours.',
+      totpTitle: 'Application d’authentification',
+      totpActive:
+        'Active. Un code est demandé à chaque connexion par mot de passe.',
+      totpInactive:
+        'Pas encore activée. Activez-la avant de définir un mot de passe.',
+      totpStart: 'Activer l’application d’authentification',
+      totpStarting: 'Préparation…',
+      totpScan:
+        'Scannez ce code avec votre application d’authentification, puis saisissez le code à 6 chiffres qu’elle affiche.',
+      totpQrAlt: 'Code QR à scanner',
+      totpSecretLabel: 'Ou saisissez cette clé à la main',
+      totpCodeLabel: 'Code à 6 chiffres',
+      totpConfirm: 'Confirmer',
+      totpConfirming: 'Vérification…',
+      totpEnabled: 'Application d’authentification activée.',
+      totpFailed:
+        'Code incorrect. Vérifiez l’heure de votre appareil et réessayez.',
+      error: 'L’opération a échoué. Réessayez dans un instant.',
+      passwordTitle: 'Mot de passe',
+      passwordIntro:
+        '12 caractères au moins, sans règle de composition ; une phrase de plusieurs mots convient. Les mots de passe courants sont refusés.',
+      newLabel: 'Nouveau mot de passe',
+      confirmLabel: 'Confirmer le mot de passe',
+      codeLabel: 'Code d’authentification (6 chiffres)',
+      save: 'Enregistrer le mot de passe',
+      saving: 'Enregistrement…',
+      saved: 'Mot de passe enregistré.',
+      needsTotp: 'Activez d’abord l’application d’authentification.',
+      mismatch: 'Les deux mots de passe ne correspondent pas.',
+      invalid: 'Vérifiez les trois champs.',
+      codeFailed: 'Code d’authentification incorrect.',
+      rateLimited: 'Trop de tentatives. Réessayez plus tard.',
+      weak: {
+        too_short: 'Au moins 12 caractères.',
+        too_long: '72 octets au plus (environ 72 caractères simples).',
+        common: 'Ce mot de passe est trop courant ou déjà compromis.',
+        repetitive: 'Évitez de répéter un seul caractère.',
+        contains_email: 'Le mot de passe ne doit pas contenir votre adresse.'
+      }
+    },
     adminLink: 'Administration Tenga',
     logout: 'Se déconnecter'
   },
@@ -426,7 +487,20 @@ const french = {
     colAction: 'Action',
     colActor: 'Acteur',
     colResource: 'Ressource',
-    colQuantity: 'Quantité'
+    colQuantity: 'Quantité',
+    locked: {
+      title: 'Mots de passe verrouillés',
+      intro:
+        'Un mot de passe est bloqué 30 minutes après 5 échecs en moins de 15 minutes, puis verrouillé au 6e échec en 24 heures. Seul un administrateur lève le verrouillage. Le lien de connexion par e-mail reste utilisable.',
+      empty: 'Aucun compte bloqué ou verrouillé.',
+      colAccount: 'Compte',
+      colState: 'État',
+      colUntil: 'Jusqu’à',
+      stateDefinitif: 'Verrouillé',
+      stateTemporaire: 'Bloqué',
+      unlock: 'Déverrouiller',
+      unlocked: 'Compte déverrouillé.'
+    }
   },
   campaigns: {
     title: 'Campagnes',

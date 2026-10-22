@@ -5,6 +5,11 @@ import { safeInternalPath } from '@/lib/safe-path';
 export const ACCESS_COOKIE = '__Host-tenga_at';
 export const REFRESH_COOKIE = '__Host-tenga_rt';
 export const NEXT_COOKIE = '__Host-tenga_next';
+// Entre le mot de passe et le code TOTP : paquet SCELLÉ côté serveur
+// (lib/mfa-pending.ts, revue B1), jamais un jeton lisible. Ce cookie n'ouvre
+// AUCUNE session : le garde ne lit que ACCESS_COOKIE.
+export const PENDING_COOKIE = '__Host-tenga_mfa';
+const PENDING_SECONDS = 5 * 60;
 
 /** Inactivité tolérée : le cookie de renouvellement est reposé à chaque renouvellement. */
 export const SESSION_IDLE_SECONDS = 30 * 24 * 60 * 60;
@@ -60,6 +65,13 @@ export function nextCookie(path: unknown): CookieSpec | null {
 }
 
 export const clearedNextCookie = (): CookieSpec => spec(NEXT_COOKIE, '', 0);
+
+/** Étape du code TOTP : valeur déjà scellée par sealPending, 5 minutes. */
+export const pendingCookie = (sealed: string): CookieSpec =>
+  spec(PENDING_COOKIE, sealed, PENDING_SECONDS);
+
+export const clearedPendingCookie = (): CookieSpec =>
+  spec(PENDING_COOKIE, '', 0);
 
 /** Destination après connexion : le cookie relu avec le même contrôle. */
 export const resolveNext = (cookieValue: unknown, fallback: string): string =>

@@ -64,6 +64,8 @@ export TENGA_DB_CONTAINER=$ctr
 sh "$here/scripts/migrate.sh" "$stack" "$here/migrations"
 sh "$here/scripts/test-sql.sh" "$stack" "$here/tests/sql"
 sh "$here/scripts/concurrence-dernier-admin.sh" "$ctr"
+sh "$here/scripts/concurrence-mdp.sh" "$ctr"
+sh "$here/scripts/concurrence-mdp.sh" "$ctr" --sans-verrou
 if [ "$mutations" = "--mutations" ]; then
   sh "$here/scripts/mutate-sql.sh" "$stack"
 fi

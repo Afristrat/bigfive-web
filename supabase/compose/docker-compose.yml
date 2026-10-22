@@ -109,6 +109,10 @@ services:
       GOTRUE_JWT_SECRET: ${JWT_SECRET}
       # Décision 4 : sessions inactives supprimées après 30 jours.
       GOTRUE_SESSIONS_INACTIVITY_TIMEOUT: 720h
+      # Migration 0018 : mot de passe des administrateurs, 12 caractères au
+      # moins (GoTrue : 6 par défaut). L'application applique la même borne et
+      # refuse en plus les mots de passe courants par une liste locale.
+      GOTRUE_PASSWORD_MIN_LENGTH: 12
       # L'application envoie les e-mails (Resend) : GoTrue n'a aucun SMTP.
       GOTRUE_SMTP_ADMIN_EMAIL: ""
       GOTRUE_SMTP_HOST: ""

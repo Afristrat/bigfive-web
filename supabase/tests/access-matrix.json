@@ -758,6 +758,56 @@
         }
       },
       "note": "Retire une participation de son groupe (renvoie faux si elle n'y était pas) ; campagne en brouillon seulement ; journalisée seulement si un retrait a eu lieu (groupe.retirer)."
+    },
+    {
+      "objet": "app.mdp_tentative",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "serveur": "autorise"
+        }
+      },
+      "note": "Migration 0018 : contrôle du blocage et débit préalable d'un essai de mot de passe ou de code TOTP en une opération atomique (I1) ; adresse inconnue ou non administrateur = « faux libre », rien n'est écrit ; blocage 30 minutes au 5e échec en 15 minutes, verrouillage au 6e en 24 heures."
+    },
+    {
+      "objet": "app.mdp_rembourser",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "serveur": "autorise"
+        }
+      },
+      "note": "Migration 0018 : mot de passe juste ; retire le débit de l'essai et le blocage ou le verrouillage que ce débit a déclenché."
+    },
+    {
+      "objet": "app.mdp_succes",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "serveur": "autorise"
+        }
+      },
+      "note": "Migration 0018 : connexion réussie (code TOTP juste) ; exige l'essai admis le plus récent (moins de 10 minutes) ; refuse (faux) pour un compte bloqué ou verrouillé par un autre essai, ou non administrateur."
+    },
+    {
+      "objet": "app.deverrouiller_mot_de_passe",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Migration 0018 : lève le verrouillage du mot de passe d'un compte. Administrateur Tenga seul (I4 : un responsable ne déverrouille personne) ; jamais soi-même ; refus unique 42501."
+    },
+    {
+      "objet": "app.mdp_comptes_a_surveiller",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Migration 0018 : comptes bloqués ou verrouillés, avec leur adresse ; administrateur Tenga seul (son propre compte excepté) ; tout autre appelant n'obtient aucune ligne."
     }
   ]
 }

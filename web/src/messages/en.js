@@ -294,6 +294,21 @@ const english = {
       'This code is incorrect or has expired. Request a new sign-in link.',
     linkError:
       'This sign-in link is invalid or has expired. Request a new one.',
+    password: {
+      summary: 'Tenga administrator: sign in with a password',
+      emailLabel: 'Email address',
+      passwordLabel: 'Password',
+      submit: 'Sign in',
+      checking: 'Checking…',
+      failed:
+        'Sign-in failed. Check your details or get a sign-in link by email.',
+      invalid: 'Enter your email address and your password.',
+      totpTitle: 'Verification code',
+      totpIntro: 'Enter the 6-digit code shown by your authenticator app.',
+      totpLabel: '6-digit code',
+      totpSubmit: 'Confirm code',
+      totpFailed: 'Wrong or expired code. Start again with your password.'
+    },
     connect: {
       title: 'Confirm sign-in',
       intro:
@@ -326,6 +341,47 @@ const english = {
     error: 'The profile could not be saved. Try again in a moment.',
     rolesTitle: 'Your roles',
     noRoles: 'No role yet.',
+    security: {
+      title: 'Sign-in security',
+      intro:
+        'For Tenga administrators only. The password needs an authentication code at every sign-in; the email sign-in link stays available as a fallback.',
+      totpTitle: 'Authenticator app',
+      totpActive: 'Active. A code is asked at every password sign-in.',
+      totpInactive: 'Not enabled yet. Enable it before setting a password.',
+      totpStart: 'Enable the authenticator app',
+      totpStarting: 'Preparing…',
+      totpScan:
+        'Scan this code with your authenticator app, then enter the 6-digit code it shows.',
+      totpQrAlt: 'QR code to scan',
+      totpSecretLabel: 'Or type this key by hand',
+      totpCodeLabel: '6-digit code',
+      totpConfirm: 'Confirm',
+      totpConfirming: 'Checking…',
+      totpEnabled: 'Authenticator app enabled.',
+      totpFailed: 'Wrong code. Check your device clock and try again.',
+      error: 'The operation failed. Try again in a moment.',
+      passwordTitle: 'Password',
+      passwordIntro:
+        'At least 12 characters, no composition rule; a phrase of several words works. Common passwords are refused.',
+      newLabel: 'New password',
+      confirmLabel: 'Confirm password',
+      codeLabel: 'Authentication code (6 digits)',
+      save: 'Save password',
+      saving: 'Saving…',
+      saved: 'Password saved.',
+      needsTotp: 'Enable the authenticator app first.',
+      mismatch: 'The two passwords do not match.',
+      invalid: 'Check the three fields.',
+      codeFailed: 'Wrong authentication code.',
+      rateLimited: 'Too many attempts. Try again later.',
+      weak: {
+        too_short: 'At least 12 characters.',
+        too_long: '72 bytes at most (about 72 plain characters).',
+        common: 'This password is too common or already compromised.',
+        repetitive: 'Avoid repeating a single character.',
+        contains_email: 'The password must not contain your address.'
+      }
+    },
     adminLink: 'Tenga administration',
     logout: 'Sign out'
   },
@@ -423,7 +479,20 @@ const english = {
     colAction: 'Action',
     colActor: 'Actor',
     colResource: 'Resource',
-    colQuantity: 'Quantity'
+    colQuantity: 'Quantity',
+    locked: {
+      title: 'Locked passwords',
+      intro:
+        'A password is blocked for 30 minutes after 5 failures within 15 minutes, then locked at the 6th failure within 24 hours. Only an administrator lifts the lock. The email sign-in link stays usable.',
+      empty: 'No blocked or locked account.',
+      colAccount: 'Account',
+      colState: 'State',
+      colUntil: 'Until',
+      stateDefinitif: 'Locked',
+      stateTemporaire: 'Blocked',
+      unlock: 'Unlock',
+      unlocked: 'Account unlocked.'
+    }
   },
   campaigns: {
     title: 'Campaigns',
