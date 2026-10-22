@@ -1,9 +1,12 @@
+import { CSSProperties } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import {
   getMessages,
   getTranslations,
   setRequestLocale
 } from 'next-intl/server';
+import { PentagoneTrace } from '@/components/cadre/pentagone-trace';
+import { MotsCinetiques } from '@/components/mots-cinetiques';
 import { PresentationForm } from '@/components/presentation-form';
 import { subtitle, title } from '@/components/primitives';
 import { basePath } from '@/config/site';
@@ -13,6 +16,8 @@ interface Props {
 }
 
 const servedLocales = ['fr', 'ar', 'en'];
+
+const rang = (i: number): CSSProperties => ({ ['--i' as string]: i });
 
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
@@ -32,6 +37,9 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
+// Deux temps dès les grands écrans : en début de ligne, le titre qui monte mot
+// à mot, le chapeau et le pentagone refermé, collés sous l'en-tête ; en fin de
+// ligne, le formulaire, qui entre après eux.
 export default async function PresentationPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -39,16 +47,33 @@ export default async function PresentationPage({ params }: Props) {
   const messages = await getMessages({ locale });
 
   return (
-    <article>
-      <h1 className={title()}>{t('title')}</h1>
-      <p className={subtitle()}>{t('intro')}</p>
-      {/* Le formulaire lit ses libellés côté navigateur : seul son espace de noms lui est transmis. */}
-      <NextIntlClientProvider
-        locale={locale}
-        messages={{ presentation: messages.presentation }}
-      >
-        <PresentationForm locale={locale} />
-      </NextIntlClientProvider>
+    <article className='grid gap-x-12 lg:grid-cols-12'>
+      <header className='lg:sticky lg:top-24 lg:col-span-5 lg:self-start'>
+        <h1 className={title()}>
+          <MotsCinetiques texte={t('title')} />
+        </h1>
+        <p style={rang(0)} className={subtitle({ class: 'apparait-tard' })}>
+          {t('intro')}
+        </p>
+        <span
+          aria-hidden='true'
+          style={rang(1)}
+          className='apparait-tard mt-8 hidden h-[3px] w-24 bg-safran lg:block'
+        />
+        <PentagoneTrace
+          formes
+          className='mt-10 hidden max-w-[260px] lg:block'
+        />
+      </header>
+      <div style={rang(1)} className='apparait-tard lg:col-span-7'>
+        {/* Le formulaire lit ses libellés côté navigateur : seul son espace de noms lui est transmis. */}
+        <NextIntlClientProvider
+          locale={locale}
+          messages={{ presentation: messages.presentation }}
+        >
+          <PresentationForm locale={locale} />
+        </NextIntlClientProvider>
+      </div>
     </article>
   );
 }
