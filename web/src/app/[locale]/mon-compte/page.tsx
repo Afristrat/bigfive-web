@@ -1,9 +1,13 @@
+import type { CSSProperties } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { signOutAction } from '@/actions/auth';
 import { secondaryButtonClass } from '@/components/form-styles';
+import styles from '@/components/formulaires.module.css';
+import { MotsCinetiques } from '@/components/home-sections';
 import { ProfileForm } from '@/components/profile-form';
 import { PasswordSection, TotpSection } from '@/components/security-forms';
 import { title } from '@/components/primitives';
+import { Sceau, initiale } from '@/components/sceau';
 import { hasVerifiedTotp, loadAccount } from '@/lib/account-data';
 import { isoler } from '@/lib/format';
 import { isTengaAdmin, requireViewer } from '@/lib/session';
@@ -69,12 +73,23 @@ export default async function AccountPage({ params }: Props) {
     }
   };
 
+  // Ouverture : le sceau se trace autour de l'initiale, le titre monte mot à
+  // mot, puis l'identité et les panneaux entrent en cascade (rang --i). La
+  // colonne d'identité reste en vue pendant le défilement sur grand écran.
+  const rang = (i: number): CSSProperties => ({ ['--i' as string]: i });
+  const lettre = initiale(account.nom?.trim() || viewer.email, locale);
+
   return (
     <div className='grid gap-10 lg:grid-cols-12'>
-      <div className='lg:col-span-5'>
-        <h1 className={title()}>{t('title')}</h1>
-        <p className='mt-4 text-texte-2'>{t('intro')}</p>
-        <dl className='mt-6'>
+      <div className='lg:sticky lg:top-24 lg:col-span-5 lg:self-start'>
+        <Sceau lettre={lettre} className='mb-6 h-20 w-20' />
+        <h1 className={title()}>
+          <MotsCinetiques texte={t('title')} />
+        </h1>
+        <p style={rang(1)} className={`mt-4 text-texte-2 ${styles.entree}`}>
+          {t('intro')}
+        </p>
+        <dl style={rang(2)} className={`mt-6 ${styles.entree}`}>
           <dt className='text-legende font-semibold text-texte-2'>
             {t('emailLabel')}
           </dt>
@@ -82,7 +97,10 @@ export default async function AccountPage({ params }: Props) {
             <bdi dir='ltr'>{isoler(viewer.email)}</bdi>
           </dd>
         </dl>
-        <div className='mt-8 flex flex-wrap gap-3'>
+        <div
+          style={rang(3)}
+          className={`mt-8 flex flex-wrap gap-3 ${styles.entree}`}
+        >
           {admin && (
             <Link href='/admin' className={secondaryButtonClass}>
               {t('adminLink')}
@@ -98,7 +116,11 @@ export default async function AccountPage({ params }: Props) {
       </div>
 
       <div className='flex flex-col gap-10 lg:col-span-7'>
-        <section aria-labelledby='profil-titre' className='carte'>
+        <section
+          aria-labelledby='profil-titre'
+          style={rang(3)}
+          className={`carte ${styles.entree}`}
+        >
           <h2 id='profil-titre' className='text-titre-2 text-encre'>
             {t('profileTitle')}
           </h2>
@@ -124,7 +146,11 @@ export default async function AccountPage({ params }: Props) {
           />
         </section>
 
-        <section aria-labelledby='roles-titre' className='carte'>
+        <section
+          aria-labelledby='roles-titre'
+          style={rang(4)}
+          className={`carte ${styles.entree}`}
+        >
           <h2 id='roles-titre' className='text-titre-2 text-encre'>
             {t('rolesTitle')}
           </h2>
@@ -132,10 +158,11 @@ export default async function AccountPage({ params }: Props) {
             <p className='mt-4 text-texte-2'>{t('noRoles')}</p>
           ) : (
             <ul className='mt-4 divide-y divide-trait'>
-              {account.roles.map((r) => (
+              {account.roles.map((r, i) => (
                 <li
                   key={`${r.organisation}-${r.role}`}
-                  className='flex flex-wrap items-center justify-between gap-2 py-3'
+                  style={rang(5 + Math.min(i, 5))}
+                  className={`flex flex-wrap items-center justify-between gap-2 py-3 ${styles.entree}`}
                 >
                   <span className='font-semibold text-encre'>
                     {r.organisation}
@@ -150,7 +177,11 @@ export default async function AccountPage({ params }: Props) {
         </section>
 
         {admin && (
-          <section aria-labelledby='securite-titre' className='carte'>
+          <section
+            aria-labelledby='securite-titre'
+            style={rang(5)}
+            className={`carte ${styles.entree}`}
+          >
             <h2 id='securite-titre' className='text-titre-2 text-encre'>
               {t('security.title')}
             </h2>

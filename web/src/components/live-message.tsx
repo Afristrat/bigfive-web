@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { ReactNode } from 'react';
+import styles from '@/components/formulaires.module.css';
 
 // Mêmes teintes que `Notice`, sans son rôle : ici le rôle est porté par le
 // conteneur persistant, pas par la boîte qui apparaît.
@@ -11,7 +12,10 @@ const tons = {
 
 export type MessageTon = keyof typeof tons;
 
-/** Boîte de message, sans rôle (à poser dans une région vivante ou aria-hidden). */
+/**
+ * Boîte de message, sans rôle (à poser dans une région vivante ou aria-hidden).
+ * Elle entre en descendant vers sa place ; un refus se secoue brièvement.
+ */
 export function MessageBox({
   ton,
   children,
@@ -26,6 +30,7 @@ export function MessageBox({
       className={clsx(
         'rounded-controle p-4 text-petit [overflow-wrap:anywhere]',
         tons[ton],
+        ton === 'erreur' ? styles.secousse : styles.message,
         className
       )}
     >

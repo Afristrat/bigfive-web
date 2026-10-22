@@ -1,16 +1,15 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { saveProfile, type ProfileState } from '@/actions/account';
 import {
   inputClassNames,
   labelClass,
-  selectClass,
-  submitButtonClass
+  selectClass
 } from '@/components/form-styles';
 import { Notice } from '@/components/notice';
+import { PendingButton } from '@/components/pending-button';
 
 export type ProfileLabels = {
   nameLabel: string;
@@ -68,9 +67,9 @@ export function ProfileForm({ locale, nom, langue, labels }: ProfileFormProps) {
           ))}
         </select>
       </div>
-      {state.status !== 'idle' && (
+      {state.status !== 'idle' && !pending && (
         <div className='max-w-md'>
-          <Notice ton={state.status === 'saved' ? 'info' : 'erreur'}>
+          <Notice ton={state.status === 'saved' ? 'succes' : 'erreur'}>
             <p>
               {state.status === 'saved'
                 ? labels.saved
@@ -82,14 +81,10 @@ export function ProfileForm({ locale, nom, langue, labels }: ProfileFormProps) {
         </div>
       )}
       <div>
-        <Button
-          type='submit'
-          color='primary'
-          isLoading={pending}
-          className={submitButtonClass}
-        >
-          {pending ? labels.saving : labels.save}
-        </Button>
+        <PendingButton
+          pending={pending}
+          label={pending ? labels.saving : labels.save}
+        />
       </div>
     </form>
   );

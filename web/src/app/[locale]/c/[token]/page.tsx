@@ -1,6 +1,8 @@
+import type { CSSProperties } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { CodeForm } from '@/components/code-form';
 import { ConsumeLinkForm } from '@/components/consume-link-form';
+import styles from '@/components/formulaires.module.css';
 import { MotsCinetiques } from '@/components/home-sections';
 import { Notice } from '@/components/notice';
 import { title } from '@/components/primitives';
@@ -28,16 +30,17 @@ export default async function ConnectPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations('login');
   const usable = isLoginToken(token);
+  const rang = (i: number): CSSProperties => ({ ['--i' as string]: i });
 
-  // Le titre monte mot à mot ; le bouton, seul geste attendu, est là d'emblée.
-  // Le formulaire de code, simple recours, se pose ensuite.
+  // Le titre monte mot à mot ; le bouton (seul geste qui consomme le jeton)
+  // puis la saisie du code entrent en cascade.
   return (
     <div className='min-h-[50vh]'>
       <h1 className={title()}>
         <MotsCinetiques texte={t('connect.title')} />
       </h1>
       {usable ? (
-        <>
+        <div style={rang(1)} className={styles.entree}>
           <p className='mt-4 colonne-lecture text-chapo text-texte-2'>
             {t('connect.intro')}
           </p>
@@ -51,9 +54,9 @@ export default async function ConnectPage({ params }: Props) {
               newLink: t('connect.newLink')
             }}
           />
-        </>
+        </div>
       ) : (
-        <div className='mt-6 max-w-md'>
+        <div style={rang(1)} className={`mt-6 max-w-md ${styles.entree}`}>
           <Notice ton='erreur'>
             <p>{t('connect.error')}</p>
             <Link href='/connexion' className='font-semibold underline'>
@@ -62,7 +65,7 @@ export default async function ConnectPage({ params }: Props) {
           </Notice>
         </div>
       )}
-      <div style={{ ['--i' as string]: 1 }} className='apparait-tard'>
+      <div style={rang(2)} className={`mt-4 ${styles.entree}`}>
         <CodeForm
           locale={locale}
           labels={{
@@ -73,7 +76,7 @@ export default async function ConnectPage({ params }: Props) {
             submit: t('codeSubmit'),
             checking: t('codeChecking'),
             error: t('codeError'),
-            invalid: t('invalid')
+            invalid: t('codeInvalid')
           }}
         />
       </div>
