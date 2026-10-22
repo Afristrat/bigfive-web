@@ -46,6 +46,22 @@ export function MotionRuntime(): null {
       requestAnimationFrame(pas);
     };
 
+    // Compteurs d'ouverture ([data-ouverture], en millisecondes) : visibles au
+    // montage, ils partent de zéro quand leur bloc a fini d'apparaître.
+    const minuteries: number[] = [];
+    const ouverture = compteurs.filter(
+      (el) => el.dataset.ouverture && !horsEcran.includes(el)
+    );
+    ouverture.forEach((el) => {
+      el.textContent = '0';
+      minuteries.push(
+        window.setTimeout(
+          () => lancerCompteur(el),
+          Number(el.dataset.ouverture)
+        )
+      );
+    });
+
     // Un élément entièrement rogné (masque, volet) n'intersecte jamais : on
     // observe alors son parent, qui porte la même position.
     const cibles = new Map<Element, HTMLElement[]>();
@@ -95,6 +111,13 @@ export function MotionRuntime(): null {
 
     return () => {
       observateur.disconnect();
+      minuteries.forEach((id) => window.clearTimeout(id));
+      // Un compteur interrompu retrouve sa valeur finale.
+      ouverture.forEach((el) => {
+        el.textContent = new Intl.NumberFormat(
+          `${el.dataset.locale ?? 'fr-MA'}-u-nu-latn`
+        ).format(Number(el.dataset.compteur));
+      });
       nettoyages.forEach((n) => n());
       // Une navigation ne laisse jamais un contenu à l'état de départ.
       document

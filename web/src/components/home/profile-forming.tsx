@@ -9,6 +9,8 @@ export interface Etape {
   nomCourt: string;
   texte: string;
   mention: string;
+  // Les six facettes du facteur, telles que le profil les décrit.
+  facettes: readonly string[];
 }
 
 interface ProfileFormingProps {
@@ -234,12 +236,26 @@ export function ProfileForming({
                   <h3 className='pic-titre font-display text-titre-1 text-encre'>
                     {etape.nom}
                   </h3>
-                  <p className='mt-1 text-petit font-medium text-texte-3'>
-                    {etape.mention}
-                  </p>
                   <p className='mt-4 max-w-[34em] text-chapo text-texte-2'>
                     {etape.texte}
                   </p>
+                  <p className='mt-6 text-petit font-medium text-texte-3'>
+                    {etape.mention}
+                  </p>
+                  <ul
+                    role='list'
+                    className='pic-facettes mt-3 flex max-w-[34em] flex-wrap gap-2'
+                  >
+                    {etape.facettes.map((facette, i) => (
+                      <li
+                        key={facette}
+                        style={{ ['--i' as string]: i }}
+                        className='rounded-petit border border-trait bg-surface px-2.5 py-1 text-petit text-texte-2'
+                      >
+                        {facette}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </li>
             ))}
