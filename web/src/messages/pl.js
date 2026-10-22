@@ -46,9 +46,8 @@ const polish = {
       subtop: '',
       subtop2:
         'jest najbardziej wiarygodnym i naukowo potwierdzonym modelem psychologicznym opisującym osobowość.',
-      reference: `Testy i ocena użyte na tej stronie pochodzą z
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Następujący test zawiera 120 pytań. Odpowiedź na wszystkie zajmuje ok. 10 minut.',
       result:
         'Kiedy wypełnisz test, otrzymasz szczegółowy opis Twojej osobowości obejmujący pięć czynników:',

@@ -43,9 +43,8 @@ const hindi = {
       subtop: 'The',
       subtop2:
         ' सबसे वैज्ञानिक रूप से मान्य और विश्वसनीय मनोवैज्ञानिक मॉडल है जो व्यक्तित्व को मापने के लिए है।',
-      reference: `इस साइट के परीक्षण और मूल्यांकन को 
-  <a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a> से संकलित किया गया है,
-  इन्वेंट्री <i>जॉनसन (2014) के 120-आइटम IPIP NEO-PI-R</i> से है।`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'निम्नलिखित परीक्षण में 120 प्रश्न शामिल हैं जिन्हें पूरा करने में आपको लगभग 10 मिनट लगने का अनुमान है।',
       result:
         'परीक्षण पूरा करने के बाद, आपको निम्नलिखित डोमेन में एक विस्तृत व्यक्तित्व रिपोर्ट प्राप्त होगी:',

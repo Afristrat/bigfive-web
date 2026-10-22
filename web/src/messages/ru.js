@@ -46,9 +46,8 @@ const russian = {
       subtop: 'Это',
       subtop2:
         'наиболее научно обоснованная и надежная психологическая модель для измерения личности.',
-      reference: `Тесты и анализы для этой страницы взяты из
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Следующий тест состоит из 120 вопросов и займет примерно 10 минут вашего времени.',
       result:
         'После прохождения теста вы получите подробное описание вашей личности по следущим аспектам:',

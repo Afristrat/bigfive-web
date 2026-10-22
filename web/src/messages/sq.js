@@ -43,9 +43,8 @@ const albanian = {
       subtop: 'Modeli',
       subtop2:
         ' është modeli më i verifikuar shkencërisht dhe i besueshëm për matjen e personalitetit.',
-      reference: `Testet dhe vlerësimet për këtë faqe janë mbledhur nga
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventari është nga <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Testi i mëposhtëm përmban 120 pyetje dhe vlerësohet të zgjasë rreth 10 minuta për t’u përfunduar.',
       result:
         'Pas përfundimit të testit, do të merrni një raport të detajuar të personalitetit në fushat e mëposhtme:',

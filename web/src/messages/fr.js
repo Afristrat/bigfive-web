@@ -317,7 +317,7 @@ const french = {
     honeypot: 'Ne remplissez pas ce champ',
     success: {
       title: 'Votre demande est bien reçue',
-      text: 'Merci. Tenga Conseil a enregistré votre demande de présentation. Un accusé de réception est envoyé à l’adresse indiquée\u00A0; pensez à vérifier vos courriers indésirables.',
+      text: 'Merci. Tenga Conseil a enregistré votre demande de présentation. Un accusé de réception devrait arriver à l’adresse indiquée ; votre demande est de toute façon enregistrée. Pensez à vérifier vos courriers indésirables.',
       nextTitle: 'La suite',
       step1: 'Un consultant de Tenga Conseil lit votre demande.',
       step2:

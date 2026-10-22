@@ -43,9 +43,8 @@ const hebrew = {
       top: 'גלו את עצמכם טוב יותר עם מבחן אישיות <violet>חינמי</violet> וקוד פתוח.',
       subtop: 'ה-',
       subtop2: ' הוא המודל הפסיכולוגי המאומת והאמין ביותר למדידת אישיות.',
-      reference: `המבחנים וההערכות באתר זה נאספים מ-
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-והמלאי הוא מ- <i> Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'המבחן הבא כולל 120 שאלות וההערכה היא שייקח לכם כ-10 דקות להשלים אותו.',
       result: 'לאחר שתשלים את המבחן תקבל דוח אישיות מפורט בתחומים הבאים:',
       tests_taken: 'מבחנים שנעשו עד כה'

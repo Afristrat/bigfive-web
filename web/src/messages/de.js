@@ -46,9 +46,8 @@ const deutsh = {
       subtop: 'Der',
       subtop2:
         ' ist das am meisten wissenschaftlich validierte und zuverlässigste psychologische Modell zur Persönlichkeitsmessung.',
-      reference: `Die Tests und Auswertungen für diese Seite stammen von
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Der folgende Test umfasst 120 Fragen und beansprucht schätzungsweise 10 Minuten Ihrer Zeit.',
       result:
         'Nach dem vervollständigen des Tests erhalten Sie eine detaillierte  Beschreibung Ihrer Persönlichkeit in den folgenden Dimensionen:',

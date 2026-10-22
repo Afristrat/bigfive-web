@@ -45,9 +45,8 @@ const dansk = {
       subtop: '',
       subtop2:
         ' er en videnskabelig og troværdig psykologisk model til måling af personlighed.',
-      reference: `Tests og evalueringer på dette websted er hentet fra
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-indholdet er fra <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Den følgende test har 120 spørgsmål, og den estimerede tid er 10 minutter.',
       result:
         'Efter afslutningen af testen får du en detaljeret personlighedsrapport inden for følgende domæner:',

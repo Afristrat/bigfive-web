@@ -44,9 +44,8 @@ const estonian = {
       subtop: 'See',
       subtop2:
         ' on kõige teaduslikult kinnitatud ja usaldusväärsem psühholoogiline mudel isiksuse mõõtmiseks.',
-      reference: `Selle saidi testid ja hinnangud on kogutud
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a> lehelt,
-inventar on pärit <i>Johnsoni (2014) 120-item IPIP NEO-PI-R</i> küsimustikust.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Järgmine test sisaldab 120 küsimust, mille täitmiseks kulub hinnanguliselt umbes 10 minutit.',
       result:
         'Pärast testi lõpetamist saate detailse isiksuse aruande järgmistes valdkondades:',
