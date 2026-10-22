@@ -16,29 +16,30 @@ const english = {
     toLight: 'Switch to light theme'
   },
   home: {
+    eyebrow: 'Personality questionnaire, by Tenga Conseil',
     specimenTag: 'Sample, fictitious values',
     peak: {
-      lead: 'A profile takes shape, one factor at a time.'
+      lead: 'As you read on, the profile takes shape, one factor at a time.'
     },
     figures: {
       items: 'statements',
       factors: 'broad factors',
-      facets: 'facets described',
+      facets: 'facets',
       languages: 'languages'
     },
-    title: 'Decisions built on reference points, not impressions.',
-    lead: 'A questionnaire of 120 statements, with no time limit. We tell you where it comes from, what it measures and what it does not measure.',
+    title: 'Precise words for the way you work.',
+    lead: '120 statements, no time limit, drawn from a public inventory. You get a profile across five broad factors and thirty facets, with its sources and its limits.',
     stake: {
-      title: 'What is at stake',
+      title: 'Where it starts',
       problem:
-        'A badly composed team. A change nobody understood. A training course that misses its target. Many human decisions are still made on instinct.',
+        'You put a team together. You lead a change. You choose a training course. Each time, you need to understand how people work.',
       answer:
-        'Tenga Assessments offers another foothold: shared, public reference points, every source of which you can check.'
+        'The questionnaire gives you a shared vocabulary to talk about it: five factors, thirty facets, public definitions. It opens the conversation; it does not replace it.'
     },
     research: {
-      title: 'What the research says, and what it does not',
+      title: 'What the research establishes, and how far it goes',
       intro:
-        'We cite our sources, with their figures and their limits. Three findings.',
+        'Three findings, without stretching their reach. The full references are published.',
       structure: {
         title: 'A structure that travels',
         text: 'The five major factors have been found in most of the cultures studied, in dozens of languages.'
@@ -54,7 +55,7 @@ const english = {
       link: 'Read the method and references'
     },
     limits: {
-      title: 'What the questionnaire does not do',
+      title: 'What the questionnaire will not do',
       intro: 'A method is also judged by what it refuses to promise.',
       diagnosis: {
         title: 'It makes no diagnosis',
@@ -74,15 +75,16 @@ const english = {
       }
     },
     how: {
-      title: 'How it works',
-      intro: 'Three steps, at your own pace.',
+      title: 'Three stages, at your own pace',
+      intro:
+        'Nothing to prepare, nothing to revise: there are no right or wrong answers.',
       answer: {
         title: 'You answer',
-        text: '120 statements, with no time limit. For each one, you say how you usually are, not how you would like to be. You can stop and carry on later on this device.'
+        text: '120 statements, with no time limit. For each one, say how you usually are, not how you would like to be. You can stop and carry on later on this device.'
       },
       read: {
         title: 'You read your profile',
-        text: 'Five major factors, thirty facets, described as tendencies. Nothing ranks you, nothing is a diagnosis.'
+        text: 'Five broad factors and thirty facets, each described as a tendency. Nothing ranks you, nothing is a diagnosis.'
       },
       keep: {
         title: 'You keep it',
@@ -102,17 +104,33 @@ const english = {
       A: 'Cooperation, trust, concern for others. Some put harmony first; others, frankness.',
       C: 'Organisation, sense of duty, perseverance. Some plan everything; others improvise better.'
     },
-    languages: {
-      title: 'Three languages',
-      text: 'Available in French, Arabic and English.'
+    sheet: {
+      title: 'The instrument at a glance',
+      intro:
+        'Everything you need to check for yourself, without taking our word for it.',
+      inventory: 'Inventory',
+      inventoryValue: 'IPIP-NEO-120, by John A. Johnson (2014)',
+      origin: 'Source of the statements',
+      originValue: 'International Personality Item Pool',
+      status: 'Status',
+      statusValue: 'Public domain',
+      content: 'Content',
+      contentValue: '{items} statements, {factors} factors, {facets} facets',
+      languages: 'Languages',
+      duration: 'Duration',
+      durationValue: 'No time limit',
+      wording: 'Wording',
+      wordingValue:
+        'A few statements reworded, without changing the facet measured or the scoring direction.',
+      validation: 'Validation of this version',
+      validationValue:
+        'No validation study to date. We say so rather than let you guess.'
     },
     reference: {
-      title: 'Where the questionnaire comes from',
-      text: 'The 120 statements come from the IPIP-NEO-120 by John A. Johnson (2014), built from the International Personality Item Pool. The inventory is in the public domain: anyone can read it, criticise it and check it.',
       methodLink: 'Method and references'
     },
     faq: {
-      title: 'Your questions, our answers',
+      title: 'Three questions before you start',
       all: 'All frequently asked questions'
     },
     trust: {
@@ -120,7 +138,7 @@ const english = {
       text: 'Tenga Conseil stands between your leadership and your teams. The consultant debriefs, explains and puts things back in perspective. Nothing individual is passed on to the organisation.'
     },
     closing: {
-      text: 'Answer the questionnaire for yourself, or request a presentation for your organisation. Tenga Conseil will reply to arrange a conversation.'
+      text: 'For yourself, the questionnaire is open now. For your organisation, request a presentation: Tenga Conseil will reply to arrange a conversation.'
     }
   },
   radar: {

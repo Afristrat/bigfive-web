@@ -17,29 +17,30 @@ const french = {
     toLight: 'Passer au thème clair'
   },
   home: {
+    eyebrow: 'Questionnaire de personnalité, par Tenga Conseil',
     specimenTag: 'Exemple, valeurs fictives',
     peak: {
-      lead: 'Un profil se dessine, un facteur après l’autre.'
+      lead: 'À mesure que vous lisez, le profil se dessine, un facteur après l’autre.'
     },
     figures: {
       items: 'affirmations',
       factors: 'grands facteurs',
-      facets: 'facettes décrites',
+      facets: 'facettes',
       languages: 'langues'
     },
-    title: 'Décider sur des repères, pas sur des impressions.',
-    lead: 'Un questionnaire de 120 affirmations, sans limite de temps. Nous vous disons d’où il vient, ce qu’il mesure et ce qu’il ne mesure pas.',
+    title: 'Des mots précis sur votre façon de travailler.',
+    lead: '120 affirmations, sans limite de temps, tirées d’un inventaire public. Vous obtenez un profil sur cinq grands facteurs et trente facettes, avec ses sources et ses limites.',
     stake: {
-      title: 'L’enjeu',
+      title: 'Le point de départ',
       problem:
-        'Une équipe mal composée. Un changement mal compris. Une formation qui rate sa cible. Bien des décisions humaines se prennent sur une intuition.',
+        'On compose une équipe. On conduit un changement. On choisit une formation. Chaque fois, il faut comprendre comment les personnes travaillent.',
       answer:
-        'Tenga Assessments offre un autre point d’appui : des repères communs et publics, dont vous pouvez vérifier chaque source.'
+        'Le questionnaire donne un vocabulaire commun pour en parler\u00A0: cinq facteurs, trente facettes, des définitions publiques. Il ouvre la conversation\u00A0; il ne la remplace pas.'
     },
     research: {
-      title: 'Ce que dit la recherche, et ce qu’elle ne dit pas',
+      title: 'Ce que la recherche établit, et jusqu’où',
       intro:
-        'Nous citons nos sources, avec leurs chiffres et leurs limites. Trois constats.',
+        'Trois constats, sans en forcer la portée. Les références complètes sont publiées.',
       structure: {
         title: 'Une structure qui voyage',
         text: 'Les cinq grands facteurs ont été retrouvés dans la plupart des cultures étudiées, dans des dizaines de langues.'
@@ -50,12 +51,12 @@ const french = {
       },
       groups: {
         title: 'Des groupes, pas des personnes',
-        text: 'Ces résultats décrivent des tendances de groupe. Ils ne prédisent pas une personne, et les traits ne sont qu’un élément parmi d’autres : les compétences, l’expérience et le contexte comptent aussi.'
+        text: 'Ces résultats décrivent des tendances de groupe. Ils ne prédisent pas une personne, et les traits ne sont qu’un élément parmi d’autres\u00A0: les compétences, l’expérience et le contexte comptent aussi.'
       },
       link: 'Consulter la méthode et les références'
     },
     limits: {
-      title: 'Ce que le questionnaire ne fait pas',
+      title: 'Ce que le questionnaire ne fera pas',
       intro: 'Une méthode se juge aussi à ce qu’elle refuse de promettre.',
       diagnosis: {
         title: 'Il ne pose pas de diagnostic',
@@ -67,7 +68,7 @@ const french = {
       },
       mirror: {
         title: 'Il ne dit que ce que vous dites de vous',
-        text: 'Ses résultats reposent sur vos propres réponses : une information précieuse, mais partielle.'
+        text: 'Ses résultats reposent sur vos propres réponses\u00A0: une information précieuse, mais partielle.'
       },
       sorting: {
         title: 'Il n’est pas conçu pour trier des candidats',
@@ -75,15 +76,16 @@ const french = {
       }
     },
     how: {
-      title: 'Comment cela se passe',
-      intro: 'Trois étapes, à votre rythme.',
+      title: 'Trois temps, à votre rythme',
+      intro:
+        'Rien à préparer, rien à réviser\u00A0: il n’y a ni bonne ni mauvaise réponse.',
       answer: {
         title: 'Vous répondez',
-        text: '120 affirmations, sans limite de temps. Pour chacune, vous dites comment vous êtes habituellement, pas comment vous aimeriez être. Vous pouvez vous arrêter et reprendre plus tard sur cet appareil.'
+        text: '120 affirmations, sans limite de temps. Pour chacune, dites comment vous êtes d’habitude, pas comment vous aimeriez être. Vous pouvez vous arrêter et reprendre plus tard sur cet appareil.'
       },
       read: {
         title: 'Vous lisez votre profil',
-        text: 'Cinq grands facteurs, trente facettes, décrits comme des tendances. Rien ne vous classe, rien n’est un diagnostic.'
+        text: 'Cinq grands facteurs et trente facettes, chacun décrit comme une tendance. Rien ne vous classe, rien n’est un diagnostic.'
       },
       keep: {
         title: 'Vous le conservez',
@@ -92,28 +94,44 @@ const french = {
     },
     method: {
       measured:
-        'Cinq grands facteurs de la personnalité : ouverture à l’expérience, conscienciosité, extraversion, agréabilité, névrosisme. Chacun se décompose en six facettes, soit trente tendances décrites séparément.'
+        'Cinq grands facteurs de la personnalité\u00A0: ouverture à l’expérience, conscienciosité, extraversion, agréabilité, névrosisme. Chacun se décompose en six facettes, soit trente tendances décrites séparément.'
     },
     factors: {
       title: 'Cinq facteurs. Trente facettes. Aucun verdict.',
       facets: 'Six facettes',
       N: 'Sensibilité aux émotions négatives et au stress, plus ou moins vive selon les personnes. C’est une tendance d’humeur, pas un diagnostic.',
-      E: 'Énergie dans les échanges et dans l’action. Certains se ressourcent avec les autres ; d’autres, dans le calme.',
-      O: 'Curiosité, imagination, goût de la nouveauté. Certains explorent d’abord ; d’autres s’appuient sur ce qui a fait ses preuves. Les deux manières servent.',
-      A: 'Coopération, confiance, souci d’autrui. Certains privilégient l’harmonie ; d’autres, la franchise.',
-      C: 'Organisation, sens du devoir, persévérance. Certains planifient tout ; d’autres improvisent mieux.'
+      E: 'Énergie dans les échanges et dans l’action. Certains se ressourcent avec les autres\u00A0; d’autres, dans le calme.',
+      O: 'Curiosité, imagination, goût de la nouveauté. Certains explorent d’abord\u00A0; d’autres s’appuient sur ce qui a fait ses preuves. Les deux manières servent.',
+      A: 'Coopération, confiance, souci d’autrui. Certains privilégient l’harmonie\u00A0; d’autres, la franchise.',
+      C: 'Organisation, sens du devoir, persévérance. Certains planifient tout\u00A0; d’autres improvisent mieux.'
     },
-    languages: {
-      title: 'Trois langues',
-      text: 'Disponible en français, en arabe et en anglais.'
+    sheet: {
+      title: 'Fiche de l’instrument',
+      intro: 'De quoi vérifier par vous-même, sans nous croire sur parole.',
+      inventory: 'Inventaire',
+      inventoryValue: 'IPIP-NEO-120, de John A. Johnson (2014)',
+      origin: 'Origine des affirmations',
+      originValue: 'International Personality Item Pool',
+      status: 'Statut',
+      statusValue: 'Domaine public',
+      content: 'Contenu',
+      contentValue:
+        '{items} affirmations, {factors} facteurs, {facets} facettes',
+      languages: 'Langues',
+      duration: 'Durée',
+      durationValue: 'Sans limite de temps',
+      wording: 'Formulations',
+      wordingValue:
+        'Quelques-unes retouchées, sans changer la facette mesurée ni le sens de cotation.',
+      validation: 'Validation de cette version',
+      validationValue:
+        'Aucune étude de validation à ce jour. Nous le disons, plutôt que de le laisser deviner.'
     },
     reference: {
-      title: 'D’où vient le questionnaire',
-      text: 'Les 120 affirmations proviennent de l’IPIP-NEO-120 de John A. Johnson (2014), construit à partir de l’International Personality Item Pool. L’inventaire est placé dans le domaine public : chacun peut le lire, le critiquer et le vérifier.',
       methodLink: 'Méthode et références'
     },
     faq: {
-      title: 'Vos questions, nos réponses',
+      title: 'Trois questions avant de commencer',
       all: 'Toutes les questions fréquentes'
     },
     trust: {
@@ -121,7 +139,7 @@ const french = {
       text: 'Tenga Conseil est le tiers entre votre direction et vos équipes. Le consultant restitue, explique et recadre. Il ne transmet rien d’individuel à l’organisation.'
     },
     closing: {
-      text: 'Répondez au questionnaire pour vous-même, ou demandez une présentation pour votre organisation. Tenga Conseil vous répond pour convenir d’un échange.'
+      text: 'Pour vous-même, le questionnaire est ouvert dès maintenant. Pour votre organisation, demandez une présentation\u00A0: Tenga Conseil vous répond pour convenir d’un échange.'
     }
   },
   radar: {
