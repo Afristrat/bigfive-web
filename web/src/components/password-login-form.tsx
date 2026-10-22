@@ -1,15 +1,17 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import {
   signInWithPassword,
   verifyLoginTotp,
   type PasswordLoginState
 } from '@/actions/password-login';
-import { inputClassNames, submitButtonClass } from '@/components/form-styles';
+import { inputClassNames } from '@/components/form-styles';
+import styles from '@/components/formulaires.module.css';
+import { ChevronRightLinearIcon } from '@/components/icons';
 import { Notice } from '@/components/notice';
+import { PendingButton } from '@/components/pending-button';
 
 export type PasswordLoginLabels = {
   summary: string;
@@ -44,7 +46,10 @@ function TotpStep({
 }) {
   const [state, formAction, pending] = useActionState(verifyLoginTotp, idle);
   return (
-    <section aria-labelledby='totp-titre' className='mt-5 max-w-md'>
+    <section
+      aria-labelledby='totp-titre'
+      className={`mt-5 max-w-md ${styles.etape}`}
+    >
       <h3 id='totp-titre' className='text-titre-3 text-encre'>
         {labels.totpTitle}
       </h3>
@@ -68,7 +73,7 @@ function TotpStep({
             input: 'text-corps text-encre tracking-[0.3em] tabular-nums'
           }}
         />
-        {state.status !== 'idle' && (
+        {state.status !== 'idle' && !pending && (
           <Notice ton='erreur'>
             <p>
               {state.status === 'invalid' ? labels.invalid : labels.totpFailed}
@@ -76,14 +81,10 @@ function TotpStep({
           </Notice>
         )}
         <div>
-          <Button
-            type='submit'
-            color='primary'
-            isLoading={pending}
-            className={submitButtonClass}
-          >
-            {pending ? labels.checking : labels.totpSubmit}
-          </Button>
+          <PendingButton
+            pending={pending}
+            label={pending ? labels.checking : labels.totpSubmit}
+          />
         </div>
       </form>
     </section>
@@ -92,18 +93,25 @@ function TotpStep({
 
 // Connexion par mot de passe des administrateurs Tenga : adresse et mot de
 // passe, puis code TOTP. Replié par défaut : le lien reste la voie ordinaire.
+// À l'ouverture, le chevron pivote et le formulaire monte.
 export function PasswordLoginForm({ locale, next, labels }: Props) {
   const [state, formAction, pending] = useActionState(signInWithPassword, idle);
 
   return (
-    <details className='mt-10 max-w-md'>
-      <summary className='cursor-pointer font-semibold text-encre underline underline-offset-4'>
+    <details className={`mt-10 max-w-md ${styles.repli}`}>
+      <summary className='inline-flex min-h-11 cursor-pointer items-center gap-2 font-semibold text-encre underline underline-offset-4'>
+        <ChevronRightLinearIcon size={18} className={styles.chevron} />
         {labels.summary}
       </summary>
       {state.status === 'totp' ? (
-        <TotpStep locale={locale} labels={labels} />
+        <div className={styles.contenu}>
+          <TotpStep locale={locale} labels={labels} />
+        </div>
       ) : (
-        <form action={formAction} className='mt-5 flex flex-col gap-5'>
+        <form
+          action={formAction}
+          className={`mt-5 flex flex-col gap-5 ${styles.contenu}`}
+        >
           <input type='hidden' name='locale' value={locale} />
           {next && <input type='hidden' name='next' value={next} />}
           <Input
@@ -129,7 +137,7 @@ export function PasswordLoginForm({ locale, next, labels }: Props) {
             variant='bordered'
             classNames={inputClassNames}
           />
-          {state.status !== 'idle' && (
+          {state.status !== 'idle' && !pending && (
             <Notice ton='erreur'>
               <p>
                 {state.status === 'invalid' ? labels.invalid : labels.failed}
@@ -137,14 +145,10 @@ export function PasswordLoginForm({ locale, next, labels }: Props) {
             </Notice>
           )}
           <div>
-            <Button
-              type='submit'
-              color='primary'
-              isLoading={pending}
-              className={submitButtonClass}
-            >
-              {pending ? labels.checking : labels.submit}
-            </Button>
+            <PendingButton
+              pending={pending}
+              label={pending ? labels.checking : labels.submit}
+            />
           </div>
         </form>
       )}

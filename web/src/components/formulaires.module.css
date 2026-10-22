@@ -1,0 +1,240 @@
+/* Mouvement des écrans de compte, de connexion et d'invitation, et des
+   formulaires partagés. Styles locaux : ils lisent les jetons globaux
+   (--courbe, --courbe-glisse, --ressort, --c-*) et n'en définissent aucun.
+   Seuls transform, opacity, clip-path et stroke-dashoffset sont animés. Sous
+   prefers-reduced-motion, chaque élément est posé dans son état final. */
+
+/* Entrée en cascade d'un écran utilitaire : plus vive que celle de l'accueil,
+   le formulaire doit être là avant que la main n'atteigne le clavier. */
+.entree {
+  animation: montee 520ms var(--courbe) both;
+  animation-delay: calc(90ms + var(--i, 0) * 70ms);
+}
+
+@keyframes montee {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Changement d'étape dans un même formulaire (lien envoyé, code TOTP) : la
+   nouvelle étape prend la place de l'ancienne en montant. */
+.etape {
+  animation: montee 420ms var(--courbe) both;
+}
+
+/* Message qui apparaît après un envoi : il descend de 6 px vers sa place. */
+.message {
+  animation: message 260ms var(--courbe) both;
+}
+@keyframes message {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Refus : une brève secousse horizontale, symétrique (identique en arabe). */
+.secousse {
+  animation:
+    message 260ms var(--courbe) both,
+    secousse 380ms var(--courbe) 80ms;
+}
+@keyframes secousse {
+  0%,
+  100% {
+    transform: none;
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  45% {
+    transform: translateX(4px);
+  }
+  70% {
+    transform: translateX(-2px);
+  }
+}
+
+/* Succès : la coche se trace. */
+.coche {
+  flex: none;
+  stroke-dasharray: 1;
+  animation: tracer 520ms var(--courbe) 140ms both;
+}
+@keyframes tracer {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Bouton d'envoi : le libellé change en fondu, et pendant l'envoi un trait
+   parcourt le pied du bouton (état d'attente, sans indicateur tournant). */
+.libelle {
+  display: inline-block;
+  animation: libelle 200ms var(--courbe) both;
+}
+@keyframes libelle {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.attente {
+  --dir: 1;
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: 0;
+  width: 40%;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.6;
+  pointer-events: none;
+  animation: attente 1100ms var(--courbe-glisse) infinite;
+}
+:global([dir='rtl']) .attente {
+  --dir: -1;
+}
+@keyframes attente {
+  from {
+    transform: translateX(calc(var(--dir) * -100%));
+  }
+  to {
+    transform: translateX(calc(var(--dir) * 250%));
+  }
+}
+
+/* Volet replié (connexion par mot de passe) : le chevron pivote, le contenu
+   monte à l'ouverture. */
+.repli > summary {
+  list-style: none;
+}
+.repli > summary::-webkit-details-marker {
+  display: none;
+}
+.chevron {
+  flex: none;
+  transition: transform 220ms var(--courbe);
+}
+:global([dir='rtl']) .chevron {
+  transform: scaleX(-1);
+}
+.repli[open] .chevron {
+  transform: rotate(90deg);
+}
+:global([dir='rtl']) .repli[open] .chevron {
+  transform: scaleX(-1) rotate(90deg);
+}
+.repli[open] > .contenu {
+  animation: montee 360ms var(--courbe) both;
+}
+
+/* Code QR de l'authentification à deux facteurs : il se dévoile de haut en
+   bas, comme lu par un scanner. */
+.qr {
+  animation: balayage 900ms var(--courbe-glisse) 80ms both;
+}
+@keyframes balayage {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Sceau : pentagone de la marque tracé à l'encre safran, initiale au centre. */
+.sceau {
+  display: block;
+  overflow: visible;
+  direction: ltr;
+}
+.sceauContour {
+  stroke-dasharray: 1;
+  animation: tracer 1200ms var(--courbe-glisse) 150ms both;
+}
+.sceauAxe {
+  stroke-dasharray: 1;
+  animation: tracer 700ms var(--courbe) both;
+  animation-delay: calc(450ms + var(--i, 0) * 70ms);
+}
+.sceauForme {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: ouvrir-sceau 1000ms var(--ressort) 650ms both;
+}
+@keyframes ouvrir-sceau {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sceauLettre {
+  animation: montee 600ms var(--courbe) 500ms both;
+}
+
+/* Message joint à une invitation : la lettre se déplie depuis son pli
+   supérieur, son texte suit. */
+.lettre {
+  animation: deplier 760ms var(--courbe-glisse) 260ms both;
+}
+@keyframes deplier {
+  from {
+    clip-path: inset(0 0 100% 0 round 10px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 10px);
+  }
+}
+.lettre > * {
+  animation: montee 520ms var(--courbe) both;
+  animation-delay: calc(560ms + var(--i, 0) * 80ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entree,
+  .etape,
+  .message,
+  .secousse,
+  .coche,
+  .libelle,
+  .repli[open] > .contenu,
+  .qr,
+  .sceauContour,
+  .sceauAxe,
+  .sceauForme,
+  .sceauLettre,
+  .lettre,
+  .lettre > * {
+    animation: none;
+  }
+  .chevron {
+    transition: none;
+  }
+  .attente {
+    animation: none;
+    width: 100%;
+    opacity: 0.35;
+  }
+}

@@ -1,7 +1,6 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import {
   changeAdminPassword,
@@ -10,8 +9,10 @@ import {
   type PasswordChangeState,
   type TotpSetupState
 } from '@/actions/security';
-import { inputClassNames, submitButtonClass } from '@/components/form-styles';
+import { inputClassNames } from '@/components/form-styles';
+import styles from '@/components/formulaires.module.css';
 import { Notice } from '@/components/notice';
+import { PendingButton } from '@/components/pending-button';
 
 export type SecurityLabels = {
   totpTitle: string;
@@ -71,23 +72,24 @@ function TotpConfirm({
   if (state.status === 'enabled') {
     return (
       <div className='mt-5 max-w-md'>
-        <Notice ton='info'>
+        <Notice ton='succes'>
           <p>{labels.totpEnabled}</p>
         </Notice>
       </div>
     );
   }
   return (
-    <div className='mt-5 flex flex-col gap-5'>
+    <div className={`mt-5 flex flex-col gap-5 ${styles.etape}`}>
       <p className='text-texte-2'>{labels.totpScan}</p>
-      {/* Image SVG produite par GoTrue pour cette inscription : data URI, aucun chargement externe. */}
+      {/* Image SVG produite par GoTrue pour cette inscription : data URI, aucun
+          chargement externe. Elle se dévoile de haut en bas. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={enrollment.qrCode}
         alt={labels.totpQrAlt}
         width={192}
         height={192}
-        className='h-48 w-48 rounded-controle bg-white p-2'
+        className={`h-48 w-48 rounded-controle bg-white p-2 ${styles.qr}`}
       />
       <p className='text-petit text-texte-2'>
         {labels.totpSecretLabel}
@@ -112,25 +114,22 @@ function TotpConfirm({
           variant='bordered'
           classNames={codeInputClassNames}
         />
-        {state.status === 'failed' && (
+        {state.status === 'failed' && !pending && (
           <Notice ton='erreur'>
             <p>{labels.totpFailed}</p>
           </Notice>
         )}
-        {(state.status === 'invalid' || state.status === 'error') && (
-          <Notice ton='erreur'>
-            <p>{labels.error}</p>
-          </Notice>
-        )}
+        {(state.status === 'invalid' || state.status === 'error') &&
+          !pending && (
+            <Notice ton='erreur'>
+              <p>{labels.error}</p>
+            </Notice>
+          )}
         <div>
-          <Button
-            type='submit'
-            color='primary'
-            isLoading={pending}
-            className={submitButtonClass}
-          >
-            {pending ? labels.totpConfirming : labels.totpConfirm}
-          </Button>
+          <PendingButton
+            pending={pending}
+            label={pending ? labels.totpConfirming : labels.totpConfirm}
+          />
         </div>
       </form>
     </div>
@@ -163,21 +162,17 @@ export function TotpSection({
           ) : (
             <form action={formAction} className='mt-5'>
               <input type='hidden' name='locale' value={locale} />
-              {state.status === 'error' && (
+              {state.status === 'error' && !pending && (
                 <div className='mb-5 max-w-md'>
                   <Notice ton='erreur'>
                     <p>{labels.error}</p>
                   </Notice>
                 </div>
               )}
-              <Button
-                type='submit'
-                color='primary'
-                isLoading={pending}
-                className={submitButtonClass}
-              >
-                {pending ? labels.totpStarting : labels.totpStart}
-              </Button>
+              <PendingButton
+                pending={pending}
+                label={pending ? labels.totpStarting : labels.totpStart}
+              />
             </form>
           )}
         </>
@@ -277,22 +272,18 @@ export function PasswordSection({
             variant='bordered'
             classNames={codeInputClassNames}
           />
-          {message && (
+          {message && !pending && (
             <div className='max-w-md'>
-              <Notice ton={state.status === 'saved' ? 'info' : 'erreur'}>
+              <Notice ton={state.status === 'saved' ? 'succes' : 'erreur'}>
                 <p>{message}</p>
               </Notice>
             </div>
           )}
           <div>
-            <Button
-              type='submit'
-              color='primary'
-              isLoading={pending}
-              className={submitButtonClass}
-            >
-              {pending ? labels.saving : labels.save}
-            </Button>
+            <PendingButton
+              pending={pending}
+              label={pending ? labels.saving : labels.save}
+            />
           </div>
         </form>
       )}

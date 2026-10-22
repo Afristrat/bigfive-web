@@ -1,11 +1,11 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { consumeLoginCode, type AuthFormState } from '@/actions/auth';
+import { inputClassNames } from '@/components/form-styles';
 import { Notice } from '@/components/notice';
-import { inputClassNames, submitButtonClass } from '@/components/form-styles';
+import { PendingButton } from '@/components/pending-button';
 
 export type CodeFormLabels = {
   title: string;
@@ -70,20 +70,16 @@ export function CodeForm({ locale, email, labels }: CodeFormProps) {
             input: 'text-corps text-encre tracking-[0.3em] tabular-nums'
           }}
         />
-        {state.status !== 'idle' && (
+        {state.status !== 'idle' && !pending && (
           <Notice ton='erreur'>
             <p>{state.status === 'invalid' ? labels.invalid : labels.error}</p>
           </Notice>
         )}
         <div>
-          <Button
-            type='submit'
-            color='primary'
-            isLoading={pending}
-            className={submitButtonClass}
-          >
-            {pending ? labels.checking : labels.submit}
-          </Button>
+          <PendingButton
+            pending={pending}
+            label={pending ? labels.checking : labels.submit}
+          />
         </div>
       </form>
     </section>

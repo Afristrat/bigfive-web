@@ -1,12 +1,13 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { requestLoginLink, type LoginState } from '@/actions/auth';
 import { CodeForm, type CodeFormLabels } from '@/components/code-form';
-import { inputClassNames, submitButtonClass } from '@/components/form-styles';
+import { inputClassNames } from '@/components/form-styles';
+import styles from '@/components/formulaires.module.css';
 import { Notice } from '@/components/notice';
+import { PendingButton } from '@/components/pending-button';
 
 export type LoginLabels = {
   emailLabel: string;
@@ -30,9 +31,10 @@ export function LoginForm({ locale, next, labels }: LoginFormProps) {
     status: 'idle'
   } as LoginState);
 
+  // Lien envoyé : l'étape du code prend la place du formulaire, en montant.
   if (state.status === 'sent') {
     return (
-      <>
+      <div className={styles.etape}>
         <div className='mt-8 max-w-md'>
           <Notice ton='info'>
             <p>{labels.sent}</p>
@@ -40,7 +42,7 @@ export function LoginForm({ locale, next, labels }: LoginFormProps) {
           </Notice>
         </div>
         <CodeForm locale={locale} email={state.email} labels={labels.code} />
-      </>
+      </div>
     );
   }
 
@@ -61,7 +63,8 @@ export function LoginForm({ locale, next, labels }: LoginFormProps) {
         variant='bordered'
         classNames={inputClassNames}
       />
-      {state.status === 'invalid' && (
+      {/* Retiré pendant l'envoi : un refus répété réapparaît et se secoue. */}
+      {state.status === 'invalid' && !pending && (
         <div className='max-w-md'>
           <Notice ton='erreur'>
             <p>{labels.invalid}</p>
@@ -69,14 +72,10 @@ export function LoginForm({ locale, next, labels }: LoginFormProps) {
         </div>
       )}
       <div>
-        <Button
-          type='submit'
-          color='primary'
-          isLoading={pending}
-          className={submitButtonClass}
-        >
-          {pending ? labels.sending : labels.submit}
-        </Button>
+        <PendingButton
+          pending={pending}
+          label={pending ? labels.sending : labels.submit}
+        />
       </div>
     </form>
   );
