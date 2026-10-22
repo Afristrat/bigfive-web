@@ -23,7 +23,7 @@ interface SurveyNavProps {
 }
 
 const baseStyle =
-  'appui h-auto min-h-11 min-w-[128px] rounded-controle px-5 py-2 text-base font-medium max-sm:flex-1';
+  'appui h-auto min-h-12 min-w-[128px] touch-manipulation rounded-controle px-5 py-2 text-base font-medium max-sm:flex-1';
 
 const disabledStyle =
   'data-[disabled=true]:bg-creux data-[disabled=true]:text-texte-3 data-[disabled=true]:opacity-100';

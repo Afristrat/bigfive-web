@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@nextui-org/button';
 import { useRouter } from '@/navigation';
 
@@ -12,7 +12,13 @@ import { SurveyNav } from '@/components/questionnaire/survey-nav';
 import { type Question } from '@bigfive-org/questions';
 import { isDev } from '@/lib/helpers';
 import { formatNombre } from '@/lib/format';
-import { scoreForKey } from '@/lib/questionnaire-keys';
+import { domainCodes } from '@/lib/domain-labels';
+import {
+  progressByDomain,
+  progressQuarter,
+  scoreForKey
+} from '@/lib/questionnaire-keys';
+import styles from '@/components/questionnaire/flow.module.css';
 import useTimer from '@/hooks/useTimer';
 import { type Answer, type DbResult } from '@/types';
 
@@ -56,6 +62,9 @@ export const Survey = ({
   const [loading, setLoading] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [restored, setRestored] = useState(false);
+  // Sens de la dernière navigation : la question suivante arrive du bord de
+  // fin de ligne, la précédente revient du bord de début.
+  const [sens, setSens] = useState<'avant' | 'arriere'>('avant');
   const seconds = useTimer();
   const headingRef = useRef<HTMLHeadingElement>(null);
   // Vrai uniquement après un clic sur Suivant ou Précédent : ni la restauration
@@ -110,6 +119,11 @@ export const Survey = ({
   const backButtonDisabled = currentQuestionIndex === 0 || loading;
 
   const total = questions.length;
+  const parFacteur = useMemo(
+    () => progressByDomain(questions, answers, domainCodes),
+    [questions, answers]
+  );
+  const palier = progressQuarter(answers.length, total);
   const current = Math.min(currentQuestionIndex + 1, total);
   const progressLabel = labels.progress
     .replace('{current}', formatNombre(current, language))
@@ -157,11 +171,13 @@ export const Survey = ({
 
   function handlePreviousQuestions() {
     shouldFocusHeading.current = true;
+    setSens('arriere');
     setCurrentQuestionIndex((prev) => Math.max(0, prev - 1));
   }
 
   function handleNextQuestions() {
     shouldFocusHeading.current = true;
+    setSens('avant');
     setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1));
     if (restored) setRestored(false);
   }
@@ -232,6 +248,9 @@ export const Survey = ({
         label={progressLabel}
         noTimeLimit={labels.noTimeLimit}
         barLabel={labels.progressBar}
+        parFacteur={parFacteur}
+        facteurCourant={question?.domain}
+        palier={palier}
       />
       {currentQuestionIndex === 0 && (
         <p className='mt-6 flex max-w-[44rem] items-start gap-3 rounded-controle border-s-2 border-accent bg-accent-doux px-4 py-3 text-petit text-encre'>
@@ -254,8 +273,29 @@ export const Survey = ({
         </p>
       )}
       {currentQuestionIndex === half && (
-        <Notice ton='info' className='mt-5'>
-          <p>{halfwayLabel}</p>
+        <Notice ton='info' className={`mt-5 ${styles.felicitation}`}>
+          <p className='flex items-start gap-2'>
+            <svg
+              aria-hidden='true'
+              focusable='false'
+              width='20'
+              height='20'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              className='mt-px flex-none text-accent'
+            >
+              <path
+                className={styles['coche-trait']}
+                pathLength={1}
+                d='M4.5 12.5l4.8 4.8L19.5 7'
+              />
+            </svg>
+            <span>{halfwayLabel}</span>
+          </p>
         </Notice>
       )}
       {restored && (
@@ -295,6 +335,7 @@ export const Survey = ({
             value={currentAnswer?.score.toString()}
             onChange={(value) => handleAnswer(question.id, value)}
             headingRef={headingRef}
+            sens={sens}
           />
         )}
         <SurveyNav
