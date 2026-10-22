@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useId } from 'react';
 import { Input } from '@nextui-org/input';
 import { consumeLoginCode, type AuthFormState } from '@/actions/auth';
 import { inputClassNames } from '@/components/form-styles';
@@ -23,19 +23,29 @@ interface CodeFormProps {
   /** Adresse déjà saisie sur la page de connexion ; sinon le champ est affiché. */
   email?: string;
   labels: CodeFormLabels;
+  /** Niveau du titre, selon la place du formulaire dans la page. */
+  heading?: 'h2' | 'h3' | 'h4';
 }
 
 // Saisie du code à 6 chiffres reçu dans le message (autre appareil que celui du lien).
-export function CodeForm({ locale, email, labels }: CodeFormProps) {
+export function CodeForm({
+  locale,
+  email,
+  labels,
+  heading: Heading = 'h2'
+}: CodeFormProps) {
   const [state, formAction, pending] = useActionState(consumeLoginCode, {
     status: 'idle'
   } as AuthFormState);
+  // Identifiant unique : la page peut porter deux demandes de lien (lien et
+  // mot de passe oublié), donc deux formulaires de code.
+  const titleId = useId();
 
   return (
-    <section aria-labelledby='code-titre' className='mt-10 max-w-md'>
-      <h2 id='code-titre' className='text-titre-3 text-encre'>
+    <section aria-labelledby={titleId} className='mt-8 max-w-md'>
+      <Heading id={titleId} className='text-titre-3 text-encre'>
         {labels.title}
-      </h2>
+      </Heading>
       <p className='mt-2 text-texte-2'>{labels.intro}</p>
       <form action={formAction} className='mt-5 flex flex-col gap-5'>
         <input type='hidden' name='locale' value={locale} />

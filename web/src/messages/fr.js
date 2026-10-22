@@ -290,55 +290,76 @@ const french = {
   login: {
     title: 'Connexion',
     intro:
-      'Saisissez votre adresse e-mail. Nous vous enverrons un lien de connexion et un code, valables 15 minutes et utilisables une seule fois. Aucun mot de passe à retenir ; seuls les administrateurs Tenga peuvent aussi se connecter par mot de passe.',
+      'Recevez par e-mail un lien de connexion. Il est valable 15 minutes et ne sert qu’une fois.',
+    stepsLabel: 'Étapes de la connexion',
+    steps: {
+      address: 'Saisissez votre adresse e-mail.',
+      open: 'Ouvrez le message reçu.',
+      confirm:
+        'Cliquez sur le lien, ou saisissez sur cette page le code à 6 chiffres du message.'
+    },
     emailLabel: 'Adresse e-mail',
-    submit: 'Recevoir mon lien de connexion',
-    sending: 'Envoi en cours…',
-    invalid: 'Veuillez saisir une adresse e-mail valide.',
-    sent: 'Si cette adresse peut se connecter, un message vient de lui être envoyé, avec un lien et un code valables 15 minutes.',
+    submit: 'Recevoir le lien',
+    sending: 'Envoi…',
+    invalid: 'Saisissez une adresse e-mail valide.',
+    sent: 'Si cette adresse peut se connecter, un message vient d’y être envoyé : un lien et un code, valables 15 minutes.',
     sentHelp:
-      'Rien au bout de quelques minutes\u00a0? Vérifiez vos courriers indésirables, puis demandez un nouveau lien.',
-    codeTitle: 'Message ouvert sur un autre appareil\u00a0?',
-    codeIntro: 'Saisissez ici le code à 6 chiffres reçu dans le message.',
+      'Rien reçu après quelques minutes ? Regardez dans les courriers indésirables, ou demandez un nouveau lien.',
+    retry: 'Demander un nouveau lien',
+    codeTitle: 'Message ouvert sur un autre appareil ?',
+    codeIntro: 'Saisissez ici le code à 6 chiffres du message.',
     codeLabel: 'Code à 6 chiffres',
     codeSubmit: 'Valider le code',
     codeChecking: 'Vérification…',
-    codeError:
-      'Ce code est incorrect ou expiré. Demandez un nouveau lien de connexion.',
+    codeInvalid: 'Vérifiez l’adresse e-mail et les 6 chiffres du code.',
+    codeError: 'Code incorrect ou expiré. Demandez un nouveau lien.',
     linkError:
-      'Ce lien de connexion est invalide ou a expiré. Demandez-en un nouveau.',
+      'Ce lien de connexion n’est plus valable. Demandez-en un nouveau.',
     password: {
-      summary: 'Administrateur Tenga : me connecter avec un mot de passe',
+      summary: 'Administrateur Tenga : connexion par mot de passe',
+      intro:
+        'Votre mot de passe, puis le code de votre application d’authentification.',
+      stepOne: 'Étape 1 sur 2',
+      stepTwo: 'Étape 2 sur 2',
       emailLabel: 'Adresse e-mail',
       passwordLabel: 'Mot de passe',
-      submit: 'Me connecter',
+      submit: 'Continuer',
       checking: 'Vérification…',
       failed:
-        'Connexion impossible. Vérifiez vos identifiants ou recevez un lien de connexion par e-mail.',
+        'Connexion refusée. Vérifiez vos identifiants, ou recevez un lien de connexion par e-mail.',
       invalid: 'Saisissez votre adresse e-mail et votre mot de passe.',
-      totpTitle: 'Code de vérification',
+      totpTitle: 'Code d’authentification',
       totpIntro:
         'Saisissez le code à 6 chiffres affiché par votre application d’authentification.',
       totpLabel: 'Code à 6 chiffres',
-      totpSubmit: 'Valider le code',
+      totpSubmit: 'Me connecter',
       totpFailed:
-        'Code incorrect ou expiré. Recommencez avec votre mot de passe.'
+        'Code refusé. Saisissez le code suivant, ou recommencez depuis le mot de passe.',
+      restart: 'Recommencer',
+      forgot: {
+        open: 'Mot de passe oublié ?',
+        title: 'Mot de passe oublié',
+        intro:
+          'Recevez un lien de connexion par e-mail. Il vous mène à Mon compte, où vous choisirez un nouveau mot de passe avec le code de votre application d’authentification.',
+        lock: 'Un mot de passe verrouillé après plusieurs échecs le reste jusqu’à son déverrouillage par un autre administrateur Tenga.',
+        submit: 'Recevoir le lien',
+        back: 'Retour au mot de passe'
+      }
     },
     connect: {
       title: 'Confirmer la connexion',
       intro:
-        'Cliquez sur le bouton pour ouvrir votre session. Le lien ne sert qu’une seule fois.',
-      button: 'Ouvrir ma session',
-      opening: 'Ouverture…',
+        'Le lien ne sert qu’une fois : il est utilisé au moment où vous cliquez sur le bouton.',
+      button: 'Me connecter',
+      opening: 'Connexion…',
       error:
-        'Ce lien est invalide, expiré ou déjà utilisé. Demandez-en un nouveau.',
+        'Ce lien n’est plus valable : il a expiré ou a déjà servi. Demandez-en un nouveau.',
       newLink: 'Demander un nouveau lien'
     }
   },
   account: {
     title: 'Mon compte',
-    intro:
-      'Votre profil et vos rôles. Seules ces informations sont conservées à votre sujet ici.',
+    intro: 'Votre adresse de connexion, votre profil et vos rôles.',
     profileTitle: 'Profil',
     emailLabel: 'Adresse de connexion',
     nameLabel: 'Nom',
@@ -353,51 +374,52 @@ const french = {
     saving: 'Enregistrement…',
     saved: 'Profil enregistré.',
     invalid: 'Vérifiez le nom (120 caractères au plus) et la langue.',
-    error: 'Le profil n’a pas pu être enregistré. Réessayez dans un instant.',
+    error: 'Le profil n’a pas été enregistré. Réessayez dans un instant.',
     rolesTitle: 'Vos rôles',
-    noRoles: 'Aucun rôle pour le moment.',
+    noRoles: 'Aucun rôle pour l’instant.',
     security: {
       title: 'Sécurité de la connexion',
       intro:
-        'Réservé aux administrateurs Tenga. Le mot de passe exige un code d’authentification à chaque connexion ; le lien de connexion par e-mail reste disponible en secours.',
+        'Réservé aux administrateurs Tenga. La connexion par mot de passe demande aussi le code de votre application d’authentification ; le lien de connexion par e-mail reste possible.',
       totpTitle: 'Application d’authentification',
       totpActive:
-        'Active. Un code est demandé à chaque connexion par mot de passe.',
-      totpInactive:
-        'Pas encore activée. Activez-la avant de définir un mot de passe.',
+        'Activée. Son code est demandé à chaque connexion par mot de passe.',
+      totpInactive: 'Non activée. Activez-la avant de définir un mot de passe.',
       totpStart: 'Activer l’application d’authentification',
       totpStarting: 'Préparation…',
       totpScan:
-        'Scannez ce code avec votre application d’authentification, puis saisissez le code à 6 chiffres qu’elle affiche.',
-      totpQrAlt: 'Code QR à scanner',
-      totpSecretLabel: 'Ou saisissez cette clé à la main',
+        'Scannez ce code QR avec votre application d’authentification, puis saisissez le code à 6 chiffres qu’elle affiche.',
+      totpQrAlt: 'Code QR d’activation de l’application d’authentification',
+      totpSecretLabel: 'Ou saisissez cette clé dans l’application :',
       totpCodeLabel: 'Code à 6 chiffres',
       totpConfirm: 'Confirmer',
       totpConfirming: 'Vérification…',
       totpEnabled: 'Application d’authentification activée.',
       totpFailed:
-        'Code incorrect. Vérifiez l’heure de votre appareil et réessayez.',
-      error: 'L’opération a échoué. Réessayez dans un instant.',
+        'Code refusé. Vérifiez l’heure de votre appareil, puis réessayez.',
+      error: 'L’opération n’a pas abouti. Réessayez dans un instant.',
       passwordTitle: 'Mot de passe',
       passwordIntro:
-        '12 caractères au moins, sans règle de composition ; une phrase de plusieurs mots convient. Les mots de passe courants sont refusés.',
+        'L’ancien mot de passe n’est pas demandé : le code de votre application d’authentification suffit. 12 caractères au moins, sans règle de composition ; une phrase de plusieurs mots convient. Les mots de passe trop courants sont refusés.',
       newLabel: 'Nouveau mot de passe',
-      confirmLabel: 'Confirmer le mot de passe',
+      confirmLabel: 'Confirmez le mot de passe',
       codeLabel: 'Code d’authentification (6 chiffres)',
       save: 'Enregistrer le mot de passe',
       saving: 'Enregistrement…',
       saved: 'Mot de passe enregistré.',
       needsTotp: 'Activez d’abord l’application d’authentification.',
-      mismatch: 'Les deux mots de passe ne correspondent pas.',
+      mismatch: 'Les deux saisies ne correspondent pas.',
       invalid: 'Vérifiez les trois champs.',
-      codeFailed: 'Code d’authentification incorrect.',
+      codeFailed: 'Code d’authentification refusé.',
       rateLimited: 'Trop de tentatives. Réessayez plus tard.',
       weak: {
-        too_short: 'Au moins 12 caractères.',
-        too_long: '72 octets au plus (environ 72 caractères simples).',
-        common: 'Ce mot de passe est trop courant ou déjà compromis.',
-        repetitive: 'Évitez de répéter un seul caractère.',
-        contains_email: 'Le mot de passe ne doit pas contenir votre adresse.'
+        too_short: '12 caractères au moins.',
+        too_long: '72 octets au plus (environ 72 caractères non accentués).',
+        common:
+          'Ce mot de passe est refusé : il est trop courant ou identique à l’actuel.',
+        repetitive: 'Évitez un seul caractère répété.',
+        contains_email:
+          'Le mot de passe ne doit pas contenir votre adresse e-mail.'
       }
     },
     adminLink: 'Administration Tenga',
@@ -632,13 +654,13 @@ const french = {
   invitation: {
     title: 'Votre invitation',
     invalid:
-      'Cette invitation n’est plus valable. Demandez-en une nouvelle à l’organisation qui vous a écrit.',
+      'Cette invitation n’est plus valable. Demandez-en une nouvelle à l’organisation qui vous l’a envoyée.',
     greeting: 'Bonjour {prenom},',
     greetingNeutral: 'Bonjour,',
     intro:
-      '{organisation} vous invite à répondre au questionnaire de personnalité de Tenga Assessments, dans le cadre de la campagne «\u00a0{campagne}\u00a0».',
+      '{organisation} vous invite à répondre au questionnaire de personnalité de Tenga Assessments, pour la campagne «\u00a0{campagne}\u00a0».',
     messageTitle: 'Message joint à l’invitation',
-    expires: 'Cette invitation est valable jusqu’au {date}.',
+    expires: 'Invitation valable jusqu’au {date}.',
     acceptHelp:
       'En l’acceptant, vous ouvrez votre espace personnel sur Tenga Assessments.',
     button: 'Accepter l’invitation',

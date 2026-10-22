@@ -222,7 +222,13 @@ export function PasswordSection({
   );
   const message = passwordMessage(state, labels);
   return (
-    <section aria-labelledby='mdp-section-titre'>
+    // Ancre de « mot de passe oublié » (FORGOT_NEXT) : la rubrique se signale
+    // brièvement quand on y arrive par le lien.
+    <section
+      id='mot-de-passe'
+      aria-labelledby='mdp-section-titre'
+      className={styles.cible}
+    >
       <h3 id='mdp-section-titre' className='text-titre-3 text-encre'>
         {labels.passwordTitle}
       </h3>

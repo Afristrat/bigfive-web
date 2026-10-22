@@ -212,6 +212,36 @@
   animation-delay: calc(560ms + var(--i, 0) * 80ms);
 }
 
+/* Rubrique atteinte par une ancre (#mot-de-passe) : un cadre d'accent
+   apparaît puis s'efface ; seule son opacité est animée. */
+.cible {
+  position: relative;
+  scroll-margin-top: 6rem;
+}
+.cible::after {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border: 2px solid rgb(var(--c-accent));
+  border-radius: 10px;
+  opacity: 0;
+  pointer-events: none;
+}
+.cible:target::after {
+  animation: reperage 1800ms var(--courbe) 300ms both;
+}
+@keyframes reperage {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .entree,
   .etape,
@@ -228,6 +258,11 @@
   .lettre,
   .lettre > * {
     animation: none;
+  }
+  /* Sans mouvement, le repère reste affiché : il signale où l'on arrive. */
+  .cible:target::after {
+    animation: none;
+    opacity: 1;
   }
   .chevron {
     transition: none;

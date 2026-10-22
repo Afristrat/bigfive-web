@@ -289,53 +289,72 @@ const english = {
   login: {
     title: 'Sign in',
     intro:
-      'Enter your e-mail address. We will send you a sign-in link and a code, valid for 15 minutes and usable once. There is no password to remember; only Tenga administrators can also sign in with a password.',
-    emailLabel: 'E-mail address',
-    submit: 'Send me a sign-in link',
+      'Get a sign-in link by email. It is valid for 15 minutes and works once.',
+    stepsLabel: 'Sign-in steps',
+    steps: {
+      address: 'Enter your email address.',
+      open: 'Open the message you receive.',
+      confirm:
+        'Click the link, or enter the 6-digit code from the message on this page.'
+    },
+    emailLabel: 'Email address',
+    submit: 'Get the link',
     sending: 'Sending…',
-    invalid: 'Please enter a valid e-mail address.',
-    sent: 'If this address can sign in, a message has just been sent to it, with a link and a code valid for 15 minutes.',
+    invalid: 'Enter a valid email address.',
+    sent: 'If this address can sign in, a message has just been sent to it: a link and a code, valid for 15 minutes.',
     sentHelp:
-      'Nothing after a few minutes? Check your spam folder, then request a new link.',
+      'Nothing after a few minutes? Check your spam folder, or request a new link.',
+    retry: 'Request a new link',
     codeTitle: 'Opened the message on another device?',
-    codeIntro: 'Enter here the 6-digit code from the message.',
+    codeIntro: 'Enter the 6-digit code from the message here.',
     codeLabel: '6-digit code',
     codeSubmit: 'Confirm the code',
     codeChecking: 'Checking…',
-    codeError:
-      'This code is incorrect or has expired. Request a new sign-in link.',
-    linkError:
-      'This sign-in link is invalid or has expired. Request a new one.',
+    codeInvalid: 'Check the email address and the 6 digits of the code.',
+    codeError: 'Wrong or expired code. Request a new link.',
+    linkError: 'This sign-in link is no longer valid. Request a new one.',
     password: {
       summary: 'Tenga administrator: sign in with a password',
+      intro: 'Your password, then the code from your authenticator app.',
+      stepOne: 'Step 1 of 2',
+      stepTwo: 'Step 2 of 2',
       emailLabel: 'Email address',
       passwordLabel: 'Password',
-      submit: 'Sign in',
+      submit: 'Continue',
       checking: 'Checking…',
       failed:
-        'Sign-in failed. Check your details or get a sign-in link by email.',
+        'Sign-in refused. Check your details, or get a sign-in link by email.',
       invalid: 'Enter your email address and your password.',
-      totpTitle: 'Verification code',
+      totpTitle: 'Authentication code',
       totpIntro: 'Enter the 6-digit code shown by your authenticator app.',
       totpLabel: '6-digit code',
-      totpSubmit: 'Confirm code',
-      totpFailed: 'Wrong or expired code. Start again with your password.'
+      totpSubmit: 'Sign in',
+      totpFailed:
+        'Code refused. Enter the next code, or start again from the password.',
+      restart: 'Start again',
+      forgot: {
+        open: 'Forgot your password?',
+        title: 'Forgotten password',
+        intro:
+          'Get a sign-in link by email. It takes you to My account, where you choose a new password with the code from your authenticator app.',
+        lock: 'A password locked after several failures stays locked until another Tenga administrator unlocks it.',
+        submit: 'Get the link',
+        back: 'Back to the password'
+      }
     },
     connect: {
       title: 'Confirm sign-in',
-      intro:
-        'Click the button to open your session. The link can be used only once.',
-      button: 'Open my session',
-      opening: 'Opening…',
+      intro: 'The link works once: it is used when you click the button.',
+      button: 'Sign in',
+      opening: 'Signing in…',
       error:
-        'This link is invalid, has expired or was already used. Request a new one.',
+        'This link is no longer valid: it has expired or was already used. Request a new one.',
       newLink: 'Request a new link'
     }
   },
   account: {
     title: 'My account',
-    intro:
-      'Your profile and your roles. Only this information is kept about you here.',
+    intro: 'Your sign-in address, your profile and your roles.',
     profileTitle: 'Profile',
     emailLabel: 'Sign-in address',
     nameLabel: 'Name',
@@ -350,48 +369,49 @@ const english = {
     saving: 'Saving…',
     saved: 'Profile saved.',
     invalid: 'Check the name (120 characters at most) and the language.',
-    error: 'The profile could not be saved. Try again in a moment.',
+    error: 'The profile was not saved. Try again in a moment.',
     rolesTitle: 'Your roles',
-    noRoles: 'No role yet.',
+    noRoles: 'No role for now.',
     security: {
       title: 'Sign-in security',
       intro:
-        'For Tenga administrators only. The password needs an authentication code at every sign-in; the email sign-in link stays available as a fallback.',
+        'For Tenga administrators only. Signing in with a password also asks for the code from your authenticator app; the email sign-in link remains available.',
       totpTitle: 'Authenticator app',
-      totpActive: 'Active. A code is asked at every password sign-in.',
-      totpInactive: 'Not enabled yet. Enable it before setting a password.',
+      totpActive: 'Enabled. Its code is asked at every password sign-in.',
+      totpInactive: 'Not enabled. Enable it before setting a password.',
       totpStart: 'Enable the authenticator app',
       totpStarting: 'Preparing…',
       totpScan:
-        'Scan this code with your authenticator app, then enter the 6-digit code it shows.',
-      totpQrAlt: 'QR code to scan',
-      totpSecretLabel: 'Or type this key by hand',
+        'Scan this QR code with your authenticator app, then enter the 6-digit code it shows.',
+      totpQrAlt: 'QR code to enable the authenticator app',
+      totpSecretLabel: 'Or enter this key in the app:',
       totpCodeLabel: '6-digit code',
       totpConfirm: 'Confirm',
       totpConfirming: 'Checking…',
       totpEnabled: 'Authenticator app enabled.',
-      totpFailed: 'Wrong code. Check your device clock and try again.',
-      error: 'The operation failed. Try again in a moment.',
+      totpFailed: 'Code refused. Check your device clock, then try again.',
+      error: 'The operation did not complete. Try again in a moment.',
       passwordTitle: 'Password',
       passwordIntro:
-        'At least 12 characters, no composition rule; a phrase of several words works. Common passwords are refused.',
+        'Your current password is not asked: the code from your authenticator app is enough. At least 12 characters, no composition rule; a phrase of several words works. Passwords that are too common are refused.',
       newLabel: 'New password',
-      confirmLabel: 'Confirm password',
+      confirmLabel: 'Confirm the password',
       codeLabel: 'Authentication code (6 digits)',
-      save: 'Save password',
+      save: 'Save the password',
       saving: 'Saving…',
       saved: 'Password saved.',
       needsTotp: 'Enable the authenticator app first.',
-      mismatch: 'The two passwords do not match.',
+      mismatch: 'The two entries do not match.',
       invalid: 'Check the three fields.',
-      codeFailed: 'Wrong authentication code.',
+      codeFailed: 'Authentication code refused.',
       rateLimited: 'Too many attempts. Try again later.',
       weak: {
         too_short: 'At least 12 characters.',
-        too_long: '72 bytes at most (about 72 plain characters).',
-        common: 'This password is too common or already compromised.',
-        repetitive: 'Avoid repeating a single character.',
-        contains_email: 'The password must not contain your address.'
+        too_long: '72 bytes at most (about 72 unaccented characters).',
+        common:
+          'This password is refused: it is too common or identical to the current one.',
+        repetitive: 'Avoid a single repeated character.',
+        contains_email: 'The password must not contain your email address.'
       }
     },
     adminLink: 'Tenga administration',
@@ -622,13 +642,13 @@ const english = {
   invitation: {
     title: 'Your invitation',
     invalid:
-      'This invitation is no longer valid. Ask the organisation that wrote to you for a new one.',
+      'This invitation is no longer valid. Ask the organisation that sent it for a new one.',
     greeting: 'Hello {prenom},',
     greetingNeutral: 'Hello,',
     intro:
-      '{organisation} invites you to answer the Tenga Assessments personality questionnaire, as part of the campaign “{campagne}”.',
+      '{organisation} invites you to answer the Tenga Assessments personality questionnaire, for the campaign “{campagne}”.',
     messageTitle: 'Message attached to the invitation',
-    expires: 'This invitation is valid until {date}.',
+    expires: 'Invitation valid until {date}.',
     acceptHelp:
       'By accepting it, you open your personal space on Tenga Assessments.',
     button: 'Accept the invitation',
