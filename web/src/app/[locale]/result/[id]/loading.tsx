@@ -3,8 +3,7 @@ import { getTranslations } from 'next-intl/server';
 // Squelette de la page de résultat : même géométrie (titre, carte du radar,
 // carte des cinq domaines), sans scintillement quand le mouvement est réduit.
 const rangees = ['N', 'E', 'O', 'A', 'C'];
-const carte =
-  'rounded-panneau border border-trait bg-surface p-[clamp(1.375rem,3vw,2.25rem)]';
+const carte = 'carte';
 
 export default async function Loading() {
   const t = await getTranslations('results');
@@ -14,8 +13,8 @@ export default async function Loading() {
         {t('loading')}
       </p>
       <div aria-hidden='true' className='motion-safe:animate-pulse'>
-        <div className='h-7 w-32 rounded-full bg-creux' />
-        <div className='mt-4 h-12 w-full max-w-xl rounded-controle bg-creux' />
+        <div className='h-10 w-full max-w-xl rounded-controle bg-creux' />
+        <div className='mt-3 h-4 w-32 rounded-petit bg-creux' />
         <div className='mt-4 h-5 w-full max-w-md rounded-petit bg-creux' />
         <div className='mt-8 grid gap-4 lg:grid-cols-[11fr_10fr]'>
           <div className={carte}>
@@ -27,11 +26,10 @@ export default async function Loading() {
               {rangees.map((code) => (
                 <li key={code}>
                   <div className='flex items-center gap-3'>
-                    <span className='h-10 w-10 rounded-petit bg-creux' />
                     <span className='h-5 w-32 rounded-petit bg-creux' />
                     <span className='ms-auto h-7 w-20 rounded-petit bg-creux' />
                   </div>
-                  <span className='mt-3 block h-2.5 rounded-full bg-creux' />
+                  <span className='mt-3 block h-2 rounded-petit bg-creux' />
                   <span className='mt-3 block h-4 w-3/4 rounded-petit bg-creux' />
                 </li>
               ))}

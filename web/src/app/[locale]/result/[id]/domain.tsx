@@ -38,10 +38,10 @@ export function ScoreValue({
     <span className='whitespace-nowrap text-end'>
       <span className='sr-only'>{spoken}</span>
       <span aria-hidden='true' dir='ltr' className='inline-block'>
-        <span className={className ?? 'text-[26px] font-extrabold'}>
+        <span className={className ?? 'text-titre-3 font-semibold text-encre'}>
           {valeur}
         </span>{' '}
-        <span className='text-petit font-medium text-texte-2'>/ {max}</span>
+        <span className='text-petit text-texte-3'>/ {max}</span>
       </span>
     </span>
   );
@@ -61,14 +61,14 @@ export const DomainSection = ({
     {code === 'N' && (
       <p className='mt-1 text-petit text-texte-2'>{labels.neuroticismGloss}</p>
     )}
-    <ul className='mt-4 grid gap-3 md:grid-cols-2'>
+    <ul className='mt-4 grid gap-x-8 border-t border-trait md:grid-cols-2'>
       {domain.facets.map((facet: Facet) => (
         <li
           key={facet.facet}
-          className='break-inside-avoid rounded-controle border border-trait bg-fond p-5'
+          className='break-inside-avoid border-b border-trait py-5'
         >
           <div className='flex items-baseline justify-between gap-3'>
-            <span className='text-corps font-bold text-encre'>
+            <span className='text-corps font-medium text-encre'>
               {facetLabel(code, facet.facet, locale)}
               {labels.level[facet.scoreText] && (
                 <span className='sr-only'>
@@ -81,7 +81,7 @@ export const DomainSection = ({
               valeur={formatNombre(facet.score, locale)}
               max={formatNombre(20, locale)}
               spoken={`${labels.score} ${formatNombre(facet.score, locale)} ${labels.facetOutOf}`}
-              className='text-[22px] font-extrabold'
+              className='text-corps font-semibold text-encre'
             />
           </div>
           <div className='mt-3'>
@@ -93,7 +93,7 @@ export const DomainSection = ({
     </ul>
     <p className='mt-8 colonne-lecture text-corps text-encre'>{domain.text}</p>
     <details className='mt-4 colonne-lecture' open={showExpanded}>
-      <summary className='flex min-h-11 cursor-pointer items-center text-petit font-bold text-accent'>
+      <summary className='flex min-h-11 cursor-pointer items-center text-petit font-medium text-accent underline-offset-4 hover:underline'>
         {labels.learnMore}
       </summary>
       <div

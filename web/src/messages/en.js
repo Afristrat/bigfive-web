@@ -13,7 +13,6 @@ const english = {
   },
   home: {
     specimenTag: 'Sample, fictitious values',
-    chip: 'Personality questionnaire, five-factor model',
     title: 'Decisions built on reference points, not impressions.',
     lead: 'A questionnaire of 120 statements, with no time limit. We tell you where it comes from, what it measures and what it does not measure.',
     stake: {
@@ -102,6 +101,10 @@ const english = {
     faq: {
       title: 'Your questions, our answers',
       all: 'All frequently asked questions'
+    },
+    trust: {
+      title: 'A trusted third party',
+      text: 'Tenga Conseil stands between your leadership and your teams. The consultant debriefs, explains and puts things back in perspective. Nothing individual is passed on to the organisation.'
     },
     closing: {
       text: 'Answer the questionnaire for yourself, or request a presentation for your organisation. Tenga Conseil will reply to arrange a conversation.'
@@ -1012,11 +1015,6 @@ const english = {
       hidden: {
         title: 'What your organisation does not see',
         text: 'No individual result. Group summaries are produced only from a minimum number of participants. This principle protects the honesty of answers, and so the quality of the reading.'
-      },
-      // Lot 1.
-      trust: {
-        title: 'A trusted third party',
-        text: 'Tenga Conseil stands between your leadership and your teams. The consultant debriefs, explains and puts things back in perspective. Nothing individual is passed on to the organisation.'
       },
       // Step 2 and the resume part of step 3: lot 2. Step 4: lot 4 (group
       // summary) and lot 6 (PDF).

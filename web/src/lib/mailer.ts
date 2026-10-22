@@ -130,7 +130,7 @@ export function buildLinkMail({
     (message
       ? `<blockquote style="margin:12px 0;padding:8px 14px;border-inline-start:3px solid #cccccc"><strong>${escapeHtml(message.title)}</strong><br>${multiline(message.body)}</blockquote>`
       : '') +
-    `<p><a href="${escapeHtml(url)}" style="display:inline-block;padding:10px 18px;background:#3730a3;color:#ffffff;text-decoration:none;border-radius:6px">${escapeHtml(action)}</a></p>` +
+    `<p><a href="${escapeHtml(url)}" style="display:inline-block;padding:10px 18px;background:#1d5446;color:#ffffff;text-decoration:none;border-radius:6px">${escapeHtml(action)}</a></p>` +
     `<p>${escapeHtml(url)}</p>` +
     (code
       ? `<p>${escapeHtml(code.label)}<br><strong dir="ltr" style="font-size:24px;letter-spacing:4px">${escapeHtml(code.value)}</strong></p>`

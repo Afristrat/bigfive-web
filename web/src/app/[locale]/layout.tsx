@@ -71,8 +71,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F6F6FA' },
-    { media: '(prefers-color-scheme: dark)', color: '#0C0D1B' }
+    { media: '(prefers-color-scheme: light)', color: '#F7F6F3' },
+    { media: '(prefers-color-scheme: dark)', color: '#111413' }
   ]
 };
 
@@ -116,7 +116,7 @@ export default async function RootLayout({
           <Providers locale={locale} themeProps={themeProps}>
             <a
               href='#contenu'
-              className='sr-only focus:not-sr-only focus:fixed focus:start-3 focus:top-3 focus:z-fenetre focus:rounded-[12px] focus:bg-accent focus:px-[18px] focus:py-3 focus:font-bold focus:text-sur-accent focus:no-underline'
+              className='sr-only focus:not-sr-only focus:fixed focus:start-3 focus:top-3 focus:z-fenetre focus:rounded-controle focus:bg-accent focus:px-5 focus:py-3 focus:font-semibold focus:text-sur-accent focus:no-underline'
             >
               {t('a11y.skip')}
             </a>

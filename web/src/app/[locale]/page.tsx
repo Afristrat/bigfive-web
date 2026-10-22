@@ -5,12 +5,13 @@ import { boutonPrincipal, heading, title } from '@/components/primitives';
 import { ArrowRightIcon } from '@/components/icons';
 import { HomeClosing, HomeSections } from '@/components/home-sections';
 import { PostListItem } from '@/components/post-list-item';
-import { RadarChart } from '@/components/radar-chart';
+import { ScoreRule } from '@/components/score-rule';
 import { secondaryButtonClass } from '@/components/form-styles';
 import { Link } from '@/navigation';
 import { basePath } from '@/config/site';
 import { DomainCode, domainCodes, domainLabel } from '@/lib/domain-labels';
 import { formatNombre } from '@/lib/format';
+import { niveauDeScore } from '@/lib/niveau';
 
 interface HomeProps {
   params: Promise<{ locale: string }>;
@@ -18,7 +19,8 @@ interface HomeProps {
 
 const servedLocales = ['fr', 'ar', 'en'];
 
-// Valeurs d'exemple (direction B2), affichées comme telles.
+// Spécimen de restitution : valeurs fictives fixées dans le code, affichées
+// comme telles (légende « Exemple, valeurs fictives »).
 const specimen: Record<DomainCode, number> = {
   N: 62,
   E: 88,
@@ -27,10 +29,10 @@ const specimen: Record<DomainCode, number> = {
   C: 91
 };
 
-const chip =
-  'inline-flex items-center gap-2 rounded-full border border-trait bg-creux px-3.5 py-1.5 text-petit font-semibold text-encre';
-
-const section = 'py-[clamp(2.25rem,5vw,4rem)]';
+// Échelle d'un domaine : 24 affirmations notées de 1 à 5.
+const DOMAINE_MIN = 24;
+const DOMAINE_MAX = 120;
+const DOMAINE_QUESTIONS = 24;
 
 export async function generateMetadata({ params }: HomeProps) {
   const { locale } = await params;
@@ -52,8 +54,9 @@ export default async function Home({ params }: HomeProps) {
   const t = await getTranslations('frontpage');
   const h = await getTranslations('home');
   const p = await getTranslations('presentation');
-  const radar = await getTranslations('radar');
+  const r = await getTranslations('results');
   const toolbar = await getTranslations('toolbar');
+  const surMax = r('outOf', { max: formatNombre(DOMAINE_MAX, locale) });
 
   // Articles seulement dans la langue exacte de la page (aucun en FR ni en AR).
   const posts = allPosts
@@ -63,89 +66,73 @@ export default async function Home({ params }: HomeProps) {
 
   return (
     <>
-      <section className='fond-points relative pb-[clamp(2.5rem,6vw,4.5rem)]'>
-        <div className='relative grid items-center gap-11 min-[960px]:grid-cols-[1.05fr_.95fr] min-[960px]:gap-16'>
-          <div>
-            <span className={`${chip} apparition`}>
-              <i aria-hidden='true' className='size-2 rounded-full bg-accent' />
-              {h('chip')}
-            </span>
-            <h1
-              className={`${title({ size: 'display' })} apparition my-[22px]`}
-              style={{ animationDelay: '0.05s' }}
-            >
-              {h('title')}
-            </h1>
-            <p
-              className='apparition max-w-[34em] text-chapo text-texte-2'
-              style={{ animationDelay: '0.1s' }}
-            >
-              {h('lead')}
-            </p>
-            <div
-              className='apparition mt-[34px] flex flex-wrap gap-3'
-              style={{ animationDelay: '0.15s' }}
-            >
-              <Link href='/test' className={boutonPrincipal()}>
-                {t('call_to_action')}
-                <ArrowRightIcon />
-              </Link>
-              <Link href='/presentation' className={secondaryButtonClass}>
-                {p('cta')}
-              </Link>
-            </div>
-            <p
-              className='apparition mt-7 max-w-[34em] text-petit text-texte-2 [&_a]:font-bold [&_a]:text-accent [&_a]:underline'
-              style={{ animationDelay: '0.2s' }}
-            >
-              {t.rich('description.reference', {
-                ipip: (chunks) => (
-                  <a
-                    href='https://ipip.ori.org'
-                    rel='noopener noreferrer'
-                    target='_blank'
-                  >
-                    {chunks}
-                  </a>
-                )
-              })}
-            </p>
+      {/* Ouverture : la promesse en début de ligne, le produit lui-même en fin de
+          ligne (le spécimen de restitution), sans illustration. */}
+      <section className='grid items-center gap-12 pb-16 lg:grid-cols-12 lg:gap-8 lg:pb-24'>
+        <div className='lg:col-span-7'>
+          <h1 className={`${title({ size: 'display' })} max-w-[14em]`}>
+            {h('title')}
+          </h1>
+          <p className='mt-6 max-w-[34em] text-chapo text-texte-2'>
+            {h('lead')}
+          </p>
+          <div className='mt-8 flex flex-wrap gap-3'>
+            <Link href='/test' className={boutonPrincipal()}>
+              {t('call_to_action')}
+              <ArrowRightIcon size={18} />
+            </Link>
+            <Link href='/presentation' className={secondaryButtonClass}>
+              {p('cta')}
+            </Link>
           </div>
-          <div
-            className='carte apparition relative p-[clamp(1rem,2.4vw,1.75rem)]'
-            style={{ animationDelay: '0.12s' }}
-          >
-            <span className={`${chip} absolute start-[18px] top-[18px] z-10`}>
-              {h('specimenTag')}
-            </span>
-            <RadarChart
-              className='pt-10'
-              domains={domainCodes.map((code) => ({
-                code,
-                label: domainLabel(code, locale, 'short'),
-                value: specimen[code]
-              }))}
-              min={24}
-              max={120}
-              locale={locale}
-              title={radar('title')}
-              summary={radar('summary', {
-                min: formatNombre(24, locale),
-                max: formatNombre(120, locale)
-              })}
-              columnLabels={{
-                domain: radar('domain'),
-                score: radar('score')
-              }}
-            />
-          </div>
+          <p className='mt-8 max-w-[38em] border-t border-trait pt-4 text-petit text-texte-3 [&_a]:font-medium [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-2'>
+            {t.rich('description.reference', {
+              ipip: (chunks) => (
+                <a
+                  href='https://ipip.ori.org'
+                  rel='noopener noreferrer'
+                  target='_blank'
+                >
+                  {chunks}
+                </a>
+              )
+            })}
+          </p>
         </div>
+        <figure className='carte lg:col-span-5'>
+          <ul role='list' className='grid gap-5'>
+            {domainCodes.map((code, rang) => {
+              const score = specimen[code];
+              return (
+                <li key={code}>
+                  <ScoreRule
+                    label={domainLabel(code, locale, 'short')}
+                    score={score}
+                    min={DOMAINE_MIN}
+                    max={DOMAINE_MAX}
+                    valeur={formatNombre(score, locale)}
+                    surMax={surMax}
+                    niveau={r(
+                      `level.${niveauDeScore(score, DOMAINE_QUESTIONS)}`
+                    )}
+                    disposition='pile'
+                    anime
+                    rang={rang}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+          <figcaption className='mt-6 border-t border-trait pt-3 text-legende text-texte-3'>
+            {h('specimenTag')}
+          </figcaption>
+        </figure>
       </section>
 
       <HomeSections locale={locale} />
 
       {posts.length > 0 && (
-        <section className={section}>
+        <section className='border-t border-trait py-16'>
           <h2 className={heading()}>{toolbar('articles')}</h2>
           <ul className='mt-4 divide-y divide-trait'>
             {posts.map((post) => (
@@ -154,7 +141,7 @@ export default async function Home({ params }: HomeProps) {
           </ul>
           <Link
             href='/articles'
-            className='mt-4 inline-flex min-h-11 items-center text-petit font-bold text-accent hover:text-accent-survol hover:underline'
+            className='mt-4 inline-flex min-h-11 items-center text-petit font-medium text-accent underline-offset-4 hover:text-accent-survol hover:underline'
           >
             {t('posts.all')}
           </Link>

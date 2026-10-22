@@ -17,15 +17,16 @@ export function ProgressHeader({
   noTimeLimit,
   barLabel
 }: ProgressHeaderProps) {
+  const part = progressPercent(current, total) / 100;
   return (
     <div data-question={current}>
-      <div className='flex flex-wrap justify-between gap-x-3 font-bold text-encre chiffres'>
+      <div className='flex flex-wrap justify-between gap-x-3 text-petit font-medium text-encre chiffres'>
         <p id='progression-test'>{label}</p>
-        <p className='font-semibold text-texte-2'>{noTimeLimit}</p>
+        <p className='text-texte-3'>{noTimeLimit}</p>
       </div>
       {/* Gabarit maison plutôt que la barre NextUI, qui se remplit à l'envers
-          en arabe : la largeur part du bord de début de ligne, dans les deux
-          sens d'écriture. */}
+          en arabe : le trait part du bord de début de ligne dans les deux sens
+          d'écriture, et avance par transform (aucun recalcul de mise en page). */}
       <div
         role='progressbar'
         aria-label={barLabel}
@@ -33,11 +34,11 @@ export function ProgressHeader({
         aria-valuemax={total}
         aria-valuenow={current}
         aria-valuetext={label}
-        className='mt-2.5 h-3 w-full overflow-hidden rounded-full bg-piste'
+        className='regle-piste mt-2 h-1 w-full overflow-hidden rounded-petit bg-creux'
       >
         <div
-          className='h-full rounded-full bg-accent transition-[width] duration-500 ease-tenga motion-reduce:transition-none'
-          style={{ width: `${progressPercent(current, total).toFixed(2)}%` }}
+          className='regle-trait h-full w-full origin-left bg-accent transition-transform duration-longue ease-tenga motion-reduce:transition-none rtl:origin-right'
+          style={{ transform: `scaleX(${part.toFixed(4)})` }}
         />
       </div>
     </div>

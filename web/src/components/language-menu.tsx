@@ -18,9 +18,9 @@ interface LanguageMenuProps {
 }
 
 const item =
-  'grid min-h-11 min-w-[38px] place-items-center rounded-[11px] px-2 text-[0.875rem] font-bold min-[441px]:min-w-[42px]';
+  'grid min-h-[38px] min-w-[38px] place-items-center rounded-petit px-2 text-petit font-medium min-[441px]:min-w-[42px]';
 
-// Sélecteur segmenté de la direction B2. Le texte visible (« FR ») fait partie
+// Sélecteur segmenté, sans drapeau. Le texte visible (« FR ») fait partie
 // du nom accessible, que complète le nom de la langue (critère 2.5.3) ; la
 // langue courante est signalée par aria-current et par son fond plein.
 export function LanguageMenu({ label }: LanguageMenuProps): ReactElement {
@@ -31,7 +31,7 @@ export function LanguageMenu({ label }: LanguageMenuProps): ReactElement {
     <div
       role='group'
       aria-label={label}
-      className='flex flex-none rounded-[14px] border border-trait bg-surface p-[3px]'
+      className='flex flex-none rounded-controle border border-trait bg-surface p-[2px]'
     >
       {menuLanguages.map((language) => {
         const contenu = (
@@ -48,7 +48,7 @@ export function LanguageMenu({ label }: LanguageMenuProps): ReactElement {
             lang={language.code}
             dir={language.dir}
             aria-current='true'
-            className={clsx(item, 'bg-accent text-sur-accent')}
+            className={clsx(item, 'bg-accent-doux font-semibold text-accent')}
           >
             {contenu}
           </span>
@@ -61,7 +61,7 @@ export function LanguageMenu({ label }: LanguageMenuProps): ReactElement {
             dir={language.dir}
             className={clsx(
               item,
-              'text-texte-2 transition-colors duration-normale hover:text-encre'
+              'text-texte-2 transition-colors duration-courte ease-tenga hover:bg-creux hover:text-encre'
             )}
           >
             {contenu}

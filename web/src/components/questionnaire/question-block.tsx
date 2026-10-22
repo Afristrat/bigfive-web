@@ -28,24 +28,26 @@ export function QuestionBlock({
   const headingId = 'q-' + question.id;
   return (
     <section className='animate-apparaitre motion-reduce:animate-none'>
-      <p className='text-[0.875rem] font-extrabold uppercase tracking-[0.08em] text-accent rtl:tracking-normal'>
+      <p className='chiffres text-petit font-medium text-texte-3'>
         {statementLabel.replace('{number}', formatNombre(number, locale))}
       </p>
       <h2
         id={headingId}
         ref={headingRef}
         tabIndex={-1}
-        className='mb-2 mt-2.5 text-[clamp(1.5rem,4.2vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.03em] text-encre focus:outline-none rtl:font-bold rtl:leading-[1.4] rtl:tracking-normal'
+        className='mt-2 max-w-[30em] text-question text-encre focus:outline-none'
       >
         {question.text}
       </h2>
-      <p className='mb-6 text-texte-2'>{prompt}</p>
-      {/* Boutons radio natifs : les flèches du clavier changent le choix, la
-          sélection porte une coche et une bordure épaisse, pas la couleur seule. */}
+      <p className='mb-5 mt-2 text-petit text-texte-2'>{prompt}</p>
+      {/* Cinq lignes pleine largeur (direction § 8.6) : boutons radio natifs,
+          les flèches du clavier changent le choix ; le choix coché porte une
+          pastille pleine, un contour et une graisse plus forte, pas la couleur
+          seule. Le chiffre en fin de ligne rappelle la touche 1 à 5. */}
       <div
         role='radiogroup'
         aria-labelledby={headingId}
-        className='grid grid-cols-1 gap-3 sm:grid-cols-5'
+        className='grid max-w-[44rem] gap-2'
       >
         {question.choices.map((choice, index) => {
           const id = `${headingId}-${choice.score}`;
@@ -63,37 +65,30 @@ export function QuestionBlock({
               />
               <label
                 htmlFor={id}
-                className={`relative flex min-h-16 flex-row items-center gap-4 rounded-[20px] border-2 px-[18px] py-3 text-[1.03rem] font-bold leading-[1.3] text-encre transition-[background-color,border-color,transform] duration-normale peer-focus-visible:outline peer-focus-visible:outline-[3px] peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-anneau peer-active:scale-[0.985] motion-reduce:transition-none motion-reduce:peer-active:scale-100 sm:min-h-[148px] sm:flex-col sm:justify-center sm:gap-3.5 sm:px-2.5 sm:pb-[18px] sm:pt-[26px] sm:text-center ${
+                className={`flex min-h-12 items-center gap-3 rounded-controle border px-4 py-2.5 text-corps leading-snug text-encre transition-[background-color,border-color,transform] duration-courte ease-tenga peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-anneau peer-active:scale-[0.99] motion-reduce:transition-none motion-reduce:peer-active:scale-100 ${
                   selected
-                    ? 'border-accent bg-accent-doux shadow-[inset_0_0_0_1.5px_rgb(var(--c-accent))]'
-                    : 'border-trait-fort bg-surface group-hover:bg-creux'
+                    ? 'border-accent bg-accent-doux font-semibold shadow-[inset_0_0_0_0.5px_rgb(var(--c-accent))]'
+                    : 'border-trait bg-surface font-medium group-hover:border-trait-fort group-hover:bg-creux'
                 }`}
               >
                 <span
                   aria-hidden='true'
-                  className={`grid h-[30px] w-[30px] flex-none place-items-center rounded-full border-2 ${
+                  className={`grid size-5 flex-none place-items-center rounded-full border-[1.5px] transition-colors duration-courte ease-tenga ${
                     selected
-                      ? 'border-accent bg-accent text-sur-accent'
-                      : 'border-trait-fort bg-surface text-transparent'
+                      ? 'border-accent bg-accent'
+                      : 'border-trait-fort bg-surface'
                   }`}
                 >
-                  <svg
-                    viewBox='0 0 24 24'
-                    width='18'
-                    height='18'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth='3.4'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  >
-                    <path d='M5 12.5l4.5 4.5L19 7.5' />
-                  </svg>
+                  <span
+                    className={`size-2 rounded-full bg-sur-accent transition-[opacity,transform] duration-courte ease-tenga ${
+                      selected ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
+                    }`}
+                  />
                 </span>
-                <span>{choice.text}</span>
+                <span className='flex-1'>{choice.text}</span>
                 <span
                   aria-hidden='true'
-                  className='order-3 ms-auto text-[0.8125rem] font-bold text-texte-2 chiffres sm:absolute sm:start-3.5 sm:top-2.5 sm:order-none sm:m-0'
+                  className='chiffres text-legende font-medium text-texte-3'
                 >
                   {formatNombre(index + 1, locale)}
                 </span>
