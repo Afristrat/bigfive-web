@@ -14,6 +14,15 @@ const french = {
   },
   home: {
     specimenTag: 'Exemple, valeurs fictives',
+    peak: {
+      lead: 'Un profil se dessine, un facteur après l’autre.'
+    },
+    figures: {
+      items: 'affirmations',
+      factors: 'grands facteurs',
+      facets: 'facettes décrites',
+      languages: 'langues'
+    },
     title: 'Décider sur des repères, pas sur des impressions.',
     lead: 'Un questionnaire de 120 affirmations, sans limite de temps. Nous vous disons d’où il vient, ce qu’il mesure et ce qu’il ne mesure pas.',
     stake: {

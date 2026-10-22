@@ -1,8 +1,20 @@
-import { IBM_Plex_Sans_Arabic, Instrument_Sans } from 'next/font/google';
+import {
+  Bricolage_Grotesque,
+  IBM_Plex_Sans_Arabic,
+  Instrument_Sans
+} from 'next/font/google';
 
-// Direction « règle graduée » : Instrument Sans (variable, graisse 400 à 700,
-// chasse 75 à 100) pour le latin ; IBM Plex Sans Arabic (400, 500, 600) pour
-// l'arabe. Fichiers servis par l'application, aucun appel à Google à l'exécution.
+// Identité « encre et safran » : Bricolage Grotesque (variable, taille optique
+// et chasse) pour les titres, Instrument Sans pour le texte courant, IBM Plex
+// Sans Arabic pour l'arabe. Fichiers servis par l'application, aucun appel à
+// Google à l'exécution.
+export const fontDisplay = Bricolage_Grotesque({
+  subsets: ['latin', 'latin-ext'],
+  axes: ['opsz', 'wdth'],
+  display: 'swap',
+  variable: '--font-display-latin'
+});
+
 export const fontLatin = Instrument_Sans({
   subsets: ['latin', 'latin-ext'],
   axes: ['wdth'],
@@ -13,7 +25,7 @@ export const fontLatin = Instrument_Sans({
 // Téléchargée seulement quand un glyphe arabe est affiché.
 export const fontArabe = IBM_Plex_Sans_Arabic({
   subsets: ['arabic'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
   preload: false,
   variable: '--font-arabe'

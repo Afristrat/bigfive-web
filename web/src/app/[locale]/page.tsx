@@ -3,15 +3,18 @@ import { allPosts } from 'contentlayer/generated';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { boutonPrincipal, heading, title } from '@/components/primitives';
 import { ArrowRightIcon } from '@/components/icons';
-import { HomeClosing, HomeSections } from '@/components/home-sections';
+import {
+  HomeClosing,
+  HomeSections,
+  MotsCinetiques
+} from '@/components/home-sections';
+import { HeroRadar } from '@/components/home/hero-radar';
+import { ratioDeScore } from '@/components/home/pentagone';
 import { PostListItem } from '@/components/post-list-item';
-import { ScoreRule } from '@/components/score-rule';
 import { secondaryButtonClass } from '@/components/form-styles';
 import { Link } from '@/navigation';
 import { basePath } from '@/config/site';
 import { DomainCode, domainCodes, domainLabel } from '@/lib/domain-labels';
-import { formatNombre } from '@/lib/format';
-import { niveauDeScore } from '@/lib/niveau';
 
 interface HomeProps {
   params: Promise<{ locale: string }>;
@@ -19,20 +22,13 @@ interface HomeProps {
 
 const servedLocales = ['fr', 'ar', 'en'];
 
-// Spécimen de restitution : valeurs fictives fixées dans le code, affichées
-// comme telles (légende « Exemple, valeurs fictives »).
-const specimen: Record<DomainCode, number> = {
-  N: 62,
-  E: 88,
-  O: 97,
-  A: 79,
-  C: 91
-};
-
-// Échelle d'un domaine : 24 affirmations notées de 1 à 5.
-const DOMAINE_MIN = 24;
-const DOMAINE_MAX = 120;
-const DOMAINE_QUESTIONS = 24;
+// Profils d'exemple du héros : valeurs fictives fixées dans le code (24 à 120
+// par domaine), affichées comme telles (légende « Exemple, valeurs fictives »).
+const profils: ReadonlyArray<Record<DomainCode, number>> = [
+  { O: 97, C: 91, E: 88, A: 79, N: 62 },
+  { O: 64, C: 108, E: 52, A: 96, N: 41 },
+  { O: 112, C: 58, E: 99, A: 61, N: 83 }
+];
 
 export async function generateMetadata({ params }: HomeProps) {
   const { locale } = await params;
@@ -54,9 +50,10 @@ export default async function Home({ params }: HomeProps) {
   const t = await getTranslations('frontpage');
   const h = await getTranslations('home');
   const p = await getTranslations('presentation');
-  const r = await getTranslations('results');
   const toolbar = await getTranslations('toolbar');
-  const surMax = r('outOf', { max: formatNombre(DOMAINE_MAX, locale) });
+  const ratios = profils.map((profil) =>
+    domainCodes.map((code) => ratioDeScore(profil[code]))
+  );
 
   // Articles seulement dans la langue exacte de la page (aucun en FR ni en AR).
   const posts = allPosts
@@ -66,26 +63,49 @@ export default async function Home({ params }: HomeProps) {
 
   return (
     <>
-      {/* Ouverture : la promesse en début de ligne, le produit lui-même en fin de
-          ligne (le spécimen de restitution), sans illustration. */}
-      <section className='grid items-center gap-12 pb-16 lg:grid-cols-12 lg:gap-8 lg:pb-24'>
-        <div className='lg:col-span-7'>
-          <h1 className={`${title({ size: 'display' })} max-w-[14em]`}>
-            {h('title')}
-          </h1>
-          <p className='mt-6 max-w-[34em] text-chapo text-texte-2'>
+      {/* Ouverture : le titre monte mot à mot en début de ligne ; en fin de
+          ligne, le radar vivant des cinq facteurs, en trois plans. Sur mobile, le
+          radar s'intercale entre le titre et le chapeau. */}
+      <section className='grid items-center gap-x-8 pb-16 lg:min-h-[calc(100dvh-8rem)] lg:grid-cols-12 lg:pb-20'>
+        <h1
+          className={`${title({ size: 'display' })} max-w-[11em] lg:col-span-7 lg:row-start-1`}
+        >
+          <MotsCinetiques texte={h('title')} />
+        </h1>
+        <div className='mx-auto mt-8 w-[82%] max-w-[380px] lg:col-span-5 lg:row-span-2 lg:row-start-1 lg:m-0 lg:w-full lg:max-w-none'>
+          <HeroRadar
+            noms={domainCodes.map((code) => domainLabel(code, locale, 'short'))}
+            profils={ratios}
+            legende={h('specimenTag')}
+          />
+        </div>
+        <div className='lg:col-span-7 lg:row-start-2 lg:self-start'>
+          <p
+            style={{ ['--i' as string]: 1 }}
+            className='apparait-tard mt-8 max-w-[34em] text-chapo text-texte-2 lg:mt-8'
+          >
             {h('lead')}
           </p>
-          <div className='mt-8 flex flex-wrap gap-3'>
-            <Link href='/test' className={boutonPrincipal()}>
+          <div
+            style={{ ['--i' as string]: 2 }}
+            className='apparait-tard mt-8 flex flex-wrap gap-3'
+          >
+            <Link href='/test' data-aimant='' className={boutonPrincipal()}>
               {t('call_to_action')}
               <ArrowRightIcon size={18} />
             </Link>
-            <Link href='/presentation' className={secondaryButtonClass}>
+            <Link
+              href='/presentation'
+              data-aimant=''
+              className={secondaryButtonClass}
+            >
               {p('cta')}
             </Link>
           </div>
-          <p className='mt-8 max-w-[38em] border-t border-trait pt-4 text-petit text-texte-3 [&_a]:font-medium [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-2'>
+          <p
+            style={{ ['--i' as string]: 3 }}
+            className='apparait-tard mt-10 max-w-[38em] border-t border-trait pt-4 text-petit text-texte-3 [&_a]:font-medium [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-2'
+          >
             {t.rich('description.reference', {
               ipip: (chunks) => (
                 <a
@@ -99,34 +119,6 @@ export default async function Home({ params }: HomeProps) {
             })}
           </p>
         </div>
-        <figure className='carte lg:col-span-5'>
-          <ul role='list' className='grid gap-5'>
-            {domainCodes.map((code, rang) => {
-              const score = specimen[code];
-              return (
-                <li key={code}>
-                  <ScoreRule
-                    label={domainLabel(code, locale, 'short')}
-                    score={score}
-                    min={DOMAINE_MIN}
-                    max={DOMAINE_MAX}
-                    valeur={formatNombre(score, locale)}
-                    surMax={surMax}
-                    niveau={r(
-                      `level.${niveauDeScore(score, DOMAINE_QUESTIONS)}`
-                    )}
-                    disposition='pile'
-                    anime
-                    rang={rang}
-                  />
-                </li>
-              );
-            })}
-          </ul>
-          <figcaption className='mt-6 border-t border-trait pt-3 text-legende text-texte-3'>
-            {h('specimenTag')}
-          </figcaption>
-        </figure>
       </section>
 
       <HomeSections locale={locale} />

@@ -13,6 +13,15 @@ const english = {
   },
   home: {
     specimenTag: 'Sample, fictitious values',
+    peak: {
+      lead: 'A profile takes shape, one factor at a time.'
+    },
+    figures: {
+      items: 'statements',
+      factors: 'broad factors',
+      facets: 'facets described',
+      languages: 'languages'
+    },
     title: 'Decisions built on reference points, not impressions.',
     lead: 'A questionnaire of 120 statements, with no time limit. We tell you where it comes from, what it measures and what it does not measure.',
     stake: {
