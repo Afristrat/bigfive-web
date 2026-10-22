@@ -1006,6 +1006,14 @@ const english = {
     urlOrId: 'URL or ID of your result',
     getResult: 'Get result',
     viewPrevious: 'View Previous Result'
+  },
+  // Mouvement du parcours (questionnaire et résultat).
+  flow: {
+    railLabel: 'Result contents',
+    railProfile: 'Profile',
+    railScores: 'Scores',
+    railDetail: 'Facets',
+    railId: 'ID'
   }
 };
 

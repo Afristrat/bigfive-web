@@ -20,15 +20,18 @@
 // libellé complet et sa valeur : la lecture ne dépend ni de la couleur ni de la
 // grille. Deux variantes sont rendues, une large et une resserrée (libellés plus
 // grands) sous 640 px ; les classes Tailwind n'en montrent qu'une.
-// Mouvement : la grille apparaît en fondu, la forme s'ouvre depuis le centre,
-// puis les marqueurs ; opacité et transformation seulement, 400 ms au plus.
-// prefers-reduced-motion les affiche sans animation (voir globals.css).
+// Mouvement (radar-motion.module.css) : la grille se pose, chaque axe se trace
+// depuis le centre, son sommet apparaît, puis le contour se referme et l'aire
+// se pose, en 1,9 s au total ; opacité, transformation et stroke-dashoffset
+// seulement. Chaque valeur porte data-compte pour la montée du compteur (page
+// de résultat). prefers-reduced-motion et l'impression affichent l'état final.
 import { ReactElement, useId } from 'react';
 import clsx from 'clsx';
 import { isRtlLang } from 'rtl-detect';
 import { DomainCode } from '@/lib/domain-labels';
 import { formatNombre } from '@/lib/format';
 import { domainShapes, shapePath } from '@/components/domain-shape';
+import motion from './radar-motion.module.css';
 
 export interface RadarDomain {
   code: DomainCode;
@@ -90,6 +93,9 @@ export function radarFraction(value: number, min: number, max: number): number {
 }
 
 const un = (valeur: number): string => valeur.toFixed(1);
+
+// Rang de l'axe pour la cascade de construction (variable CSS --i).
+const rang = (index: number) => ({ ['--i' as string]: index });
 
 const flip = (anchor: Anchor): Anchor =>
   anchor === 'start' ? 'end' : anchor === 'end' ? 'start' : anchor;
@@ -166,6 +172,7 @@ function RadarSvg({
     <svg
       className={clsx(
         'radar',
+        motion.radar,
         variant === 'compact' && 'radar-etroit',
         className
       )}
@@ -176,29 +183,38 @@ function RadarSvg({
       <title id={`${id}t`}>{title}</title>
       <desc id={`${id}d`}>{description}</desc>
       {geometry.rings.map((points) => (
-        <polygon key={points} className='radar-anneau' points={points} />
+        <polygon
+          key={points}
+          className={clsx('radar-anneau', motion.anneau)}
+          points={points}
+        />
       ))}
-      {geometry.axes.map((axis) => (
+      {geometry.axes.map((axis, index) => (
         <line
           key={`${axis.x2},${axis.y2}`}
-          className='radar-axe'
+          className={clsx('radar-axe', motion.axe)}
+          style={rang(index)}
+          pathLength={1}
           x1={axis.x1}
           y1={axis.y1}
           x2={un(axis.x2)}
           y2={un(axis.y2)}
         />
       ))}
-      <polygon className='radar-aire' points={geometry.polygon} />
       <polygon
-        className='radar-trace'
+        className={clsx('radar-aire', motion.aire)}
+        points={geometry.polygon}
+      />
+      <polygon
+        className={clsx('radar-trace', motion.trace)}
         pathLength={1}
         points={geometry.polygon}
       />
       {geometry.points.map((point, index) => (
         <path
           key={domains[index].code}
-          className='radar-marqueur'
-          style={{ animationDelay: `${0.5 + index * 0.18}s` }}
+          className={clsx('radar-marqueur', motion.marqueur)}
+          style={rang(index)}
           d={shapePath(
             domainShapes[domains[index].code],
             point.x,
@@ -208,7 +224,11 @@ function RadarSvg({
         />
       ))}
       {geometry.labels.map((label, index) => (
-        <g key={domains[index].code}>
+        <g
+          key={domains[index].code}
+          className={motion.etiquette}
+          style={rang(index)}
+        >
           <text
             className='radar-nom'
             textAnchor={label.anchor}
@@ -223,7 +243,7 @@ function RadarSvg({
             x={un(label.x)}
             y={un(label.valueY)}
           >
-            <tspan className='radar-valeur'>
+            <tspan className='radar-valeur' data-compte={domains[index].value}>
               {formatNombre(domains[index].value, locale)}
             </tspan>
             <tspan className='radar-max' dx={4}>

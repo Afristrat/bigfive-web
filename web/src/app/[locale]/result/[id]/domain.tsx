@@ -2,6 +2,7 @@ import { Domain, Facet } from '@bigfive-org/results';
 import { ScoreBar } from '@/components/score-bar';
 import { DomainCode, domainLabel, facetLabel } from '@/lib/domain-labels';
 import { formatNombre } from '@/lib/format';
+import styles from './result.module.css';
 
 export type DomainSectionLabels = {
   facets: string;
@@ -27,18 +28,23 @@ export function ScoreValue({
   valeur,
   max,
   spoken,
-  className
+  className,
+  compte
 }: {
   valeur: string;
   max: string;
   spoken: string;
   className?: string;
+  compte?: number; // cible du compteur animé (page de résultat)
 }) {
   return (
     <span className='whitespace-nowrap text-end'>
       <span className='sr-only'>{spoken}</span>
       <span aria-hidden='true' dir='ltr' className='inline-block'>
-        <span className={className ?? 'text-titre-3 font-semibold text-encre'}>
+        <span
+          className={`chiffres ${className ?? 'text-titre-3 font-semibold text-encre'}`}
+          data-compte={compte}
+        >
           {valeur}
         </span>{' '}
         <span className='text-petit text-texte-3'>/ {max}</span>
@@ -54,7 +60,7 @@ export const DomainSection = ({
   labels,
   showExpanded
 }: DomainSectionProps) => (
-  <section aria-labelledby={'titre-' + code}>
+  <section aria-labelledby={'titre-' + code} className={styles.panneau}>
     <h3 id={'titre-' + code} className='text-titre-3 text-encre'>
       {domainLabel(code, locale)}
     </h3>
@@ -62,10 +68,11 @@ export const DomainSection = ({
       <p className='mt-1 text-petit text-texte-2'>{labels.neuroticismGloss}</p>
     )}
     <ul className='mt-4 grid gap-x-8 border-t border-trait md:grid-cols-2'>
-      {domain.facets.map((facet: Facet) => (
+      {domain.facets.map((facet: Facet, index: number) => (
         <li
           key={facet.facet}
-          className='break-inside-avoid border-b border-trait py-5'
+          className={`break-inside-avoid border-b border-trait py-5 ${styles.facette}`}
+          style={{ ['--i' as string]: index }}
         >
           <div className='flex items-baseline justify-between gap-3'>
             <span className='text-corps font-medium text-encre'>
@@ -82,10 +89,19 @@ export const DomainSection = ({
               max={formatNombre(20, locale)}
               spoken={`${labels.score} ${formatNombre(facet.score, locale)} ${labels.facetOutOf}`}
               className='text-corps font-semibold text-encre'
+              compte={facet.score}
             />
           </div>
           <div className='mt-3'>
-            <ScoreBar taille='facette' score={facet.score} min={4} max={20} />
+            <ScoreBar
+              taille='facette'
+              score={facet.score}
+              min={4}
+              max={20}
+              anime
+              gradue
+              rang={index + 2}
+            />
           </div>
           <p className='mt-3 text-petit text-texte-2'>{facet.text}</p>
         </li>
