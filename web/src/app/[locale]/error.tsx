@@ -7,6 +7,10 @@ import { PentagoneTrace } from '@/components/cadre/pentagone-trace';
 import { MotsCinetiques } from '@/components/mots-cinetiques';
 import { boutonPrincipal, subtitle, title } from '@/components/primitives';
 
+// Même source que supportEmail (config/site), lue ici directement : ce module
+// serveur ne peut pas être importé dans un composant client.
+const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || '';
+
 export default function Error({
   error,
   reset
@@ -57,13 +61,35 @@ export default function Error({
             {n('home')}
           </Link>
         </div>
-        {error.digest && (
-          <p
+        {(supportEmail || error.digest) && (
+          <div
             style={{ ['--i' as string]: 2 }}
-            className='apparait-tard mt-4 text-legende text-texte-3 chiffres'
+            className='apparait-tard mt-10 max-w-[38em] border-t border-trait pt-4 text-petit text-texte-2'
           >
-            <bdi dir='ltr'>{error.digest}</bdi>
-          </p>
+            {supportEmail && (
+              <p>
+                {t.rich('contact', {
+                  email: supportEmail,
+                  mail: (chunks) => (
+                    <a
+                      href={`mailto:${supportEmail}`}
+                      className='font-medium text-accent underline underline-offset-2 hover:text-accent-survol'
+                    >
+                      <bdi dir='ltr'>{chunks}</bdi>
+                    </a>
+                  )
+                })}
+              </p>
+            )}
+            {error.digest && (
+              <p className='mt-1 text-legende text-texte-3'>
+                {t('code')}{' '}
+                <bdi dir='ltr' className='chiffres font-medium text-encre'>
+                  {error.digest}
+                </bdi>
+              </p>
+            )}
+          </div>
         )}
       </div>
     </section>

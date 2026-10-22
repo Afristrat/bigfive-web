@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/navigation';
 import { PentagoneTrace } from '@/components/cadre/pentagone-trace';
+import { ArrowRightIcon } from '@/components/icons';
 import { MotsCinetiques } from '@/components/mots-cinetiques';
 import { boutonPrincipal, subtitle, title } from '@/components/primitives';
 
@@ -27,9 +28,19 @@ export default function NotFound() {
         >
           {t('text')}
         </p>
-        <div style={{ ['--i' as string]: 1 }} className='apparait-tard mt-8'>
+        <div
+          style={{ ['--i' as string]: 1 }}
+          className='apparait-tard mt-8 flex flex-wrap items-center gap-x-6 gap-y-3'
+        >
           <Link href='/' data-aimant='' className={boutonPrincipal()}>
             {t('home')}
+          </Link>
+          <Link
+            href='/test'
+            className='lien-fleche inline-flex min-h-11 items-center gap-2 text-petit font-medium text-accent underline-offset-4 hover:text-accent-survol hover:underline'
+          >
+            {t('test')}
+            <ArrowRightIcon size={18} />
           </Link>
         </div>
       </div>

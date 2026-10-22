@@ -5,11 +5,11 @@ import {
   getTranslations,
   setRequestLocale
 } from 'next-intl/server';
-import { PentagoneTrace } from '@/components/cadre/pentagone-trace';
 import { MotsCinetiques } from '@/components/mots-cinetiques';
 import { PresentationForm } from '@/components/presentation-form';
 import { subtitle, title } from '@/components/primitives';
 import { basePath } from '@/config/site';
+import { formatNombre } from '@/lib/format';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -37,35 +37,33 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-// Deux temps dès les grands écrans : en début de ligne, le titre qui monte mot
-// à mot, le chapeau et le pentagone refermé, collés sous l'en-tête ; en fin de
-// ligne, le formulaire, qui entre après eux.
+// Composition asymétrique dès les grands écrans : en début de ligne, le titre
+// qui monte mot à mot, le chapeau, puis la suite de la demande en trois temps
+// reliés par un filet safran ; en fin de ligne, le formulaire. Sur mobile, le
+// formulaire vient avant la suite, pour être atteint sans détour.
 export default async function PresentationPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('presentation');
   const messages = await getMessages({ locale });
+  // Les deux derniers temps reprennent le texte affiché après l'envoi.
+  const etapes = [t('stepSend'), t('success.step1'), t('success.step2')];
 
   return (
-    <article className='grid gap-x-12 lg:grid-cols-12'>
-      <header className='lg:sticky lg:top-24 lg:col-span-5 lg:self-start'>
-        <h1 className={title()}>
+    <article className='grid gap-x-12 gap-y-14 lg:grid-cols-12'>
+      <header className='lg:col-span-5 lg:col-start-1 lg:row-start-1'>
+        <h1 className={title({ size: 'display' })}>
           <MotsCinetiques texte={t('title')} />
         </h1>
         <p style={rang(0)} className={subtitle({ class: 'apparait-tard' })}>
           {t('intro')}
         </p>
-        <span
-          aria-hidden='true'
-          style={rang(1)}
-          className='apparait-tard mt-8 hidden h-[3px] w-24 bg-safran lg:block'
-        />
-        <PentagoneTrace
-          formes
-          className='mt-10 hidden max-w-[260px] lg:block'
-        />
       </header>
-      <div style={rang(1)} className='apparait-tard lg:col-span-7'>
+
+      <div
+        style={rang(1)}
+        className='apparait-tard lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1 lg:pt-4'
+      >
         {/* Le formulaire lit ses libellés côté navigateur : seul son espace de noms lui est transmis. */}
         <NextIntlClientProvider
           locale={locale}
@@ -74,6 +72,47 @@ export default async function PresentationPage({ params }: Props) {
           <PresentationForm locale={locale} />
         </NextIntlClientProvider>
       </div>
+
+      <section
+        aria-labelledby='presentation-suite'
+        className='lg:col-span-5 lg:col-start-1 lg:row-start-2 lg:self-start'
+      >
+        <h2
+          id='presentation-suite'
+          data-reveal='monte'
+          className='text-petit font-medium text-texte-3 [font-family:var(--font-texte)]'
+        >
+          {t('success.nextTitle')}
+        </h2>
+        <div data-reveal='trace' className='relative mt-6'>
+          <span
+            aria-hidden='true'
+            className='barre-verticale absolute start-[7px] top-2 block h-[calc(100%-1.5rem)] w-0.5 bg-safran'
+          />
+          <ol role='list'>
+            {etapes.map((etape, index) => (
+              <li
+                key={etape}
+                data-reveal='monte'
+                style={rang(index + 1)}
+                className='relative grid grid-cols-[auto_1fr] gap-x-4 pb-8 ps-8 last:pb-0'
+              >
+                <span
+                  aria-hidden='true'
+                  className='absolute start-0 top-1.5 block size-4 rotate-45 border-2 border-safran bg-fond'
+                />
+                <span
+                  aria-hidden='true'
+                  className='chiffres font-display text-titre-2 leading-none text-trait-fort'
+                >
+                  {formatNombre(index + 1, locale)}
+                </span>
+                <p className='text-texte-2'>{etape}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
     </article>
   );
 }

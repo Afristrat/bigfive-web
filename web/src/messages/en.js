@@ -2,6 +2,10 @@ const english = {
   language: {
     label: 'Language'
   },
+  footer: {
+    tagline:
+      'The personality questionnaire from Tenga Conseil: 120 statements, five domains, thirty facets, based on the IPIP-NEO-120.'
+  },
   a11y: {
     skip: 'Skip to content',
     mainNav: 'Main navigation',
@@ -204,11 +208,11 @@ const english = {
     home_aria: 'Tenga Assessments home page',
     open_menu: 'Open menu',
     close_menu: 'Close menu',
-    result: 'Result',
+    result: 'Find a result',
     articles: 'Articles',
     privacy: 'Privacy',
     about: 'About',
-    see_results: 'See your results',
+    see_results: 'Find a result',
     faq: 'Frequently asked questions',
     account: 'My account',
     presentation: 'Request a presentation',
@@ -224,7 +228,7 @@ const english = {
     },
     title: 'Request a presentation',
     intro:
-      'Tell us who you are and what you want to clarify: a team decision, support for a change, developing your managers. Tenga Conseil will reply at the address you give to arrange a presentation.',
+      'For a team, a change programme or developing your managers: describe your context in a few lines. A Tenga Conseil consultant replies in writing, in the language you choose, to arrange a conversation.',
     requiredNote: 'All fields are required, except the message.',
     fields: {
       name: 'First and last name',
@@ -282,6 +286,7 @@ const english = {
         'They write to you at the address you gave, in the language you chose, to arrange a conversation.',
       back: 'Back to the home page'
     },
+    stepSend: 'You describe your context and send this form.',
     cta: 'Request a presentation',
     aboutLink:
       'Would you like a presentation of Tenga Assessments for your organisation? <link>Send us a request</link>.'
@@ -810,14 +815,17 @@ const english = {
     empty: 'No article has been published in this language yet.'
   },
   notFound: {
-    title: 'Page not found',
-    text: 'The requested address does not exist or is no longer available.',
-    home: 'Back to the home page'
+    title: 'This page does not exist',
+    text: 'The address may have been mistyped, or the page has moved. Start again from the home page, or go straight to the questionnaire.',
+    home: 'Back to the home page',
+    test: 'Start the questionnaire'
   },
   error: {
-    title: 'An error occurred',
-    text: 'Please try again in a moment. If the error persists, write to us.',
-    retry: 'Try again'
+    title: 'This page could not be displayed',
+    text: 'A technical problem interrupted the display. Please try again in a moment.',
+    retry: 'Try again',
+    contact: 'If the problem persists, write to us at <mail>{email}</mail>.',
+    code: 'Incident code, to include in your message:'
   },
   // "Method and references" page. Every figure is the one read in the source
   // (docs/design/dossier-preuves.md, sheet given in src/lib/method-references.ts).
@@ -828,13 +836,13 @@ const english = {
         'The instrument, the five domains and thirty facets, and the research references, with their exact figures and their limits.'
     },
     title: 'Method and references',
-    lead: 'An open instrument, published research, figures you can check for yourself.',
+    lead: 'What the questionnaire rests on, what published research establishes, and what it does not. Every figure points to its source.',
     toc: 'On this page',
     verified:
-      'Each reference was consulted on 20 October 2026. Quotations are our own translation from the original, and each entry says what was read: full text, publisher’s abstract or web page.',
+      'References consulted on 20 October 2026. Quotations are our own translation from the English; each entry says what we read: the full text, the publisher’s abstract or a web page.',
     labels: {
       finding: 'What the source establishes',
-      limit: 'Worth keeping in mind',
+      limit: 'Its limits',
       evidence: 'Strength of evidence',
       reading: {
         full: 'Full text read',
@@ -846,23 +854,23 @@ const english = {
     instrument: {
       title: 'The instrument',
       intro:
-        'The questionnaire uses the IPIP-NEO-120 by John A. Johnson, published in 2014 in the Journal of Research in Personality. Its 120 statements shed light on the five major personality factors and their thirty facets, for a fine-grained reading rather than a simple label. It draws on the International Personality Item Pool, a bank of statements that its official website declares to be in the public domain: an open instrument, whose every question can be read and examined.',
+        'The questionnaire uses the IPIP-NEO-120, published by John A. Johnson in 2014 in the Journal of Research in Personality. Its 120 statements cover the five major personality factors and, under each, six facets. The result gives a score for each of the five domains and each of the thirty facets. The statements come from the International Personality Item Pool, whose official website declares them to be in the public domain: every one can be read and examined.',
       notNeo:
-        'It measures facets close to those of the NEO PI-R, a separate commercial instrument, without being that instrument.'
+        'Its facets are close to those of the NEO PI-R, a separate commercial instrument; it is not the NEO PI-R.'
     },
     domains: {
-      title: 'What the five domains and thirty facets measure',
+      title: 'Five domains, thirty facets',
       intro:
-        'Each domain describes a tendency, never a quality or a flaw: a way of approaching the world, with its own strengths. Each breaks down into six facets, described one by one.',
+        'Each domain describes a tendency, not a quality or a flaw. A score shows where your answers fall between the two poles of that tendency; it does not compare you with anyone. Each domain breaks down into six facets.',
       facets: 'The six facets'
     },
     research: {
       title: 'What the research says',
       intro:
-        'Sixteen references, each presented with its authors, year, journal, the exact figures read in the source and its strength of evidence. We keep work whose strength of evidence is strong or partial, and we say which: you always know what you are relying on.',
+        'The references are grouped by question. For each: authors, year, journal, the figures noted in the source, the strength of evidence and the limits. We keep only work with strong or partial evidence, and we say which.',
       reading: {
         title: 'How to read the figures',
-        text: 'A correlation runs from 0 to 1: the closer to 1, the more two measures move together. Its square gives the share of shared variance: a correlation of 0.19 corresponds to about 3.6% (a calculation from our evidence file). An average hides differences between studies, and an association is not a cause.'
+        text: 'A correlation runs from −1 to 1. The further it is from 0, the more two measures vary together; when it is negative, one falls as the other rises. Its square gives the share of shared variance: a correlation of 0.19 corresponds to about 3.6% (a calculation from our evidence file). An average hides differences between studies, and an association is not a cause.'
       },
       groups: {
         instrument: 'The instrument’s sources',
@@ -875,9 +883,9 @@ const english = {
       }
     },
     gaps: {
-      title: 'The questions research leaves open',
+      title: 'What research does not yet establish',
       intro:
-        'Research is never exhaustive, and a study we could not find does not prove that none exists. Here, in full transparency, is what the literature consulted does not yet establish.',
+        'What our searches did not find. A study we could not find does not prove that none exists; these three gaps remain open.',
       morocco:
         'No study of measurement invariance of the IPIP-NEO-120 between Morocco and another country, or between Moroccan Arabic or French and English.',
       team: 'No study comparing people who receive a personality report with a control group, on leadership criteria.',

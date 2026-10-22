@@ -150,7 +150,10 @@ export default async function RootLayout({
               <MotionRuntime />
               <Footer
                 footerLinks={footerLinks}
-                labels={{ nav: t('a11y.footerNav') }}
+                labels={{
+                  nav: t('a11y.footerNav'),
+                  tagline: t('footer.tagline')
+                }}
               />
             </div>
           </Providers>

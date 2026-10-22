@@ -3,6 +3,10 @@ const french = {
   language: {
     label: 'Langue'
   },
+  footer: {
+    tagline:
+      'Le questionnaire de personnalité de Tenga Conseil : 120 affirmations, cinq domaines, trente facettes, d’après l’IPIP-NEO-120.'
+  },
   a11y: {
     skip: 'Aller au contenu',
     mainNav: 'Navigation principale',
@@ -204,11 +208,11 @@ const french = {
     home_aria: 'Accueil de Tenga Assessments',
     open_menu: 'Ouvrir le menu',
     close_menu: 'Fermer le menu',
-    result: 'Résultat',
+    result: 'Retrouver un résultat',
     articles: 'Articles',
     privacy: 'Confidentialité',
     about: 'À propos',
-    see_results: 'Voir vos résultats',
+    see_results: 'Retrouver un résultat',
     faq: 'Questions fréquentes',
     account: 'Mon compte',
     presentation: 'Demander une présentation',
@@ -224,7 +228,7 @@ const french = {
     },
     title: 'Demander une présentation',
     intro:
-      'Dites-nous qui vous êtes et ce que vous cherchez à éclairer\u00A0: décision d’équipe, accompagnement d’un changement, développement de vos cadres. Tenga Conseil vous répond à l’adresse indiquée pour convenir d’une présentation.',
+      'Pour une équipe, un accompagnement du changement ou le développement de vos cadres : décrivez votre contexte en quelques lignes. Un consultant de Tenga Conseil vous répond par écrit, dans la langue de votre choix, pour convenir d’un échange.',
     requiredNote: 'Tous les champs sont obligatoires, sauf le message.',
     fields: {
       name: 'Prénom et nom',
@@ -283,6 +287,7 @@ const french = {
         'Il vous écrit à l’adresse indiquée, dans la langue choisie, pour convenir d’un échange.',
       back: 'Retour à l’accueil'
     },
+    stepSend: 'Vous décrivez votre contexte et envoyez ce formulaire.',
     cta: 'Demander une présentation',
     aboutLink:
       'Vous souhaitez une présentation de Tenga Assessments pour votre organisation\u00A0? <link>Faites-en la demande</link>.'
@@ -821,14 +826,17 @@ const french = {
     empty: 'Aucun article n’est encore publié dans cette langue.'
   },
   notFound: {
-    title: 'Page introuvable',
-    text: 'L’adresse demandée n’existe pas ou n’est plus disponible.',
-    home: 'Retour à l’accueil'
+    title: 'Cette page n’existe pas',
+    text: 'L’adresse a peut-être été mal saisie, ou la page a été déplacée. Repartez de l’accueil, ou commencez directement le questionnaire.',
+    home: 'Retour à l’accueil',
+    test: 'Commencer le questionnaire'
   },
   error: {
-    title: 'Une erreur est survenue',
-    text: 'Réessayez dans un instant. Si l’erreur persiste, écrivez-nous.',
-    retry: 'Réessayer'
+    title: 'Cette page n’a pas pu s’afficher',
+    text: 'Un problème technique a interrompu l’affichage. Réessayez dans un instant.',
+    retry: 'Réessayer',
+    contact: 'Si le problème persiste, écrivez-nous à <mail>{email}</mail>.',
+    code: 'Code de l’incident, à nous indiquer :'
   },
   // Page « Méthode et références ». Chaque chiffre est celui lu dans la source
   // (docs/design/dossier-preuves.md, fiche indiquée dans src/lib/method-references.ts).
@@ -839,13 +847,13 @@ const french = {
         'L’instrument, les cinq domaines et les trente facettes, et les références de la recherche, avec leurs chiffres exacts et leurs limites.'
     },
     title: 'Méthode et références',
-    lead: 'Un instrument ouvert, des travaux de recherche publiés, des chiffres que vous pouvez vérifier vous-même.',
+    lead: 'Sur quoi repose le questionnaire, ce que la recherche publiée établit, et ce qu’elle n’établit pas. Chaque chiffre renvoie à sa source.',
     toc: 'Sur cette page',
     verified:
-      'Chaque référence a été consultée le 20 octobre 2026. Les citations sont traduites de l’anglais par nos soins, et chaque fiche indique ce qui a été lu : texte intégral, résumé de l’éditeur ou page web.',
+      'Références consultées le 20 octobre 2026. Les citations sont traduites de l’anglais par nos soins ; chaque fiche dit ce que nous avons lu : le texte intégral, le résumé de l’éditeur ou une page web.',
     labels: {
       finding: 'Ce que la source établit',
-      limit: 'À garder en tête',
+      limit: 'Ses limites',
       evidence: 'Niveau de preuve',
       reading: {
         full: 'Texte intégral lu',
@@ -857,23 +865,23 @@ const french = {
     instrument: {
       title: 'L’instrument',
       intro:
-        'Le questionnaire s’appuie sur l’IPIP-NEO-120 de John A. Johnson, publié en 2014 dans le Journal of Research in Personality. Ses 120 affirmations éclairent les cinq grands facteurs de la personnalité et leurs trente facettes, pour une lecture fine plutôt qu’une simple étiquette. Il puise dans l’International Personality Item Pool, une banque d’affirmations que son site officiel déclare placée dans le domaine public : un instrument ouvert, dont chaque question peut être lue et examinée.',
+        'Le questionnaire reprend l’IPIP-NEO-120, publié par John A. Johnson en 2014 dans le Journal of Research in Personality. Ses 120 affirmations couvrent les cinq grands facteurs de la personnalité et, sous chacun, six facettes. Le résultat donne un score pour chacun des cinq domaines et pour chacune des trente facettes. Les affirmations viennent de l’International Personality Item Pool, dont le site officiel les déclare dans le domaine public : chacune peut être lue et examinée.',
       notNeo:
-        'Il mesure des facettes proches de celles du NEO PI-R, un instrument commercial distinct, sans être celui-ci.'
+        'Ses facettes sont proches de celles du NEO PI-R, un instrument commercial distinct ; ce n’est pas le NEO PI-R.'
     },
     domains: {
-      title: 'Ce que mesurent les cinq domaines et les trente facettes',
+      title: 'Cinq domaines, trente facettes',
       intro:
-        'Chaque domaine décrit une tendance, jamais une qualité ni un défaut : une manière d’aborder le monde, avec ses forces propres. Chacun se décline en six facettes, décrites une à une.',
+        'Chaque domaine décrit une tendance, pas une qualité ni un défaut. Un score indique où se placent vos réponses entre les deux pôles de cette tendance ; il ne vous compare à personne. Chaque domaine se décline en six facettes.',
       facets: 'Les six facettes'
     },
     research: {
       title: 'Ce que dit la recherche',
       intro:
-        'Seize références, chacune présentée avec ses auteurs, son année, sa revue, les chiffres exacts lus dans la source et son niveau de preuve. Nous retenons les travaux dont le niveau de preuve est fort ou partiel, et nous disons lequel : vous savez toujours sur quoi vous vous appuyez.',
+        'Les références sont classées par question. Pour chacune : auteurs, année, revue, chiffres relevés dans la source, niveau de preuve et limites. Nous ne retenons que des travaux à preuve forte ou partielle, et nous indiquons lequel.',
       reading: {
         title: 'Comment lire les chiffres',
-        text: 'Une corrélation va de 0 à 1 : plus elle est proche de 1, plus deux mesures évoluent ensemble. Son carré donne la part de variance partagée : une corrélation de 0,19 correspond à environ 3,6 % (calcul de notre dossier de preuves). Une moyenne cache des écarts entre études, et une association n’est pas une cause.'
+        text: 'Une corrélation va de −1 à 1. Plus elle s’éloigne de 0, plus deux mesures varient ensemble ; négative, l’une baisse quand l’autre monte. Son carré donne la part de variance partagée : une corrélation de 0,19 correspond à environ 3,6 % (calcul de notre dossier de preuves). Une moyenne masque les écarts entre études, et une association n’est pas une cause.'
       },
       groups: {
         instrument: 'Les sources de l’instrument',
@@ -886,9 +894,9 @@ const french = {
       }
     },
     gaps: {
-      title: 'Les questions que la recherche laisse ouvertes',
+      title: 'Ce que la recherche n’établit pas encore',
       intro:
-        'Une recherche n’est jamais exhaustive, et une étude introuvable ne prouve pas qu’elle n’existe pas. Voici, en toute transparence, ce que la littérature consultée n’établit pas encore.',
+        'Ce que nos recherches n’ont pas trouvé. Une étude introuvable ne prouve pas qu’elle n’existe pas ; ces trois manques restent ouverts.',
       morocco:
         'Aucune étude d’invariance de mesure de l’IPIP-NEO-120 entre le Maroc et un autre pays, ni entre l’arabe ou le français marocains et l’anglais.',
       team: 'Aucune étude qui compare des personnes recevant un rapport de personnalité à un groupe témoin, sur des critères de leadership.',

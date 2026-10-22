@@ -132,15 +132,18 @@ function Group({ id, t }: { id: MethodGroupId; t: Translate }): ReactElement {
   );
 }
 
-// Section de la page : un filet safran ouvre sa bordure et le titre monte de
-// son masque à l'entrée dans l'écran (moteur MotionRuntime, section observée).
-// La marge d'ancrage tient compte de l'en-tête et du sommaire collants.
+// Section de la page : son numéro d'ordre en safran devant le titre ; un filet
+// safran ouvre la bordure et le titre monte de son masque à l'entrée dans
+// l'écran (moteur MotionRuntime). La marge d'ancrage tient compte de l'en-tête
+// et du sommaire collants.
 function Section({
   id,
+  numero,
   titre,
   children
 }: {
   id: string;
+  numero: number;
   titre: string;
   children: ReactNode;
 }): ReactElement {
@@ -155,13 +158,21 @@ function Section({
         data-reveal='volet'
         className='absolute -top-px start-0 block h-0.5 w-16 bg-safran'
       />
-      <h2
-        id={`${id}-titre`}
-        data-reveal='masque'
-        className={title({ size: 'section' })}
-      >
-        {titre}
-      </h2>
+      <div className='flex items-baseline gap-4 sm:gap-6'>
+        <span
+          aria-hidden='true'
+          className='chiffres flex-none font-display text-titre-section leading-none text-safran'
+        >
+          {String(numero).padStart(2, '0')}
+        </span>
+        <h2
+          id={`${id}-titre`}
+          data-reveal='masque'
+          className={title({ size: 'section' })}
+        >
+          {titre}
+        </h2>
+      </div>
       {children}
     </section>
   );
@@ -221,7 +232,7 @@ export default async function MethodPage({
 
       <Sommaire label={t('toc')} items={toc} />
 
-      <Section id='instrument' titre={t('instrument.title')}>
+      <Section id='instrument' numero={1} titre={t('instrument.title')}>
         <p
           data-reveal='monte'
           className='mt-3 colonne-lecture text-chapo text-texte-2'
@@ -238,7 +249,7 @@ export default async function MethodPage({
         <Group id='instrument' t={t} />
       </Section>
 
-      <Section id='domaines' titre={t('domains.title')}>
+      <Section id='domaines' numero={2} titre={t('domains.title')}>
         <p data-reveal='monte' className='mt-3 colonne-lecture text-texte-2'>
           {t('domains.intro')}
         </p>
@@ -274,7 +285,7 @@ export default async function MethodPage({
         </ul>
       </Section>
 
-      <Section id='recherche' titre={t('research.title')}>
+      <Section id='recherche' numero={3} titre={t('research.title')}>
         <p data-reveal='monte' className='mt-3 colonne-lecture text-texte-2'>
           {t('research.intro')}
         </p>
@@ -297,7 +308,7 @@ export default async function MethodPage({
         ))}
       </Section>
 
-      <Section id='lacunes' titre={t('gaps.title')}>
+      <Section id='lacunes' numero={4} titre={t('gaps.title')}>
         <p data-reveal='monte' className='mt-3 colonne-lecture text-texte-2'>
           {t('gaps.intro')}
         </p>
