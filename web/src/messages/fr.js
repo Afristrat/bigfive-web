@@ -1099,6 +1099,14 @@ const french = {
     urlOrId: 'URL ou ID de votre résultat',
     getResult: 'Obtenez le résultat',
     viewPrevious: 'Afficher le résultat précédent'
+  },
+  // Mouvement du parcours (questionnaire et résultat).
+  flow: {
+    railLabel: 'Sommaire du résultat',
+    railProfile: 'Profil',
+    railScores: 'Scores',
+    railDetail: 'Facettes',
+    railId: 'Identifiant'
   }
 };
 

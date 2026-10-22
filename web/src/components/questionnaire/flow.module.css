@@ -1,0 +1,181 @@
+/* Mouvement du questionnaire. Styles locaux : ils lisent les jetons globaux
+   (--courbe, --c-*) et n'en définissent aucun. Seuls transform, opacity,
+   clip-path et stroke-dashoffset sont animés. Sans JavaScript ou sous
+   prefers-reduced-motion, chaque élément est affiché dans son état final. */
+
+/* Sens du mouvement : --sens vaut 1 en avançant, -1 en revenant ; --dir
+   retourne l'axe en arabe (la question suivante arrive du bord de fin de
+   ligne dans les deux sens d'écriture). */
+.question {
+  --dir: 1;
+  --sens: 1;
+  animation: entree 340ms var(--courbe) both;
+}
+:global([dir='rtl']) .question {
+  --dir: -1;
+}
+.arriere {
+  --sens: -1;
+}
+
+@keyframes entree {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--sens) * var(--dir) * 32px));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Énoncé révélé par un masque qui monte depuis la ligne de base. */
+.enonce {
+  animation: masque 460ms var(--courbe) 40ms both;
+}
+@keyframes masque {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(0.35em);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+}
+
+/* Les cinq lignes arrivent en cascade, 28 ms d'écart. */
+.ligne {
+  animation: ligne 320ms var(--courbe) both;
+  animation-delay: calc(80ms + var(--rang, 0) * 28ms);
+}
+@keyframes ligne {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Choix : un remplissage balaie la ligne depuis le bord de début, la
+   pastille prend un léger rebond. L'appui réduit la ligne à 98,5 %. */
+.choix {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  transition:
+    transform 140ms var(--courbe),
+    border-color 160ms var(--courbe);
+}
+.choix::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgb(var(--c-accent-doux));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 160ms var(--courbe);
+}
+:global([dir='rtl']) .choix::before {
+  transform-origin: right center;
+}
+.coche::before {
+  transform: scaleX(1);
+  transition-duration: 380ms;
+}
+.pastille {
+  transition: transform 160ms var(--courbe);
+}
+.coche .pastille {
+  animation: rebond 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes rebond {
+  from {
+    transform: scale(0.7);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Avancement : cinq pistes (une par facteur) et un petit radar d'avancement
+   dont chaque rayon s'allonge avec les réponses données au facteur. */
+.piste {
+  position: relative;
+  overflow: hidden;
+}
+.remplissage {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transition: transform 420ms var(--courbe);
+}
+:global([dir='rtl']) .remplissage {
+  transform-origin: right center;
+}
+.palier {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: palier 600ms var(--courbe) both;
+}
+@keyframes palier {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Mi-parcours : l'avis entre, la coche se trace. */
+.felicitation {
+  animation: ligne 360ms var(--courbe) both;
+}
+.coche-trait {
+  stroke-dasharray: 1;
+  animation: tracer 520ms var(--courbe) 180ms both;
+}
+@keyframes tracer {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question,
+  .enonce,
+  .ligne,
+  .felicitation,
+  .palier,
+  .coche .pastille,
+  .coche-trait {
+    animation: none;
+  }
+  .choix,
+  .choix::before,
+  .remplissage {
+    transition: none;
+  }
+}
+
+@media print {
+  .question,
+  .enonce,
+  .ligne {
+    animation: none;
+  }
+}

@@ -44,7 +44,12 @@ export function ResultBody({
       : []
   );
   return (
-    <section aria-labelledby='detail' className='carte mt-4'>
+    <section
+      id='facettes'
+      data-revele
+      aria-labelledby='detail'
+      className='carte mt-4 scroll-mt-32'
+    >
       <h2 id='detail' className={title({ size: 'section' })}>
         {labels.detailTitle}
       </h2>

@@ -1062,6 +1062,14 @@ const arabic = {
     urlOrId: 'رابط أو رمز النتيجة',
     getResult: 'احصل على النتيجة',
     viewPrevious: 'عرض النتيجة السابقة'
+  },
+  // Mouvement du parcours (questionnaire et résultat).
+  flow: {
+    railLabel: 'محتويات النتيجة',
+    railProfile: 'الملف الشخصي',
+    railScores: 'الدرجات',
+    railDetail: 'السمات الفرعية',
+    railId: 'المعرّف'
   }
 };
 
