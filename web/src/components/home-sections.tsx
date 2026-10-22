@@ -1,18 +1,17 @@
-// Sections de la page d'accueil sous l'ouverture (direction « règle graduée »,
-// § 8.9) : l'enjeu, ce que dit la recherche, ce que le questionnaire ne fait
-// pas, le tiers de confiance, le déroulement, les cinq grands facteurs, la
-// provenance, la FAQ courte, puis la signature et l'appel final.
-// Une seule grammaire : un filet en tête de section, le titre en début de ligne
-// (4 colonnes sur 12), le contenu en fin de ligne (8 colonnes) ; des filets
-// plutôt que des cartes. Composants serveur : aucun JavaScript client. La FAQ
-// est un accordéon natif (details/summary), accessible sans code.
-import { ReactElement, ReactNode } from 'react';
+// Sections de la page d'accueil sous l'ouverture (identité « encre et safran ») :
+// l'enjeu en grandes lignes révélées, le déroulement relié par un fil qui se
+// trace, ce que le questionnaire mesure et ne mesure pas, le pic où un profil
+// se forme facteur après facteur, le tiers de confiance et la provenance avec
+// leurs chiffres réels, la FAQ courte, puis la signature et l'appel final.
+// Composants serveur ; seuls le pic (profile-forming) et le moteur de
+// mouvement global sont des composants client. Tout le texte est dans le HTML.
+import { CSSProperties, ReactElement } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { ArrowRightIcon } from '@/components/icons';
-import { boutonPrincipal } from '@/components/primitives';
-import { secondaryButtonClass } from '@/components/form-styles';
-import { domainCodes, domainLabel } from '@/lib/domain-labels';
-import { formatNombre } from '@/lib/format';
+import { ProfileForming } from '@/components/home/profile-forming';
+import { ratioDeScore } from '@/components/home/pentagone';
+import { DomainCode, domainCodes, domainLabel } from '@/lib/domain-labels';
+import { formatNombre, localeRegionale } from '@/lib/format';
 import { Link } from '@/navigation';
 
 interface HomeSectionProps {
@@ -27,36 +26,41 @@ const languages = [
 
 const faqKeys = ['science', 'usefulness', 'diagnosis'] as const;
 
-const textLink =
-  'inline-flex min-h-11 items-center gap-2 text-petit font-medium text-accent underline-offset-4 transition-colors duration-courte ease-tenga hover:text-accent-survol hover:underline';
+// Profil d'exemple du pic : valeurs fictives, annoncées comme telles.
+const profilPic: Record<DomainCode, number> = {
+  O: 101,
+  C: 84,
+  E: 63,
+  A: 92,
+  N: 49
+};
 
-// Section à deux colonnes : titre en début de ligne, contenu en fin de ligne.
-function Section({
-  id,
-  titre,
-  intro,
-  children
-}: {
-  id: string;
-  titre: string;
-  intro?: string;
-  children?: ReactNode;
-}): ReactElement {
+const rang = (i: number): CSSProperties => ({ ['--i' as string]: i });
+
+const textLink =
+  'lien-fleche inline-flex min-h-11 items-center gap-2 text-petit font-medium text-accent underline-offset-4 transition-colors duration-courte ease-tenga hover:text-accent-survol hover:underline';
+
+// Titre cinétique : chaque mot dans son masque. Le texte reste un seul titre
+// pour les lecteurs d'écran ; sans animation, les mots sont simplement posés.
+export function MotsCinetiques({ texte }: { texte: string }): ReactElement {
+  const mots = texte.split(/\s+/).filter(Boolean);
   return (
-    <section
-      aria-labelledby={id}
-      className='grid gap-x-8 gap-y-6 border-t border-trait pb-16 pt-10 lg:grid-cols-12 lg:pb-24 lg:pt-12'
-    >
-      <div className='lg:col-span-4'>
-        <h2 id={id} className='max-w-[16em] text-titre-section text-encre'>
-          {titre}
-        </h2>
-        {intro && <p className='mt-3 max-w-[30em] text-texte-2'>{intro}</p>}
-      </div>
-      <div className='lg:col-span-8'>{children}</div>
-    </section>
+    <>
+      {mots.map((mot, i) => (
+        <span key={`${mot}-${i}`}>
+          <span className='mot'>
+            <span style={rang(i)}>{mot}</span>
+          </span>
+          {i < mots.length - 1 ? ' ' : null}
+        </span>
+      ))}
+    </>
   );
 }
+
+// Phrases d'un paragraphe, pour les révéler ligne à ligne.
+const phrases = (texte: string): string[] =>
+  texte.split(/(?<=[.!?؟])\s+/).filter(Boolean);
 
 export async function HomeSections({
   locale
@@ -64,198 +68,376 @@ export async function HomeSections({
   const h = await getTranslations({ locale, namespace: 'home' });
   const f = await getTranslations({ locale, namespace: 'faq' });
   const n = (value: number): string => formatNombre(value, locale);
+  const regionale = localeRegionale(locale);
 
   const research = ['structure', 'work', 'groups'] as const;
   const limits = ['diagnosis', 'exam', 'mirror', 'sorting'] as const;
   const steps = ['answer', 'read', 'keep'] as const;
+  const enjeu = phrases(h('stake.problem'));
+  const chiffres = [
+    { valeur: 120, label: h('figures.items') },
+    { valeur: 5, label: h('figures.factors') },
+    { valeur: 30, label: h('figures.facets') },
+    { valeur: 3, label: h('figures.languages') }
+  ];
 
   return (
     <>
-      <Section id='enjeu' titre={h('stake.title')}>
-        <p className='max-w-[26em] text-titre-2 font-medium text-encre'>
-          {h('stake.problem')}
-        </p>
-        <p className='mt-6 max-w-[38em] text-chapo text-texte-2'>
-          {h('stake.answer')}
-        </p>
-      </Section>
-
-      <Section
-        id='recherche-titre'
-        titre={h('research.title')}
-        intro={h('research.intro')}
+      {/* L'enjeu : trois phrases courtes, révélées par masque, la dernière en
+          retrait vers la fin de ligne. */}
+      <section
+        aria-labelledby='enjeu'
+        className='border-t border-trait py-16 lg:py-28'
       >
-        <ul role='list' className='divide-y divide-trait border-y border-trait'>
-          {research.map((key) => (
-            <li
-              key={key}
-              className='grid gap-2 py-5 md:grid-cols-[minmax(0,14rem)_1fr] md:gap-8'
-            >
-              <h3 className='text-titre-3 text-encre'>
-                {h(`research.${key}.title`)}
-              </h3>
-              <p className='colonne-lecture text-texte-2'>
-                {h(`research.${key}.text`)}
-              </p>
-            </li>
-          ))}
-        </ul>
-        <p className='mt-4'>
-          <Link href='/methode' className={textLink}>
-            {h('research.link')}
-            <ArrowRightIcon size={18} />
-          </Link>
-        </p>
-      </Section>
-
-      <Section
-        id='limites-titre'
-        titre={h('limits.title')}
-        intro={h('limits.intro')}
-      >
-        <ul
-          role='list'
-          className='grid gap-x-8 border-t border-trait sm:grid-cols-2'
+        <h2
+          id='enjeu'
+          className='text-petit font-medium text-texte-3 [font-family:var(--font-texte)]'
         >
-          {limits.map((key) => (
-            <li key={key} className='border-b border-trait py-5'>
-              <h3 className='text-titre-3 text-encre'>
-                {h(`limits.${key}.title`)}
-              </h3>
-              <p className='mt-2 text-texte-2'>{h(`limits.${key}.text`)}</p>
-            </li>
+          {h('stake.title')}
+        </h2>
+        <p className='mt-6 text-geant text-encre font-display'>
+          {enjeu.map((phrase, i) => (
+            <span
+              key={phrase}
+              data-reveal='masque'
+              style={rang(i * 2)}
+              className={
+                i === enjeu.length - 1
+                  ? 'mt-4 block text-texte-2 lg:ms-[16%]'
+                  : 'block'
+              }
+            >
+              {phrase}
+            </span>
           ))}
-        </ul>
-      </Section>
-
-      <Section id='confiance-titre' titre={h('trust.title')}>
-        <p className='max-w-[34em] text-chapo text-texte-2'>
-          {h('trust.text')}
         </p>
-      </Section>
+        <div className='mt-12 grid gap-6 lg:grid-cols-12'>
+          <span
+            aria-hidden='true'
+            data-reveal='volet'
+            className='mt-4 block h-[3px] w-full bg-safran lg:col-span-3'
+          />
+          <p
+            data-reveal='monte'
+            className='max-w-[36em] text-chapo text-texte-2 lg:col-span-7 lg:col-start-5'
+          >
+            {h('stake.answer')}
+          </p>
+        </div>
+      </section>
 
-      <Section
-        id='deroulement-titre'
-        titre={h('how.title')}
-        intro={h('how.intro')}
+      {/* Comment cela se passe : trois étapes reliées par un fil tracé. */}
+      <section
+        aria-labelledby='deroulement-titre'
+        className='border-t border-trait py-16 lg:py-24'
       >
-        {/* Une vraie suite d'étapes : la numérotation porte l'ordre. */}
-        <ol role='list' className='grid gap-8 md:grid-cols-3 md:gap-6'>
-          {steps.map((key, index) => (
-            <li key={key} className='border-t-2 border-accent pt-4'>
-              <span
-                aria-hidden='true'
-                className='chiffres text-petit font-medium text-texte-3'
+        <div className='grid gap-6 lg:grid-cols-12'>
+          <h2
+            id='deroulement-titre'
+            className='text-titre-section text-encre lg:col-span-5'
+          >
+            {h('how.title')}
+          </h2>
+          <p className='text-chapo text-texte-2 lg:col-span-5 lg:col-start-7'>
+            {h('how.intro')}
+          </p>
+        </div>
+        <div data-reveal='trace' className='relative mt-12'>
+          <svg
+            aria-hidden='true'
+            className='absolute start-[7px] top-2 h-[calc(100%-1rem)] w-[2px] md:hidden'
+            viewBox='0 0 2 100'
+            preserveAspectRatio='none'
+          >
+            <line
+              x1='1'
+              y1='0'
+              x2='1'
+              y2='100'
+              pathLength={1}
+              className='trace-svg stroke-safran'
+              strokeWidth='2'
+              vectorEffect='non-scaling-stroke'
+            />
+          </svg>
+          <svg
+            aria-hidden='true'
+            className='absolute inset-x-0 top-[7px] hidden h-[2px] w-full md:block'
+            viewBox='0 0 100 2'
+            preserveAspectRatio='none'
+          >
+            <line
+              x1='0'
+              y1='1'
+              x2='100'
+              y2='1'
+              pathLength={1}
+              className='trace-svg stroke-safran'
+              strokeWidth='2'
+              vectorEffect='non-scaling-stroke'
+            />
+          </svg>
+          <ol role='list' className='grid gap-10 md:grid-cols-3 md:gap-8'>
+            {steps.map((key, index) => (
+              <li
+                key={key}
+                data-reveal='monte'
+                style={rang(index * 3 + 2)}
+                className='relative ps-8 md:ps-0 md:pt-10'
               >
-                {n(index + 1)}
-              </span>
-              <h3 className='mt-1 text-titre-3 text-encre'>
-                {h(`how.${key}.title`)}
-              </h3>
-              <p className='mt-2 text-texte-2'>{h(`how.${key}.text`)}</p>
-            </li>
-          ))}
-        </ol>
-      </Section>
+                <span
+                  aria-hidden='true'
+                  className='absolute start-0 top-0 block size-4 rotate-45 border-2 border-safran bg-fond'
+                />
+                <span
+                  aria-hidden='true'
+                  className='chiffres font-display text-geant leading-none text-trait-fort'
+                >
+                  {n(index + 1)}
+                </span>
+                <h3 className='mt-3 text-titre-2 text-encre'>
+                  {h(`how.${key}.title`)}
+                </h3>
+                <p className='mt-2 text-texte-2'>{h(`how.${key}.text`)}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
 
-      <Section
-        id='facteurs-titre'
+      {/* Ce que dit la recherche, face à ce que le questionnaire ne fait pas. */}
+      <section
+        aria-labelledby='recherche-titre'
+        className='border-t border-trait py-16 lg:py-24'
+      >
+        <div className='grid gap-x-16 gap-y-16 lg:grid-cols-2'>
+          <div>
+            <h2
+              id='recherche-titre'
+              className='max-w-[18em] text-titre-section text-encre'
+            >
+              {h('research.title')}
+            </h2>
+            <p className='mt-3 max-w-[32em] text-texte-2'>
+              {h('research.intro')}
+            </p>
+            <ul role='list' className='mt-8 border-t-2 border-encre'>
+              {research.map((key, i) => (
+                <li
+                  key={key}
+                  data-reveal='monte'
+                  style={rang(i)}
+                  className='border-b border-trait py-6'
+                >
+                  <h3 className='text-titre-3 text-encre'>
+                    {h(`research.${key}.title`)}
+                  </h3>
+                  <p className='mt-2 text-texte-2'>
+                    {h(`research.${key}.text`)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <p className='mt-4'>
+              <Link href='/methode' className={textLink}>
+                {h('research.link')}
+                <ArrowRightIcon size={18} />
+              </Link>
+            </p>
+          </div>
+          <div className='lg:pt-24'>
+            <h2
+              id='limites-titre'
+              className='max-w-[18em] text-titre-section text-encre'
+            >
+              {h('limits.title')}
+            </h2>
+            <p className='mt-3 max-w-[32em] text-texte-2'>
+              {h('limits.intro')}
+            </p>
+            <ul role='list' className='mt-8'>
+              {limits.map((key, i) => (
+                <li
+                  key={key}
+                  data-reveal='monte'
+                  style={rang(i)}
+                  className='relative py-6'
+                >
+                  <span
+                    aria-hidden='true'
+                    style={rang(i)}
+                    className='barre-reglee absolute inset-x-0 top-0 block h-px bg-trait-fort'
+                  />
+                  <h3 className='text-titre-3 text-encre'>
+                    {h(`limits.${key}.title`)}
+                  </h3>
+                  <p className='mt-2 text-texte-2'>{h(`limits.${key}.text`)}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Le pic : un profil se forme, facteur après facteur. */}
+      <ProfileForming
         titre={h('factors.title')}
         intro={h('method.measured')}
+        lead={h('peak.lead')}
+        legende={h('specimenTag')}
+        ratios={domainCodes.map((code) => ratioDeScore(profilPic[code]))}
+        etapes={domainCodes.map((code) => ({
+          code,
+          nom: domainLabel(code, locale, 'long'),
+          nomCourt: domainLabel(code, locale, 'short'),
+          texte: h(`factors.${code}`),
+          mention: h('factors.facets')
+        }))}
+      />
+
+      {/* Pour qui : le tiers de confiance, puis la provenance chiffrée. */}
+      <section
+        aria-labelledby='confiance-titre'
+        className='border-t border-trait py-16 lg:py-28'
       >
-        <dl className='grid gap-x-8 border-t border-trait sm:grid-cols-2'>
-          {domainCodes.map((code) => (
-            <div key={code} className='border-b border-trait py-5'>
-              <dt className='flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1'>
-                <span className='text-titre-3 text-encre'>
-                  {domainLabel(code, locale, 'long')}
-                </span>
-                <span className='text-legende text-texte-3'>
-                  {h('factors.facets')}
-                </span>
+        <div className='grid gap-8 lg:grid-cols-12'>
+          <h2
+            id='confiance-titre'
+            className='text-titre-section text-encre lg:col-span-4'
+          >
+            {h('trust.title')}
+          </h2>
+          <p
+            data-reveal='masque'
+            className='font-display text-titre-1 font-medium text-encre lg:col-span-8'
+          >
+            {h('trust.text')}
+          </p>
+        </div>
+      </section>
+
+      <section
+        aria-labelledby='provenance-titre'
+        className='border-t border-trait py-16 lg:py-24'
+      >
+        <dl className='grid grid-cols-2 gap-x-6 gap-y-10 border-b border-trait pb-12 md:grid-cols-4'>
+          {chiffres.map((chiffre, i) => (
+            <div
+              key={chiffre.label}
+              data-reveal='monte'
+              style={rang(i)}
+              className='flex flex-col-reverse gap-2'
+            >
+              <dt className='text-petit font-medium text-texte-2'>
+                {chiffre.label}
               </dt>
-              <dd className='mt-2 text-texte-2'>{h(`factors.${code}`)}</dd>
+              <dd className='chiffres font-display text-[clamp(3rem,2rem+5vw,6rem)] font-semibold leading-none tracking-[-0.04em] text-encre'>
+                <span
+                  data-compteur={chiffre.valeur}
+                  data-locale={regionale}
+                  aria-hidden='true'
+                >
+                  {n(chiffre.valeur)}
+                </span>
+                <span className='sr-only'>{n(chiffre.valeur)}</span>
+              </dd>
             </div>
           ))}
         </dl>
-      </Section>
-
-      <Section id='provenance-titre' titre={h('reference.title')}>
-        <p className='colonne-lecture text-chapo text-texte-2'>
-          {h('reference.text')}
-        </p>
-        <p className='mt-3 flex flex-wrap gap-x-6'>
-          <a
-            href='https://ipip.ori.org'
-            rel='noopener noreferrer'
-            target='_blank'
-            className={textLink}
-          >
-            <bdi dir='ltr'>ipip.ori.org</bdi>
-          </a>
-          <Link href='/methode' className={textLink}>
-            {h('reference.methodLink')}
-          </Link>
-        </p>
-        <div className='mt-10 border-t border-trait pt-6'>
-          <h3 className='text-titre-3 text-encre'>{h('languages.title')}</h3>
-          <p className='mt-2 text-texte-2'>{h('languages.text')}</p>
-          <ul role='list' className='mt-4 flex flex-wrap gap-2'>
-            {languages.map((language) => (
-              <li
-                key={language.code}
-                lang={language.code}
-                className='rounded-controle border border-trait-fort px-4 py-2 font-medium text-encre'
+        <div className='mt-12 grid gap-10 lg:grid-cols-12'>
+          <div className='lg:col-span-7'>
+            <h2 id='provenance-titre' className='text-titre-section text-encre'>
+              {h('reference.title')}
+            </h2>
+            <p className='mt-4 max-w-[38em] text-chapo text-texte-2'>
+              {h('reference.text')}
+            </p>
+            <p className='mt-3 flex flex-wrap gap-x-6'>
+              <a
+                href='https://ipip.ori.org'
+                rel='noopener noreferrer'
+                target='_blank'
+                className={textLink}
               >
-                {language.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Section>
-
-      <Section id='faq-titre' titre={h('faq.title')}>
-        <div className='divide-y divide-trait border-y border-trait'>
-          {faqKeys.map((key) => (
-            <details key={key} className='group'>
-              <summary className='flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-titre-3 text-encre transition-colors duration-courte ease-tenga hover:text-accent [&::-webkit-details-marker]:hidden'>
-                <span>{f(`${key}.question`)}</span>
-                <svg
-                  aria-hidden='true'
-                  focusable='false'
-                  viewBox='0 0 24 24'
-                  width='20'
-                  height='20'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='1.75'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  className='flex-none text-texte-3 transition-transform duration-normale ease-tenga group-open:rotate-180 motion-reduce:transition-none'
+                <bdi dir='ltr'>ipip.ori.org</bdi>
+              </a>
+              <Link href='/methode' className={textLink}>
+                {h('reference.methodLink')}
+              </Link>
+            </p>
+          </div>
+          <div className='lg:col-span-4 lg:col-start-9'>
+            <h3 className='text-titre-3 text-encre'>{h('languages.title')}</h3>
+            <p className='mt-2 text-texte-2'>{h('languages.text')}</p>
+            <ul role='list' className='mt-4 grid gap-2'>
+              {languages.map((language, i) => (
+                <li
+                  key={language.code}
+                  lang={language.code}
+                  data-reveal='volet'
+                  style={rang(i)}
+                  className='border-b border-trait py-2 font-display text-titre-2 text-encre'
                 >
-                  <path d='m6 9 6 6 6-6' />
-                </svg>
-              </summary>
-              <p className='colonne-lecture pb-5 text-texte-2'>
-                {f(`${key}.answer`)}
-              </p>
-            </details>
-          ))}
+                  {language.name}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <p className='mt-4'>
-          <Link href='/faq' className={textLink}>
-            {h('faq.all')}
-            <ArrowRightIcon size={18} />
-          </Link>
-        </p>
-      </Section>
+      </section>
+
+      <section
+        aria-labelledby='faq-titre'
+        className='grid gap-x-8 gap-y-6 border-t border-trait py-16 lg:grid-cols-12 lg:py-24'
+      >
+        <h2
+          id='faq-titre'
+          className='max-w-[14em] text-titre-section text-encre lg:col-span-4'
+        >
+          {h('faq.title')}
+        </h2>
+        <div className='lg:col-span-8'>
+          <div className='divide-y divide-trait border-y border-trait'>
+            {faqKeys.map((key) => (
+              <details key={key} className='group'>
+                <summary className='flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-titre-3 text-encre transition-colors duration-courte ease-tenga hover:text-accent [&::-webkit-details-marker]:hidden'>
+                  <span>{f(`${key}.question`)}</span>
+                  <svg
+                    aria-hidden='true'
+                    focusable='false'
+                    viewBox='0 0 24 24'
+                    width='20'
+                    height='20'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='1.75'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    className='flex-none text-texte-3 transition-transform duration-normale ease-tenga group-open:rotate-45 motion-reduce:transition-none'
+                  >
+                    <path d='M12 5v14M5 12h14' />
+                  </svg>
+                </summary>
+                <p className='colonne-lecture pb-5 text-texte-2'>
+                  {f(`${key}.answer`)}
+                </p>
+              </details>
+            ))}
+          </div>
+          <p className='mt-4'>
+            <Link href='/faq' className={textLink}>
+              {h('faq.all')}
+              <ArrowRightIcon size={18} />
+            </Link>
+          </p>
+        </div>
+      </section>
     </>
   );
 }
 
-// Signature et appel final : la phrase de marque, puis le questionnaire pour
-// soi et la présentation pour une organisation. Une règle d'accent pleine
-// largeur ferme la page, sans animation (le seul tracé est celui du spécimen).
+// Signature et appel final : le pentagone se ferme une dernière fois autour de
+// la phrase de marque, puis les deux actions, aimantées au pointeur.
 export async function HomeClosing({
   locale
 }: HomeSectionProps): Promise<ReactElement> {
@@ -267,22 +449,46 @@ export async function HomeClosing({
   return (
     <section
       aria-labelledby='signature'
-      className='border-t-2 border-accent pt-12'
+      data-reveal='trace'
+      className='relative overflow-hidden rounded-panneau bg-encre px-6 py-16 text-fond md:px-12 md:py-24'
     >
-      <h2 id='signature' className='text-titre-1 text-encre'>
-        {c('signature')}
-      </h2>
-      <p className='mt-4 max-w-[36em] text-chapo text-texte-2'>
-        {h('closing.text')}
-      </p>
-      <div className='mt-8 flex flex-wrap gap-3'>
-        <Link href='/test' className={boutonPrincipal()}>
-          {t('call_to_action')}
-          <ArrowRightIcon size={18} />
-        </Link>
-        <Link href='/presentation' className={secondaryButtonClass}>
-          {p('cta')}
-        </Link>
+      <svg
+        aria-hidden='true'
+        viewBox='0 0 600 600'
+        className='pointer-events-none absolute -end-24 -top-16 w-[min(560px,90vw)] opacity-90'
+      >
+        <polygon
+          points='300,40 547,220 453,510 147,510 53,220'
+          pathLength={1}
+          className='trace-svg fill-none stroke-safran'
+          strokeWidth='3'
+          strokeLinejoin='round'
+        />
+      </svg>
+      <div className='relative max-w-[40rem]'>
+        <h2 id='signature' className='text-geant'>
+          {c('signature')}
+        </h2>
+        <p className='mt-5 max-w-[36em] text-chapo opacity-80'>
+          {h('closing.text')}
+        </p>
+        <div className='mt-10 flex flex-wrap gap-3'>
+          <Link
+            href='/test'
+            data-aimant=''
+            className='appui inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-controle bg-safran px-6 font-semibold text-[#14182B] hover:bg-fond'
+          >
+            {t('call_to_action')}
+            <ArrowRightIcon size={18} />
+          </Link>
+          <Link
+            href='/presentation'
+            data-aimant=''
+            className='appui inline-flex min-h-12 items-center justify-center rounded-controle border border-fond/40 px-6 font-medium hover:bg-fond/10'
+          >
+            {p('cta')}
+          </Link>
+        </div>
       </div>
     </section>
   );
