@@ -22,7 +22,8 @@ export const heading = tv({
   base: 'text-titre-2 text-encre'
 });
 
-// Lien stylé en bouton principal (accueil, pages 404 et erreur).
+// Lien stylé en bouton principal (accueil, pages 404 et erreur) : fond d'accent,
+// 44 px de haut, rayon 6 px, sans ombre ; appui par légère réduction.
 export const boutonPrincipal = tv({
-  base: 'inline-flex min-h-[52px] items-center justify-center gap-2.5 whitespace-nowrap rounded-controle border-[1.5px] border-transparent bg-accent px-[26px] font-bold leading-tight text-sur-accent shadow-[0_8px_20px_-10px_rgb(var(--c-accent))] transition duration-normale ease-tenga hover:-translate-y-px hover:bg-accent-survol active:translate-y-px'
+  base: 'appui inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-controle border border-transparent bg-accent px-5 font-medium leading-tight text-sur-accent hover:bg-accent-survol'
 });

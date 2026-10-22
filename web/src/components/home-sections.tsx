@@ -1,14 +1,16 @@
-// Sections de la page d'accueil sous l'en-tête (direction B2) : l'enjeu, ce que
-// dit la recherche, ce que le questionnaire ne fait pas, comment cela se passe,
-// les cinq grands facteurs, la provenance, la FAQ courte, puis la signature et
-// l'appel final. Composants serveur : aucun JavaScript client. La FAQ est un
-// accordéon natif (details/summary), accessible au clavier et aux lecteurs
-// d'écran sans code.
-import { ReactElement } from 'react';
+// Sections de la page d'accueil sous l'ouverture (direction « règle graduée »,
+// § 8.9) : l'enjeu, ce que dit la recherche, ce que le questionnaire ne fait
+// pas, le tiers de confiance, le déroulement, les cinq grands facteurs, la
+// provenance, la FAQ courte, puis la signature et l'appel final.
+// Une seule grammaire : un filet en tête de section, le titre en début de ligne
+// (4 colonnes sur 12), le contenu en fin de ligne (8 colonnes) ; des filets
+// plutôt que des cartes. Composants serveur : aucun JavaScript client. La FAQ
+// est un accordéon natif (details/summary), accessible sans code.
+import { ReactElement, ReactNode } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { ArrowRightIcon } from '@/components/icons';
-import { DomainShape, domainNumber } from '@/components/domain-shape';
-import { title } from '@/components/primitives';
+import { boutonPrincipal } from '@/components/primitives';
+import { secondaryButtonClass } from '@/components/form-styles';
 import { domainCodes, domainLabel } from '@/lib/domain-labels';
 import { formatNombre } from '@/lib/format';
 import { Link } from '@/navigation';
@@ -16,8 +18,6 @@ import { Link } from '@/navigation';
 interface HomeSectionProps {
   locale: string;
 }
-
-const section = 'py-[clamp(2.25rem,5vw,4rem)]';
 
 const languages = [
   { code: 'fr', name: 'Français' },
@@ -27,26 +27,34 @@ const languages = [
 
 const faqKeys = ['science', 'usefulness', 'diagnosis'] as const;
 
-// Boutons du bandeau final, posés sur le fond d'accent : l'anneau de focus passe
-// en couleur de texte sur accent pour rester visible sur ce fond.
-const closingPrimary =
-  'inline-flex min-h-[52px] items-center justify-center gap-2.5 whitespace-nowrap rounded-controle border-[1.5px] border-sur-accent bg-surface px-[26px] font-bold leading-tight text-encre transition duration-normale ease-tenga hover:bg-creux focus-visible:outline-sur-accent active:translate-y-px motion-reduce:transition-none';
-
-const closingSecondary =
-  'inline-flex min-h-[52px] items-center justify-center rounded-controle border-[1.5px] border-sur-accent px-[26px] py-2 text-base font-bold text-sur-accent transition-colors duration-normale hover:bg-sur-accent/15 focus-visible:outline-sur-accent active:translate-y-px motion-reduce:transition-none rtl:font-semibold';
-
 const textLink =
-  'inline-flex min-h-11 items-center gap-2 text-petit font-bold text-accent hover:text-accent-survol hover:underline';
+  'inline-flex min-h-11 items-center gap-2 text-petit font-medium text-accent underline-offset-4 transition-colors duration-courte ease-tenga hover:text-accent-survol hover:underline';
 
-// Pastille numérotée : le chiffre est décoratif, l'ordre vient de la liste.
-function Index({ value }: { value: string }): ReactElement {
+// Section à deux colonnes : titre en début de ligne, contenu en fin de ligne.
+function Section({
+  id,
+  titre,
+  intro,
+  children
+}: {
+  id: string;
+  titre: string;
+  intro?: string;
+  children?: ReactNode;
+}): ReactElement {
   return (
-    <span
-      aria-hidden='true'
-      className='text-petit font-extrabold tracking-[0.04em] text-accent'
+    <section
+      aria-labelledby={id}
+      className='grid gap-x-8 gap-y-6 border-t border-trait pb-16 pt-10 lg:grid-cols-12 lg:pb-24 lg:pt-12'
     >
-      {value}
-    </span>
+      <div className='lg:col-span-4'>
+        <h2 id={id} className='max-w-[16em] text-titre-section text-encre'>
+          {titre}
+        </h2>
+        {intro && <p className='mt-3 max-w-[30em] text-texte-2'>{intro}</p>}
+      </div>
+      <div className='lg:col-span-8'>{children}</div>
+    </section>
   );
 }
 
@@ -63,236 +71,172 @@ export async function HomeSections({
 
   return (
     <>
-      <section aria-labelledby='enjeu' className={section}>
-        <h2
-          id='enjeu'
-          className='text-petit font-extrabold tracking-[0.04em] text-accent'
-        >
-          {h('stake.title')}
-        </h2>
-        <p className='mt-4 max-w-[24em] text-titre-section text-encre'>
+      <Section id='enjeu' titre={h('stake.title')}>
+        <p className='max-w-[26em] text-titre-2 font-medium text-encre'>
           {h('stake.problem')}
         </p>
         <p className='mt-6 max-w-[38em] text-chapo text-texte-2'>
           {h('stake.answer')}
         </p>
-      </section>
+      </Section>
 
-      <section
-        id='recherche'
-        aria-labelledby='recherche-titre'
-        className={section}
+      <Section
+        id='recherche-titre'
+        titre={h('research.title')}
+        intro={h('research.intro')}
       >
-        <h2 id='recherche-titre' className={title({ size: 'section' })}>
-          {h('research.title')}
-        </h2>
-        <p className='mt-2.5 max-w-[40em] text-texte-2'>
-          {h('research.intro')}
-        </p>
-        <ul role='list' className='mt-8 grid gap-3.5 min-[900px]:grid-cols-3'>
-          {research.map((key, index) => (
+        <ul role='list' className='divide-y divide-trait border-y border-trait'>
+          {research.map((key) => (
             <li
               key={key}
-              className='carte carte-survol apparition flex flex-col gap-3 p-6'
-              style={{ animationDelay: `${index * 0.06}s` }}
+              className='grid gap-2 py-5 md:grid-cols-[minmax(0,14rem)_1fr] md:gap-8'
             >
-              <Index value={n(index + 1).padStart(2, '0')} />
               <h3 className='text-titre-3 text-encre'>
                 {h(`research.${key}.title`)}
               </h3>
-              <p className='text-texte-2'>{h(`research.${key}.text`)}</p>
+              <p className='colonne-lecture text-texte-2'>
+                {h(`research.${key}.text`)}
+              </p>
             </li>
           ))}
         </ul>
-        <p className='mt-5'>
+        <p className='mt-4'>
           <Link href='/methode' className={textLink}>
             {h('research.link')}
             <ArrowRightIcon size={18} />
           </Link>
         </p>
-      </section>
+      </Section>
 
-      <section aria-labelledby='limites-titre' className={section}>
-        <h2 id='limites-titre' className={title({ size: 'section' })}>
-          {h('limits.title')}
-        </h2>
-        <p className='mt-2.5 max-w-[40em] text-texte-2'>{h('limits.intro')}</p>
-        <ul role='list' className='mt-8 grid gap-3.5 sm:grid-cols-2'>
-          {limits.map((key, index) => (
-            <li
-              key={key}
-              className='carte apparition flex items-start gap-4 p-6'
-              style={{ animationDelay: `${index * 0.06}s` }}
-            >
-              <span
-                aria-hidden='true'
-                className='grid size-[46px] flex-none place-items-center rounded-[15px] bg-accent-doux text-accent'
-              >
-                <svg
-                  viewBox='0 0 24 24'
-                  width='22'
-                  height='22'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2.4'
-                  strokeLinecap='round'
-                  focusable='false'
-                >
-                  <path d='M6 6l12 12M18 6L6 18' />
-                </svg>
-              </span>
-              <div>
-                <h3 className='text-titre-3 text-encre'>
-                  {h(`limits.${key}.title`)}
-                </h3>
-                <p className='mt-2 text-texte-2'>{h(`limits.${key}.text`)}</p>
-              </div>
+      <Section
+        id='limites-titre'
+        titre={h('limits.title')}
+        intro={h('limits.intro')}
+      >
+        <ul
+          role='list'
+          className='grid gap-x-8 border-t border-trait sm:grid-cols-2'
+        >
+          {limits.map((key) => (
+            <li key={key} className='border-b border-trait py-5'>
+              <h3 className='text-titre-3 text-encre'>
+                {h(`limits.${key}.title`)}
+              </h3>
+              <p className='mt-2 text-texte-2'>{h(`limits.${key}.text`)}</p>
             </li>
           ))}
         </ul>
-      </section>
+      </Section>
 
-      <section aria-labelledby='confiance-titre' className={section}>
-        <h2 id='confiance-titre' className={title({ size: 'section' })}>
-          {h('trust.title')}
-        </h2>
-        <p className='mt-2.5 max-w-[40em] text-texte-2'>{h('trust.text')}</p>
-      </section>
+      <Section id='confiance-titre' titre={h('trust.title')}>
+        <p className='max-w-[34em] text-chapo text-texte-2'>
+          {h('trust.text')}
+        </p>
+      </Section>
 
-      <section aria-labelledby='deroulement-titre' className={section}>
-        <h2 id='deroulement-titre' className={title({ size: 'section' })}>
-          {h('how.title')}
-        </h2>
-        <p className='mt-2.5 max-w-[40em] text-texte-2'>{h('how.intro')}</p>
-        <ol role='list' className='mt-8 grid gap-3.5 min-[900px]:grid-cols-3'>
+      <Section
+        id='deroulement-titre'
+        titre={h('how.title')}
+        intro={h('how.intro')}
+      >
+        {/* Une vraie suite d'étapes : la numérotation porte l'ordre. */}
+        <ol role='list' className='grid gap-8 md:grid-cols-3 md:gap-6'>
           {steps.map((key, index) => (
-            <li
-              key={key}
-              className='carte apparition flex flex-col gap-3 p-6'
-              style={{ animationDelay: `${index * 0.06}s` }}
-            >
+            <li key={key} className='border-t-2 border-accent pt-4'>
               <span
                 aria-hidden='true'
-                className='grid size-[46px] place-items-center rounded-full bg-accent text-corps font-extrabold text-sur-accent'
+                className='chiffres text-petit font-medium text-texte-3'
               >
                 {n(index + 1)}
               </span>
-              <h3 className='text-titre-3 text-encre'>
+              <h3 className='mt-1 text-titre-3 text-encre'>
                 {h(`how.${key}.title`)}
               </h3>
-              <p className='text-texte-2'>{h(`how.${key}.text`)}</p>
+              <p className='mt-2 text-texte-2'>{h(`how.${key}.text`)}</p>
             </li>
           ))}
         </ol>
-      </section>
+      </Section>
 
-      <section
-        id='facteurs'
-        aria-labelledby='facteurs-titre'
-        className={section}
+      <Section
+        id='facteurs-titre'
+        titre={h('factors.title')}
+        intro={h('method.measured')}
       >
-        <h2 id='facteurs-titre' className={title({ size: 'section' })}>
-          {h('factors.title')}
-        </h2>
-        <p className='mt-2.5 max-w-[40em] text-texte-2'>
-          {h('method.measured')}
-        </p>
-        <ul
-          role='list'
-          className='mt-8 grid gap-3.5 sm:grid-cols-2 min-[1000px]:grid-cols-5'
-        >
-          {domainCodes.map((code, index) => (
-            <li
-              key={code}
-              className='carte carte-survol apparition flex flex-col gap-3 p-6'
-              style={{ animationDelay: `${index * 0.06}s` }}
-            >
-              <div className='flex items-center justify-between'>
-                <span
-                  aria-hidden='true'
-                  className='grid size-[46px] flex-none place-items-center rounded-[15px] bg-accent-doux text-accent'
-                >
-                  <DomainShape domain={code} />
+        <dl className='grid gap-x-8 border-t border-trait sm:grid-cols-2'>
+          {domainCodes.map((code) => (
+            <div key={code} className='border-b border-trait py-5'>
+              <dt className='flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1'>
+                <span className='text-titre-3 text-encre'>
+                  {domainLabel(code, locale, 'long')}
                 </span>
-                <span
-                  aria-hidden='true'
-                  className='text-petit font-extrabold tracking-[0.04em] text-texte-2'
-                >
-                  {domainNumber(code)}
+                <span className='text-legende text-texte-3'>
+                  {h('factors.facets')}
                 </span>
-              </div>
-              <h3 className='text-titre-3 text-encre'>
-                {domainLabel(code, locale, 'short')}
-              </h3>
-              <p className='text-texte-2'>{h(`factors.${code}`)}</p>
-              <p className='mt-auto pt-1.5 text-petit font-bold text-accent'>
-                {h('factors.facets')}
-              </p>
-            </li>
+              </dt>
+              <dd className='mt-2 text-texte-2'>{h(`factors.${code}`)}</dd>
+            </div>
           ))}
-        </ul>
-        <div className='mt-3.5 grid gap-3.5 min-[800px]:grid-cols-2'>
-          <article className='carte'>
-            <h3 className='text-titre-3 text-encre'>{h('languages.title')}</h3>
-            <p className='mt-1.5 text-texte-2'>{h('languages.text')}</p>
-            <ul role='list' className='mt-[18px] flex flex-wrap gap-2.5'>
-              {languages.map((language) => (
-                <li
-                  key={language.code}
-                  lang={language.code}
-                  className='rounded-[14px] border-[1.5px] border-trait-fort bg-creux px-5 py-2.5 font-bold'
-                >
-                  {language.name}
-                </li>
-              ))}
-            </ul>
-          </article>
-          <article className='carte'>
-            <h3 className='text-titre-3 text-encre'>{h('reference.title')}</h3>
-            <p className='mt-2.5 text-texte-2'>{h('reference.text')}</p>
-            <p className='mt-2.5 flex flex-wrap gap-x-6'>
-              <a
-                href='https://ipip.ori.org'
-                rel='noopener noreferrer'
-                target='_blank'
-                className={textLink}
-              >
-                <bdi dir='ltr'>ipip.ori.org</bdi>
-              </a>
-              <Link href='/methode' className={textLink}>
-                {h('reference.methodLink')}
-              </Link>
-            </p>
-          </article>
-        </div>
-      </section>
+        </dl>
+      </Section>
 
-      <section aria-labelledby='faq-titre' className={section}>
-        <h2 id='faq-titre' className={title({ size: 'section' })}>
-          {h('faq.title')}
-        </h2>
-        <div className='mt-8 divide-y divide-trait rounded-panneau border border-trait bg-surface px-[clamp(1.25rem,3vw,2rem)]'>
+      <Section id='provenance-titre' titre={h('reference.title')}>
+        <p className='colonne-lecture text-chapo text-texte-2'>
+          {h('reference.text')}
+        </p>
+        <p className='mt-3 flex flex-wrap gap-x-6'>
+          <a
+            href='https://ipip.ori.org'
+            rel='noopener noreferrer'
+            target='_blank'
+            className={textLink}
+          >
+            <bdi dir='ltr'>ipip.ori.org</bdi>
+          </a>
+          <Link href='/methode' className={textLink}>
+            {h('reference.methodLink')}
+          </Link>
+        </p>
+        <div className='mt-10 border-t border-trait pt-6'>
+          <h3 className='text-titre-3 text-encre'>{h('languages.title')}</h3>
+          <p className='mt-2 text-texte-2'>{h('languages.text')}</p>
+          <ul role='list' className='mt-4 flex flex-wrap gap-2'>
+            {languages.map((language) => (
+              <li
+                key={language.code}
+                lang={language.code}
+                className='rounded-controle border border-trait-fort px-4 py-2 font-medium text-encre'
+              >
+                {language.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Section>
+
+      <Section id='faq-titre' titre={h('faq.title')}>
+        <div className='divide-y divide-trait border-y border-trait'>
           {faqKeys.map((key) => (
-            <details key={key} className='group py-1'>
-              <summary className='flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 py-3 text-titre-3 text-encre [&::-webkit-details-marker]:hidden'>
+            <details key={key} className='group'>
+              <summary className='flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-titre-3 text-encre transition-colors duration-courte ease-tenga hover:text-accent [&::-webkit-details-marker]:hidden'>
                 <span>{f(`${key}.question`)}</span>
                 <svg
                   aria-hidden='true'
                   focusable='false'
                   viewBox='0 0 24 24'
-                  width='22'
-                  height='22'
+                  width='20'
+                  height='20'
                   fill='none'
                   stroke='currentColor'
-                  strokeWidth='2.2'
+                  strokeWidth='1.75'
                   strokeLinecap='round'
                   strokeLinejoin='round'
-                  className='flex-none text-accent transition-transform duration-normale motion-reduce:transition-none group-open:rotate-180'
+                  className='flex-none text-texte-3 transition-transform duration-normale ease-tenga group-open:rotate-180 motion-reduce:transition-none'
                 >
                   <path d='m6 9 6 6 6-6' />
                 </svg>
               </summary>
-              <p className='colonne-lecture pb-4 text-texte-2'>
+              <p className='colonne-lecture pb-5 text-texte-2'>
                 {f(`${key}.answer`)}
               </p>
             </details>
@@ -304,13 +248,14 @@ export async function HomeSections({
             <ArrowRightIcon size={18} />
           </Link>
         </p>
-      </section>
+      </Section>
     </>
   );
 }
 
-// Bandeau de signature et appel final : le même geste qu'en tête de page, le
-// questionnaire pour soi, la présentation pour une organisation.
+// Signature et appel final : la phrase de marque, puis le questionnaire pour
+// soi et la présentation pour une organisation. Une règle d'accent pleine
+// largeur ferme la page, sans animation (le seul tracé est celui du spécimen).
 export async function HomeClosing({
   locale
 }: HomeSectionProps): Promise<ReactElement> {
@@ -320,23 +265,24 @@ export async function HomeClosing({
   const p = await getTranslations({ locale, namespace: 'presentation' });
 
   return (
-    <section aria-labelledby='signature' className={section}>
-      <div className='carte border-accent bg-accent text-center text-sur-accent'>
-        <h2 id='signature' className='text-display text-sur-accent'>
-          {c('signature')}
-        </h2>
-        <p className='mx-auto mt-5 max-w-[36em] text-chapo opacity-90'>
-          {h('closing.text')}
-        </p>
-        <div className='mt-8 flex flex-wrap justify-center gap-3'>
-          <Link href='/test' className={closingPrimary}>
-            {t('call_to_action')}
-            <ArrowRightIcon />
-          </Link>
-          <Link href='/presentation' className={closingSecondary}>
-            {p('cta')}
-          </Link>
-        </div>
+    <section
+      aria-labelledby='signature'
+      className='border-t-2 border-accent pt-12'
+    >
+      <h2 id='signature' className='text-titre-1 text-encre'>
+        {c('signature')}
+      </h2>
+      <p className='mt-4 max-w-[36em] text-chapo text-texte-2'>
+        {h('closing.text')}
+      </p>
+      <div className='mt-8 flex flex-wrap gap-3'>
+        <Link href='/test' className={boutonPrincipal()}>
+          {t('call_to_action')}
+          <ArrowRightIcon size={18} />
+        </Link>
+        <Link href='/presentation' className={secondaryButtonClass}>
+          {p('cta')}
+        </Link>
       </div>
     </section>
   );

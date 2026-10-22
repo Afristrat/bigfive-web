@@ -4,39 +4,28 @@ import { IconSvgProps } from '@/types';
 // Icônes SVG en ligne : 20 px et trait de 1,5 par défaut, masquées des
 // technologies d'assistance (le nom vient toujours du contrôle qui les porte).
 
-// Mot-symbole provisoire en attendant le logo de Tenga Conseil (direction § 12,
-// point 1) : pastille de marque (pentagone) et nom, comme dans la direction B2.
+// Mot-symbole typographique provisoire en attendant le logo de Tenga Conseil
+// (direction § 12, point 1) : « Tenga » en 600, « Assessments » en 400 plus
+// petit ; une courte règle d'accent sous le nom reprend la signature du site.
 export const Wordmark = ({ className }: { className?: string }) => (
-  <span className={clsx('inline-flex items-center gap-2.5', className)}>
-    <span
-      aria-hidden='true'
-      className='grid size-[38px] flex-none place-items-center rounded-[12px] bg-accent text-sur-accent'
-    >
-      <svg
-        width={22}
-        height={22}
-        viewBox='0 0 24 24'
-        fill='none'
-        stroke='currentColor'
-        strokeWidth={2.2}
-        strokeLinejoin='round'
-        focusable='false'
-      >
-        <path d='M12 2.8l8.6 6.3-3.3 10.1H6.7L3.4 9.1z' />
-        <path
-          d='M12 8.5l4 2.9-1.5 4.6H9.5L8 11.4z'
-          fill='currentColor'
-          fillOpacity={0.35}
-        />
-      </svg>
+  <bdi
+    dir='ltr'
+    className={clsx(
+      'inline-flex items-baseline gap-1.5 whitespace-nowrap',
+      className
+    )}
+  >
+    <span className='relative text-[1.25rem] font-semibold leading-none tracking-[-0.01em] text-encre'>
+      Tenga
+      <span
+        aria-hidden='true'
+        className='absolute -bottom-1.5 start-0 h-0.5 w-[62%] bg-accent'
+      />
     </span>
-    <bdi dir='ltr' className='whitespace-nowrap text-[1.125rem] font-extrabold'>
-      Tenga{' '}
-      <span className='font-medium text-texte-2 max-[440px]:hidden'>
-        Assessments
-      </span>
-    </bdi>
-  </span>
+    <span className='text-petit font-normal text-texte-3 max-[440px]:hidden'>
+      Assessments
+    </span>
+  </bdi>
 );
 
 export const TwitterIcon = ({
@@ -139,7 +128,7 @@ export const MoonIcon = ({
     width={size || width}
     fill='none'
     stroke='currentColor'
-    strokeWidth={2}
+    strokeWidth={1.75}
     strokeLinecap='round'
     strokeLinejoin='round'
     {...props}
@@ -162,7 +151,7 @@ export const SunIcon = ({
     width={size || width}
     fill='none'
     stroke='currentColor'
-    strokeWidth={2}
+    strokeWidth={1.75}
     strokeLinecap='round'
     {...props}
   >
@@ -185,7 +174,7 @@ export const MenuIcon = ({
     width={size || width}
     fill='none'
     stroke='currentColor'
-    strokeWidth={2.2}
+    strokeWidth={1.75}
     strokeLinecap='round'
     {...props}
   >
@@ -210,7 +199,7 @@ export const ArrowRightIcon = ({
     viewBox='0 0 24 24'
     fill='none'
     stroke='currentColor'
-    strokeWidth='2.2'
+    strokeWidth='1.75'
     strokeLinecap='round'
     strokeLinejoin='round'
     {...props}
