@@ -63,11 +63,19 @@ export function accorder(texte: string, accord: Accord): string {
   });
 }
 
+/**
+ * Réglage d'appel de la garde de relecture. `afficherNonRelus` remplace, pour
+ * cet appel seul, la variable d'exploitation BIBLIOTHEQUE_NON_RELUS_PERSONNES
+ * (aperçu interne) ; indéfini, la variable fait foi, comme avant.
+ */
+export type OptionsBloc = { afficherNonRelus?: boolean };
+
 export function blocFacette(
   id: `${FacetteCode}/${Niveau}`,
   locale: string,
   audience: Audience,
-  accord: Accord = 'n'
+  accord: Accord = 'n',
+  options: OptionsBloc = {}
 ): EtatBloc {
   if (!estFrancais(locale)) return { etat: 'langue_absente' };
   const [code = '', niveau = ''] = id.split('/');
@@ -79,11 +87,10 @@ export function blocFacette(
     return { etat: 'en_relecture' };
   }
   const nonRelu = brut.relecture === NON_RELU;
-  if (
-    nonRelu &&
-    audience === 'personne' &&
-    process.env.BIBLIOTHEQUE_NON_RELUS_PERSONNES !== 'afficher'
-  ) {
+  const afficherAuxPersonnes =
+    options.afficherNonRelus ??
+    process.env.BIBLIOTHEQUE_NON_RELUS_PERSONNES === 'afficher';
+  if (nonRelu && audience === 'personne' && !afficherAuxPersonnes) {
     return { etat: 'en_relecture' };
   }
   const a = (t: string): string => accorder(t, accord);

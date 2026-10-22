@@ -1,0 +1,365 @@
+{
+  "version": "apercu-1",
+  "avertissement": "Données entièrement fictives. Les profils sont la copie de docs/design/profils-fictifs/profils.json ; les groupes et leurs agrégats sont inventés pour l'aperçu, sans lien avec des personnes.",
+  "profils": [
+    {
+      "code": "AM",
+      "nom": "Amine (estimation)",
+      "fictif": false,
+      "sexe": "h",
+      "domaine": {
+        "N": 60,
+        "E": 100,
+        "O": 96,
+        "A": 72,
+        "C": 100
+      },
+      "facette": {
+        "N1": 3,
+        "N2": 3,
+        "N3": 2,
+        "N4": 2,
+        "N5": 3,
+        "N6": 2,
+        "E1": 4,
+        "E2": 3,
+        "E3": 5,
+        "E4": 5,
+        "E5": 4,
+        "E6": 4,
+        "O1": 4,
+        "O2": 4,
+        "O3": 4,
+        "O4": 4,
+        "O5": 5,
+        "O6": 3,
+        "A1": 3,
+        "A2": 2,
+        "A3": 4,
+        "A4": 2,
+        "A5": 3,
+        "A6": 4,
+        "C1": 5,
+        "C2": 4,
+        "C3": 5,
+        "C4": 5,
+        "C5": 4,
+        "C6": 2
+      }
+    },
+    {
+      "code": "KB",
+      "nom": "Karim B.",
+      "fictif": true,
+      "sexe": "h",
+      "domaine": {
+        "N": 49,
+        "E": 80,
+        "O": 59,
+        "A": 79,
+        "C": 102
+      },
+      "facette": {
+        "N1": 2,
+        "N2": 2.25,
+        "N3": 1.75,
+        "N4": 2,
+        "N5": 2.5,
+        "N6": 1.75,
+        "E1": 3.5,
+        "E2": 3,
+        "E3": 3.75,
+        "E4": 3.5,
+        "E5": 3,
+        "E6": 3.25,
+        "O1": 2.5,
+        "O2": 2.25,
+        "O3": 2.75,
+        "O4": 2.25,
+        "O5": 2,
+        "O6": 3,
+        "A1": 3.5,
+        "A2": 2.75,
+        "A3": 3.5,
+        "A4": 3.25,
+        "A5": 3.25,
+        "A6": 3.5,
+        "C1": 4.25,
+        "C2": 4.5,
+        "C3": 4.5,
+        "C4": 4.25,
+        "C5": 4,
+        "C6": 4
+      }
+    },
+    {
+      "code": "SR",
+      "nom": "Salma R.",
+      "fictif": true,
+      "sexe": "f",
+      "domaine": {
+        "N": 76,
+        "E": 99,
+        "O": 105,
+        "A": 71,
+        "C": 70
+      },
+      "facette": {
+        "N1": 3.25,
+        "N2": 3.5,
+        "N3": 3,
+        "N4": 2.75,
+        "N5": 3.5,
+        "N6": 3,
+        "E1": 4.25,
+        "E2": 4,
+        "E3": 3.5,
+        "E4": 4,
+        "E5": 4.5,
+        "E6": 4.5,
+        "O1": 4.75,
+        "O2": 4.5,
+        "O3": 4.25,
+        "O4": 4.75,
+        "O5": 4,
+        "O6": 4,
+        "A1": 3,
+        "A2": 2.5,
+        "A3": 3.25,
+        "A4": 3,
+        "A5": 2.75,
+        "A6": 3.25,
+        "C1": 3,
+        "C2": 2.75,
+        "C3": 3.25,
+        "C4": 3.5,
+        "C5": 2.75,
+        "C6": 2.25
+      }
+    },
+    {
+      "code": "HT",
+      "nom": "Hind T.",
+      "fictif": true,
+      "sexe": "f",
+      "domaine": {
+        "N": 88,
+        "E": 55,
+        "O": 89,
+        "A": 103,
+        "C": 93
+      },
+      "facette": {
+        "N1": 4,
+        "N2": 3.5,
+        "N3": 3.5,
+        "N4": 4.25,
+        "N5": 3,
+        "N6": 3.75,
+        "E1": 2.5,
+        "E2": 2.25,
+        "E3": 2,
+        "E4": 2.75,
+        "E5": 1.75,
+        "E6": 2.5,
+        "O1": 3.75,
+        "O2": 4,
+        "O3": 4.25,
+        "O4": 3.5,
+        "O5": 3.75,
+        "O6": 3,
+        "A1": 4.25,
+        "A2": 4.5,
+        "A3": 4,
+        "A4": 4.5,
+        "A5": 4,
+        "A6": 4.5,
+        "C1": 3.75,
+        "C2": 4.25,
+        "C3": 4,
+        "C4": 4,
+        "C5": 3.75,
+        "C6": 3.5
+      }
+    }
+  ],
+  "groupes": [
+    {
+      "id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "nom": "Équipe Atlas (fictive)",
+      "ordre": 1
+    },
+    {
+      "id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "nom": "Équipe Borj (fictive)",
+      "ordre": 2
+    },
+    {
+      "id": "11111111-aaaa-4aaa-8aaa-000000000003",
+      "nom": "Équipe Cèdre (fictive, effectif sous le seuil)",
+      "ordre": 3
+    }
+  ],
+  "agregats": [
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "portee": "groupe",
+      "domaine": "N",
+      "effectif": 12,
+      "moyenne": 68.4,
+      "ecart_type": 11.2
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "portee": "groupe",
+      "domaine": "E",
+      "effectif": 12,
+      "moyenne": 84.2,
+      "ecart_type": 9.8
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "portee": "groupe",
+      "domaine": "O",
+      "effectif": 12,
+      "moyenne": 76.9,
+      "ecart_type": 12.6
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "portee": "groupe",
+      "domaine": "A",
+      "effectif": 12,
+      "moyenne": 81.5,
+      "ecart_type": 8.4
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "portee": "groupe",
+      "domaine": "C",
+      "effectif": 12,
+      "moyenne": 90.3,
+      "ecart_type": 10.1
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "portee": "complement",
+      "domaine": "N",
+      "effectif": 31,
+      "moyenne": 72.1,
+      "ecart_type": 12.9
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "portee": "complement",
+      "domaine": "E",
+      "effectif": 31,
+      "moyenne": 79.6,
+      "ecart_type": 10.7
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "portee": "complement",
+      "domaine": "O",
+      "effectif": 31,
+      "moyenne": 80.3,
+      "ecart_type": 11.4
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "portee": "complement",
+      "domaine": "A",
+      "effectif": 31,
+      "moyenne": 77.8,
+      "ecart_type": 9.9
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000001",
+      "portee": "complement",
+      "domaine": "C",
+      "effectif": 31,
+      "moyenne": 85.4,
+      "ecart_type": 11.8
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "portee": "groupe",
+      "domaine": "N",
+      "effectif": 9,
+      "moyenne": 74.8,
+      "ecart_type": 13.4
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "portee": "groupe",
+      "domaine": "E",
+      "effectif": 9,
+      "moyenne": 71.3,
+      "ecart_type": 12.1
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "portee": "groupe",
+      "domaine": "O",
+      "effectif": 9,
+      "moyenne": 88.6,
+      "ecart_type": 9.3
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "portee": "groupe",
+      "domaine": "A",
+      "effectif": 9,
+      "moyenne": 86.2,
+      "ecart_type": 7.9
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "portee": "groupe",
+      "domaine": "C",
+      "effectif": 9,
+      "moyenne": 79.7,
+      "ecart_type": 12.5
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "portee": "complement",
+      "domaine": "N",
+      "effectif": 34,
+      "moyenne": 70.5,
+      "ecart_type": 12.4
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "portee": "complement",
+      "domaine": "E",
+      "effectif": 34,
+      "moyenne": 82.7,
+      "ecart_type": 10.3
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "portee": "complement",
+      "domaine": "O",
+      "effectif": 34,
+      "moyenne": 76.4,
+      "ecart_type": 12.2
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "portee": "complement",
+      "domaine": "A",
+      "effectif": 34,
+      "moyenne": 78.1,
+      "ecart_type": 9.7
+    },
+    {
+      "group_id": "11111111-aaaa-4aaa-8aaa-000000000002",
+      "portee": "complement",
+      "domaine": "C",
+      "effectif": 34,
+      "moyenne": 87.9,
+      "ecart_type": 10.6
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import mesResultatsAr from './espace/mesResultats.ar.js';
 import rapportAr from './espace/rapport.ar.js';
 import binomeAr from './espace/binome.ar.js';
 import syntheseAr from './espace/synthese.ar.js';
+import apercuAr from './espace/apercu.ar.js';
 
 const arabic = {
   language: {
@@ -972,7 +973,8 @@ const arabic = {
   mesResultats: mesResultatsAr,
   rapport: rapportAr,
   binome: binomeAr,
-  synthese: syntheseAr
+  synthese: syntheseAr,
+  apercu: apercuAr
 };
 
 export default arabic;

@@ -91,6 +91,8 @@ type ResultViewProps = {
   libelles: ResultViewLabels;
   /** Date de passation déjà formatée, ou null. */
   date: string | null;
+  /** Remplace la variable d'exploitation de la garde de relecture (aperçu interne). */
+  afficherNonRelus?: boolean;
 };
 
 const libelleFacette = (code: FacetteCode, locale: string): string => {
@@ -108,7 +110,8 @@ export function ResultView({
   locale,
   audience,
   libelles,
-  date
+  date,
+  afficherNonRelus
 }: ResultViewProps): ReactElement {
   const { niveaux, vue } = libelles;
   return (
@@ -172,7 +175,9 @@ export function ResultView({
                     score={facette.score}
                     niveau={facette.niveau}
                     niveauLabel={niveaux[facette.niveau]}
-                    etat={blocFacette(facette.blocId, locale, audience)}
+                    etat={blocFacette(facette.blocId, locale, audience, 'n', {
+                      afficherNonRelus
+                    })}
                     avertissement={avertissementFacette(k, locale)}
                     locale={locale}
                     rang={rang}

@@ -5,6 +5,7 @@ import mesResultatsFr from './espace/mesResultats.fr.js';
 import rapportFr from './espace/rapport.fr.js';
 import binomeFr from './espace/binome.fr.js';
 import syntheseFr from './espace/synthese.fr.js';
+import apercuFr from './espace/apercu.fr.js';
 
 const french = {
   language: {
@@ -1005,7 +1006,8 @@ const french = {
   mesResultats: mesResultatsFr,
   rapport: rapportFr,
   binome: binomeFr,
-  synthese: syntheseFr
+  synthese: syntheseFr,
+  apercu: apercuFr
 };
 
 export default french;

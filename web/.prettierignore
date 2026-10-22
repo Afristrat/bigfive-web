@@ -2,3 +2,4 @@ pnpm-lock.yaml
 src/data/rapport-apercu-html.ts
 src/data/rapport-apercu-fichiers.ts
 src/data/bibliotheque-facettes.json
+src/data/apercu-resultats.json

@@ -127,6 +127,40 @@ describe('garde de relecture', () => {
   });
 });
 
+describe('option afficherNonRelus (aperçu interne, sans variable d’environnement)', () => {
+  it('vrai : affiche à une personne le bloc non relu, marqué non relu', () => {
+    const r = blocFacette('N1/bas', 'fr', 'personne', 'n', {
+      afficherNonRelus: true
+    });
+    expect(r.etat).toBe('affiche');
+    if (r.etat === 'affiche') expect(r.nonRelu).toBe(true);
+  });
+
+  it('faux : masque même quand la variable vaut « afficher »', () => {
+    process.env.BIBLIOTHEQUE_NON_RELUS_PERSONNES = 'afficher';
+    expect(
+      blocFacette('N1/bas', 'fr', 'personne', 'n', { afficherNonRelus: false })
+    ).toEqual({ etat: 'en_relecture' });
+  });
+
+  it('absent ou indéfini : le comportement par défaut (variable) est inchangé', () => {
+    expect(blocFacette('N1/bas', 'fr', 'personne', 'n', {})).toEqual({
+      etat: 'en_relecture'
+    });
+    process.env.BIBLIOTHEQUE_NON_RELUS_PERSONNES = 'afficher';
+    expect(
+      blocFacette('N1/bas', 'fr', 'personne', 'n', {
+        afficherNonRelus: undefined
+      }).etat
+    ).toBe('affiche');
+  });
+
+  it('ne modifie pas la variable d’environnement', () => {
+    blocFacette('N1/bas', 'fr', 'personne', 'n', { afficherNonRelus: true });
+    expect(process.env.BIBLIOTHEQUE_NON_RELUS_PERSONNES).toBeUndefined();
+  });
+});
+
 describe('bloc inconnu', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);

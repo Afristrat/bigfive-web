@@ -4,6 +4,7 @@ import mesResultatsEn from './espace/mesResultats.en.js';
 import rapportEn from './espace/rapport.en.js';
 import binomeEn from './espace/binome.en.js';
 import syntheseEn from './espace/synthese.en.js';
+import apercuEn from './espace/apercu.en.js';
 
 const english = {
   language: {
@@ -1000,7 +1001,8 @@ const english = {
   mesResultats: mesResultatsEn,
   rapport: rapportEn,
   binome: binomeEn,
-  synthese: syntheseEn
+  synthese: syntheseEn,
+  apercu: apercuEn
 };
 
 export default english;

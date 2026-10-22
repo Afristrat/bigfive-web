@@ -29,7 +29,8 @@ const namespaces = [
   'mesResultats',
   'rapport',
   'binome',
-  'synthese'
+  'synthese',
+  'apercu'
 ] as const;
 
 describe('parité des messages fr / en / ar', () => {

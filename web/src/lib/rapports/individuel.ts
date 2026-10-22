@@ -40,6 +40,8 @@ export type EntreeRapport = {
   scores: ScoresTenga;
   locale: string;
   audience: Audience;
+  /** Remplace la variable d'exploitation de la garde de relecture (aperçu interne). */
+  afficherNonRelus?: boolean;
 };
 
 export type FacetteRapport = {
@@ -100,7 +102,7 @@ const facettesDe = (domaine: DomainCode): FacetteCode[] =>
 export function construireRapportIndividuel(
   entree: EntreeRapport
 ): RapportIndividuel {
-  const { scores, locale, audience } = entree;
+  const { scores, locale, audience, afficherNonRelus } = entree;
   const profil = profilDepuisScores(scores);
   const retire = audience !== 'personne';
   const visible = (code: FacetteCode): boolean =>
@@ -115,7 +117,7 @@ export function construireRapportIndividuel(
       niveau: f.niveau,
       blocId: f.blocId,
       // Aucun accord grammatical tant que la décision D8 est ouverte : forme 'n'.
-      etat: blocFacette(f.blocId, locale, audience, 'n'),
+      etat: blocFacette(f.blocId, locale, audience, 'n', { afficherNonRelus }),
       avertissement: avertissementFacette(code, locale)
     };
   };
@@ -154,7 +156,9 @@ export function construireRapportIndividuel(
   for (const code of candidats) {
     if (entretien.length === ENTRETIEN_MAX) break;
     const blocId = profil.facettes[code].blocId;
-    const etat = blocFacette(blocId, locale, audience, 'n');
+    const etat = blocFacette(blocId, locale, audience, 'n', {
+      afficherNonRelus
+    });
     if (etat.etat === 'affiche') {
       entretien.push({ code, blocId, question: etat.bloc.question });
     }

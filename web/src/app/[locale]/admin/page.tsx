@@ -41,6 +41,7 @@ export default async function AdminPage({ params }: Props) {
   const t = await getTranslations('admin');
   const roles = await getTranslations('roles');
   const account = await getTranslations('account');
+  const apercu = await getTranslations('apercu');
 
   const languages = {
     fr: account('languages.fr'),
@@ -67,6 +68,14 @@ export default async function AdminPage({ params }: Props) {
             className='underline underline-offset-4'
           >
             Aperçu du rapport cabinet
+          </Link>
+        </p>
+        <p className='mt-2'>
+          <Link
+            href='/admin/apercu-resultats'
+            className='underline underline-offset-4'
+          >
+            {apercu('lien')}
           </Link>
         </p>
       </header>

@@ -48,10 +48,10 @@ const campaignRows = z.array(
     statut: z.enum(['brouillon', 'ouverte', 'close'])
   })
 );
-const groupRows = z.array(
+export const groupRows = z.array(
   z.object({ id: uuid, nom: z.string(), ordre: z.number().int() })
 );
-const aggregateRows = z.array(
+export const aggregateRows = z.array(
   z.object({
     group_id: uuid,
     portee: z.enum(['groupe', 'complement']),
@@ -85,6 +85,47 @@ export type Synthese =
   | { etat: 'prete'; campagne: CampagneSynthese; groupes: GroupeSynthese[] };
 
 const ordreDomaine = (code: DomainCode): number => DOMAINES.indexOf(code);
+
+export type LigneGroupe = z.infer<typeof groupRows>[number];
+export type LigneAgregat = z.infer<typeof aggregateRows>[number];
+
+/**
+ * Assemble les lignes de `groups` et de `group_aggregates` en groupes lisibles :
+ * ordre de la campagne, domaines dans l'ordre du moteur, `publie` faux quand la
+ * base n'a posé aucune ligne `groupe`. Partagée avec l'aperçu interne, qui lui
+ * donne des lignes fictives de la même forme.
+ */
+export function assemblerGroupes(
+  groups: readonly LigneGroupe[],
+  aggregates: readonly LigneAgregat[]
+): GroupeSynthese[] {
+  const lignesDe = (
+    groupId: string,
+    portee: 'groupe' | 'complement'
+  ): LigneDomaine[] =>
+    aggregates
+      .filter((a) => a.group_id === groupId && a.portee === portee)
+      .map((a) => ({
+        domaine: a.domaine,
+        effectif: a.effectif,
+        moyenne: a.moyenne,
+        ecartType: a.ecart_type
+      }))
+      .sort((a, b) => ordreDomaine(a.domaine) - ordreDomaine(b.domaine));
+
+  return [...groups]
+    .sort((a, b) => a.ordre - b.ordre || a.nom.localeCompare(b.nom, 'fr'))
+    .map((g): GroupeSynthese => {
+      const groupe = lignesDe(g.id, 'groupe');
+      return {
+        id: g.id,
+        nom: g.nom,
+        publie: groupe.length > 0,
+        groupe,
+        complement: lignesDe(g.id, 'complement')
+      };
+    });
+}
 
 /**
  * Synthèse d'une campagne de l'organisation. `null` si la campagne est absente,
@@ -124,32 +165,7 @@ export async function loadSynthese(
     )
   ]);
 
-  const lignesDe = (
-    groupId: string,
-    portee: 'groupe' | 'complement'
-  ): LigneDomaine[] =>
-    aggregates
-      .filter((a) => a.group_id === groupId && a.portee === portee)
-      .map((a) => ({
-        domaine: a.domaine,
-        effectif: a.effectif,
-        moyenne: a.moyenne,
-        ecartType: a.ecart_type
-      }))
-      .sort((a, b) => ordreDomaine(a.domaine) - ordreDomaine(b.domaine));
-
-  const groupes = [...groups]
-    .sort((a, b) => a.ordre - b.ordre || a.nom.localeCompare(b.nom, 'fr'))
-    .map((g): GroupeSynthese => {
-      const groupe = lignesDe(g.id, 'groupe');
-      return {
-        id: g.id,
-        nom: g.nom,
-        publie: groupe.length > 0,
-        groupe,
-        complement: lignesDe(g.id, 'complement')
-      };
-    });
+  const groupes = assemblerGroupes(groups, aggregates);
 
   return { etat: 'prete', campagne, groupes };
 }
