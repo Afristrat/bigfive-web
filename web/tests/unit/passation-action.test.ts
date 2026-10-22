@@ -183,6 +183,18 @@ describe('submitParticipation : appel de la base', () => {
     expect(lus?.meta.duree_secondes).toBe(1234);
   });
 
+  it('timeElapsed à 0 (passation reprise) : durée inconnue, jamais « 0 seconde »', async () => {
+    await submitParticipation(PARTICIPATION, resultat({ timeElapsed: 0 }));
+    const [, args] = rpc.mock.calls[0] as [string, Record<string, unknown>];
+    expect(lireScores(args.p_scores)?.meta.duree_secondes).toBeNull();
+  });
+
+  it('timeElapsed positif : conservé tel quel', async () => {
+    await submitParticipation(PARTICIPATION, resultat({ timeElapsed: 1 }));
+    const [, args] = rpc.mock.calls[0] as [string, Record<string, unknown>];
+    expect(lireScores(args.p_scores)?.meta.duree_secondes).toBe(1);
+  });
+
   it('relit domaine et facette côté serveur : ceux du client sont ignorés', async () => {
     const r = resultat();
     const truquees = resultat({

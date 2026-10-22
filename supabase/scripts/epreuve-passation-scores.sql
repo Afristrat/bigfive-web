@@ -1,7 +1,7 @@
--- Épreuve de la migration 0015 (contrat de passation tenu en base : forme des
+-- Épreuve de la migration 0019 (contrat de passation tenu en base : forme des
 -- réponses et des scores « tenga-scores-1 » ; colonne campagne_statut de
 -- app.mes_resultats) sur la base de production, AVANT puis APRÈS l'application de
--- la migration. Avant : elle doit sortir ROUGE avec « migration 0015 non
+-- la migration. Avant : elle doit sortir ROUGE avec « migration 0019 non
 -- appliquée ». Après : « EPREUVE VERTE ». Tout est annulé : aucune ligne n'est
 -- conservée (ROLLBACK final), hormis l'avance des compteurs d'identité du
 -- journal, que PostgreSQL ne restitue jamais.
@@ -77,13 +77,13 @@ DECLARE
   v_audit  integer;
   v_cas    record;
 BEGIN
-  -- 1. Objets de la migration 0015, lus dans le catalogue.
+  -- 1. Objets de la migration 0019, lus dans le catalogue.
   IF v_soum IS NULL OR v_mes IS NULL THEN
     RAISE EXCEPTION 'fonctions de passation absentes (app.soumettre_resultat ou app.mes_resultats)';
   END IF;
   IF position('tenga-scores-1' IN pg_get_functiondef(v_soum)) = 0
      OR position('campagne_statut' IN pg_get_function_result(v_mes)) = 0 THEN
-    RAISE EXCEPTION 'migration 0015 non appliquée : contrôle de forme ou colonne campagne_statut absent';
+    RAISE EXCEPTION 'migration 0019 non appliquée : contrôle de forme ou colonne campagne_statut absent';
   END IF;
   IF pg_get_function_result(v_mes) IS DISTINCT FROM
      'TABLE(participation_id uuid, campagne_id uuid, campagne_titre text, organisation_nom text, organisation_slug text, statut text, ouverte_le timestamp with time zone, terminee_le timestamp with time zone, scores jsonb, questionnaire_version text, calcul_version text, campagne_statut text)' THEN
@@ -105,7 +105,7 @@ BEGIN
        WHERE n.nspname = 'app' AND p.proname IN ('soumettre_resultat', 'mes_resultats')) <> 2 THEN
     RAISE EXCEPTION 'une signature en trop pour app.soumettre_resultat ou app.mes_resultats';
   END IF;
-  RAISE NOTICE 'OK : migration 0015 appliquée ; deux fonctions SECURITY DEFINER, search_path vide, tenga_owner, authenticated seul ; campagne_statut en dernière colonne';
+  RAISE NOTICE 'OK : migration 0019 appliquée ; deux fonctions SECURITY DEFINER, search_path vide, tenga_owner, authenticated seul ; campagne_statut en dernière colonne';
 
   -- Données jetables : une organisation, deux participants, trois campagnes
   -- (deux ouvertes, une close), quatre participations.
@@ -125,7 +125,8 @@ BEGIN
     (v_part2, v_camp1, v_org, v_pb),
     (v_part3, v_camp2, v_org, v_pa),
     (v_part4, v_camp3, v_org, v_pa);
-  SELECT count(*) INTO v_audit FROM private.audit_log;
+  SELECT count(*) INTO v_audit FROM private.audit_log
+   WHERE action = 'resultat.soumettre' AND ressource_id IN (v_part1, v_part2, v_part3, v_part4);
 
   -- 2. Refus de forme des réponses : 22023, rien d'écrit.
   FOR v_cas IN
@@ -177,10 +178,11 @@ BEGIN
 
   SELECT count(*) INTO v_n FROM app.results WHERE participation_id IN (v_part1, v_part2, v_part3, v_part4);
   IF v_n <> 0 THEN RAISE EXCEPTION 'un refus a écrit % résultat(s)', v_n; END IF;
-  IF (SELECT statut FROM app.participations WHERE id = v_part1) <> 'en_cours' THEN
+  IF (SELECT statut FROM app.participations WHERE id = v_part1) <> 'ouverte' THEN
     RAISE EXCEPTION 'un refus a modifié le statut de la participation';
   END IF;
-  SELECT count(*) INTO v_n FROM private.audit_log;
+  SELECT count(*) INTO v_n FROM private.audit_log
+   WHERE action = 'resultat.soumettre' AND ressource_id IN (v_part1, v_part2, v_part3, v_part4);
   IF v_n <> v_audit THEN RAISE EXCEPTION 'un refus a écrit % ligne(s) de journal', v_n - v_audit; END IF;
   RAISE NOTICE 'OK : un refus n''écrit ni résultat, ni statut, ni journal';
 
@@ -227,7 +229,7 @@ BEGIN
   IF v_r IS DISTINCT FROM 'ouverte|terminee' THEN RAISE EXCEPTION 'participation terminée : % au lieu de ouverte|terminee', v_r; END IF;
   UPDATE app.campaigns SET statut = 'close', cloture_le = now() WHERE id = v_camp2;
   v_r := pg_temp.comme(v_pa, 'authenticated', format($q$select campagne_statut || '|' || statut from app.mes_resultats() where campagne_id = %L$q$, v_camp2));
-  IF v_r IS DISTINCT FROM 'close|en_cours' THEN RAISE EXCEPTION 'campagne close : % au lieu de close|en_cours', v_r; END IF;
+  IF v_r IS DISTINCT FROM 'close|ouverte' THEN RAISE EXCEPTION 'campagne close : % au lieu de close|ouverte', v_r; END IF;
   v_r := pg_temp.comme(v_pa, 'authenticated', 'select count(*)::text from app.mes_resultats()');
   IF v_r IS DISTINCT FROM '3' THEN RAISE EXCEPTION 'mes_resultats de pa : % ligne(s) au lieu de 3', v_r; END IF;
   v_r := pg_temp.comme(v_pb, 'authenticated', 'select count(*)::text from app.mes_resultats()');

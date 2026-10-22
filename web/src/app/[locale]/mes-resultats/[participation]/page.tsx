@@ -6,7 +6,7 @@ import {
   ResultView,
   libellesResultView
 } from '@/components/resultats/result-view';
-import { formatDate, isoler } from '@/lib/format';
+import { formatDate, isolerEnArabe, formatDateMaroc } from '@/lib/format';
 import {
   loadMaParticipation,
   parseParticipationId
@@ -39,14 +39,13 @@ export default async function MaParticipationPage({ params }: Props) {
 
   const t = await getTranslations('mesResultats');
   const niveaux = await getTranslations('niveaux');
-  const iso = (valeur: string): string =>
-    locale === 'ar' ? isoler(valeur) : valeur;
+  const rapport = await getTranslations('rapport');
 
   const peutPasser =
     participation.statut !== 'terminee' &&
     participation.campagneStatut === 'ouverte';
   const date = participation.termineeLe
-    ? formatDate(participation.termineeLe, locale, 'Africa/Casablanca')
+    ? formatDateMaroc(participation.termineeLe, locale)
     : null;
 
   return (
@@ -56,18 +55,30 @@ export default async function MaParticipationPage({ params }: Props) {
           {t('retour')}
         </Link>
       </p>
-      <h1 className={`mt-4 ${title()}`}>{iso(participation.campagneTitre)}</h1>
-      <p className='mt-2 text-texte-2'>{iso(participation.organisationNom)}</p>
+      <h1 className={`mt-4 ${title()}`}>
+        {isolerEnArabe(participation.campagneTitre, locale)}
+      </h1>
+      <p className='mt-2 text-texte-2'>
+        {isolerEnArabe(participation.organisationNom, locale)}
+      </p>
 
       <div className='mt-8'>
         {participation.scores ? (
-          <ResultView
-            profil={profilDepuisScores(participation.scores)}
-            locale={locale}
-            audience='personne'
-            libelles={libellesResultView(t, niveaux)}
-            date={date}
-          />
+          <div className='flex flex-col items-start gap-6'>
+            <Link
+              href={`/mes-resultats/${participation.participationId}/rapport`}
+              className={secondaryButtonClass}
+            >
+              {rapport('personne.titre')}
+            </Link>
+            <ResultView
+              profil={profilDepuisScores(participation.scores)}
+              locale={locale}
+              audience='personne'
+              libelles={libellesResultView(t, niveaux)}
+              date={date}
+            />
+          </div>
         ) : participation.scoresIllisibles ? (
           <p className='text-texte-2'>{t('formatAnterieur')}</p>
         ) : (

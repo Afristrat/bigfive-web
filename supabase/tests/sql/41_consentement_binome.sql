@@ -1,4 +1,4 @@
--- Migration 0017 (étape C2a, écart X8, décision D2) : consentement du binôme.
+-- Migration 0021 (étape C2a, écart X8, décision D2) : consentement du binôme.
 -- app.binomes (RLS forcée, aucun droit de table pour l'API, écriture refusée à
 -- l'API, consentement non réécrivable) et quatre fonctions contrôlées :
 -- app.proposer_binome (consultant de l'organisation ou administrateur Tenga, deux
@@ -8,12 +8,13 @@
 -- n'est pas retirée), app.lire_binome (scores des deux participations, SEULEMENT
 -- si les deux accords existent et si la proposition n'est pas retirée ; le
 -- responsable, un autre participant et un consultant d'une autre organisation
--- sont refusés ; lecture journalisée ; facette O6 retirée de la ligne de l'autre).
+-- sont refusés ; lecture journalisée ; facette O6 retirée de la ligne de l'autre),
+-- et app.exporter_mes_donnees (droit d'accès) qui gagne la clé « binomes ».
 -- Exécution à l'épreuve de déploiement (T10), jamais sur le poste ; épreuve en
 -- transaction annulée : scripts/epreuve-consentement-binome.sql.
 -- (Enveloppé dans une transaction annulée par scripts/test-sql.sh.)
 SET LOCAL search_path TO tests, pg_catalog, public;
-SELECT plan(144);
+SELECT plan(158);
 
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
@@ -110,6 +111,12 @@ CREATE FUNCTION pg_temp.definitif() RETURNS text LANGUAGE sql AS $$
 $$;
 CREATE FUNCTION pg_temp.inval() RETURNS text LANGUAGE sql AS $$
   SELECT 'ERR:22023:Binôme invalide : deux participations terminées, de deux personnes différentes, de la même organisation'
+$$;
+
+-- Export de la personne (app.exporter_mes_donnees) sous une identité donnée.
+CREATE FUNCTION pg_temp.exp(p_uid uuid, p_role text DEFAULT 'authenticated') RETURNS text
+LANGUAGE sql AS $$
+  SELECT pg_temp.comme(p_uid, p_role, 'select app.exporter_mes_donnees()::text')
 $$;
 
 -- Scores de fixture : domaine O avec six facettes dont O6 = p_o6, domaine E.
@@ -450,6 +457,47 @@ SELECT is(pg_temp.comme(pg_temp.u_pa(), 'authenticated', 'update app.binomes set
   'ERR:42501:permission denied for table binomes', 'un participant ne modifie pas la table directement');
 SELECT is(pg_temp.comme(pg_temp.u_pa(), 'authenticated', 'delete from app.binomes'),
   'ERR:42501:permission denied for table binomes', 'un participant n''efface pas la table directement');
+
+-- ===== Droit d'accès : l'export de la personne contient ses binômes, jamais l'autre personne =====
+-- État à ce point : d1-d2 actif (pa et pb ont accepté), d1-d3 refusée par pc (retirée), d1-d3 nouvelle en attente,
+-- d2-d3 acceptée par pb et pc puis retirée par pb.
+SELECT is(
+  (SELECT p.prosecdef::text || '|' || p.provolatile::text || '|' || (p.proconfig = ARRAY['search_path=""']::text[])::text || '|' || pg_get_userbyid(p.proowner)::text || '|'
+          || has_function_privilege('anon', p.oid, 'EXECUTE')::text || '|' || has_function_privilege('public', p.oid, 'EXECUTE')::text || '|'
+          || has_function_privilege('service_role', p.oid, 'EXECUTE')::text || '|' || has_function_privilege('authenticated', p.oid, 'EXECUTE')::text
+     FROM pg_proc p WHERE p.oid = 'app.exporter_mes_donnees()'::regprocedure AND pg_get_function_result(p.oid) = 'jsonb'),
+  'true|v|true|tenga_owner|false|false|false|true', 'exporter_mes_donnees : signature, SECURITY DEFINER, search_path vide, tenga_owner, authenticated seul (inchangés)');
+SELECT is((SELECT string_agg(k, ',' ORDER BY k COLLATE "C") FROM jsonb_object_keys(pg_temp.exp(pg_temp.u_pa())::jsonb) k),
+  'appartenances,binomes,compte,exporte_le,journal,participations,profil,resultats,tentatives', 'l''export garde ses clés de 0003 et gagne « binomes »');
+SELECT is(jsonb_array_length(pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes'), 3, 'pa retrouve ses trois propositions (d1-d2, d1-d3 refusée, d1-d3 en attente)');
+SELECT is((SELECT string_agg(e ->> 'statut', ',' ORDER BY e ->> 'statut') FROM jsonb_array_elements(pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes') e),
+  'actif,en_attente,retire', 'les statuts exportés sont actif, en_attente et retire');
+SELECT is((SELECT string_agg(k, ',' ORDER BY k COLLATE "C") FROM jsonb_object_keys(pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes' -> 0) k),
+  'binome,ma_participation,mon_accord_le,organisation,propose_le,retire_le,statut', 'une proposition exportée porte sept clés : identifiant, sa participation, son accord, organisation, dates, statut');
+SELECT is((SELECT count(*)::int FROM jsonb_array_elements(pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes') e
+            WHERE e ->> 'statut' = 'actif' AND e ->> 'mon_accord_le' IS NOT NULL AND e ->> 'retire_le' IS NULL),
+  1, 'le binôme actif de pa porte la date de son accord et aucune date de retrait');
+SELECT is((SELECT count(*)::int FROM jsonb_array_elements(pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes') e
+            WHERE e ->> 'statut' = 'retire' AND e ->> 'retire_le' IS NOT NULL AND e ->> 'mon_accord_le' IS NULL),
+  1, 'la proposition refusée porte sa date de retrait et aucun accord de pa');
+SELECT is((SELECT count(*)::int FROM jsonb_array_elements(pg_temp.exp(pg_temp.u_pc())::jsonb -> 'binomes') e WHERE e ->> 'mon_accord_le' IS NOT NULL),
+  1, 'pc n''exporte que son propre accord (d2-d3) : ni son refus ni les accords des autres');
+SELECT is(
+  position('d0000000-0000-4000-8000-000000000002' IN (pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes')::text)
+  + position('d0000000-0000-4000-8000-000000000003' IN (pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes')::text)
+  + position('Bruno' IN (pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes')::text)
+  + position('Camille' IN (pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes')::text)
+  + position('a0000000-0000-4000-8000-000000000002' IN (pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes')::text)
+  + position('a0000000-0000-4000-8000-000000000004' IN (pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes')::text)
+  + position('a0000000-0000-4000-8000-000000000007' IN (pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes')::text)
+  + position('score' IN (pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes')::text)
+  + position('@' IN (pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes')::text),
+  0, 'les binômes exportés ne contiennent ni score, ni nom, ni identifiant, ni adresse de l''autre personne ni du consultant');
+SELECT is(pg_temp.exp(pg_temp.u_pd())::jsonb -> 'binomes', '[]'::jsonb, 'une personne sans proposition exporte une liste vide');
+SELECT is(pg_temp.exp(pg_temp.u_ra())::jsonb -> 'binomes', '[]'::jsonb, 'le responsable n''exporte aucun binôme');
+SELECT is(pg_temp.exp(pg_temp.u_ca())::jsonb -> 'binomes', '[]'::jsonb, 'le consultant qui a proposé n''exporte aucun binôme (il n''est pas la personne concernée)');
+SELECT is(pg_temp.exp(pg_temp.u_pa(), 'anon'), 'ERR:42501:permission denied for schema app', 'exporter_mes_donnees, anonyme : refusé');
+SELECT is(pg_temp.exp(pg_temp.u_pa(), 'service_role'), 'ERR:42501:permission denied for function exporter_mes_donnees', 'exporter_mes_donnees, service_role : aucun droit d''exécution');
 
 -- ===== Effacement : le compte du consultant, puis les personnes =====
 SELECT is((SELECT count(*)::int FROM app.binomes), 4, 'avant effacement : quatre lignes (d1-d2, d1-d3 refusée, d1-d3 en cours, d2-d3 retirée)');

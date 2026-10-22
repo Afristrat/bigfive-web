@@ -64,12 +64,14 @@ export function FacetCard({
         <h3 className='text-corps font-bold text-encre'>{label}</h3>
         <LevelBadge niveau={niveau} label={niveauLabel} />
       </div>
-      <p className='mt-2 text-end' dir='ltr'>
-        <span className='chiffres text-[22px] font-extrabold text-encre'>
-          {formatNombre(score, locale)}
-        </span>{' '}
-        <span className='text-petit font-medium text-texte-2'>
-          {labels.facetOutOf}
+      <p className='mt-2 text-end'>
+        <span dir='ltr'>
+          <span className='chiffres text-[22px] font-extrabold text-encre'>
+            {formatNombre(score, locale)}
+          </span>{' '}
+          <span className='text-petit font-medium text-texte-2'>
+            {labels.facetOutOf}
+          </span>
         </span>
       </p>
       <div className='mt-2'>

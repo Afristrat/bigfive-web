@@ -1,4 +1,5 @@
 import { hasLinkOrInvisible } from '@/lib/access-rules';
+import { FUSEAU_MAROC } from '@/lib/format';
 import { buildLinkMail } from '@/lib/mailer';
 import type { MailLocale } from '@/lib/login-mail';
 import { localizedPath } from '@/lib/safe-path';
@@ -206,7 +207,7 @@ const formatExpire = (expire: string, locale: MailLocale): string => {
   if (Number.isNaN(date.getTime())) return expire;
   return new Intl.DateTimeFormat(dateTags[locale], {
     dateStyle: 'long',
-    timeZone: 'Africa/Casablanca'
+    timeZone: FUSEAU_MAROC
   }).format(date);
 };
 

@@ -51,13 +51,15 @@ const estFrancais = (locale: string): boolean =>
 const facette = (code: string): FacetteBrute | undefined =>
   facettes.find((f) => f.code === code);
 
-// Même règle que docs/design/rapport-cabinet/rapport/outils.mjs (accorder) :
-// {masculin|féminin|sans accord}, forme sans accord par défaut.
+// Proche de docs/design/rapport-cabinet/rapport/outils.mjs (accorder) :
+// {masculin|féminin|sans accord}, forme sans accord par défaut. Écart voulu :
+// quand la partie demandée manque ({ouvert|ouverte} sans forme sans accord), on
+// rend la première forme, jamais la dernière (la féminine) par défaut.
 export function accorder(texte: string, accord: Accord): string {
   const i = { m: 0, f: 1, n: 2 }[accord] ?? 2;
   return texte.replace(/\{([^{}]*)\}/g, (_, g: string) => {
     const p = g.split('|');
-    return p[i] ?? p[p.length - 1] ?? '';
+    return p[i] ?? p[0] ?? '';
   });
 }
 
@@ -70,7 +72,12 @@ export function blocFacette(
   if (!estFrancais(locale)) return { etat: 'langue_absente' };
   const [code = '', niveau = ''] = id.split('/');
   const brut = facette(code)?.niveaux[niveau];
-  if (!brut) throw new Error(`Bloc de bibliothèque inconnu : ${id}`);
+  if (!brut) {
+    // Un identifiant sans bloc ne doit pas faire tomber tout le rapport : le
+    // bloc est présenté comme en relecture, l'anomalie est journalisée.
+    console.error(`Bloc de bibliothèque inconnu : ${id}`);
+    return { etat: 'en_relecture' };
+  }
   const nonRelu = brut.relecture === NON_RELU;
   if (
     nonRelu &&

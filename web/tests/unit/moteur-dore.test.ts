@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import {
+  comparerBinome,
   profilDepuisScores,
   SEUILS_DEFAUT,
   type DomainCode,
@@ -47,12 +48,25 @@ type Faits = {
       }[];
     }
   >;
+  relations: {
+    id: string;
+    a: string;
+    b: string;
+    domaines: { d: DomainCode; ecart: number; classe: string }[];
+    facettes_notables: {
+      k: FacetteCode;
+      ecart: number;
+      niveau_a: Niveau;
+      niveau_b: Niveau;
+    }[];
+  }[];
 };
 type Regles = {
   seuils: {
     niveaux: Record<string, number>;
     ecarts: Record<string, number>;
     tension: Record<string, number>;
+    contribution: Record<string, number>;
   };
 };
 
@@ -131,5 +145,91 @@ describe('seuils par défaut', () => {
     expect(SEUILS_DEFAUT.niveaux).toEqual(seuils.niveaux);
     expect(SEUILS_DEFAUT.ecarts).toEqual(seuils.ecarts);
     expect(SEUILS_DEFAUT.tension).toEqual(seuils.tension);
+    expect(SEUILS_DEFAUT.contribution).toEqual(seuils.contribution);
   });
+});
+
+describe('position sur l’échelle, contre les moyennes de profils.json', () => {
+  // La position est propre à l'application (le moteur du rapport n'en a pas) :
+  // elle est recalculée ici, sans le code du moteur, par (moyenne - 1) x 25.
+  it.each(CODES)('%s : 30 facettes et 5 domaines', (code) => {
+    const source = profils.find((p) => p.code === code);
+    if (!source) throw new Error(`profil ${code} absent`);
+    const calcule = profilDepuisScores(scoresDepuisProfil(source));
+    for (const k of Object.keys(source.facette) as FacetteCode[]) {
+      expect(calcule.facettes[k].position, k).toBeCloseTo(
+        (source.facette[k] - 1) * 25,
+        6
+      );
+    }
+    for (const d of DOMAINES) {
+      expect(calcule.domaines[d].position, d).toBeCloseTo(
+        (source.domaine[d] / 24 - 1) * 25,
+        4
+      );
+    }
+  });
+
+  it('valeurs écrites à la main pour KB : 18,75 ; 25 ; 37,5 ; 68,75 ; 87,5', () => {
+    const source = profils.find((p) => p.code === 'KB');
+    if (!source) throw new Error('profil KB absent');
+    const { facettes, domaines } = profilDepuisScores(
+      scoresDepuisProfil(source)
+    );
+    // N3 : total 7, moyenne 1,75. N1 : total 8, moyenne 2. N5 : total 10,
+    // moyenne 2,5. E3 : total 15, moyenne 3,75. C2 : total 18, moyenne 4,5.
+    expect(facettes.N3.position).toBe(18.75);
+    expect(facettes.N1.position).toBe(25);
+    expect(facettes.N5.position).toBe(37.5);
+    expect(facettes.E3.position).toBe(68.75);
+    expect(facettes.C2.position).toBe(87.5);
+    // C : 102 / 24 = 4,25, soit 81,25.
+    expect(domaines.C.position).toBe(81.25);
+  });
+});
+
+describe('comparerBinome contre les relations de faits.json', () => {
+  const parCode = (code: string): ProfilFictif => {
+    const source = profils.find((p) => p.code === code);
+    if (!source) throw new Error(`profil ${code} absent`);
+    return source;
+  };
+
+  it('couvre les six paires des quatre profils', () => {
+    expect(faits.relations.map((r) => r.id)).toEqual([
+      'AM-KB',
+      'AM-SR',
+      'AM-HT',
+      'KB-SR',
+      'KB-HT',
+      'SR-HT'
+    ]);
+  });
+
+  it.each(['AM-KB', 'AM-SR', 'AM-HT', 'KB-SR', 'KB-HT', 'SR-HT'])(
+    '%s : écarts de domaine, classes et facettes notables identiques',
+    (id) => {
+      const relation = faits.relations.find((r) => r.id === id);
+      if (!relation) throw new Error(`relation ${id} absente`);
+      const e = comparerBinome(
+        profilDepuisScores(scoresDepuisProfil(parCode(relation.a))),
+        profilDepuisScores(scoresDepuisProfil(parCode(relation.b)))
+      );
+      expect(e.domaines).toEqual(
+        relation.domaines.map((x) => ({
+          d: x.d,
+          ecart: x.ecart,
+          classe: x.classe
+        }))
+      );
+      expect(e.facettesNotables).toEqual(
+        relation.facettes_notables.map((x) => ({
+          k: x.k,
+          ecart: x.ecart,
+          niveauA: x.niveau_a,
+          niveauB: x.niveau_b
+        }))
+      );
+    }
+  );
 });

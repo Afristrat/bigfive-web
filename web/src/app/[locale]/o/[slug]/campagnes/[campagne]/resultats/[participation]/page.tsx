@@ -11,7 +11,7 @@ import {
   loadResultatIndividuel,
   peutLireResultats
 } from '@/lib/consultant-data';
-import { formatDate, isoler } from '@/lib/format';
+import { formatDate, isolerEnArabe, formatDateMaroc } from '@/lib/format';
 import { parseParticipationId } from '@/lib/mes-resultats-data';
 import { construireRapportIndividuel } from '@/lib/rapports/individuel';
 import { requireViewer } from '@/lib/session';
@@ -83,8 +83,6 @@ export default async function LectureResultatPage({ params }: Props) {
   const t = await getTranslations('rapport');
   const mes = await getTranslations('mesResultats');
   const niveaux = await getTranslations('niveaux');
-  const iso = (valeur: string): string =>
-    locale === 'ar' ? isoler(valeur) : valeur;
 
   return (
     <div>
@@ -98,7 +96,7 @@ export default async function LectureResultatPage({ params }: Props) {
       </p>
       <h1 className={`mt-4 ${title()}`}>{t('consultant.titre')}</h1>
       <p className='mt-2 text-texte-2'>
-        {t('liste.campagne', { titre: iso(campagne.titre) })}
+        {t('liste.campagne', { titre: isolerEnArabe(campagne.titre, locale) })}
       </p>
       <div className='mt-8'>
         {resultat.scores ? (
@@ -110,7 +108,7 @@ export default async function LectureResultatPage({ params }: Props) {
             })}
             locale={locale}
             libelles={libellesRapport(t, mes, niveaux)}
-            date={formatDate(resultat.soumisLe, locale, 'Africa/Casablanca')}
+            date={formatDateMaroc(resultat.soumisLe, locale)}
           />
         ) : (
           <p className='text-texte-2'>{mes('formatAnterieur')}</p>

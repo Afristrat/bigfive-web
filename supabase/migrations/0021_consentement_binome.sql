@@ -1,4 +1,4 @@
--- 0017 : consentement du binôme (étape C2a du plan de branchement du
+-- 0021 : consentement du binôme (étape C2a du plan de branchement du
 -- questionnaire sur le moteur, écart X8, décision D2 des bases des rapports).
 --
 -- Besoin : un rapport de binôme compare les scores de DEUX personnes. Il n'est
@@ -48,6 +48,11 @@
 --     du domaine O reste renvoyé ; O6 se déduit du score du domaine O moins les
 --     cinq autres facettes. Le retrait réel de O6 exige une décision sur le
 --     domaine O d'une autre personne (voir le rapport C2a).
+--
+--   app.exporter_mes_donnees() (droit d'accès, 0003) : redéfinie à l'identique avec
+--     une clé de plus, « binomes » (propositions qui concernent la personne, son
+--     propre accord, statut, dates ; jamais les scores ni l'identité de l'autre
+--     personne). Mêmes signature, attributs, droits et clés qu'en 0003.
 --
 -- Journal : binome.proposer, binome.accepter, binome.refuser, binome.retirer,
 -- binome.lire (ressource de type binome, organisation du binôme). Aucune adresse
@@ -102,6 +107,8 @@ CREATE UNIQUE INDEX binomes_proposition_en_cours_uniq
 CREATE INDEX binomes_participation_a_idx ON app.binomes (participation_a);
 CREATE INDEX binomes_participation_b_idx ON app.binomes (participation_b);
 CREATE INDEX binomes_organisation_idx ON app.binomes (organization_id);
+-- Clé étrangère propose_par (ON DELETE SET NULL à l'effacement d'un compte consultant).
+CREATE INDEX binomes_propose_par_idx ON app.binomes (propose_par) WHERE propose_par IS NOT NULL;
 COMMENT ON TABLE app.binomes IS
   'Consentement du binôme : deux participations terminées de la même organisation, un accord par personne, un retrait définitif. Aucun score. Aucun accès direct par l''API.';
 
@@ -344,13 +351,92 @@ BEGIN
 END
 $$;
 
--- 5. Droits : défense en profondeur (comme 0008, 0010, 0013, 0014, 0015 et
--- 0016), puis EXECUTE pour authenticated seul.
+-- 4.5 Droit d'accès : l'export de la personne (app.exporter_mes_donnees, 0003,
+-- jamais redéfini depuis) gagne la clé « binomes ». Mêmes signature, attributs et
+-- droits, mêmes clés et même forme qu'en 0003 ; une clé en plus, un tableau
+-- (vide si la personne n'a aucune proposition). Pour chaque proposition qui
+-- concerne la personne : identifiant, organisation, sa participation, date de
+-- proposition, son propre accord, statut (en_attente, actif ou retire), date de
+-- retrait. JAMAIS les scores de l'autre personne, ni son identité (ni nom, ni
+-- identifiant de compte ou de participation), ni le compte du consultant qui a
+-- proposé. Le journal de l'export contient déjà les actions binome.* au nom de la
+-- personne.
+CREATE OR REPLACE FUNCTION app.exporter_mes_donnees()
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_uid    uuid := auth.uid();
+  v_export jsonb;
+BEGIN
+  IF v_uid IS NULL THEN
+    RAISE EXCEPTION 'Connexion requise' USING ERRCODE = '42501';
+  END IF;
+  SELECT pg_catalog.jsonb_build_object(
+    'exporte_le', now(),
+    'compte', pg_catalog.jsonb_build_object(
+      'id', v_uid,
+      'email', (SELECT u.email FROM auth.users u WHERE u.id = v_uid),
+      'administrateur_tenga', app.suis_admin_tenga()),
+    'profil', (SELECT pg_catalog.to_jsonb(p) - 'user_id' FROM app.profiles p WHERE p.user_id = v_uid),
+    'appartenances', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+               'organisation', o.nom, 'identifiant', o.slug, 'role', m.role, 'depuis', m.cree_le) ORDER BY m.cree_le, o.slug)
+      FROM app.memberships m JOIN app.organizations o ON o.id = m.organization_id
+      WHERE m.user_id = v_uid), '[]'::jsonb),
+    'participations', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+               'participation', p.id, 'campagne', c.titre, 'organisation', o.nom, 'statut', p.statut,
+               'ouverte_le', p.ouverte_le, 'commencee_le', p.commencee_le, 'terminee_le', p.terminee_le)
+               ORDER BY p.ouverte_le, p.id)
+      FROM app.participations p
+      JOIN app.campaigns c ON c.id = p.campaign_id
+      JOIN app.organizations o ON o.id = p.organization_id
+      WHERE p.user_id = v_uid), '[]'::jsonb),
+    'tentatives', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+               'participation', a.participation_id, 'questionnaire_version', a.questionnaire_version,
+               'reponses', a.reponses, 'revision', a.revision, 'mis_a_jour_le', a.mis_a_jour_le,
+               'expire_le', a.expire_le) ORDER BY a.cree_le, a.participation_id)
+      FROM app.attempts a WHERE a.user_id = v_uid), '[]'::jsonb),
+    'resultats', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+               'participation', r.participation_id, 'reponses', r.reponses, 'scores', r.scores,
+               'questionnaire_version', r.questionnaire_version, 'calcul_version', r.calcul_version,
+               'soumis_le', r.soumis_le) ORDER BY r.soumis_le, r.participation_id)
+      FROM app.results r WHERE r.user_id = v_uid), '[]'::jsonb),
+    'binomes', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+               'binome', b.id, 'organisation', o.nom, 'ma_participation', mine.id,
+               'propose_le', b.propose_le,
+               'mon_accord_le', CASE WHEN mine.id = b.participation_a THEN b.accord_a_le ELSE b.accord_b_le END,
+               'statut', CASE WHEN b.retire_le IS NOT NULL THEN 'retire'
+                              WHEN b.accord_a_le IS NOT NULL AND b.accord_b_le IS NOT NULL THEN 'actif'
+                              ELSE 'en_attente' END,
+               'retire_le', b.retire_le) ORDER BY b.propose_le, b.id)
+      FROM app.binomes b
+      JOIN app.participations mine ON mine.user_id = v_uid AND mine.id IN (b.participation_a, b.participation_b)
+      JOIN app.organizations o ON o.id = b.organization_id), '[]'::jsonb),
+    'journal', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object('action', l.action, 'date', l.cree_le) ORDER BY l.id)
+      FROM private.audit_log l WHERE l.acteur = v_uid), '[]'::jsonb)
+  ) INTO v_export;
+  PERFORM private.journaliser(v_uid, 'compte.exporter', 'utilisateur', v_uid);
+  RETURN v_export;
+END
+$$;
+
+-- 5. Droits : défense en profondeur (comme 0008, 0010, 0013, 0014, 0019 et
+-- 0020), puis EXECUTE pour authenticated seul.
 REVOKE ALL ON FUNCTION app.proposer_binome(uuid, uuid) FROM PUBLIC, anon, service_role;
 REVOKE ALL ON FUNCTION app.repondre_binome(uuid, boolean) FROM PUBLIC, anon, service_role;
 REVOKE ALL ON FUNCTION app.mes_binomes() FROM PUBLIC, anon, service_role;
 REVOKE ALL ON FUNCTION app.lire_binome(uuid) FROM PUBLIC, anon, service_role;
+REVOKE ALL ON FUNCTION app.exporter_mes_donnees() FROM PUBLIC, anon, service_role;
 GRANT EXECUTE ON FUNCTION app.proposer_binome(uuid, uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION app.repondre_binome(uuid, boolean) TO authenticated;
 GRANT EXECUTE ON FUNCTION app.mes_binomes() TO authenticated;
 GRANT EXECUTE ON FUNCTION app.lire_binome(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION app.exporter_mes_donnees() TO authenticated;

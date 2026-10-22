@@ -49,9 +49,20 @@ export async function getTestResult(id: string): Promise<Report> {
       console.error(`The test results with id ${id} are not found!`);
       throw notFound(id);
     }
-    const profil = profilDepuisScores(
-      scoresDepuisReponsesMongo(report.answers)
-    );
+    let profil: ProfilCalcule;
+    try {
+      profil = profilDepuisScores(scoresDepuisReponsesMongo(report.answers));
+    } catch (cause) {
+      // Résultat ancien ou atypique (moins de 120 réponses, question retirée) :
+      // la cause est journalisée avec l'identifiant du document, jamais les
+      // réponses. La personne voit une page introuvable, pas une panne.
+      console.error(
+        `Résultat public ${id} illisible : ${
+          cause instanceof Error ? cause.message : 'cause inconnue'
+        }`
+      );
+      throw notFound(id);
+    }
     return { id: report._id.toString(), timestamp: report.dateStamp, profil };
   } catch (error) {
     if (error instanceof B5Error) {

@@ -258,6 +258,24 @@ describe('loadSynthese', () => {
     expect(result.groupes[2]?.groupe[0]?.moyenne).toBe(50);
   });
 
+  it('égalité d’ordre : noms accentués comparés en français, indépendamment de la langue du serveur', async () => {
+    const comparaison = vi.spyOn(String.prototype, 'localeCompare');
+    reponses({
+      campaigns: [campagne('close')],
+      groups: [
+        { id: G3, nom: 'Zèbre', ordre: 0 },
+        { id: G1, nom: 'école', ordre: 0 },
+        { id: G2, nom: 'abc', ordre: 0 }
+      ]
+    });
+    const result = await loadSynthese(VIEWER, ORG_ID, CAMPAIGN_ID);
+    if (result?.etat !== 'prete') throw new Error('état inattendu');
+    expect(result.groupes.map((g) => g.nom)).toEqual(['abc', 'école', 'Zèbre']);
+    expect(comparaison).toHaveBeenCalled();
+    for (const appel of comparaison.mock.calls) expect(appel[1]).toBe('fr');
+    comparaison.mockRestore();
+  });
+
   it('ligne d’un groupe inconnu, domaine inconnu ou portée inconnue : refusée par le schéma', async () => {
     reponses({
       campaigns: [campagne('close')],

@@ -5,7 +5,7 @@ import {
   RapportIndividuel,
   libellesRapport
 } from '@/components/rapports/rapport-individuel';
-import { formatDate, isoler } from '@/lib/format';
+import { formatDate, isolerEnArabe, formatDateMaroc } from '@/lib/format';
 import {
   loadMaParticipation,
   parseParticipationId
@@ -46,8 +46,6 @@ export default async function RapportPersonnePage({ params }: Props) {
   const t = await getTranslations('rapport');
   const mes = await getTranslations('mesResultats');
   const niveaux = await getTranslations('niveaux');
-  const iso = (valeur: string): string =>
-    locale === 'ar' ? isoler(valeur) : valeur;
 
   const rapport = construireRapportIndividuel({
     scores: participation.scores,
@@ -55,7 +53,7 @@ export default async function RapportPersonnePage({ params }: Props) {
     audience: 'personne'
   });
   const date = participation.termineeLe
-    ? formatDate(participation.termineeLe, locale, 'Africa/Casablanca')
+    ? formatDateMaroc(participation.termineeLe, locale)
     : null;
 
   return (
@@ -70,7 +68,8 @@ export default async function RapportPersonnePage({ params }: Props) {
       </p>
       <h1 className={`mt-4 ${title()}`}>{t('personne.titre')}</h1>
       <p className='mt-2 text-texte-2'>
-        {iso(participation.campagneTitre)}, {iso(participation.organisationNom)}
+        {isolerEnArabe(participation.campagneTitre, locale)},{' '}
+        {isolerEnArabe(participation.organisationNom, locale)}
       </p>
       <div className='mt-8'>
         <RapportIndividuel

@@ -1,7 +1,7 @@
--- Épreuve de la migration 0017 (consentement du binôme : app.binomes, app.proposer_binome,
--- app.repondre_binome, app.mes_binomes, app.lire_binome) sur la base de production, AVANT
+-- Épreuve de la migration 0021 (consentement du binôme : app.binomes, app.proposer_binome,
+-- app.repondre_binome, app.mes_binomes, app.lire_binome, clé « binomes » de l'export) sur la base de production, AVANT
 -- puis APRÈS l'application de la migration. Avant : elle doit sortir ROUGE avec
--- « migration 0017 non appliquée ». Après : « EPREUVE VERTE ».
+-- « migration 0021 non appliquée ». Après : « EPREUVE VERTE ».
 -- Tout est annulé : aucune ligne n'est conservée (ROLLBACK final), hormis l'avance des
 -- compteurs d'identité du journal, que PostgreSQL ne restitue jamais.
 --
@@ -55,6 +55,12 @@ LANGUAGE sql AS $$
     format('select x.%I::text from app.mes_binomes() x where x.binome_id = %L', p_col, p_binome))
 $$;
 
+-- Export de la personne (app.exporter_mes_donnees) sous une identité donnée.
+CREATE FUNCTION pg_temp.exp(p_uid uuid, p_role text DEFAULT 'authenticated') RETURNS text
+LANGUAGE sql AS $$
+  SELECT pg_temp.comme(p_uid, p_role, 'select app.exporter_mes_donnees()::text')
+$$;
+
 -- Scores jetables : domaine O avec six facettes dont O6 = p_o6, domaine E.
 CREATE FUNCTION pg_temp.sc(p_o6 integer) RETURNS jsonb LANGUAGE sql AS $$
   SELECT jsonb_build_object('format', 'tenga-scores-1',
@@ -106,13 +112,18 @@ DECLARE
 BEGIN
   -- 1. La migration est appliquée : table, quatre fonctions.
   IF to_regclass('app.binomes') IS NULL THEN
-    RAISE EXCEPTION 'migration 0017 non appliquée : app.binomes n''existe pas';
+    RAISE EXCEPTION 'migration 0021 non appliquée : app.binomes n''existe pas';
   END IF;
   IF to_regprocedure('app.proposer_binome(uuid, uuid)') IS NULL
      OR to_regprocedure('app.repondre_binome(uuid, boolean)') IS NULL
      OR to_regprocedure('app.mes_binomes()') IS NULL
      OR to_regprocedure('app.lire_binome(uuid)') IS NULL THEN
-    RAISE EXCEPTION 'migration 0017 non appliquée : une des quatre fonctions de binôme manque';
+    RAISE EXCEPTION 'migration 0021 non appliquée : une des quatre fonctions de binôme manque';
+  END IF;
+
+  IF to_regclass('app.binomes_propose_par_idx') IS NULL
+     OR position('binomes' IN pg_get_functiondef('app.exporter_mes_donnees()'::regprocedure)) = 0 THEN
+    RAISE EXCEPTION 'migration 0021 non appliquée : index binomes_propose_par_idx ou clé binomes de l''export absents';
   END IF;
 
   -- 2. Structure et droits, lus dans le catalogue.
@@ -156,7 +167,7 @@ BEGIN
        'TABLE(binome_id uuid, organisation_nom text, ma_participation uuid, propose_le timestamp with time zone, statut text, mon_accord_le timestamp with time zone, autre_nom text)' THEN
     RAISE EXCEPTION 'colonnes inattendues : % / %', pg_get_function_result('app.lire_binome(uuid)'::regprocedure), pg_get_function_result('app.mes_binomes()'::regprocedure);
   END IF;
-  RAISE NOTICE 'OK : migration 0017 appliquée ; table fermée à l''API (RLS forcée, trois règles tenga_owner, déclencheurs), quatre fonctions SECURITY DEFINER, search_path vide, tenga_owner, authenticated seul';
+  RAISE NOTICE 'OK : migration 0021 appliquée ; table fermée à l''API (RLS forcée, trois règles tenga_owner, déclencheurs), quatre fonctions SECURITY DEFINER, search_path vide, tenga_owner, authenticated seul';
 
   -- Données jetables : deux organisations. A : pa, pb, pc (résultats), pd (en cours), ra, ca ; B : cx, qb.
   INSERT INTO auth.users (id, email, raw_user_meta_data) VALUES
@@ -466,6 +477,49 @@ BEGIN
     NULL;
   END;
   RAISE NOTICE 'OK : accord non effaçable, retrait non défait, personnes immuables, couple unique et ordonné, même organisation (clé étrangère composite)';
+
+  -- 13 bis. Droit d'accès : l'export contient les binômes de la personne, jamais l'autre personne.
+  -- État : d1-d2 actif, d1-d3 refusée (retirée), d1-d3 nouvelle en attente, d2-d3 retirée.
+  IF NOT EXISTS (SELECT 1 FROM pg_proc p WHERE p.oid = 'app.exporter_mes_donnees()'::regprocedure AND p.prosecdef
+                    AND p.provolatile = 'v' AND p.proconfig = ARRAY['search_path=""']::text[] AND pg_get_userbyid(p.proowner) = 'tenga_owner')
+     OR NOT has_function_privilege('authenticated', 'app.exporter_mes_donnees()'::regprocedure, 'EXECUTE')
+     OR has_function_privilege('anon', 'app.exporter_mes_donnees()'::regprocedure, 'EXECUTE')
+     OR has_function_privilege('public', 'app.exporter_mes_donnees()'::regprocedure, 'EXECUTE')
+     OR has_function_privilege('service_role', 'app.exporter_mes_donnees()'::regprocedure, 'EXECUTE') THEN
+    RAISE EXCEPTION 'attributs ou droits inattendus pour app.exporter_mes_donnees';
+  END IF;
+  SELECT string_agg(k, ',' ORDER BY k COLLATE "C") INTO v_r FROM jsonb_object_keys(pg_temp.exp(v_pa)::jsonb) k;
+  IF v_r IS DISTINCT FROM 'appartenances,binomes,compte,exporte_le,journal,participations,profil,resultats,tentatives' THEN
+    RAISE EXCEPTION 'clés de l''export : %', v_r;
+  END IF;
+  IF jsonb_array_length(pg_temp.exp(v_pa)::jsonb -> 'binomes') <> 3 THEN RAISE EXCEPTION 'pa devait exporter trois propositions'; END IF;
+  SELECT string_agg(e ->> 'statut', ',' ORDER BY e ->> 'statut') INTO v_r FROM jsonb_array_elements(pg_temp.exp(v_pa)::jsonb -> 'binomes') e;
+  IF v_r IS DISTINCT FROM 'actif,en_attente,retire' THEN RAISE EXCEPTION 'statuts exportés : %', v_r; END IF;
+  SELECT string_agg(k, ',' ORDER BY k COLLATE "C") INTO v_r FROM jsonb_object_keys(pg_temp.exp(v_pa)::jsonb -> 'binomes' -> 0) k;
+  IF v_r IS DISTINCT FROM 'binome,ma_participation,mon_accord_le,organisation,propose_le,retire_le,statut' THEN
+    RAISE EXCEPTION 'clés d''une proposition exportée : %', v_r;
+  END IF;
+  SELECT count(*) INTO v_n FROM jsonb_array_elements(pg_temp.exp(v_pa)::jsonb -> 'binomes') e
+   WHERE e ->> 'statut' = 'actif' AND e ->> 'mon_accord_le' IS NOT NULL AND e ->> 'retire_le' IS NULL;
+  IF v_n <> 1 THEN RAISE EXCEPTION 'le binôme actif de pa devait porter son accord et aucun retrait'; END IF;
+  SELECT count(*) INTO v_n FROM jsonb_array_elements(pg_temp.exp(v_pa)::jsonb -> 'binomes') e
+   WHERE e ->> 'statut' = 'retire' AND e ->> 'retire_le' IS NOT NULL AND e ->> 'mon_accord_le' IS NULL;
+  IF v_n <> 1 THEN RAISE EXCEPTION 'la proposition refusée devait porter sa date de retrait et aucun accord de pa'; END IF;
+  SELECT count(*) INTO v_n FROM jsonb_array_elements(pg_temp.exp(v_pc)::jsonb -> 'binomes') e WHERE e ->> 'mon_accord_le' IS NOT NULL;
+  IF v_n <> 1 THEN RAISE EXCEPTION 'pc devait exporter son seul accord (% trouvé(s))', v_n; END IF;
+  v_r := (pg_temp.exp(v_pa)::jsonb -> 'binomes')::text;
+  IF v_r ~ (v_d2::text || '|' || v_d3::text || '|' || v_pb::text || '|' || v_pc::text || '|' || v_ca::text || '|score|@') THEN
+    RAISE EXCEPTION 'l''export de pa contient un score, un identifiant ou une adresse d''une autre personne';
+  END IF;
+  IF pg_temp.exp(v_pd)::jsonb -> 'binomes' IS DISTINCT FROM '[]'::jsonb
+     OR pg_temp.exp(v_ra)::jsonb -> 'binomes' IS DISTINCT FROM '[]'::jsonb
+     OR pg_temp.exp(v_ca)::jsonb -> 'binomes' IS DISTINCT FROM '[]'::jsonb THEN
+    RAISE EXCEPTION 'une personne sans proposition (ou le responsable, le consultant) devait exporter une liste vide';
+  END IF;
+  IF pg_temp.exp(v_pa, 'anon') NOT LIKE 'ERR:42501:%' OR pg_temp.exp(v_pa, 'service_role') NOT LIKE 'ERR:42501:%' THEN
+    RAISE EXCEPTION 'anon ou service_role n''est pas refusé sur l''export';
+  END IF;
+  RAISE NOTICE 'OK : l''export de la personne contient ses binômes (statut, son accord, dates), sans score, nom, identifiant ni adresse d''autrui ; vide pour qui n''en a pas ; attributs et droits inchangés';
 
   -- 14. Effacement en cascade : le compte du consultant, puis les personnes.
   DELETE FROM auth.users WHERE id = v_ca;

@@ -22,6 +22,8 @@ export type Seuils = {
   };
   ecarts: { proche: number; notable: number };
   tension: { ecart_min: number };
+  /** Nombre maximal de facettes retenues pour « ce qui ressort » (CONTRIB-1). */
+  contribution: { n_max: number };
 };
 
 export type Tension = {

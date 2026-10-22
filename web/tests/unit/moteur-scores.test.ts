@@ -122,6 +122,92 @@ describe('calculerScores', () => {
   });
 });
 
+// Vecteur fixe : les totaux par facette sont écrits à la main (profil fictif
+// KB de docs/design/profils-fictifs/profils.json, moyennes de facette x 4).
+// Les réponses sont fabriquées ici à partir de ces totaux : aucune table du
+// moteur n'intervient dans l'attendu.
+const TOTAUX_KB: Record<DomainCode, readonly number[]> = {
+  N: [8, 9, 7, 8, 10, 7],
+  E: [14, 12, 15, 14, 12, 13],
+  O: [10, 9, 11, 9, 8, 12],
+  A: [14, 11, 14, 13, 13, 14],
+  C: [17, 18, 18, 17, 16, 16]
+};
+const TOTAUX_DOMAINE_KB: Record<DomainCode, number> = {
+  N: 49,
+  E: 80,
+  O: 59,
+  A: 79,
+  C: 102
+};
+// 49 / 24, 80 / 24, 59 / 24, 79 / 24, 102 / 24 arrondis à six décimales, à la main.
+const MOYENNES_DOMAINE_KB: Record<DomainCode, number> = {
+  N: 2.041667,
+  E: 3.333333,
+  O: 2.458333,
+  A: 3.291667,
+  C: 4.25
+};
+
+// Répartit un total (4 à 20) sur les quatre questions d'une facette.
+const repartir = (total: number): number[] => {
+  const base = Math.floor(total / 4);
+  const reste = total % 4;
+  return [0, 1, 2, 3].map((i) => (i < reste ? base + 1 : base));
+};
+
+const vecteurKB = (): Record<string, number> => {
+  const reponses: Record<string, number> = {};
+  for (const d of DOMAINES) {
+    FACETTES.forEach((f, i) => {
+      const questions = items.filter(
+        (q) => q.domain === d && String(q.facet) === f
+      );
+      expect(questions).toHaveLength(4);
+      const parts = repartir(TOTAUX_KB[d][i]);
+      questions.forEach((q, k) => {
+        reponses[q.id] = parts[k];
+      });
+    });
+  }
+  return reponses;
+};
+
+describe('calculerScores : vecteur fixe de 120 réponses, totaux écrits à la main', () => {
+  it('fabrique bien 120 réponses de 1 à 5', () => {
+    const reponses = vecteurKB();
+    expect(Object.keys(reponses)).toHaveLength(120);
+    expect(
+      Object.values(reponses).every(
+        (v) => Number.isInteger(v) && v >= 1 && v <= 5
+      )
+    ).toBe(true);
+  });
+
+  it('donne le total et la moyenne attendus pour chacune des 30 facettes', () => {
+    const scores = calculerScores(vecteurKB(), 900);
+    for (const d of DOMAINES) {
+      FACETTES.forEach((f, i) => {
+        const attendu = TOTAUX_KB[d][i];
+        expect(scores[d].facettes[f], `${d}${f}`).toEqual({
+          score: attendu,
+          count: 4,
+          moyenne: attendu / 4
+        });
+      });
+    }
+  });
+
+  it('donne le total et la moyenne attendus pour chacun des 5 domaines', () => {
+    const scores = calculerScores(vecteurKB(), 900);
+    for (const d of DOMAINES) {
+      expect(scores[d].score, d).toBe(TOTAUX_DOMAINE_KB[d]);
+      expect(scores[d].count, d).toBe(24);
+      expect(scores[d].moyenne, d).toBe(MOYENNES_DOMAINE_KB[d]);
+    }
+  });
+});
+
 describe('scoresDepuisReponsesMongo', () => {
   it('donne les mêmes scores que calculerScores, durée nulle', () => {
     const reponses = aleatoires(7);
@@ -181,5 +267,29 @@ describe('lireScores', () => {
     const autre = copie() as { C: { facettes: Record<string, unknown> } };
     autre.C.facettes['2'] = { score: 'douze', count: 4, moyenne: 3 };
     expect(lireScores(autre)).toBeNull();
+  });
+
+  it.each([0.5, 5.5, 0, -3, 99])(
+    'refuse une moyenne de facette hors de 1 à 5 (%s)',
+    (moyenne) => {
+      const objet = copie() as {
+        N: { facettes: Record<string, { moyenne: number }> };
+      };
+      objet.N.facettes['1'].moyenne = moyenne;
+      expect(lireScores(objet)).toBeNull();
+    }
+  );
+
+  it('refuse une moyenne de domaine hors de 1 à 5', () => {
+    const objet = copie() as { E: { moyenne: number } };
+    objet.E.moyenne = 6;
+    expect(lireScores(objet)).toBeNull();
+  });
+
+  it('accepte les bornes 1 et 5', () => {
+    const bas = calculerScores(uniformes(1), null);
+    const haut = calculerScores(uniformes(5), null);
+    expect(lireScores(JSON.parse(JSON.stringify(bas)))).toEqual(bas);
+    expect(lireScores(JSON.parse(JSON.stringify(haut)))).toEqual(haut);
   });
 });

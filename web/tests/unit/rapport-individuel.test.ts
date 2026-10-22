@@ -142,6 +142,7 @@ type FaitsPersonne = {
     facettes: [FacetteCode, FacetteCode];
     ecart: number;
   }[];
+  contribution: { points_forts_hypothese: FacetteCode[] };
 };
 
 // Scores équivalents à un profil de moyennes : 4 réponses par facette, 24 par domaine.
@@ -273,20 +274,74 @@ describe('construireRapportIndividuel : test doré contre faits.json (profil AM)
     );
   });
 
-  it('ce qui ressort : six facettes au plus, hors milieu, les plus éloignées du milieu d’abord', () => {
-    const attendu = FACETTES.filter(
-      (k) => FAITS_AM.facettes[k].niveau !== 'milieu'
-    )
-      .map((k) => ({ k, d: Math.abs(FAITS_AM.facettes[k].moy - 3) }))
-      .sort((a, b) => b.d - a.d)
-      .slice(0, 6)
-      .map((x) => x.k);
+  it('ce qui ressort : règle CONTRIB-1, cinq facettes de niveau bas ou haut, les plus éloignées du milieu d’abord', () => {
     const rapport = construireRapportIndividuel({
       scores: SCORES_AM,
       locale: 'fr',
       audience: 'personne'
     });
-    expect(rapport.ressort.map((r) => r.code)).toEqual(attendu);
+    expect(rapport.ressort.map((r) => r.code)).toEqual(
+      FAITS_AM.contribution.points_forts_hypothese
+    );
+    expect(rapport.ressort).toHaveLength(5);
+    for (const point of rapport.ressort) {
+      expect(['bas', 'haut']).toContain(point.niveau);
+    }
+  });
+
+  it.each(['AM', 'KB', 'SR', 'HT'])(
+    '%s : ce qui ressort égale points_forts_hypothese de faits.json',
+    (code) => {
+      const source = profils.find((p) => p.code === code);
+      if (!source) throw new Error(`profil ${code} absent`);
+      const rapport = construireRapportIndividuel({
+        scores: scoresDepuisProfil(source),
+        locale: 'fr',
+        audience: 'personne'
+      });
+      expect(rapport.ressort.map((r) => r.code)).toEqual(
+        faits.personnes[code].contribution.points_forts_hypothese
+      );
+    }
+  );
+
+  it('ce qui ressort : une facette de niveau « plutôt haut » ou « plutôt bas » n’y figure jamais', () => {
+    const rapport = construireRapportIndividuel({
+      scores: SCORES_AM,
+      locale: 'fr',
+      audience: 'personne'
+    });
+    const intermediaires = FACETTES.filter((k) =>
+      ['plutot_haut', 'plutot_bas'].includes(FAITS_AM.facettes[k].niveau)
+    );
+    expect(intermediaires.length).toBeGreaterThan(0);
+    for (const k of intermediaires) {
+      expect(rapport.ressort.map((r) => r.code)).not.toContain(k);
+    }
+  });
+
+  it('ce qui ressort : moins de cinq facettes de niveau bas ou haut, on n’y ajoute pas de facette « plutôt »', () => {
+    const facette = Object.fromEntries(FACETTES.map((k) => [k, 3.5])) as Record<
+      FacetteCode,
+      number
+    >;
+    facette.N1 = 4.5;
+    facette.N2 = 1.5;
+    const domaine = Object.fromEntries(
+      DOMAINES.map((d) => [
+        d,
+        INDEX_FACETTES.reduce((n, f) => n + facette[`${d}${f}`] * 4, 0)
+      ])
+    ) as Record<DomainCode, number>;
+    const rapport = construireRapportIndividuel({
+      scores: scoresDepuisProfil({ domaine, facette }),
+      locale: 'fr',
+      audience: 'personne'
+    });
+    expect(rapport.ressort).toEqual([
+      { code: 'N1', niveau: 'haut' },
+      { code: 'N2', niveau: 'bas' }
+    ]);
   });
 
   it('consultant : ce qui ressort ne contient jamais O6', () => {
@@ -391,13 +446,13 @@ describe('construireRapportIndividuel : questions d’entretien issues des blocs
 });
 
 describe('construireRapportIndividuel : fiabilité', () => {
-  it('120 réponses garanties par le schéma, durée donnée telle quelle, sans seuil', () => {
+  it('durée donnée telle quelle, sans seuil, et aucun compteur de réponses (le schéma en garantit 120)', () => {
     const rapport = construireRapportIndividuel({
       scores: SCORES_AM,
       locale: 'fr',
       audience: 'personne'
     });
-    expect(rapport.fiabilite).toEqual({ reponses: 120, dureeSecondes: 754 });
+    expect(rapport.fiabilite).toEqual({ dureeSecondes: 754 });
   });
 
   it('durée absente : null, rien d’inventé', () => {
@@ -409,13 +464,13 @@ describe('construireRapportIndividuel : fiabilité', () => {
     expect(rapport.fiabilite.dureeSecondes).toBeNull();
   });
 
-  it('durée nulle (zéro seconde) : conservée, ce n’est pas une absence', () => {
+  it('durée de zéro seconde (passation reprise : le client n’a pas pu la mesurer) : durée inconnue', () => {
     const rapport = construireRapportIndividuel({
       scores: scoresDepuisProfil(profilAM, 0),
       locale: 'fr',
       audience: 'personne'
     });
-    expect(rapport.fiabilite.dureeSecondes).toBe(0);
+    expect(rapport.fiabilite.dureeSecondes).toBeNull();
   });
 });
 
@@ -731,8 +786,18 @@ describe('RapportIndividuel : rendu', () => {
     expect(sans).not.toMatch(/Durée de réponse/);
   });
 
-  it('120 réponses sur 120 annoncées', () => {
-    expect(texte(rendreRapport('personne'))).toMatch(/120 sur 120/);
+  it('n’annonce aucun décompte de réponses (le schéma en garantit 120, rien à mesurer)', () => {
+    const rendu = texte(rendreRapport('personne'));
+    expect(rendu).not.toMatch(/120\s+réponses/);
+    expect(rendu).not.toMatch(/réponses\s+sur\s+120/);
+    expect(rendu).not.toMatch(/Toutes les réponses sont présentes/);
+  });
+
+  it('durée de zéro seconde : aucune durée affichée', () => {
+    const rendu = texte(
+      rendreRapport('personne', { scores: scoresDepuisProfil(profilAM, 0) })
+    );
+    expect(rendu).not.toMatch(/Durée de réponse/);
   });
 
   it('aucune tension : phrase neutre, sans liste', () => {

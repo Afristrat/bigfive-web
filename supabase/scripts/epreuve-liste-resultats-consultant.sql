@@ -1,7 +1,7 @@
--- Épreuve de la migration 0016 (app.lister_resultats_campagne : liste des résultats
+-- Épreuve de la migration 0020 (app.lister_resultats_campagne : liste des résultats
 -- d'une campagne pour le consultant et l'administrateur Tenga) sur la base de
 -- production, AVANT puis APRÈS l'application de la migration. Avant : elle doit
--- sortir ROUGE avec « migration 0016 non appliquée ». Après : « EPREUVE VERTE ».
+-- sortir ROUGE avec « migration 0020 non appliquée ». Après : « EPREUVE VERTE ».
 -- Tout est annulé : aucune ligne n'est conservée (ROLLBACK final), hormis l'avance
 -- des compteurs d'identité du journal, que PostgreSQL ne restitue jamais.
 --
@@ -69,7 +69,7 @@ DECLARE
 BEGIN
   -- 1. La fonction existe, avec les attributs et les droits attendus (lus dans le catalogue).
   IF v_oid IS NULL THEN
-    RAISE EXCEPTION 'migration 0016 non appliquée : app.lister_resultats_campagne(uuid) n''existe pas';
+    RAISE EXCEPTION 'migration 0020 non appliquée : app.lister_resultats_campagne(uuid) n''existe pas';
   END IF;
   IF (SELECT count(*) FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
        WHERE n.nspname = 'app' AND p.proname = 'lister_resultats_campagne') <> 1 THEN
@@ -88,7 +88,7 @@ BEGIN
      OR NOT has_function_privilege('authenticated', v_oid, 'EXECUTE') THEN
     RAISE EXCEPTION 'droits d''exécution inattendus (attendu : authenticated seul)';
   END IF;
-  RAISE NOTICE 'OK : migration 0016 appliquée ; fonction SECURITY DEFINER, VOLATILE, search_path vide, tenga_owner, authenticated seul ; deux colonnes';
+  RAISE NOTICE 'OK : migration 0020 appliquée ; fonction SECURITY DEFINER, VOLATILE, search_path vide, tenga_owner, authenticated seul ; deux colonnes';
 
   -- Données jetables : deux organisations ; A1 (deux résultats, une personne en cours),
   -- A2 (un résultat, close ensuite), A3 (aucun résultat), B1 (un résultat).

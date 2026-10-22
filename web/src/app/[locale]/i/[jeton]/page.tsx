@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { AcceptInvitationForm } from '@/components/accept-invitation-form';
 import { Notice } from '@/components/notice';
 import { title } from '@/components/primitives';
-import { formatDate, isoler } from '@/lib/format';
+import { formatDateMaroc, isolerEnArabe } from '@/lib/format';
 import { loadInvitation } from '@/lib/invitation-data';
 import { invitationLimits } from '@/lib/invitation-limits';
 import { isLoginToken } from '@/lib/login-format';
@@ -17,8 +17,6 @@ interface Props {
 export const dynamic = 'force-dynamic';
 
 // Fuseau de lecture des dates, celui de l'e-mail d'invitation.
-const TIME_ZONE = 'Africa/Casablanca';
-
 // Le jeton est dans l'adresse : aucune indexation, aucun en-tête Referer vers
 // d'autres sites. Le chargement de la page ne consomme rien.
 export async function generateMetadata({ params }: Props) {
@@ -60,22 +58,19 @@ export default async function InvitationPage({ params }: Props) {
 
   const prenom = invitation.prenom?.trim();
   const message = invitation.message?.trim();
-  // En arabe, un nom latin dans la phrase ne doit pas être réordonné.
-  const isolated = (texte: string): string =>
-    locale === 'ar' ? isoler(texte) : texte;
 
   return (
     <div className='min-h-[50vh]'>
       <h1 className={title()}>{t('title')}</h1>
       <p className='mt-4 break-words text-chapo text-encre'>
         {prenom
-          ? t('greeting', { prenom: isolated(prenom) })
+          ? t('greeting', { prenom: isolerEnArabe(prenom, locale) })
           : t('greetingNeutral')}
       </p>
       <p className='mt-2 break-words colonne-lecture text-chapo text-texte-2'>
         {t('intro', {
-          organisation: isolated(invitation.organisation_nom),
-          campagne: isolated(invitation.campagne_titre)
+          organisation: isolerEnArabe(invitation.organisation_nom, locale),
+          campagne: isolerEnArabe(invitation.campagne_titre, locale)
         })}
       </p>
       {message && (
@@ -94,7 +89,7 @@ export default async function InvitationPage({ params }: Props) {
       )}
       <p className='mt-6 text-texte-2'>
         {t('expires', {
-          date: formatDate(invitation.expire, locale, TIME_ZONE)
+          date: formatDateMaroc(invitation.expire, locale)
         })}
       </p>
       <p className='mt-1 text-texte-2'>{t('acceptHelp')}</p>

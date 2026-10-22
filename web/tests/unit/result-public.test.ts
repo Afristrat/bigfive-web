@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { getItems } from '@bigfive-org/questions';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ar from '@/messages/ar.js';
 import en from '@/messages/en.js';
 import fr from '@/messages/fr.js';
@@ -129,11 +129,71 @@ describe('getTestResult : profil du moteur', () => {
     });
   });
 
-  it('un document aux réponses incomplètes donne l’erreur générique, jamais un profil', async () => {
-    findOne.mockResolvedValue(document(reponses(() => 3).slice(0, 10)));
+  describe('résultat ancien ou atypique (illisible)', () => {
+    let erreur: ReturnType<typeof vi.spyOn>;
+    beforeEach(() => {
+      erreur = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    });
+    afterEach(() => {
+      erreur.mockRestore();
+    });
+
+    const atypiques: [string, () => unknown][] = [
+      ['moins de 120 réponses', () => document(reponses(() => 3).slice(0, 10))],
+      [
+        'une question inconnue',
+        () =>
+          document(
+            reponses(() => 3).map((a, i) =>
+              i === 0 ? { ...a, id: 'ancienne-question' } : a
+            )
+          )
+      ],
+      [
+        'une valeur hors de 1 à 5',
+        () => document(reponses((r) => (r === 0 ? 9 : 3)))
+      ],
+      [
+        'aucune liste de réponses',
+        () => ({ ...document(), answers: undefined })
+      ]
+    ];
+
+    it.each(atypiques)(
+      '%s : introuvable (404), jamais une panne, jamais un profil',
+      async (_nom, fabrique) => {
+        findOne.mockResolvedValue(fabrique());
+        await expect(getTestResult(ID)).rejects.toMatchObject({
+          name: 'NotFoundError'
+        });
+      }
+    );
+
+    it('journalise la cause et l’identifiant du document, sans aucune réponse', async () => {
+      findOne.mockResolvedValue(document(reponses(() => 4).slice(0, 10)));
+      await expect(getTestResult(ID)).rejects.toMatchObject({
+        name: 'NotFoundError'
+      });
+      expect(erreur).toHaveBeenCalledTimes(1);
+      const trace = erreur.mock.calls[0].map(String).join(' ');
+      expect(trace).toContain(ID);
+      expect(trace).toContain('120 réponses attendues, 10 reçues');
+      expect(trace).not.toContain(items[0].id);
+    });
+
+    it('la page publique rend alors un 404', async () => {
+      findOne.mockResolvedValue(document(reponses(() => 3).slice(0, 10)));
+      await expect(rendre()).rejects.toThrow('NOT_FOUND');
+    });
+  });
+
+  it('une panne de base reste une panne : erreur générique, pas un 404', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    findOne.mockRejectedValue(new Error('ECONNRESET'));
     await expect(getTestResult(ID)).rejects.toThrow(
       'Something wrong happend. Failed to get test result!'
     );
+    vi.restoreAllMocks();
   });
 });
 

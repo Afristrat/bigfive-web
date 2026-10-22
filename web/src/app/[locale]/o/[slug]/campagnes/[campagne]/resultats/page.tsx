@@ -1,13 +1,19 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { title } from '@/components/primitives';
+import { canManageCampaigns } from '@/lib/access-rules';
 import { loadOrgPage, parseOrgSlug } from '@/lib/campaign-data';
 import {
   loadCampagneOrganisation,
   loadResultatsCampagne,
   peutLireResultats
 } from '@/lib/consultant-data';
-import { formatDate, formatNombre, isoler } from '@/lib/format';
+import {
+  formatDate,
+  formatNombre,
+  isolerEnArabe,
+  formatDateMaroc
+} from '@/lib/format';
 import { requireViewer } from '@/lib/session';
 import { parseCampaignId } from '@/lib/synthese-data';
 import { Link } from '@/navigation';
@@ -57,8 +63,13 @@ export default async function ListeResultatsPage({ params }: Props) {
   if (!liste) notFound();
 
   const t = await getTranslations('rapport');
-  const iso = (valeur: string): string =>
-    locale === 'ar' ? isoler(valeur) : valeur;
+  const passation = await getTranslations('passation');
+  // La page de l'organisation est réservée au responsable et à l'administrateur
+  // Tenga : le consultant, lui, retourne à son compte.
+  const versOrganisation = canManageCampaigns({
+    isTengaAdmin: page.isAdmin,
+    roleInOrganization: page.role
+  });
 
   return (
     <div className='flex flex-col gap-8'>
@@ -70,13 +81,21 @@ export default async function ListeResultatsPage({ params }: Props) {
           </span>
         </h1>
         <p className='mt-2 text-chapo text-texte-2'>
-          {t('liste.campagne', { titre: iso(campagne.titre) })}
+          {t('liste.campagne', {
+            titre: isolerEnArabe(campagne.titre, locale)
+          })}
         </p>
         <p className='mt-4 colonne-lecture text-texte-2'>{t('liste.intro')}</p>
         <p className='mt-4'>
-          <Link href={`/o/${slug}`} className='underline'>
-            {t('liste.retour')}
-          </Link>
+          {versOrganisation ? (
+            <Link href={`/o/${slug}`} className='underline'>
+              {t('liste.retour')}
+            </Link>
+          ) : (
+            <Link href='/mon-compte' className='underline'>
+              {passation('backToAccount')}
+            </Link>
+          )}
         </p>
       </header>
 
@@ -110,14 +129,14 @@ export default async function ListeResultatsPage({ params }: Props) {
                       {t('liste.resultat', { numero })}
                     </th>
                     <td className={td}>
-                      {formatDate(ligne.soumisLe, locale, 'Africa/Casablanca')}
+                      {formatDateMaroc(ligne.soumisLe, locale)}
                     </td>
                     <td className={td}>
                       <Link
                         href={`/o/${slug}/campagnes/${campaignId}/resultats/${ligne.participationId}`}
                         aria-label={t('liste.lireAria', {
                           numero,
-                          titre: iso(campagne.titre)
+                          titre: isolerEnArabe(campagne.titre, locale)
                         })}
                         className='underline'
                       >

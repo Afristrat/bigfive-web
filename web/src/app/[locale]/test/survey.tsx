@@ -9,6 +9,11 @@ import { Notice } from '@/components/notice';
 import { ProgressHeader } from '@/components/questionnaire/progress-header';
 import { QuestionBlock } from '@/components/questionnaire/question-block';
 import { SurveyNav } from '@/components/questionnaire/survey-nav';
+import {
+  construireResultat,
+  fusionnerReponses,
+  restaurerReprise
+} from '@/components/questionnaire/reprise-locale';
 import { type Question } from '@bigfive-org/questions';
 import { isDev } from '@/lib/helpers';
 import { formatNombre } from '@/lib/format';
@@ -65,8 +70,10 @@ export type SurveyProps = {
   /** « b5 » pour le parcours public, « b5:<participation> » pour le parcours connecté. */
   storageKey: string;
   onSubmit: (result: DbResult) => Promise<SurveyResultat>;
-  /** Reprise depuis le serveur : prime sur le stockage local. */
+  /** Reprise depuis le serveur : prime sur le stockage local, qui lui est fusionné. */
   initial?: Reprise;
+  /** Où aller quand le serveur répond « déjà envoyé » (le résultat de la personne). */
+  alreadyHref?: string;
   /**
    * Sauvegarde sur le serveur à chaque changement d'écran (parcours connecté
    * seulement : absent, aucune sauvegarde n'est tentée). Le stockage local ne
@@ -83,17 +90,24 @@ export type FileProgression = {
   arreter: () => void;
 };
 
+/** Échecs de sauvegarde consécutifs avant d'alerter la personne. */
+export const ECHECS_AVANT_ALERTE = 3;
+
 /**
  * File des sauvegardes serveur : au plus une requête en vol, et une seule
  * écriture en attente (la plus récente). Un conflit adopte la révision du
  * serveur ; une campagne close arrête tout. Un échec ordinaire est silencieux
- * (le tampon local garde les réponses) et la sauvegarde suivante réessaie.
+ * (le tampon local garde les réponses) et la sauvegarde suivante réessaie,
+ * jusqu'à ECHECS_AVANT_ALERTE échecs d'affilée où la personne est prévenue
+ * (`retablie` la prévient du retour à la normale). Un conflit dont le serveur n'a
+ * aucune réponse n'est rejoué qu'une fois de suite : le second est notifié.
  * `null` sans onProgress : le parcours public ne sauvegarde jamais.
  */
 export function creerFileProgression(
   onProgress: SurveyProps['onProgress'],
   revisionInitiale: number,
-  notifier: (notice: ProgressNotice) => void
+  notifier: (notice: ProgressNotice) => void,
+  retablie?: () => void
 ): FileProgression | null {
   if (!onProgress) return null;
   const sauvegarder = onProgress;
@@ -101,6 +115,8 @@ export function creerFileProgression(
   let enVol = false;
   let arrete = false;
   let attente: readonly Answer[] | null = null;
+  let renvoiApresRepriseVide = false;
+  let echecs = 0;
 
   async function appeler(
     answers: readonly Answer[]
@@ -119,6 +135,9 @@ export function creerFileProgression(
     if (arrete) return;
     if (sortie && 'revision' in sortie) {
       revision = sortie.revision;
+      renvoiApresRepriseVide = false;
+      if (echecs >= ECHECS_AVANT_ALERTE) retablie?.();
+      echecs = 0;
     } else if (sortie?.error === 'closed') {
       arrete = true;
       attente = null;
@@ -129,17 +148,27 @@ export function creerFileProgression(
         arrete = true;
         attente = null;
         notifier({ error: 'conflict' });
-      } else if (reprise.answers.length === 0) {
+      } else if (reprise.answers.length === 0 && !renvoiApresRepriseVide) {
         // Plus de sauvegarde côté serveur : on repart de sa révision avec les
-        // réponses locales, sans alerter.
+        // réponses locales, sans alerter, une seule fois (sinon la requête
+        // reviendrait en boucle).
+        renvoiApresRepriseVide = true;
         revision = reprise.revision;
         attente ??= answers;
+      } else if (reprise.answers.length === 0) {
+        arrete = true;
+        attente = null;
+        notifier({ error: 'conflict' });
       } else {
         // L'écriture en attente reposait sur une révision périmée.
         revision = reprise.revision;
         attente = null;
         notifier({ error: 'conflict', reprise });
       }
+    } else {
+      // Échec ordinaire (« failed », ou action qui lève).
+      echecs += 1;
+      if (echecs === ECHECS_AVANT_ALERTE) notifier({ error: 'failed' });
     }
     if (attente) {
       const suite = attente;
@@ -245,6 +274,39 @@ export async function envoyerResultat(
   return sortie;
 }
 
+export type IssueSoumission = { aller: string } | { erreur: SurveyError };
+
+/**
+ * Soumet le questionnaire. La file de sauvegarde n'est arrêtée qu'après un
+ * succès (ou un « déjà envoyé » qui renvoie vers le résultat) : sur toute autre
+ * erreur elle continue, la personne peut réessayer sans perdre ses réponses.
+ */
+export async function soumettreQuestionnaire(entree: {
+  onSubmit: SurveyProps['onSubmit'];
+  result: DbResult;
+  storage: StorageLike;
+  key: string;
+  file: FileProgression | null;
+  alreadyHref?: string;
+}): Promise<IssueSoumission> {
+  const sortie = await envoyerResultat(
+    entree.onSubmit,
+    entree.result,
+    entree.storage,
+    entree.key
+  );
+  if (!('error' in sortie)) {
+    entree.file?.arreter();
+    return { aller: sortie.href };
+  }
+  if (sortie.error === 'already' && entree.alreadyHref) {
+    entree.file?.arreter();
+    effacerProgression(entree.storage, entree.key);
+    return { aller: entree.alreadyHref };
+  }
+  return { erreur: sortie.error };
+}
+
 export const Survey = ({
   questions,
   labels,
@@ -252,6 +314,7 @@ export const Survey = ({
   locale: language,
   storageKey,
   initial,
+  alreadyHref,
   onProgress
 }: SurveyProps) => {
   const router = useRouter();
@@ -273,6 +336,24 @@ export const Survey = ({
   // d'une sauvegarde ni le premier rendu ne déplacent le focus.
   const shouldFocusHeading = useRef(false);
 
+  // Au montage : le tampon local est fusionné à la reprise du serveur (le
+  // serveur prime) ou, sans reprise, restauré tel quel. Cet effet précède
+  // l'écriture ci-dessous : à la première passe, celle-ci écraserait sinon le
+  // tampon avant qu'il ne soit lu.
+  useEffect(() => {
+    const restauration = restaurerReprise(
+      initial,
+      lireProgression(localStorage, storageKey)
+    );
+    if (!restauration) return;
+    setAnswers(restauration.answers);
+    setCurrentQuestionIndex(restauration.index);
+    setRestored(true);
+    setResumed(false);
+    // Lecture unique au montage.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Sauvegarde locale après chaque changement d'état, pour que la dernière
   // réponse donnée soit toujours incluse. Rien n'est écrit tant qu'aucune
   // réponse n'existe, afin de ne pas écraser une progression à restaurer.
@@ -284,17 +365,6 @@ export const Survey = ({
     });
   }, [answers, currentQuestionIndex, storageKey]);
 
-  useEffect(() => {
-    if (initial) return;
-    const saved = lireProgression(localStorage, storageKey);
-    if (!saved) return;
-    setAnswers(saved.answers);
-    setCurrentQuestionIndex(saved.currentQuestionIndex);
-    setRestored(true);
-    // Lecture unique au montage.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => () => file.current?.arreter(), []);
 
   // La file n'existe que pour le parcours connecté (onProgress fourni).
@@ -305,15 +375,20 @@ export const Survey = ({
         initial?.revision ?? 0,
         ({ error, reprise }) => {
           if (error === 'conflict' && reprise) {
-            // Version du serveur reprise sur place, puis dite à la personne.
-            setAnswers(reprise.answers);
-            setCurrentQuestionIndex(reprise.index);
+            // Réponses du serveur fusionnées aux réponses locales (le serveur
+            // prime sur une question commune, rien de plus récent n'est perdu),
+            // puis dites à la personne. L'écran courant ne bouge pas.
+            setAnswers((locales) =>
+              fusionnerReponses(reprise.answers, locales)
+            );
             setConflictReloaded(true);
             setSaveError(null);
           } else {
             setSaveError(error);
           }
-        }
+        },
+        () =>
+          setSaveError((courante) => (courante === 'failed' ? null : courante))
       );
     }
     file.current?.pousser(answers);
@@ -426,28 +501,29 @@ export const Survey = ({
   async function submitTest() {
     setLoading(true);
     setSaveError(null);
-    // La soumission remplace la tentative : plus aucune sauvegarde de progression.
-    file.current?.arreter();
-    const sortie = await envoyerResultat(
+    // La file de sauvegarde ne s'arrête qu'une fois la soumission réussie : sur
+    // une erreur, la personne retente et ses réponses continuent d'être gardées.
+    const issue = await soumettreQuestionnaire({
       onSubmit,
-      {
-        testId: 'b5-120',
-        lang: language,
-        invalid: false,
-        timeElapsed: seconds,
+      result: construireResultat({
+        language,
+        seconds,
+        answers,
         dateStamp: new Date(),
-        answers
-      },
-      localStorage,
-      storageKey
-    );
-    if ('error' in sortie) {
+        reprise: Boolean(initial)
+      }),
+      storage: localStorage,
+      key: storageKey,
+      file: file.current ?? null,
+      alreadyHref
+    });
+    if ('erreur' in issue) {
       // La progression locale est conservée pour permettre un nouvel essai.
-      setSaveError(sortie.error);
+      setSaveError(issue.erreur);
       setLoading(false);
       return;
     }
-    router.push(sortie.href);
+    router.push(issue.aller);
   }
 
   function clearDataInLocalStorage() {
@@ -503,21 +579,27 @@ export const Survey = ({
           </Button>
         </Notice>
       )}
-      {conflictReloaded && labels.errorTexts?.conflictReloaded && (
-        <Notice ton='avis' className='mt-5'>
-          <p className='min-w-0 flex-1'>{labels.errorTexts.conflictReloaded}</p>
-          <Button
-            isIconOnly
-            variant='light'
-            size='md'
-            aria-label={labels.dismiss}
-            className='text-avis'
-            onPress={() => setConflictReloaded(false)}
-          >
-            <CloseIcon />
-          </Button>
-        </Notice>
-      )}
+      {/* Zone vive présente avant le message : un message inséré seul n'est pas
+          toujours annoncé par les lecteurs d'écran. */}
+      <div aria-live='polite'>
+        {conflictReloaded && labels.errorTexts?.conflictReloaded && (
+          <Notice ton='avis' className='mt-5'>
+            <p className='min-w-0 flex-1'>
+              {labels.errorTexts.conflictReloaded}
+            </p>
+            <Button
+              isIconOnly
+              variant='light'
+              size='md'
+              aria-label={labels.dismiss}
+              className='text-avis'
+              onPress={() => setConflictReloaded(false)}
+            >
+              <CloseIcon />
+            </Button>
+          </Notice>
+        )}
+      </div>
       {restored && (
         <Notice ton='avis' className='mt-5'>
           <p className='min-w-0 flex-1'>

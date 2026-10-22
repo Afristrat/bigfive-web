@@ -79,7 +79,6 @@ const rapportFr = {
   },
   fiabilite: {
     titre: 'Fiabilité de cette lecture',
-    reponses: 'Toutes les réponses sont présentes : {n} sur {n}.',
     duree: 'Durée de réponse : {duree}.',
     limite:
       'Aucun indicateur de fiabilité n’est validé à ce jour. La durée est donnée à titre d’information, sans seuil, et ne dit rien de la qualité des réponses.'

@@ -14,7 +14,7 @@ const passationEn = {
     'We restored your answers saved on your account. You can carry on where you left off.',
   errors: {
     closed:
-      'This campaign no longer accepts answers. Your answers remain saved on this device.',
+      'This campaign no longer accepts answers: your latest answers could not be saved.',
     already: 'Your questionnaire has already been sent for this campaign.',
     conflict:
       'Your answers were changed elsewhere. Reload the page to continue.',

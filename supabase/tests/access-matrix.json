@@ -1,5 +1,5 @@
 {
-  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 5 : objets des lots 1 (socle), 2 (campagnes, invitations, passation), 3 (mes résultats) et 4 (groupes, composition, agrégats photographiés). Version 9 : consentement du binôme (migration 0017). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 (lot 1), 14 à 19 (lots 2 et 3), 24 à 26 (lot 4) et 27 à 31 (migration 0006 : groupe porté par l'invitation) transcrivent ces cellules (identités simulées, rôle réel).",
+  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 5 : objets des lots 1 (socle), 2 (campagnes, invitations, passation), 3 (mes résultats) et 4 (groupes, composition, agrégats photographiés). Version 9 : consentement du binôme (migration 0021). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 (lot 1), 14 à 19 (lots 2 et 3), 24 à 26 (lot 4) et 27 à 31 (migration 0006 : groupe porté par l'invitation) transcrivent ces cellules (identités simulées, rôle réel).",
   "version": 9,
   "personnages": [
     {
@@ -539,13 +539,13 @@
           "admin_tenga": "autorise"
         }
       },
-      "note": "Migration 0016 : consultant affecté (rôle consultant dans l'organisation de la campagne) ou administrateur Tenga. Rend l'identifiant opaque de chaque participation terminée de la campagne et sa date de soumission, sans aucune identité, pour ouvrir ensuite app.lire_resultat_individuel. Refus 42501 de même message pour une campagne inexistante ou interdite ; le responsable, un consultant d'une autre organisation, le participant et l'anonyme sont refusés. Chaque consultation autorisée est journalisée (resultat.lister, quantité = nombre de lignes) ; aucun refus ne laisse de trace. Valable après la clôture comme avant."
+      "note": "Migration 0020 : consultant affecté (rôle consultant dans l'organisation de la campagne) ou administrateur Tenga. Rend l'identifiant opaque de chaque participation terminée de la campagne et sa date de soumission, sans aucune identité, pour ouvrir ensuite app.lire_resultat_individuel. Refus 42501 de même message pour une campagne inexistante ou interdite ; le responsable, un consultant d'une autre organisation, le participant et l'anonyme sont refusés. Chaque consultation autorisée est journalisée (resultat.lister, quantité = nombre de lignes) ; aucun refus ne laisse de trace. Valable après la clôture comme avant."
     },
     {
       "objet": "app.binomes",
       "type": "table",
       "cellules": {},
-      "note": "Migration 0017 : consentement du binôme (deux participations terminées de la même organisation, un accord par personne, un retrait définitif). Aucun score. Fermée à tous, même en lecture : le rôle connecté n'a aucun droit de table et aucune règle ; tout passe par app.proposer_binome, app.repondre_binome, app.mes_binomes et app.lire_binome. Le responsable de l'organisation n'a aucun accès, ni à la table ni aux scores."
+      "note": "Migration 0021 : consentement du binôme (deux participations terminées de la même organisation, un accord par personne, un retrait définitif). Aucun score. Fermée à tous, même en lecture : le rôle connecté n'a aucun droit de table et aucune règle ; tout passe par app.proposer_binome, app.repondre_binome, app.mes_binomes et app.lire_binome. Le responsable de l'organisation n'a aucun accès, ni à la table ni aux scores."
     },
     {
       "objet": "app.proposer_binome",
@@ -556,7 +556,7 @@
           "admin_tenga": "autorise"
         }
       },
-      "note": "Migration 0017 : consultant affecté (rôle consultant dans l'organisation des deux participations, lue sur la première) ou administrateur Tenga. Deux participations terminées, de deux personnes différentes, de la même organisation ; une seule proposition en cours par couple. Refus 42501 de même message pour une participation inexistante ou interdite (le responsable, un participant, un consultant d'une autre organisation, l'anonyme) ; autres entrées invalides : 22023. Journalisée (binome.proposer) ; aucun refus ne laisse de trace."
+      "note": "Migration 0021 : consultant affecté (rôle consultant dans l'organisation des deux participations, lue sur la première) ou administrateur Tenga. Deux participations terminées, de deux personnes différentes, de la même organisation ; une seule proposition en cours par couple. Refus 42501 de même message pour une participation inexistante ou interdite (le responsable, un participant, un consultant d'une autre organisation, l'anonyme) ; autres entrées invalides : 22023. Journalisée (binome.proposer) ; aucun refus ne laisse de trace."
     },
     {
       "objet": "app.repondre_binome",
@@ -568,7 +568,7 @@
           "membre_a_et_b": "autorise"
         }
       },
-      "note": "Migration 0017 : titulaire de l'une des deux participations de la proposition, et lui seul (le responsable, le consultant et l'administrateur Tenga ne répondent pas à la place d'une personne). Accord daté, rejouable sans effet ; refus avant son propre accord, retrait après ; l'un et l'autre sont définitifs pour la proposition. Proposition inexistante ou qui ne concerne pas l'appelant : P0002, même message. Journalisée (binome.accepter, binome.refuser, binome.retirer)."
+      "note": "Migration 0021 : titulaire de l'une des deux participations de la proposition, et lui seul (le responsable, le consultant et l'administrateur Tenga ne répondent pas à la place d'une personne). Accord daté, rejouable sans effet ; refus avant son propre accord, retrait après ; l'un et l'autre sont définitifs pour la proposition. Proposition inexistante ou qui ne concerne pas l'appelant : P0002, même message. Journalisée (binome.accepter, binome.refuser, binome.retirer)."
     },
     {
       "objet": "app.mes_binomes",
@@ -585,7 +585,7 @@
           "admin_tenga": "autorise"
         }
       },
-      "note": "Migration 0017 : les propositions qui concernent l'appelant, avec le statut (en_attente, actif, retire), la date de son propre accord seulement et le nom de profil de l'autre personne tant que la proposition n'est pas retirée (défaut non validé par Amine, plan § 6 question 8). Une personne sans binôme, le responsable, le consultant et l'administrateur Tenga n'obtiennent aucune ligne. Aucune adresse, aucun identifiant de compte."
+      "note": "Migration 0021 : les propositions qui concernent l'appelant, avec le statut (en_attente, actif, retire), la date de son propre accord seulement et le nom de profil de l'autre personne tant que la proposition n'est pas retirée (défaut non validé par Amine, plan § 6 question 8). Une personne sans binôme, le responsable, le consultant et l'administrateur Tenga n'obtiennent aucune ligne. Aucune adresse, aucun identifiant de compte."
     },
     {
       "objet": "app.lire_binome",
@@ -594,11 +594,12 @@
         "execute": {
           "participant_a": "autorise",
           "participant_b": "autorise",
+          "membre_a_et_b": "autorise",
           "consultant_affecte_a": "autorise",
           "admin_tenga": "autorise"
         }
       },
-      "note": "Migration 0017 : scores des deux participations (jamais les réponses), SEULEMENT si les deux accords existent et si la proposition n'est pas retirée, pour les deux personnes concernées, le consultant de l'organisation et l'administrateur Tenga. Refus 42501 de même message pour un binôme inexistant ou interdit (le responsable, un autre participant, un consultant d'une autre organisation, l'anonyme) ; 55000 pour une personne autorisée sans double consentement. Facette O6 retirée de toute ligne qui n'est pas celle de l'appelant (défaut non validé, plan § 6 question 5). Lecture journalisée (binome.lire, quantité 2) avant le renvoi ; aucun refus ne laisse de trace."
+      "note": "Migration 0021 : scores des deux participations (jamais les réponses), SEULEMENT si les deux accords existent et si la proposition n'est pas retirée, pour les deux personnes concernées, le consultant de l'organisation et l'administrateur Tenga. Refus 42501 de même message pour un binôme inexistant ou interdit (le responsable, un autre participant, un consultant d'une autre organisation, l'anonyme) ; 55000 pour une personne autorisée sans double consentement. Facette O6 retirée de toute ligne qui n'est pas celle de l'appelant (défaut non validé, plan § 6 question 5). Lecture journalisée (binome.lire, quantité 2) avant le renvoi ; aucun refus ne laisse de trace."
     },
     {
       "objet": "app.mes_resultats",

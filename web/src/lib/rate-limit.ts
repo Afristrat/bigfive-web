@@ -25,7 +25,11 @@ export const sharedLimiter: RateLimiter = (store.__tengaLimiter ??=
 // (magicLinkLimits, codeLimits) vivent dans sliding-window.ts.
 export const limits = {
   getResult: { max: 600, windowMs: HOUR_MS },
-  saveTest: { max: 60, windowMs: HOUR_MS }
+  saveTest: { max: 60, windowMs: HOUR_MS },
+  // Une sauvegarde par changement d'écran : 120 écrans, retours en arrière
+  // compris. Le plafond saveTest (60 par heure) bloquerait un parcours normal.
+  // Par personne connectée. Défaut non validé par Amine.
+  saveProgress: { max: 600, windowMs: HOUR_MS }
 } as const satisfies Record<string, Limit>;
 
 /**

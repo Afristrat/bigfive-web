@@ -19,6 +19,7 @@ export type SyntheseLabels = {
   colEffectif: string;
   colMoyenne: string;
   colEcartType: string;
+  ecartTypeAbsent: string;
   colNiveau: string;
   nonPublie: string;
   complementNonPublie: string;
@@ -46,6 +47,7 @@ function Tableau({
   locale,
   labels
 }: {
+  /** Nom du tableau, groupe compris : il doit être unique dans la page. */
   caption: string;
   lignes: readonly LigneDomaine[];
   locale: string;
@@ -98,9 +100,16 @@ function Tableau({
                     {formatNombre(ligne.moyenne, locale)}
                   </td>
                   <td className={`${td} chiffres`}>
-                    {ligne.ecartType === null
-                      ? ''
-                      : formatNombre(ligne.ecartType, locale)}
+                    {ligne.ecartType === null ? (
+                      <>
+                        <span aria-hidden='true'>–</span>
+                        <span className='sr-only'>
+                          {labels.ecartTypeAbsent}
+                        </span>
+                      </>
+                    ) : (
+                      formatNombre(ligne.ecartType, locale)
+                    )}
                   </td>
                   <td className={td}>
                     {labels.niveauLecture.replace(
@@ -145,7 +154,7 @@ export function GroupSynthesis({ groupes, locale, labels }: Props) {
             ) : (
               <>
                 <Tableau
-                  caption={labels.groupeCaption}
+                  caption={`${labels.groupeCaption} (${titre})`}
                   lignes={groupe.groupe}
                   locale={locale}
                   labels={labels}
@@ -162,7 +171,7 @@ export function GroupSynthesis({ groupes, locale, labels }: Props) {
                       </p>
                     )}
                     <Tableau
-                      caption={labels.complementCaption}
+                      caption={`${labels.complementCaption} (${titre})`}
                       lignes={groupe.complement}
                       locale={locale}
                       labels={labels}

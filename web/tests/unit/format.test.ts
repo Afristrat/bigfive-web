@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
   formatDate,
+  formatDateMaroc,
   formatNombre,
+  FUSEAU_MAROC,
   isoler,
-  localeRegionale
+  isolerEnArabe,
+  localeRegionale,
+  remplir
 } from '@/lib/format';
 
 describe('format', () => {
@@ -44,5 +48,55 @@ describe('format', () => {
     expect(isole.codePointAt(0)).toBe(0x2068);
     expect(isole.codePointAt(isole.length - 1)).toBe(0x2069);
     expect(isole.slice(1, -1)).toBe('contact@tenga.ma');
+  });
+});
+
+describe('fuseau et date du Maroc', () => {
+  it('le fuseau est celui de Casablanca', () => {
+    expect(FUSEAU_MAROC).toBe('Africa/Casablanca');
+  });
+
+  it('formatDateMaroc lit la date à Casablanca, quel que soit le fuseau du serveur', () => {
+    const tard = Date.UTC(2026, 9, 19, 23, 30);
+    expect(formatDateMaroc(tard, 'fr')).toBe('20 octobre 2026');
+    expect(formatDateMaroc(tard, 'fr')).toBe(
+      formatDate(tard, 'fr', FUSEAU_MAROC)
+    );
+  });
+});
+
+describe('isolerEnArabe', () => {
+  it('isole le segment latin en arabe seulement', () => {
+    expect(isolerEnArabe('contact@tenga.ma', 'ar')).toBe(
+      isoler('contact@tenga.ma')
+    );
+    expect(isolerEnArabe('contact@tenga.ma', 'fr')).toBe('contact@tenga.ma');
+    expect(isolerEnArabe('contact@tenga.ma', 'en')).toBe('contact@tenga.ma');
+  });
+});
+
+describe('remplir', () => {
+  it('remplace les marques {nom} par leur valeur', () => {
+    expect(remplir('{a} et {b}', { a: 'un', b: 'deux' })).toBe('un et deux');
+  });
+
+  it('remplace toutes les occurrences d’une même marque', () => {
+    expect(remplir('{n} sur {n}', { n: '5' })).toBe('5 sur 5');
+  });
+
+  it('laisse intacte une marque sans valeur', () => {
+    expect(remplir('Bonjour {nom}', {})).toBe('Bonjour {nom}');
+  });
+
+  it('ignore une valeur inutilisée et un modèle sans marque', () => {
+    expect(remplir('Rien', { x: 'y' })).toBe('Rien');
+  });
+
+  it('une valeur contenant une marque n’est pas réinterprétée', () => {
+    expect(remplir('{a}', { a: '{b}', b: 'piège' })).toBe('{b}');
+  });
+
+  it('ne lit pas une propriété héritée du prototype comme une valeur', () => {
+    expect(remplir('{constructor}', {})).toBe('{constructor}');
   });
 });

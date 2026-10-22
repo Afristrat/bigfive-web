@@ -19,6 +19,7 @@ const syntheseEn = {
   colEffectif: 'Size',
   colMoyenne: 'Average score (24 to 120)',
   colEcartType: 'Standard deviation',
+  ecartTypeAbsent: 'standard deviation not available',
   colNiveau: 'Level',
   dispersion:
     'Standard deviation: spread of the answers, with no label for lack of a convention.',

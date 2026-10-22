@@ -65,7 +65,7 @@ pid_a=$!
 sleep 1.5
 
 # Session B : soumission d'un résultat par le participant. La charge est VALIDE au sens de
-# la migration 0015 (forme « tenga-scores-1 » : 120 réponses entières de 1 à 5 ; cinq domaines
+# la migration 0019 (forme « tenga-scores-1 » : 120 réponses entières de 1 à 5 ; cinq domaines
 # de score 72 et de count 24, six facettes numérotées de 1 à 6 de score 12 et de count 4) :
 # une charge minimale serait refusée (22023) avant d'atteindre le contrôle de la campagne
 # ouverte, et la course ne prouverait plus rien. Même charge que le test SQL 39.

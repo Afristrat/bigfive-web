@@ -18,6 +18,7 @@ const syntheseFr = {
   colEffectif: 'Effectif',
   colMoyenne: 'Moyenne du score (de 24 à 120)',
   colEcartType: 'Écart type',
+  ecartTypeAbsent: 'écart type non disponible',
   colNiveau: 'Niveau',
   dispersion:
     'Écart type : dispersion des réponses, sans étiquette faute de convention.',

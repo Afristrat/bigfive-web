@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { secondaryButtonClass } from '@/components/form-styles';
 import { title } from '@/components/primitives';
-import { isoler } from '@/lib/format';
+import { isolerEnArabe } from '@/lib/format';
 import {
   loadMesParticipations,
   type MaParticipation
@@ -32,9 +32,6 @@ export default async function MesResultatsPage({ params }: Props) {
   const viewer = await requireViewer(locale, '/mes-resultats');
   const participations = await loadMesParticipations(viewer);
   const t = await getTranslations('mesResultats');
-  // Un titre ou un nom saisi par un tiers, isolé dans une phrase arabe.
-  const iso = (valeur: string): string =>
-    locale === 'ar' ? isoler(valeur) : valeur;
 
   return (
     <div>
@@ -61,10 +58,10 @@ export default async function MesResultatsPage({ params }: Props) {
               >
                 <div>
                   <p className='font-semibold text-encre'>
-                    {iso(p.campagneTitre)}
+                    {isolerEnArabe(p.campagneTitre, locale)}
                   </p>
                   <p className='text-petit text-texte-2'>
-                    {iso(p.organisationNom)}
+                    {isolerEnArabe(p.organisationNom, locale)}
                   </p>
                   <p className='text-petit text-texte-2'>
                     {t(`statut.${p.statut}`)}
@@ -75,7 +72,10 @@ export default async function MesResultatsPage({ params }: Props) {
                 </div>
                 <Link href={href} className={secondaryButtonClass}>
                   {t(`action.${action}`)}
-                  <span className='sr-only'> {iso(p.campagneTitre)}</span>
+                  <span className='sr-only'>
+                    {' '}
+                    {isolerEnArabe(p.campagneTitre, locale)}
+                  </span>
                 </Link>
               </li>
             );

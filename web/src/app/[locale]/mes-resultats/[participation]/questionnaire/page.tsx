@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { z } from 'zod';
 import { saveProgress, submitParticipation } from '@/actions/passation';
 import { title } from '@/components/primitives';
-import { formatNombre } from '@/lib/format';
+import { libellesSurvey } from '@/components/questionnaire/reprise-locale';
 import {
   loadParticipationOuverte,
   loadTentative,
@@ -133,26 +133,7 @@ export default async function PassationPage({ params }: Props) {
         <Survey
           questions={questions}
           labels={{
-            next: t('next'),
-            prev: t('back'),
-            results: t('seeResults'),
-            progress: String(t.raw('progress')),
-            saving: t('saving'),
-            dismiss: t('dismiss'),
-            instructions: t('instructions', {
-              total: formatNombre(questions.length, locale)
-            }),
-            halfway: String(t.raw('halfway')),
-            noTimeLimit: t('noTimeLimit'),
-            progressBar: t('progressBar'),
-            statement: String(t.raw('statement')),
-            prompt: t('prompt'),
-            restored: t('restored'),
-            newTest: t('newTest'),
-            saveFailedTitle: t('saveFailedTitle'),
-            saveFailedText: t('saveFailedText'),
-            reload: t('reload'),
-            nextHelp: t('nextHelp'),
+            ...libellesSurvey(t, locale, questions.length),
             errorTexts: {
               closed: p('errors.closed'),
               already: p('errors.already'),
@@ -164,6 +145,7 @@ export default async function PassationPage({ params }: Props) {
           onSubmit={onSubmit}
           onProgress={onProgress}
           initial={initial}
+          alreadyHref={`/mes-resultats/${participation.participationId}`}
           storageKey={`b5:${participation.participationId}`}
           locale={locale}
         />

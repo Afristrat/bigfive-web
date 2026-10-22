@@ -1,4 +1,4 @@
--- Migration 0015 (étape M3) : contrat de passation tenu en base.
+-- Migration 0019 (étape M3) : contrat de passation tenu en base.
 -- app.soumettre_resultat refuse (22023) une forme inconnue : réponses = exactement
 -- 120 entiers de 1 à 5 ; scores = format 'tenga-scores-1', cinq domaines (N, E, O,
 -- A, C) de score entier 24 à 120 et de count 24, six facettes numérotées 1 à 6 de
@@ -189,8 +189,8 @@ SELECT is(pg_temp.soum('a0000000-0000-4000-8000-000000000001', 'd0000000-0000-40
 
 -- ===== Un refus n'écrit rien =====
 SELECT is((SELECT count(*)::int FROM app.results), 0, 'aucun résultat enregistré par ces refus');
-SELECT is((SELECT statut FROM app.participations WHERE id = 'd0000000-0000-4000-8000-000000000001'), 'en_cours',
-  'la participation reste en cours après les refus');
+SELECT is((SELECT statut FROM app.participations WHERE id = 'd0000000-0000-4000-8000-000000000001'), 'ouverte',
+  'la participation reste ouverte (statut inchangé) après les refus');
 SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.soumettre'), 0, 'aucun refus ne laisse de ligne de journal');
 
 -- ===== Ordre des refus : ceux de 0003 passent avant la forme, message inchangé =====
@@ -260,7 +260,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated',
   'close', 'mes_resultats : après la clôture de la campagne, campagne_statut vaut close');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated',
   $q$select statut from app.mes_resultats() where campagne_id = 'c0000000-0000-4000-8000-0000000000a2'$q$),
-  'en_cours', 'mes_resultats : la participation reste en cours alors que la campagne est close (le cas de X10)');
+  'ouverte', 'mes_resultats : la participation jamais commencée reste ouverte alors que la campagne est close (le cas de X10)');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated',
   $q$select string_agg(campagne_statut, ',' order by campagne_id) from app.mes_resultats()$q$),
   'ouverte,close,close', 'mes_resultats : une valeur de campagne_statut par participation (a1 ouverte, a2 et a3 closes)');

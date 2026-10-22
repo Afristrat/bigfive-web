@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { canManageCampaigns } from '@/lib/access-rules';
 import { GroupSynthesis } from '@/components/synthese/group-synthesis';
 import { title } from '@/components/primitives';
 import { loadOrgPage, parseOrgSlug } from '@/lib/campaign-data';
-import { isoler } from '@/lib/format';
+import { isolerEnArabe } from '@/lib/format';
 import { VERSION_MOTEUR } from '@/lib/moteur/seuils';
 import { requireViewer } from '@/lib/session';
 import {
@@ -44,8 +45,13 @@ export default async function SynthesePage({ params }: Props) {
 
   const t = await getTranslations('synthese');
   const tn = await getTranslations('niveaux');
-  const iso = (value: string): string =>
-    locale === 'ar' ? isoler(value) : value;
+  const passation = await getTranslations('passation');
+  // La page de l'organisation est réservée au responsable et à l'administrateur
+  // Tenga : le consultant, lui, retourne à son compte.
+  const versOrganisation = canManageCampaigns({
+    isTengaAdmin: page.isAdmin,
+    roleInOrganization: page.role
+  });
 
   return (
     <div className='flex flex-col gap-10'>
@@ -57,13 +63,21 @@ export default async function SynthesePage({ params }: Props) {
           </span>
         </h1>
         <p className='mt-2 text-chapo text-texte-2'>
-          {t('campagne', { titre: iso(synthese.campagne.titre) })}
+          {t('campagne', {
+            titre: isolerEnArabe(synthese.campagne.titre, locale)
+          })}
         </p>
         <p className='mt-4 colonne-lecture text-texte-2'>{t('intro')}</p>
         <p className='mt-4'>
-          <Link href={`/o/${slug}`} className='underline'>
-            {t('retour')}
-          </Link>
+          {versOrganisation ? (
+            <Link href={`/o/${slug}`} className='underline'>
+              {t('retour')}
+            </Link>
+          ) : (
+            <Link href='/mon-compte' className='underline'>
+              {passation('backToAccount')}
+            </Link>
+          )}
         </p>
       </header>
 
@@ -81,6 +95,7 @@ export default async function SynthesePage({ params }: Props) {
               colEffectif: t('colEffectif'),
               colMoyenne: t('colMoyenne'),
               colEcartType: t('colEcartType'),
+              ecartTypeAbsent: t('ecartTypeAbsent'),
               colNiveau: t('colNiveau'),
               nonPublie: t('nonPublie'),
               complementNonPublie: t('complementNonPublie'),

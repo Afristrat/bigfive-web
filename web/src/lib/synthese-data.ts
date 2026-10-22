@@ -139,7 +139,7 @@ export async function loadSynthese(
       .sort((a, b) => ordreDomaine(a.domaine) - ordreDomaine(b.domaine));
 
   const groupes = [...groups]
-    .sort((a, b) => a.ordre - b.ordre || a.nom.localeCompare(b.nom))
+    .sort((a, b) => a.ordre - b.ordre || a.nom.localeCompare(b.nom, 'fr'))
     .map((g): GroupeSynthese => {
       const groupe = lignesDe(g.id, 'groupe');
       return {

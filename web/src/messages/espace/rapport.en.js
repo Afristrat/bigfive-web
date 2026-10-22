@@ -79,7 +79,6 @@ const rapportEn = {
   },
   fiabilite: {
     titre: 'Reliability of this reading',
-    reponses: 'All answers are present: {n} out of {n}.',
     duree: 'Time taken to answer: {duree}.',
     limite:
       'No reliability indicator has been validated to date. The duration is given for information, with no threshold, and says nothing about the quality of the answers.'

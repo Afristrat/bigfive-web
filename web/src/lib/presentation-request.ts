@@ -9,6 +9,7 @@ import {
   type OrganisationSize,
   type PresentationInput
 } from '@/lib/presentation-fields';
+import { FUSEAU_MAROC } from '@/lib/format';
 import { localeOf } from '@/lib/locale-field';
 import { canonicalAddress, escapeHtml } from '@/lib/mailer';
 import type { Limit, RateLimiter } from '@/lib/sliding-window';
@@ -332,7 +333,7 @@ const casablancaDate = (date: Date): string =>
   new Intl.DateTimeFormat('fr-MA-u-nu-latn', {
     dateStyle: 'long',
     timeStyle: 'short',
-    timeZone: 'Africa/Casablanca'
+    timeZone: FUSEAU_MAROC
   }).format(date);
 
 /** Notification à Tenga : en français, toutes les informations, réponse en Reply-To. */

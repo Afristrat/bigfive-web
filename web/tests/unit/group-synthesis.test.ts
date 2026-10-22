@@ -103,6 +103,7 @@ const labels: SyntheseLabels = {
   colEffectif: 'Effectif',
   colMoyenne: 'Moyenne',
   colEcartType: 'Écart type',
+  ecartTypeAbsent: 'écart type non disponible',
   colNiveau: 'Niveau',
   nonPublie: 'NON-PUBLIE',
   complementNonPublie: 'COMPLEMENT-NON-PUBLIE',
@@ -243,6 +244,37 @@ describe('GroupSynthesis', () => {
       { ...nonPublie, nom: '<img src=x onerror=alert(1)>' }
     ]);
     expect(html).not.toContain('<img');
+  });
+
+  it('chaque tableau est nommé par son groupe : légende et région distinctes', () => {
+    const html = rendre([
+      { ...publie, complement: domaines(96, 9).slice(0, 1) },
+      { ...publie, id: G2, nom: 'Équipe B', complement: [] }
+    ]);
+    const legendes = [
+      ...html.matchAll(/<caption[^>]*>([^<]*)<\/caption>/g)
+    ].map((m) => m[1]);
+    expect(legendes).toHaveLength(3);
+    expect(new Set(legendes).size).toBe(3);
+    expect(legendes).toContain('Le groupe (Équipe A)');
+    expect(legendes).toContain('Le reste de la campagne (Équipe A)');
+    expect(legendes).toContain('Le groupe (Équipe B)');
+    const regions = [
+      ...html.matchAll(/role="region" aria-label="([^"]*)"/g)
+    ].map((m) => m[1]);
+    expect(regions).toEqual(legendes);
+  });
+
+  it('écart type absent : un tiret, avec libellé masqué', () => {
+    const html = rendre([
+      {
+        ...publie,
+        groupe: [{ domaine: 'N', effectif: 1, moyenne: 72, ecartType: null }]
+      }
+    ]);
+    expect(html).toMatch(
+      /<td class="[^"]*chiffres"><span aria-hidden="true">–<\/span><span class="sr-only">écart type non disponible<\/span><\/td>/
+    );
   });
 
   it('nombres avec chiffres latins en arabe', () => {

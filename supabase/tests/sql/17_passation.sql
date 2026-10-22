@@ -41,7 +41,7 @@ LANGUAGE sql AS $$
     format($q$select app.soumettre_resultat(%L, %L::jsonb, %L::jsonb, %L, %L)::text$q$, p_participation, p_reponses, p_scores, p_vq, p_vc))
 $$;
 
--- Contrat de passation de la migration 0015 : réponses (120 entiers de 1 à 5) et scores
+-- Contrat de passation de la migration 0019 : réponses (120 entiers de 1 à 5) et scores
 -- « tenga-scores-1 » valides, que la base accepte (les refus de forme sont éprouvés par 39).
 CREATE FUNCTION pg_temp.rep_ok() RETURNS text
 LANGUAGE sql AS $$

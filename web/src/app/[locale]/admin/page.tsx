@@ -11,7 +11,7 @@ import {
   loadOrganizations,
   loadTengaAdmins
 } from '@/lib/admin-data';
-import { formatDate, formatDateHeure, isoler } from '@/lib/format';
+import { formatDate, formatDateHeure, isolerEnArabe } from '@/lib/format';
 import { requireAdmin } from '@/lib/session';
 import { Link } from '@/navigation';
 
@@ -42,8 +42,6 @@ export default async function AdminPage({ params }: Props) {
   const roles = await getTranslations('roles');
   const account = await getTranslations('account');
 
-  const iso = (value: string): string =>
-    locale === 'ar' ? isoler(value) : value;
   const languages = {
     fr: account('languages.fr'),
     ar: account('languages.ar'),
@@ -231,7 +229,9 @@ export default async function AdminPage({ params }: Props) {
               address: admin.adresse,
               addedAt: formatDate(admin.ajouteLe, locale),
               isMe: admin.estMoi,
-              confirm: t('removeConfirm', { adresse: iso(admin.adresse) }),
+              confirm: t('removeConfirm', {
+                adresse: isolerEnArabe(admin.adresse, locale)
+              }),
               ariaLabel: t('removeButtonAria', { adresse: admin.adresse })
             }))}
             labels={{

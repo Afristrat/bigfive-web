@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   accorder,
   avertissementFacette,
@@ -127,6 +127,46 @@ describe('garde de relecture', () => {
   });
 });
 
+describe('bloc inconnu', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('journalise l’identifiant du bloc', () => {
+    blocFacette('Z9/bas' as 'N1/bas', 'fr', 'consultant');
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining('Z9/bas')
+    );
+  });
+
+  it('se dégrade en « en_relecture » au lieu de lever', () => {
+    for (const audience of [
+      'personne',
+      'consultant',
+      'administrateur'
+    ] as const) {
+      expect(blocFacette('Z9/bas' as 'N1/bas', 'fr', audience)).toEqual({
+        etat: 'en_relecture'
+      });
+      expect(blocFacette('N1/inconnu' as 'N1/bas', 'fr', audience)).toEqual({
+        etat: 'en_relecture'
+      });
+      expect(blocFacette('' as 'N1/bas', 'fr', audience)).toEqual({
+        etat: 'en_relecture'
+      });
+    }
+  });
+
+  it('la langue absente garde la priorité sur le bloc inconnu', () => {
+    expect(blocFacette('Z9/bas' as 'N1/bas', 'en', 'consultant')).toEqual({
+      etat: 'langue_absente'
+    });
+  });
+});
+
 describe('langues', () => {
   it('renvoie langue_absente hors du français, avant la garde', () => {
     for (const l of ['ar', 'en', 'es', '']) {
@@ -164,6 +204,24 @@ describe('accord', () => {
 
   it('retombe sur la forme sans accord pour une valeur inconnue', () => {
     expect(accorder(t, 'x' as 'm')).toBe('Vous êtes sûr(e) de vous.');
+  });
+
+  it('partie manquante : jamais la forme féminine par défaut, on retombe sur la première forme', () => {
+    // Deux formes seulement : pas de forme sans accord, la première (de base) est rendue.
+    expect(accorder('{ouvert|ouverte}', 'n')).toBe('ouvert');
+    expect(accorder('{ouvert|ouverte}', 'x' as 'm')).toBe('ouvert');
+    expect(accorder('{ouvert|ouverte}', 'm')).toBe('ouvert');
+    expect(accorder('{ouvert|ouverte}', 'f')).toBe('ouverte');
+    // Une seule forme : elle sert pour tous les accords.
+    for (const accord of ['m', 'f', 'n'] as const) {
+      expect(accorder('{prêt}', accord)).toBe('prêt');
+    }
+  });
+
+  it('une partie vide est une forme valide, pas une partie manquante', () => {
+    expect(accorder('prêt{|e|(e)}', 'm')).toBe('prêt');
+    expect(accorder('prêt{|e|(e)}', 'f')).toBe('prête');
+    expect(accorder('prêt{|e|(e)}', 'n')).toBe('prêt(e)');
   });
 
   it('laisse intact un texte sans marquage', () => {

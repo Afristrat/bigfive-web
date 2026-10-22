@@ -42,6 +42,7 @@ import { GatewayError } from '@/lib/supabase/server';
 import {
   creerFileProgression,
   type ProgressNotice,
+  type ProgressSortie,
   type Reprise,
   type SurveyProps
 } from '@/app/[locale]/test/survey';
@@ -123,7 +124,8 @@ describe('saveProgress : validation avant tout appel', () => {
     ];
     expect(action).toBe('saveProgress');
     expect(subject).toBe(VIEWER.id);
-    expect(limit.max).toBeGreaterThanOrEqual(240);
+    expect(limit).toBe(limits.saveProgress);
+    expect(limits.saveProgress.max).toBe(600);
     expect(limit.max).toBeGreaterThan(limits.saveTest.max);
     expect(rpc).not.toHaveBeenCalled();
   });
@@ -173,6 +175,114 @@ describe('saveProgress : appel de la base', () => {
     });
     expect(select).toHaveBeenCalledTimes(1);
     expect(select.mock.calls[0][0]).toBe('attempts');
+  });
+
+  describe('conflit 40001 dû à une réponse de sauvegarde perdue en route', () => {
+    // Le serveur a bien enregistré la sauvegarde précédente (révision 7), mais
+    // le client ne l'a jamais reçue : il redemande à la révision 3.
+    const serveur = (n: number): Record<string, number> =>
+      Object.fromEntries(reponses(n).map((a) => [a.id, a.score]));
+
+    it('réponses du serveur incluses dans celles du client : accepte et renvoie la nouvelle révision', async () => {
+      rpc
+        .mockRejectedValueOnce(new GatewayError(409, '40001'))
+        .mockResolvedValueOnce(8);
+      select.mockResolvedValue([{ revision: 7, reponses: serveur(2) }]);
+      const answers = reponses(4);
+      expect(await saveProgress(PARTICIPATION, 3, answers)).toEqual({
+        status: 'ok',
+        revision: 8
+      });
+      expect(rpc).toHaveBeenCalledTimes(2);
+      expect(rpc.mock.calls[1]).toEqual([
+        'enregistrer_progression',
+        {
+          p_participation: PARTICIPATION,
+          p_revision: 7,
+          p_reponses: Object.fromEntries(answers.map((a) => [a.id, a.score])),
+          p_questionnaire_version: QUESTIONNAIRE_VERSION
+        }
+      ]);
+    });
+
+    it('mêmes réponses des deux côtés : accepte aussi', async () => {
+      rpc
+        .mockRejectedValueOnce(new GatewayError(409, '40001'))
+        .mockResolvedValueOnce(8);
+      select.mockResolvedValue([{ revision: 7, reponses: serveur(3) }]);
+      expect(await saveProgress(PARTICIPATION, 3, reponses(3))).toEqual({
+        status: 'ok',
+        revision: 8
+      });
+    });
+
+    it('le serveur a une réponse que le client n’a pas : conflit, rien n’est écrasé', async () => {
+      rpc.mockRejectedValue(new GatewayError(409, '40001'));
+      select.mockResolvedValue([{ revision: 7, reponses: serveur(5) }]);
+      expect(await saveProgress(PARTICIPATION, 3, reponses(4))).toEqual({
+        status: 'conflict',
+        revision: 7,
+        reponses: serveur(5)
+      });
+      expect(rpc).toHaveBeenCalledTimes(1);
+    });
+
+    it('le serveur a une autre valeur pour la même question : conflit', async () => {
+      rpc.mockRejectedValue(new GatewayError(409, '40001'));
+      const autre = { ...serveur(2), [ITEMS[0].id]: 5 };
+      select.mockResolvedValue([{ revision: 7, reponses: autre }]);
+      expect(await saveProgress(PARTICIPATION, 3, reponses(4))).toEqual({
+        status: 'conflict',
+        revision: 7,
+        reponses: autre
+      });
+      expect(rpc).toHaveBeenCalledTimes(1);
+    });
+
+    it('la nouvelle tentative rencontre un second conflit : conflit avec les réponses lues, une seule relance', async () => {
+      rpc.mockRejectedValue(new GatewayError(409, '40001'));
+      select.mockResolvedValue([{ revision: 7, reponses: serveur(2) }]);
+      expect(await saveProgress(PARTICIPATION, 3, reponses(4))).toEqual({
+        status: 'conflict',
+        revision: 7,
+        reponses: serveur(2)
+      });
+      expect(rpc).toHaveBeenCalledTimes(2);
+    });
+
+    it.each([
+      ['23505', 'closed'],
+      ['55000', 'closed'],
+      ['22023', 'invalid'],
+      ['XX000', 'failed']
+    ])('la nouvelle tentative échoue avec %s : %s', async (code, status) => {
+      rpc
+        .mockRejectedValueOnce(new GatewayError(409, '40001'))
+        .mockRejectedValueOnce(new GatewayError(400, code));
+      select.mockResolvedValue([{ revision: 7, reponses: serveur(2) }]);
+      expect(await saveProgress(PARTICIPATION, 3, reponses(4))).toEqual({
+        status
+      });
+    });
+
+    it('la nouvelle tentative échoue sur le réseau : failed', async () => {
+      rpc
+        .mockRejectedValueOnce(new GatewayError(409, '40001'))
+        .mockRejectedValueOnce(new Error('ECONNRESET'));
+      select.mockResolvedValue([{ revision: 7, reponses: serveur(2) }]);
+      expect(await saveProgress(PARTICIPATION, 3, reponses(4))).toEqual({
+        status: 'failed'
+      });
+    });
+
+    it('ne compte pas la relance contre le plafond de sauvegardes', async () => {
+      rpc
+        .mockRejectedValueOnce(new GatewayError(409, '40001'))
+        .mockResolvedValueOnce(8);
+      select.mockResolvedValue([{ revision: 7, reponses: serveur(2) }]);
+      await saveProgress(PARTICIPATION, 3, reponses(4));
+      expect(isRateLimited).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('conflit 40001 sans tentative lisible : révision 0 et aucune réponse', async () => {
@@ -514,5 +624,123 @@ describe('creerFileProgression', () => {
     creerFileProgression(onProgress, 0, notifier)?.pousser([]);
     await flush();
     expect(onProgress).not.toHaveBeenCalled();
+  });
+});
+
+describe('creerFileProgression : garde-fous (boucle de conflit, échecs répétés)', () => {
+  const notices: ProgressNotice[] = [];
+  const notifier = (notice: ProgressNotice): void => void notices.push(notice);
+  const vide: ProgressSortie = {
+    error: 'conflict',
+    reprise: { answers: [], index: 0, revision: 0 }
+  };
+
+  beforeEach(() => {
+    notices.length = 0;
+  });
+
+  it('conflit à reprise vide répété : un seul renvoi, puis alerte sans reprise et arrêt', async () => {
+    const onProgress = vi
+      .fn<NonNullable<SurveyProps['onProgress']>>()
+      .mockResolvedValue(vide);
+    const file = creerFileProgression(onProgress, 4, notifier);
+    file?.pousser(reponses(3));
+    await flush();
+    expect(onProgress).toHaveBeenCalledTimes(2);
+    expect(notices).toEqual([{ error: 'conflict' }]);
+    file?.pousser(reponses(4));
+    await flush();
+    expect(onProgress).toHaveBeenCalledTimes(2);
+  });
+
+  it('un succès réarme le renvoi automatique', async () => {
+    const onProgress = vi
+      .fn<NonNullable<SurveyProps['onProgress']>>()
+      .mockResolvedValueOnce(vide)
+      .mockResolvedValueOnce({ revision: 1 })
+      .mockResolvedValueOnce(vide)
+      .mockResolvedValueOnce({ revision: 1 });
+    const file = creerFileProgression(onProgress, 4, notifier);
+    file?.pousser(reponses(1));
+    await flush();
+    file?.pousser(reponses(2));
+    await flush();
+    expect(onProgress).toHaveBeenCalledTimes(4);
+    expect(notices).toEqual([]);
+  });
+
+  it('trois échecs consécutifs : alerte « failed » une fois, la file continue', async () => {
+    const onProgress = vi
+      .fn<NonNullable<SurveyProps['onProgress']>>()
+      .mockResolvedValue({ error: 'failed' });
+    const file = creerFileProgression(onProgress, 0, notifier);
+    for (let i = 1; i <= 2; i += 1) {
+      file?.pousser(reponses(i));
+      await flush();
+    }
+    expect(notices).toEqual([]);
+    file?.pousser(reponses(3));
+    await flush();
+    expect(notices).toEqual([{ error: 'failed' }]);
+    file?.pousser(reponses(4));
+    await flush();
+    expect(onProgress).toHaveBeenCalledTimes(4);
+    expect(notices).toHaveLength(1);
+  });
+
+  it('les exceptions comptent comme des échecs', async () => {
+    const onProgress = vi
+      .fn<NonNullable<SurveyProps['onProgress']>>()
+      .mockRejectedValue(new Error('réseau'));
+    const file = creerFileProgression(onProgress, 0, notifier);
+    for (let i = 1; i <= 3; i += 1) {
+      file?.pousser(reponses(i));
+      await flush();
+    }
+    expect(notices).toEqual([{ error: 'failed' }]);
+  });
+
+  it('un succès entre deux échecs remet le compteur à zéro', async () => {
+    const onProgress = vi
+      .fn<NonNullable<SurveyProps['onProgress']>>()
+      .mockResolvedValueOnce({ error: 'failed' })
+      .mockResolvedValueOnce({ error: 'failed' })
+      .mockResolvedValueOnce({ revision: 1 })
+      .mockResolvedValueOnce({ error: 'failed' })
+      .mockResolvedValueOnce({ error: 'failed' });
+    const file = creerFileProgression(onProgress, 0, notifier);
+    for (let i = 1; i <= 5; i += 1) {
+      file?.pousser(reponses(i));
+      await flush();
+    }
+    expect(notices).toEqual([]);
+  });
+
+  it('le succès qui suit une alerte « failed » la retire (rappel retablie)', async () => {
+    const retablie = vi.fn();
+    const onProgress = vi
+      .fn<NonNullable<SurveyProps['onProgress']>>()
+      .mockResolvedValueOnce({ error: 'failed' })
+      .mockResolvedValueOnce({ error: 'failed' })
+      .mockResolvedValueOnce({ error: 'failed' })
+      .mockResolvedValueOnce({ revision: 1 });
+    const file = creerFileProgression(onProgress, 0, notifier, retablie);
+    for (let i = 1; i <= 4; i += 1) {
+      file?.pousser(reponses(i));
+      await flush();
+    }
+    expect(notices).toEqual([{ error: 'failed' }]);
+    expect(retablie).toHaveBeenCalledTimes(1);
+  });
+
+  it('sans alerte préalable, un succès n’appelle pas retablie', async () => {
+    const retablie = vi.fn();
+    const onProgress = vi
+      .fn<NonNullable<SurveyProps['onProgress']>>()
+      .mockResolvedValue({ revision: 1 });
+    const file = creerFileProgression(onProgress, 0, notifier, retablie);
+    file?.pousser(reponses(1));
+    await flush();
+    expect(retablie).not.toHaveBeenCalled();
   });
 });

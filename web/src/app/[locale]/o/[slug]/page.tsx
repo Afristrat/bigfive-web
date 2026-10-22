@@ -24,7 +24,7 @@ import {
   parseOrgSlug
 } from '@/lib/campaign-data';
 import { peutLireResultats } from '@/lib/consultant-data';
-import { formatNombre, isoler } from '@/lib/format';
+import { formatNombre, isolerEnArabe } from '@/lib/format';
 import { localizedPath } from '@/lib/safe-path';
 import { requireViewer } from '@/lib/session';
 
@@ -93,9 +93,6 @@ export default async function OrganizationPage({ params }: Props) {
     conflict: t('conflict'),
     error: t('error')
   };
-  // Un titre ou un nom saisi par un tiers, isolé dans une phrase arabe.
-  const iso = (value: string): string =>
-    locale === 'ar' ? isoler(value) : value;
   // Effectif inconnu : un tiret nu est lu « tiret » ; on dit « non disponible ».
   const number = (value: number | undefined) =>
     value === undefined ? (
@@ -223,7 +220,7 @@ export default async function OrganizationPage({ params }: Props) {
                 <tbody className='divide-y divide-trait'>
                   {campaigns.map((campaign, index) => {
                     const figures = stats[index];
-                    const titre = iso(campaign.titre);
+                    const titre = isolerEnArabe(campaign.titre, locale);
                     return (
                       <tr key={campaign.id}>
                         {/* Reçoit le focus après « Ouvrir » ou « Clôturer ». */}
@@ -322,7 +319,7 @@ export default async function OrganizationPage({ params }: Props) {
             id={`inviter-${campaign.id}`}
             className='text-titre-2 text-encre [overflow-wrap:anywhere]'
           >
-            {ti('title', { titre: iso(campaign.titre) })}
+            {ti('title', { titre: isolerEnArabe(campaign.titre, locale) })}
           </h2>
           <InviteForm
             locale={locale}

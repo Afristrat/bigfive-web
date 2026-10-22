@@ -2,7 +2,7 @@ import { getLocalizedItems } from '@/lib/question-overrides';
 import { Survey } from './survey';
 import { savePublicTest } from '@/actions';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { formatNombre } from '@/lib/format';
+import { libellesSurvey } from '@/components/questionnaire/reprise-locale';
 import { Notice } from '@/components/notice';
 import {
   loadParticipationsAPasser,
@@ -24,7 +24,9 @@ async function participationsAPasser(): Promise<ParticipationPassation[]> {
     return state.status === 'ok'
       ? await loadParticipationsAPasser(state.viewer)
       : [];
-  } catch {
+  } catch (error) {
+    // Contexte seulement : ni identité ni jeton dans le journal.
+    console.error('Could not list the pending participations', error);
     return [];
   }
 }
@@ -60,28 +62,7 @@ export default async function TestPage({ params }: Props) {
         ))}
         <Survey
           questions={questions}
-          labels={{
-            next: t('next'),
-            prev: t('back'),
-            results: t('seeResults'),
-            progress: String(t.raw('progress')),
-            saving: t('saving'),
-            dismiss: t('dismiss'),
-            instructions: t('instructions', {
-              total: formatNombre(questions.length, locale)
-            }),
-            halfway: String(t.raw('halfway')),
-            noTimeLimit: t('noTimeLimit'),
-            progressBar: t('progressBar'),
-            statement: String(t.raw('statement')),
-            prompt: t('prompt'),
-            restored: t('restored'),
-            newTest: t('newTest'),
-            saveFailedTitle: t('saveFailedTitle'),
-            saveFailedText: t('saveFailedText'),
-            reload: t('reload'),
-            nextHelp: t('nextHelp')
-          }}
+          labels={libellesSurvey(t, locale, questions.length)}
           onSubmit={savePublicTest}
           storageKey='b5'
           locale={locale}

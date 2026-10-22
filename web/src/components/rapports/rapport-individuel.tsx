@@ -8,7 +8,7 @@ import {
 import { LevelBadge } from '@/components/resultats/level-badge';
 import type { ResultViewLabels } from '@/components/resultats/result-view';
 import { domainLabel, facetLabel } from '@/lib/domain-labels';
-import { formatNombre, localeRegionale } from '@/lib/format';
+import { formatNombre, localeRegionale, remplir } from '@/lib/format';
 import { DOMAINES, type DomainCode, type FacetteCode } from '@/lib/moteur';
 import type { RapportIndividuel as Rapport } from '@/lib/rapports/individuel';
 
@@ -62,8 +62,6 @@ export type RapportLibelles = {
   };
   fiabilite: {
     titre: string;
-    /** Modèle avec {n}. */
-    reponses: string;
     /** Modèle avec {duree}. */
     duree: string;
     limite: string;
@@ -143,7 +141,6 @@ export function libellesRapport(
     },
     fiabilite: {
       titre: t('fiabilite.titre'),
-      reponses: t('fiabilite.reponses', { n: '{n}' }),
       duree: t('fiabilite.duree', { duree: '{duree}' }),
       limite: t('fiabilite.limite')
     }
@@ -157,9 +154,6 @@ type RapportIndividuelProps = {
   /** Date de remplissage déjà formatée, ou null. */
   date: string | null;
 };
-
-const remplir = (modele: string, valeurs: Record<string, string>): string =>
-  modele.replace(/\{(\w+)\}/g, (tel, nom: string) => valeurs[nom] ?? tel);
 
 const libelleFacette = (code: FacetteCode, locale: string): string => {
   const domaine: DomainCode | undefined = DOMAINES.find((d) => d === code[0]);
@@ -430,11 +424,6 @@ export function RapportIndividuel({
           {fiabilite.titre}
         </h2>
         <div className='mt-2 flex flex-col gap-2 text-texte-2'>
-          <p>
-            {remplir(fiabilite.reponses, {
-              n: nombre(rapport.fiabilite.reponses)
-            })}
-          </p>
           {rapport.fiabilite.dureeSecondes !== null && (
             <p>
               {remplir(fiabilite.duree, {

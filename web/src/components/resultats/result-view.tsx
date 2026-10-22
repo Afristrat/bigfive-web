@@ -12,7 +12,7 @@ import {
   type Audience
 } from '@/lib/bibliotheque';
 import { domainLabel, facetLabel } from '@/lib/domain-labels';
-import { formatNombre } from '@/lib/format';
+import { formatNombre, remplir } from '@/lib/format';
 import {
   DOMAINES,
   INDEX_FACETTES,
@@ -92,9 +92,6 @@ type ResultViewProps = {
   /** Date de passation déjà formatée, ou null. */
   date: string | null;
 };
-
-const remplir = (modele: string, valeurs: Record<string, string>): string =>
-  modele.replace(/\{(\w+)\}/g, (tel, nom: string) => valeurs[nom] ?? tel);
 
 const libelleFacette = (code: FacetteCode, locale: string): string => {
   const domaine: DomainCode | undefined = DOMAINES.find((d) => d === code[0]);

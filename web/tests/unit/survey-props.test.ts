@@ -331,7 +331,21 @@ describe('page /test (parcours public)', () => {
     expect(html(await rendre())).not.toContain('questionnaire à passer');
   });
 
+  it('une panne de lecture est journalisée avec son contexte, sans donnée personnelle', async () => {
+    const journal = vi.spyOn(console, 'error').mockImplementation(() => {});
+    currentViewer.mockResolvedValue({ status: 'ok', viewer: VIEWER });
+    loadParticipationsAPasser.mockRejectedValue(new Error('passerelle'));
+    await rendre();
+    expect(journal).toHaveBeenCalledTimes(1);
+    const texte = JSON.stringify(journal.mock.calls[0]);
+    expect(texte).toContain('participations');
+    expect(texte).not.toContain(VIEWER.email);
+    expect(texte).not.toContain(VIEWER.accessToken);
+    journal.mockRestore();
+  });
+
   it('une panne de lecture ne casse jamais la page publique', async () => {
+    const journal = vi.spyOn(console, 'error').mockImplementation(() => {});
     currentViewer.mockResolvedValue({ status: 'ok', viewer: VIEWER });
     loadParticipationsAPasser.mockRejectedValue(new Error('passerelle'));
     const page = await rendre();
@@ -339,6 +353,7 @@ describe('page /test (parcours public)', () => {
     expect(html(page)).not.toContain('questionnaire à passer');
     currentViewer.mockRejectedValue(new Error('passerelle'));
     expect(trouver(await rendre(), Survey)).not.toBeNull();
+    journal.mockRestore();
   });
 
   it('session à renouveler : traitée comme anonyme, aucun encart', async () => {
@@ -401,6 +416,23 @@ describe('page de passation connectée', () => {
     };
     expect(props.storageKey).toBe(`b5:${ID}`);
     expect(html(page)).toContain('Acme');
+  });
+
+  it('déjà envoyé : le questionnaire sait où envoyer la personne', async () => {
+    const survey = trouver(await rendre(), Survey);
+    expect((survey?.props as { alreadyHref?: string }).alreadyHref).toBe(
+      `/mes-resultats/${ID}`
+    );
+  });
+
+  it('le parcours public n’a aucune adresse de repli « déjà envoyé »', async () => {
+    const survey = trouver(
+      await TestPage({ params: Promise.resolve({ locale: 'fr' }) }),
+      Survey
+    );
+    expect(
+      (survey?.props as { alreadyHref?: string }).alreadyHref
+    ).toBeUndefined();
   });
 
   it.each([

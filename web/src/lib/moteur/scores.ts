@@ -91,10 +91,12 @@ export function scoresDepuisReponsesMongo(
   return calculer(new Map(answers.map((a) => [a.id, a.score])), null);
 }
 
+// La moyenne d'un score lu en base reste sur l'échelle de réponse (1 à 5) : une
+// valeur hors échelle fausserait niveaux et positions sans lever d'erreur.
 const facetteSchema = z.object({
   score: z.number().finite(),
   count: z.number().int().positive(),
-  moyenne: z.number().finite()
+  moyenne: z.number().finite().min(1).max(5)
 });
 
 const domaineSchema = facetteSchema.extend({

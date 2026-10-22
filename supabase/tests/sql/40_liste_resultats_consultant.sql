@@ -1,4 +1,4 @@
--- Migration 0016 (étape C0) : app.lister_resultats_campagne(p_campagne). Le
+-- Migration 0020 (étape C0) : app.lister_resultats_campagne(p_campagne). Le
 -- consultant de l'organisation et l'administrateur Tenga listent les résultats
 -- d'une campagne (identifiant opaque de participation et date de soumission,
 -- AUCUNE identité) pour ouvrir ensuite chaque rapport par

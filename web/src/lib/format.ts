@@ -42,3 +42,28 @@ export const formatDateHeure = (
 // pour que l'algorithme bidirectionnel ne le réordonne pas en arabe.
 export const isoler = (texte: string): string =>
   String.fromCodePoint(0x2068) + texte + String.fromCodePoint(0x2069);
+
+/** Fuseau de lecture des dates montrées à une personne au Maroc (e-mails compris). */
+export const FUSEAU_MAROC = 'Africa/Casablanca';
+
+/** Date longue lue au fuseau du Maroc, quel que soit celui du serveur. */
+export const formatDateMaroc = (
+  date: Date | string | number,
+  locale: string
+): string => formatDate(date, locale, FUSEAU_MAROC);
+
+/** Isole un segment latin en arabe seulement ; inchangé dans les autres langues. */
+export const isolerEnArabe = (valeur: string, locale: string): string =>
+  locale === 'ar' ? isoler(valeur) : valeur;
+
+/**
+ * Remplace les marques {nom} d'un message traduit. Une marque sans valeur propre
+ * reste telle quelle ; une valeur n'est jamais réinterprétée.
+ */
+export const remplir = (
+  modele: string,
+  valeurs: Readonly<Record<string, string>>
+): string =>
+  modele.replace(/\{(\w+)\}/g, (tel, nom: string) =>
+    Object.hasOwn(valeurs, nom) ? valeurs[nom] ?? tel : tel
+  );

@@ -1,4 +1,4 @@
--- 0016 : liste des résultats d'une campagne pour le consultant (étape C0 du plan
+-- 0020 : liste des résultats d'une campagne pour le consultant (étape C0 du plan
 -- de branchement du questionnaire sur le moteur, écart X9).
 --
 -- Besoin : app.lire_resultat_individuel (0003) exige un identifiant de
@@ -27,7 +27,8 @@
 --   - chaque consultation autorisée est inscrite au journal (action
 --     resultat.lister, ressource de type campagne, quantité = nombre de lignes
 --     rendues), AVANT le renvoi ; un refus n'écrit rien ;
---   - triée par date de soumission, puis par identifiant (ordre stable) ;
+--   - triée par date de soumission, puis par identifiant (ordre stable) ; le
+--     nombre journalisé et les lignes rendues viennent d'UNE SEULE lecture ;
 --   - exécutable par authenticated seulement (ni anon, ni service_role, ni
 --     PUBLIC).
 --
@@ -52,6 +53,8 @@ DECLARE
   v_uid uuid := auth.uid();
   v_org uuid;
   v_n   integer;
+  v_ids uuid[];
+  v_dts timestamptz[];
 BEGIN
   IF v_uid IS NULL THEN
     RAISE EXCEPTION 'Connexion requise' USING ERRCODE = '42501';
@@ -60,21 +63,26 @@ BEGIN
   IF NOT FOUND OR NOT (app.suis_admin_tenga() OR COALESCE(app.mon_role(v_org) = 'consultant', false)) THEN
     RAISE EXCEPTION 'Réservé au consultant affecté ou à un administrateur Tenga' USING ERRCODE = '42501';
   END IF;
-  SELECT pg_catalog.count(*)::integer INTO v_n
+  -- Une seule lecture (READ COMMITTED : deux requêtes pourraient voir deux états
+  -- différents si un résultat est soumis entre elles) : les lignes sont figées dans
+  -- deux tableaux parallèles, le journal compte ces lignes et l'appelant reçoit
+  -- exactement elles, dans l'ordre de la lecture.
+  SELECT pg_catalog.array_agg(r.participation_id ORDER BY r.soumis_le, r.participation_id),
+         pg_catalog.array_agg(r.soumis_le ORDER BY r.soumis_le, r.participation_id)
+    INTO v_ids, v_dts
     FROM app.results r
     JOIN app.participations pa ON pa.id = r.participation_id
    WHERE pa.campaign_id = p_campagne;
+  v_n := COALESCE(pg_catalog.cardinality(v_ids), 0);
   PERFORM private.journaliser(v_uid, 'resultat.lister', 'campagne', p_campagne, v_org, v_n);
   RETURN QUERY
-    SELECT r.participation_id, r.soumis_le
-      FROM app.results r
-      JOIN app.participations pa ON pa.id = r.participation_id
-     WHERE pa.campaign_id = p_campagne
-     ORDER BY r.soumis_le, r.participation_id;
+    SELECT u.pid, u.dt
+      FROM pg_catalog.unnest(v_ids, v_dts) WITH ORDINALITY AS u(pid, dt, ord)
+     ORDER BY u.ord;
 END
 $$;
 
--- Droits : défense en profondeur (comme 0008, 0010, 0013, 0014 et 0015), puis
+-- Droits : défense en profondeur (comme 0008, 0010, 0013, 0014 et 0019), puis
 -- EXECUTE pour authenticated seul.
 REVOKE ALL ON FUNCTION app.lister_resultats_campagne(uuid) FROM PUBLIC, anon, service_role;
 GRANT EXECUTE ON FUNCTION app.lister_resultats_campagne(uuid) TO authenticated;

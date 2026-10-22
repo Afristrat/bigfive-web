@@ -1,6 +1,6 @@
 # Plan de branchement du questionnaire sur la base et sur le moteur
 
-> **Mise à jour du 22/10/2026 (exécution T20).** Numérotation réellement employée : migrations 0015 (M3, passation), 0016 (C0, liste du consultant), 0017 (C2a, binôme) ; tests SQL 39, 40, 41 ; mutations 168 à 175 ; le lot mot de passe est la migration 0018, hors de cette branche. Les épreuves SQL se jouent en production dans une transaction annulée (`supabase/scripts/epreuve-*.sql`), aucune instance de test n'étant autorisée. Partout où ce document écrit 0015 à 0017, 38 à 40 ou 156 à 163, lire ces numéros.
+> **Mise à jour du 22/10/2026 (exécution T20).** Numérotation réellement employée : migrations 0019 (M3, passation), 0020 (C0, liste du consultant), 0021 (C2a, binôme), numérotées après le lot mot de passe (0018) car `migrate.sh` refuse un numéro antérieur à la dernière migration appliquée ; tests SQL 39, 40, 41 ; mutations 168 à 175 ; le lot mot de passe est la migration 0018, hors de cette branche. Les épreuves SQL se jouent en production dans une transaction annulée (`supabase/scripts/epreuve-*.sql`), aucune instance de test n'étant autorisée. Partout où ce document écrit 0015, 0016 ou 0017, 38 à 40 ou 156 à 163, lire ces numéros.
 
 
 21/10/2026. Plan d'implémentation rédigé en lecture seule (aucun fichier de code, de migration ni de catalogue modifié). Il est destiné à des agents d'exécution travaillant sur des fichiers disjoints : chaque étape du § 4 est un brief autonome, à remettre tel quel à un agent.

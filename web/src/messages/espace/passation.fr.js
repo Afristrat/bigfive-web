@@ -14,7 +14,7 @@ const passationFr = {
     'Nous avons repris vos réponses enregistrées sur votre compte. Vous pouvez continuer là où vous en étiez.',
   errors: {
     closed:
-      'Cette campagne n’accepte plus de réponses. Vos réponses restent conservées sur cet appareil.',
+      'Cette campagne n’accepte plus de réponses : vos dernières réponses n’ont pas pu être enregistrées.',
     already: 'Votre questionnaire a déjà été envoyé pour cette campagne.',
     conflict:
       'Vos réponses ont été modifiées ailleurs. Rechargez la page pour reprendre.',

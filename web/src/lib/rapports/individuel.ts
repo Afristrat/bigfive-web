@@ -8,6 +8,7 @@ import {
 import {
   DOMAINES,
   FACETTES,
+  SEUILS_DEFAUT,
   INDEX_FACETTES,
   profilDepuisScores,
   type DomainCode,
@@ -32,8 +33,8 @@ import {
  */
 export const FACETTE_RETIREE: FacetteCode = 'O6';
 
-const RESSORT_MAX = 6;
 const ENTRETIEN_MAX = 3;
+const EXTREMES: readonly Niveau[] = ['bas', 'haut'];
 
 export type EntreeRapport = {
   scores: ScoresTenga;
@@ -73,7 +74,10 @@ export type RapportIndividuel = {
   audience: Audience;
   locale: string;
   domaines: DomaineRapport[];
-  /** Facettes les plus éloignées du milieu de l'échelle, hors niveau « milieu ». */
+  /**
+   * Règle CONTRIB-1 : au plus `contribution.n_max` facettes, de niveau « bas » ou
+   * « haut » seulement, les plus éloignées du milieu de l'échelle d'abord.
+   */
   ressort: PointSaillant[];
   carte: LigneCarte[];
   tensions: Tension[];
@@ -83,7 +87,11 @@ export type RapportIndividuel = {
   facetteRetiree: boolean;
   /** Identifiants des blocs cités, un par facette montrée. */
   blocIds: string[];
-  fiabilite: { reponses: number; dureeSecondes: number | null };
+  /**
+   * La durée seule : le schéma garantit déjà 120 réponses, un compteur n'apprendrait rien.
+   * `null` quand elle est inconnue (absente, ou nulle après une reprise).
+   */
+  fiabilite: { dureeSecondes: number | null };
 };
 
 const facettesDe = (domaine: DomainCode): FacetteCode[] =>
@@ -125,14 +133,14 @@ export function construireRapportIndividuel(
 
   // Tri stable : à distance égale, l'ordre fixe des domaines puis des facettes.
   const ressort = codes
-    .filter((code) => profil.facettes[code].niveau !== 'milieu')
+    .filter((code) => EXTREMES.includes(profil.facettes[code].niveau))
     .map((code) => ({
       code,
       niveau: profil.facettes[code].niveau,
       distance: Math.abs(profil.facettes[code].position - 50)
     }))
     .sort((a, b) => b.distance - a.distance)
-    .slice(0, RESSORT_MAX)
+    .slice(0, SEUILS_DEFAUT.contribution.n_max)
     .map(({ code, niveau }): PointSaillant => ({ code, niveau }));
 
   // Les facettes des tensions d'abord (la plus forte en tête), puis celles qui ressortent.
@@ -169,8 +177,11 @@ export function construireRapportIndividuel(
     facetteRetiree: retire,
     blocIds: codes.map((code) => profil.facettes[code].blocId),
     fiabilite: {
-      reponses: DOMAINES.reduce((n, d) => n + scores[d].count, 0),
-      dureeSecondes: scores.meta.duree_secondes
+      // Une durée nulle ou négative n'est pas une mesure (passation reprise).
+      dureeSecondes:
+        scores.meta.duree_secondes !== null && scores.meta.duree_secondes > 0
+          ? scores.meta.duree_secondes
+          : null
     }
   };
 }

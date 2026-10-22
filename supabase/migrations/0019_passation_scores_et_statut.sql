@@ -1,4 +1,4 @@
--- 0015 : contrat de passation tenu EN BASE (étape M3 du plan de branchement du
+-- 0019 : contrat de passation tenu EN BASE (étape M3 du plan de branchement du
 -- questionnaire sur le moteur, écarts X3 et X10).
 --
 -- X3. Jusqu'ici app.soumettre_resultat acceptait tout objet comme « scores » et
