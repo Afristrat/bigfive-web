@@ -63,7 +63,7 @@ $$;
 CREATE FUNCTION pg_temp.essai(p_email text) RETURNS text
 LANGUAGE sql AS $$
   SELECT pg_temp.comme('service_role', NULL, format(
-    'SELECT format(''%%s|%%s|%%s'', admin, etat, COALESCE(tentative::text, ''-'')) FROM app.mdp_tentative(%L)',
+    'SELECT format(''%%s|%%s|%%s'', admin::text, etat, COALESCE(tentative::text, ''-'')) FROM app.mdp_tentative(%L)',
     p_email))
 $$;
 
