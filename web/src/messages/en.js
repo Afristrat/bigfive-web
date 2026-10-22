@@ -486,7 +486,7 @@ const english = {
     locked: {
       title: 'Locked passwords',
       intro:
-        'A password is blocked for 30 minutes after 5 failures within 15 minutes, then locked at the 6th failure within 24 hours. Only an administrator lifts the lock. The email sign-in link stays usable.',
+        'A password is blocked for 30 minutes after 5 failures within 15 minutes, then locked at the 6th failure within 24 hours. Only another Tenga administrator lifts the lock. The email sign-in link stays usable.',
       empty: 'No blocked or locked account.',
       colAccount: 'Account',
       colState: 'State',
@@ -494,7 +494,11 @@ const english = {
       stateDefinitif: 'Locked',
       stateTemporaire: 'Blocked',
       unlock: 'Unlock',
-      unlocked: 'Account unlocked.'
+      unlocked: 'Account unlocked.',
+      colAction: 'Action',
+      unlockAria: 'Unlock the password of {compte}',
+      error: 'Unlocking failed. Try again in a moment.',
+      unavailable: 'The list of locked accounts is temporarily unavailable.'
     }
   },
   campaigns: {

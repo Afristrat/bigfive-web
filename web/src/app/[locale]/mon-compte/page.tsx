@@ -2,8 +2,9 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { signOutAction } from '@/actions/auth';
 import { secondaryButtonClass } from '@/components/form-styles';
 import { ProfileForm } from '@/components/profile-form';
+import { PasswordSection, TotpSection } from '@/components/security-forms';
 import { title } from '@/components/primitives';
-import { loadAccount } from '@/lib/account-data';
+import { hasVerifiedTotp, loadAccount } from '@/lib/account-data';
 import { isoler } from '@/lib/format';
 import { isTengaAdmin, requireViewer } from '@/lib/session';
 import { Link } from '@/navigation';
@@ -26,8 +27,47 @@ export default async function AccountPage({ params }: Props) {
     loadAccount(viewer),
     isTengaAdmin(viewer)
   ]);
+  // Sécurité de la connexion : réservée aux administrateurs Tenga, seuls à
+  // pouvoir se connecter par mot de passe (les actions le revérifient).
+  const totpActive = admin ? await hasVerifiedTotp(viewer) : false;
   const t = await getTranslations('account');
   const roles = await getTranslations('roles');
+  const security = {
+    totpTitle: t('security.totpTitle'),
+    totpActive: t('security.totpActive'),
+    totpInactive: t('security.totpInactive'),
+    totpStart: t('security.totpStart'),
+    totpStarting: t('security.totpStarting'),
+    totpScan: t('security.totpScan'),
+    totpQrAlt: t('security.totpQrAlt'),
+    totpSecretLabel: t('security.totpSecretLabel'),
+    totpCodeLabel: t('security.totpCodeLabel'),
+    totpConfirm: t('security.totpConfirm'),
+    totpConfirming: t('security.totpConfirming'),
+    totpEnabled: t('security.totpEnabled'),
+    totpFailed: t('security.totpFailed'),
+    error: t('security.error'),
+    passwordTitle: t('security.passwordTitle'),
+    passwordIntro: t('security.passwordIntro'),
+    newLabel: t('security.newLabel'),
+    confirmLabel: t('security.confirmLabel'),
+    codeLabel: t('security.codeLabel'),
+    save: t('security.save'),
+    saving: t('security.saving'),
+    saved: t('security.saved'),
+    needsTotp: t('security.needsTotp'),
+    mismatch: t('security.mismatch'),
+    invalid: t('security.invalid'),
+    codeFailed: t('security.codeFailed'),
+    rateLimited: t('security.rateLimited'),
+    weak: {
+      too_short: t('security.weak.too_short'),
+      too_long: t('security.weak.too_long'),
+      common: t('security.weak.common'),
+      repetitive: t('security.weak.repetitive'),
+      contains_email: t('security.weak.contains_email')
+    }
+  };
 
   return (
     <div className='grid gap-10 lg:grid-cols-12'>
@@ -108,6 +148,27 @@ export default async function AccountPage({ params }: Props) {
             </ul>
           )}
         </section>
+
+        {admin && (
+          <section aria-labelledby='securite-titre' className='carte'>
+            <h2 id='securite-titre' className='text-titre-2 text-encre'>
+              {t('security.title')}
+            </h2>
+            <p className='mt-2 text-texte-2'>{t('security.intro')}</p>
+            <div className='mt-6 flex flex-col gap-8'>
+              <TotpSection
+                locale={locale}
+                active={totpActive}
+                labels={security}
+              />
+              <PasswordSection
+                locale={locale}
+                totpActive={totpActive}
+                labels={security}
+              />
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

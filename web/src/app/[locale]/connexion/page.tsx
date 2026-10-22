@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { LoginForm } from '@/components/login-form';
 import { Notice } from '@/components/notice';
+import { PasswordLoginForm } from '@/components/password-login-form';
 import { locales } from '@/config/site';
 import { title } from '@/components/primitives';
 import { DEFAULT_AFTER_LOGIN } from '@/lib/route-guard';
@@ -74,6 +75,26 @@ export default async function LoginPage({ params, searchParams }: Props) {
             error: t('codeError'),
             invalid: t('invalid')
           }
+        }}
+      />
+      {/* Voie des administrateurs Tenga (mot de passe puis code TOTP), repliée :
+          le lien reste la voie ordinaire et le secours. */}
+      <PasswordLoginForm
+        locale={locale}
+        next={target || undefined}
+        labels={{
+          summary: t('password.summary'),
+          emailLabel: t('password.emailLabel'),
+          passwordLabel: t('password.passwordLabel'),
+          submit: t('password.submit'),
+          checking: t('password.checking'),
+          failed: t('password.failed'),
+          invalid: t('password.invalid'),
+          totpTitle: t('password.totpTitle'),
+          totpIntro: t('password.totpIntro'),
+          totpLabel: t('password.totpLabel'),
+          totpSubmit: t('password.totpSubmit'),
+          totpFailed: t('password.totpFailed')
         }}
       />
     </div>

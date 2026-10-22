@@ -7,8 +7,7 @@ import { localizedPath } from '@/lib/safe-path';
 import { requireAdmin } from '@/lib/session';
 import { GatewayError, userClient } from '@/lib/supabase/server';
 
-// Lot mot de passe (migration 0018, non publiable) : fichier propre au lot,
-// jamais référencé par /admin ni par le lot invitations.
+// Déverrouillage du mot de passe d'un compte depuis /admin (migration 0018).
 export type UnlockState = { status: 'idle' | 'unlocked' | 'error' };
 
 /**

@@ -494,7 +494,7 @@ const french = {
     locked: {
       title: 'Mots de passe verrouillés',
       intro:
-        'Un mot de passe est bloqué 30 minutes après 5 échecs en moins de 15 minutes, puis verrouillé au 6e échec en 24 heures. Seul un administrateur lève le verrouillage. Le lien de connexion par e-mail reste utilisable.',
+        'Un mot de passe est bloqué 30 minutes après 5 échecs en moins de 15 minutes, puis verrouillé au 6e échec en 24 heures. Seul un autre administrateur Tenga lève le verrouillage. Le lien de connexion par e-mail reste utilisable.',
       empty: 'Aucun compte bloqué ou verrouillé.',
       colAccount: 'Compte',
       colState: 'État',
@@ -502,7 +502,12 @@ const french = {
       stateDefinitif: 'Verrouillé',
       stateTemporaire: 'Bloqué',
       unlock: 'Déverrouiller',
-      unlocked: 'Compte déverrouillé.'
+      unlocked: 'Compte déverrouillé.',
+      colAction: 'Action',
+      unlockAria: 'Déverrouiller le mot de passe de {compte}',
+      error: 'Le déverrouillage a échoué. Réessayez dans un instant.',
+      unavailable:
+        'La liste des comptes verrouillés est momentanément indisponible.'
     }
   },
   campaigns: {

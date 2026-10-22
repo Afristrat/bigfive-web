@@ -8,12 +8,15 @@ export function UnlockButton({
   locale,
   userId,
   label,
+  ariaLabel,
   done,
   error
 }: {
   locale: string;
   userId: string;
   label: string;
+  /** Nom accessible du bouton, qui nomme le compte (une ligne par compte). */
+  ariaLabel: string;
   done: string;
   error: string;
 }) {
@@ -28,6 +31,7 @@ export function UnlockButton({
       <button
         type='submit'
         disabled={pending}
+        aria-label={ariaLabel}
         className={`${secondaryButtonClass} !min-h-[44px] !px-4`}
       >
         {label}

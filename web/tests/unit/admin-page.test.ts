@@ -52,6 +52,13 @@ vi.mock('@/actions/admin', () => ({
   createOrganization: vi.fn(),
   removeTengaAdmin: vi.fn()
 }));
+vi.mock('@/actions/password-unlock', () => ({
+  unlockPassword: vi.fn()
+}));
+const loadLockedAccounts = vi.fn();
+vi.mock('@/lib/password-locked-accounts', () => ({
+  loadLockedAccounts: (viewer: unknown) => loadLockedAccounts(viewer)
+}));
 const grantProps: { labels?: Record<string, unknown> } = {};
 vi.mock('@/components/admin-forms', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/components/admin-forms')>()),
@@ -106,9 +113,30 @@ const render = async (): Promise<string> =>
     )
   );
 
+const SALMA = '44444444-4444-4444-8444-444444444444';
+const OMAR = '55555555-5555-4555-8555-555555555555';
+const locked = [
+  {
+    utilisateur: SALMA,
+    nom: 'Salma',
+    email: 'salma@tenga.test',
+    etat: 'definitif',
+    jusqu: null
+  },
+  {
+    utilisateur: OMAR,
+    nom: null,
+    email: 'omar@tenga.test',
+    etat: 'temporaire',
+    jusqu: '2026-10-22T21:45:00+00:00'
+  }
+];
+
 beforeEach(() => {
   loadTengaAdmins.mockReset();
   loadTengaAdmins.mockResolvedValue(admins);
+  loadLockedAccounts.mockReset();
+  loadLockedAccounts.mockResolvedValue([]);
 });
 
 describe('page /admin : ajout d’un super administrateur (T05 I-2)', () => {
@@ -162,10 +190,49 @@ describe('page /admin : retrait des super administrateurs', () => {
   });
 });
 
-describe('page /admin : lot invitations seul', () => {
-  it('ne montre aucune section de verrous de mot de passe', async () => {
+describe('page /admin : mots de passe verrouillés (lot mot de passe)', () => {
+  it('section titrée et introduite, liste lue avec la session, avant le journal', async () => {
     const html = await render();
-    expect(html).not.toContain('verrous-titre');
+    expect(html).toMatch(/<h2 id="verrous-titre"/);
+    expect(html).toContain(fr.admin.locked.title);
+    expect(html).toContain(fr.admin.locked.intro);
+    expect(loadLockedAccounts).toHaveBeenCalledWith(
+      expect.objectContaining({ accessToken: 'aaaa.bbbb.cccc' })
+    );
+    expect(html.indexOf('verrous-titre')).toBeLessThan(
+      html.indexOf('journal-titre')
+    );
+  });
+
+  it('aucun compte : message vide, aucun bouton de déverrouillage', async () => {
+    const html = await render();
+    expect(html).toContain(fr.admin.locked.empty);
+    expect(html).not.toContain(`>${fr.admin.locked.unlock}<`);
+  });
+
+  it('une ligne par compte : état, échéance du seul blocage, bouton nommé', async () => {
+    loadLockedAccounts.mockResolvedValue(locked);
+    const html = await render();
+    expect(html).toContain('salma@tenga.test');
+    expect(html).toContain(fr.admin.locked.stateDefinitif);
+    expect(html).toContain(fr.admin.locked.stateTemporaire);
+    // 21 h 45 UTC, soit 22 h 45 à Casablanca (UTC+1).
+    expect(html).toContain('22/10/2026 22:45');
+    expect(html).toContain(`name="userId" value="${SALMA}"`);
+    expect(html).toContain(`name="userId" value="${OMAR}"`);
+    expect(html).toContain(
+      'aria-label="Déverrouiller le mot de passe de salma@tenga.test"'
+    );
+    expect(html).toContain(
+      'aria-label="Déverrouiller le mot de passe de omar@tenga.test"'
+    );
+  });
+
+  it('liste illisible : message clair, le reste de la page fonctionne', async () => {
+    loadLockedAccounts.mockResolvedValue(null);
+    const html = await render();
+    expect(html).toContain(fr.admin.locked.unavailable);
+    expect(html).not.toContain(fr.admin.locked.empty);
     expect(html).toContain('journal-titre');
   });
 });

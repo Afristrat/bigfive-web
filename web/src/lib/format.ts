@@ -30,12 +30,14 @@ export const formatDate = (
 
 export const formatDateHeure = (
   date: Date | string | number,
-  locale: string
+  locale: string,
+  timeZone?: string
 ): string =>
   new Intl.DateTimeFormat(avecChiffresLatins(locale), {
     dateStyle: 'short',
     timeStyle: 'short',
-    numberingSystem: 'latn'
+    numberingSystem: 'latn',
+    timeZone
   }).format(new Date(date));
 
 // Isole un segment latin (adresse, identifiant) inséré dans une phrase traduite,
