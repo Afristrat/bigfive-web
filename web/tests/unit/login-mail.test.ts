@@ -86,7 +86,8 @@ describe('buildLoginMail', () => {
       url: url('fr'),
       code: '123456'
     });
-    expect(text).toContain('connexion :');
+    expect(text).toContain('ce code :');
+    expect(text).toContain('par vous ?');
     expect(text).not.toContain('—');
   });
 

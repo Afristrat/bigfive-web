@@ -1,6 +1,5 @@
 import { ReactElement } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { DomainShape, domainNumber } from '@/components/domain-shape';
 import { ArrowRightIcon } from '@/components/icons';
 import { subtitle, title } from '@/components/primitives';
 import { basePath } from '@/config/site';
@@ -23,10 +22,10 @@ type Translate = Awaited<ReturnType<typeof methodTranslations>>;
 
 const servedLocales = ['fr', 'ar', 'en'];
 
-const section = 'py-[clamp(2rem,4.5vw,3.5rem)]';
+const section = 'mt-16 border-t border-trait pt-10 lg:mt-20 lg:pt-12';
 
 const textLink =
-  'inline-flex min-h-11 items-center gap-2 text-petit font-bold text-accent hover:text-accent-survol hover:underline';
+  'inline-flex min-h-11 items-center gap-2 text-petit font-medium text-accent underline-offset-4 transition-colors duration-courte ease-tenga hover:text-accent-survol hover:underline';
 
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
@@ -51,7 +50,7 @@ export async function generateMetadata({ params }: Props) {
 function Reference({ id, t }: { id: string; t: Translate }): ReactElement {
   const reference = methodReferenceById(id);
   return (
-    <li className='carte flex flex-col gap-3 p-6'>
+    <li className='flex flex-col gap-3 border-t border-trait py-6'>
       <h4 className='text-titre-3 text-encre'>
         <bdi dir='ltr'>
           {reference.authors}
@@ -67,30 +66,30 @@ function Reference({ id, t }: { id: string; t: Translate }): ReactElement {
           href={reference.url}
           rel='noopener noreferrer'
           target='_blank'
-          className='font-bold text-accent underline underline-offset-2 hover:text-accent-survol'
+          className='font-medium text-accent underline underline-offset-2 hover:text-accent-survol'
         >
           <bdi dir='ltr'>{reference.linkLabel}</bdi>
         </a>
         {reference.year === null && ` · ${t('labels.consulted')}`}
       </p>
       <p className='flex flex-wrap items-center gap-2 text-petit'>
-        <span className='font-bold text-encre'>{t('labels.evidence')}</span>
+        <span className='font-medium text-encre'>{t('labels.evidence')}</span>
         <span className='text-texte-2'>{t(`refs.${id}.strength`)}</span>
       </p>
       <p>
-        <span className='inline-flex rounded-full border border-trait bg-creux px-3 py-1 text-legende font-semibold text-encre'>
+        <span className='inline-flex rounded-petit border border-trait-fort px-2 py-0.5 text-legende font-medium text-encre'>
           {t(`labels.reading.${reference.reading}`)}
         </span>
       </p>
       <dl className='flex flex-col gap-3'>
         <div>
-          <dt className='text-petit font-bold text-encre'>
+          <dt className='text-petit font-medium text-encre'>
             {t('labels.finding')}
           </dt>
           <dd className='mt-1 text-texte-2'>{t(`refs.${id}.finding`)}</dd>
         </div>
         <div>
-          <dt className='text-petit font-bold text-encre'>
+          <dt className='text-petit font-medium text-encre'>
             {t('labels.limit')}
           </dt>
           <dd className='mt-1 text-texte-2'>{t(`refs.${id}.limit`)}</dd>
@@ -105,7 +104,7 @@ function Group({ id, t }: { id: MethodGroupId; t: Translate }): ReactElement {
   return (
     <div className='mt-10'>
       <h3 className='text-titre-2 text-encre'>{t(`research.groups.${id}`)}</h3>
-      <ul role='list' className='mt-5 grid gap-3.5 min-[900px]:grid-cols-2'>
+      <ul role='list' className='mt-4 grid gap-x-8 min-[900px]:grid-cols-2'>
         {(group?.refs ?? []).map((ref) => (
           <Reference key={ref} id={ref} t={t} />
         ))}
@@ -146,7 +145,7 @@ export default async function MethodPage({
       <header>
         <h1 className={title()}>{t('title')}</h1>
         <p className={subtitle()}>{t('lead')}</p>
-        <p className='mt-4 max-w-[48em] text-petit text-texte-2'>
+        <p className='mt-4 max-w-[48em] text-petit text-texte-3'>
           {t('verified')}
         </p>
         <nav aria-label={t('toc')} className='mt-6'>
@@ -190,25 +189,20 @@ export default async function MethodPage({
         <p className='mt-3 colonne-lecture text-texte-2'>
           {t('domains.intro')}
         </p>
-        <ul role='list' className='mt-8 grid gap-3.5 min-[800px]:grid-cols-2'>
+        <ul
+          role='list'
+          className='mt-8 grid gap-x-8 border-t border-trait min-[800px]:grid-cols-2'
+        >
           {domainCodes.map((code) => (
-            <li key={code} className='carte flex flex-col gap-3 p-6'>
-              <div className='flex items-center gap-3.5'>
-                <span
-                  aria-hidden='true'
-                  className='grid size-[46px] flex-none place-items-center rounded-[15px] bg-accent-doux text-accent'
-                >
-                  <DomainShape domain={code} />
-                </span>
-                <h3 className='text-titre-3 text-encre'>
-                  <span aria-hidden='true' className='me-2 text-texte-2'>
-                    {domainNumber(code)}
-                  </span>
-                  {domainLabel(code, locale, 'long')}
-                </h3>
-              </div>
+            <li
+              key={code}
+              className='flex flex-col gap-3 border-b border-trait py-6'
+            >
+              <h3 className='text-titre-3 text-encre'>
+                {domainLabel(code, locale, 'long')}
+              </h3>
               <p className='text-texte-2'>{h(`factors.${code}`)}</p>
-              <h4 className='text-petit font-bold text-encre'>
+              <h4 className='text-petit font-medium text-encre'>
                 {t('domains.facets')}
               </h4>
               <ul
@@ -235,7 +229,7 @@ export default async function MethodPage({
         <p className='mt-3 colonne-lecture text-texte-2'>
           {t('research.intro')}
         </p>
-        <aside className='carte mt-6 colonne-lecture'>
+        <aside className='mt-6 colonne-lecture border-s-2 border-accent ps-5'>
           <h3 className='text-titre-3 text-encre'>
             {t('research.reading.title')}
           </h3>
@@ -251,9 +245,12 @@ export default async function MethodPage({
           {t('gaps.title')}
         </h2>
         <p className='mt-3 colonne-lecture text-texte-2'>{t('gaps.intro')}</p>
-        <ul role='list' className='mt-6 grid gap-3.5 min-[900px]:grid-cols-3'>
+        <ul
+          role='list'
+          className='mt-6 grid gap-x-8 border-t border-trait min-[900px]:grid-cols-3'
+        >
           {gaps.map((key) => (
-            <li key={key} className='carte p-6 text-texte-2'>
+            <li key={key} className='border-b border-trait py-5 text-texte-2'>
               {t(`gaps.${key}`)}
             </li>
           ))}

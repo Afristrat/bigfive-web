@@ -465,7 +465,7 @@ export const Survey = ({
         barLabel={labels.progressBar}
       />
       {currentQuestionIndex === 0 && (
-        <p className='mt-5 flex items-start gap-3 rounded-[20px] bg-accent-doux px-5 py-4 text-[0.97rem] text-encre'>
+        <p className='mt-6 flex max-w-[44rem] items-start gap-3 rounded-controle border-s-2 border-accent bg-accent-doux px-4 py-3 text-petit text-encre'>
           <svg
             aria-hidden='true'
             focusable='false'
@@ -474,9 +474,9 @@ export const Survey = ({
             viewBox='0 0 24 24'
             fill='none'
             stroke='currentColor'
-            strokeWidth='2'
+            strokeWidth='1.75'
             strokeLinecap='round'
-            className='mt-[3px] flex-none text-accent'
+            className='mt-px flex-none text-accent'
           >
             <circle cx='12' cy='12' r='9.5' />
             <path d='M12 11v5.5M12 7.6v.1' />
@@ -543,10 +543,7 @@ export const Survey = ({
           </Button>
         </Notice>
       )}
-      <form
-        onSubmit={(event) => event.preventDefault()}
-        className='mt-4 rounded-panneau border border-trait bg-surface p-[clamp(22px,3vw,36px)] shadow-carte'
-      >
+      <form onSubmit={(event) => event.preventDefault()} className='carte mt-6'>
         {question && (
           <QuestionBlock
             key={question.id}

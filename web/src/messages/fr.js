@@ -21,7 +21,6 @@ const french = {
   },
   home: {
     specimenTag: 'Exemple, valeurs fictives',
-    chip: 'Questionnaire de personnalité, cinq grands facteurs',
     title: 'Décider sur des repères, pas sur des impressions.',
     lead: 'Un questionnaire de 120 affirmations, sans limite de temps. Nous vous disons d’où il vient, ce qu’il mesure et ce qu’il ne mesure pas.',
     stake: {
@@ -110,6 +109,10 @@ const french = {
     faq: {
       title: 'Vos questions, nos réponses',
       all: 'Toutes les questions fréquentes'
+    },
+    trust: {
+      title: 'Un tiers de confiance',
+      text: 'Tenga Conseil est le tiers entre votre direction et vos équipes. Le consultant restitue, explique et recadre. Il ne transmet rien d’individuel à l’organisation.'
     },
     closing: {
       text: 'Répondez au questionnaire pour vous-même, ou demandez une présentation pour votre organisation. Tenga Conseil vous répond pour convenir d’un échange.'
@@ -935,11 +938,6 @@ const french = {
       hidden: {
         title: 'Ce que votre organisation ne voit pas',
         text: 'Aucun résultat individuel. Les synthèses de groupe ne sont produites qu’à partir d’un nombre minimal de participants. Ce principe protège la sincérité des réponses, donc la qualité de la lecture.'
-      },
-      // Lot 1.
-      trust: {
-        title: 'Un tiers de confiance',
-        text: 'Tenga Conseil est le tiers entre votre direction et vos équipes. Le consultant restitue, explique et recadre. Il ne transmet rien d’individuel à l’organisation.'
       },
       // Étape 2 et reprise de l'étape 3 : lot 2. Étape 4 : lot 4 (synthèse de
       // groupe) et lot 6 (PDF).

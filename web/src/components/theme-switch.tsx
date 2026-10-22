@@ -15,7 +15,7 @@ interface ThemeSwitchProps {
   labels: ThemeSwitchLabels;
 }
 
-// Bouton carré de la direction B2. Le pictogramme montre le thème courant
+// Bouton icône de 44 px (critère 2.5.8). Le pictogramme montre le thème courant
 // (soleil en clair, lune en sombre) par CSS, donc sans clignotement au
 // chargement ; le nom accessible dit l'action.
 export const ThemeSwitch = ({ labels }: ThemeSwitchProps): ReactElement => {
@@ -28,7 +28,7 @@ export const ThemeSwitch = ({ labels }: ThemeSwitchProps): ReactElement => {
     <button
       type='button'
       aria-label={isDark ? labels.toLight : labels.toDark}
-      className='grid size-12 flex-none cursor-pointer place-items-center rounded-[14px] border border-trait bg-surface text-encre transition duration-normale ease-tenga hover:bg-creux active:scale-95'
+      className='appui grid size-11 flex-none cursor-pointer place-items-center rounded-controle border border-trait bg-surface text-encre hover:bg-creux'
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
     >
       <SunIcon className='dark:hidden' />

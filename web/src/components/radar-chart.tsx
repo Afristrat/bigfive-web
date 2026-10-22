@@ -20,7 +20,8 @@
 // libellé complet et sa valeur : la lecture ne dépend ni de la couleur ni de la
 // grille. Deux variantes sont rendues, une large et une resserrée (libellés plus
 // grands) sous 640 px ; les classes Tailwind n'en montrent qu'une.
-// Mouvement : contour, remplissage puis marqueurs se tracent à l'apparition ;
+// Mouvement : la grille apparaît en fondu, la forme s'ouvre depuis le centre,
+// puis les marqueurs ; opacité et transformation seulement, 400 ms au plus.
 // prefers-reduced-motion les affiche sans animation (voir globals.css).
 import { ReactElement, useId } from 'react';
 import clsx from 'clsx';

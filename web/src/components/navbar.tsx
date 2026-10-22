@@ -26,11 +26,11 @@ interface NavbarProps {
   labels: NavbarLabels;
 }
 
-// Page courante : fond teinté, couleur d'accent et trait souligné, pour que la
-// couleur ne soit jamais le seul signal.
+// Page courante : texte en encre et filet d'accent de 2 px sous le libellé, pour
+// que la couleur ne soit jamais le seul signal (direction § 8.1).
 const lienActif =
-  'bg-accent-doux text-accent after:absolute after:inset-x-3.5 after:bottom-1.5 after:h-0.5 after:rounded-full after:bg-accent';
-const lienInactif = 'text-texte-2 hover:bg-creux hover:text-encre';
+  'text-encre after:absolute after:inset-x-3 after:bottom-2 after:h-0.5 after:bg-accent';
+const lienInactif = 'text-texte-2 hover:text-encre';
 
 export const Navbar = ({
   navItems,
@@ -62,8 +62,8 @@ export const Navbar = ({
   };
 
   return (
-    <header className='sticky top-0 z-entete border-b border-trait bg-fond/85 backdrop-blur-md backdrop-saturate-150 print:hidden'>
-      <div className='conteneur flex min-h-16 items-center gap-2.5 max-[440px]:px-3.5'>
+    <header className='sticky top-0 z-entete border-b border-trait bg-fond/[0.92] backdrop-blur-sm print:hidden'>
+      <div className='conteneur flex min-h-16 items-center gap-2 max-[440px]:px-3.5'>
         <NextLink
           className='flex items-center rounded-petit'
           href='/'
@@ -84,7 +84,7 @@ export const Navbar = ({
                     href={item.href}
                     aria-current={isActive ? 'page' : undefined}
                     className={clsx(
-                      'relative inline-flex min-h-11 items-center whitespace-nowrap rounded-[12px] px-3.5 text-petit font-semibold transition-colors duration-normale',
+                      'relative inline-flex min-h-11 items-center whitespace-nowrap rounded-petit px-3 text-[0.9375rem] font-medium transition-colors duration-courte ease-tenga',
                       isActive ? lienActif : lienInactif
                     )}
                   >
@@ -107,13 +107,13 @@ export const Navbar = ({
         >
           <summary
             aria-label={isMenuOpen ? labels.closeMenu : labels.openMenu}
-            className='grid size-12 cursor-pointer list-none place-items-center rounded-[14px] border border-trait bg-surface text-encre transition hover:bg-creux [&::-webkit-details-marker]:hidden'
+            className='grid size-11 cursor-pointer list-none place-items-center rounded-controle border border-trait bg-surface text-encre transition-colors duration-courte ease-tenga hover:bg-creux [&::-webkit-details-marker]:hidden'
           >
             <MenuIcon />
           </summary>
           <nav
             aria-label={labels.mainNav}
-            className='absolute end-0 top-14 z-menu grid w-[min(300px,calc(100vw-32px))] gap-0.5 rounded-[20px] border border-trait bg-surface p-2.5 shadow-carte'
+            className='absolute end-0 top-14 z-menu grid w-[min(300px,calc(100vw-32px))] origin-top-right gap-0.5 rounded-panneau border border-trait bg-surface p-2 shadow-flottant motion-safe:animate-apparaitre rtl:origin-top-left dark:shadow-flottant-sombre'
           >
             {navMenuItems.map((item) => {
               const isActive = isCurrentPath(item.href);
@@ -124,9 +124,9 @@ export const Navbar = ({
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => setIsMenuOpen(false)}
                   className={clsx(
-                    'relative flex min-h-12 items-center rounded-[12px] px-3.5 font-semibold',
+                    'relative flex min-h-12 items-center rounded-controle px-3.5 text-titre-3 font-medium',
                     isActive
-                      ? 'bg-accent-doux text-accent after:absolute after:inset-y-3 after:start-0 after:w-0.5 after:rounded-full after:bg-accent'
+                      ? 'bg-accent-doux text-encre after:absolute after:inset-y-3 after:start-0 after:w-0.5 after:bg-accent'
                       : 'text-encre hover:bg-creux'
                   )}
                 >

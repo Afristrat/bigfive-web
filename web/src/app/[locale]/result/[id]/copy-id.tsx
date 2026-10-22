@@ -32,10 +32,7 @@ export function CopyId({
   };
 
   return (
-    <section
-      aria-labelledby='identifiant'
-      className='mt-4 rounded-panneau border border-trait bg-surface p-[clamp(1.375rem,3vw,2.25rem)] shadow-carte'
-    >
+    <section aria-labelledby='identifiant' className='carte mt-4'>
       <h2 id='identifiant' className='text-titre-3 text-encre'>
         {title}
       </h2>
@@ -50,7 +47,7 @@ export function CopyId({
         <button
           type='button'
           onClick={copy}
-          className='inline-flex min-h-11 items-center justify-center rounded-controle border-[1.5px] border-trait-fort bg-surface px-5 font-bold text-encre transition-colors duration-normale hover:bg-creux print:hidden'
+          className='appui inline-flex min-h-11 items-center justify-center rounded-controle border border-trait-fort bg-transparent px-5 font-medium text-encre hover:bg-creux print:hidden'
         >
           {copied ? copiedLabel : copyLabel}
         </button>
