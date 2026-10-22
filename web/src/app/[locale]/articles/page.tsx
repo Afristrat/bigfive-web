@@ -2,6 +2,7 @@ import { compareDesc } from 'date-fns';
 import { allPosts } from 'contentlayer/generated';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { subtitle, title } from '@/components/primitives';
+import { MotsCinetiques } from '@/components/home-sections';
 import { PostListItem } from '@/components/post-list-item';
 import { Link } from '@/navigation';
 import { getTranslationLocale } from '@/lib/helpers';
@@ -30,22 +31,40 @@ export default async function ArticlesPage({ params }: ArticlesProps) {
     .filter((post) => post.locale === translationLocale)
     .sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)));
 
+  // Le plus récent ouvre la liste en grand ; les suivants montent au défilement,
+  // décalés par groupes de trois pour que ceux qui entrent ensemble se suivent.
   return (
     <div>
-      <h1 className={title()}>{toolbar('articles')}</h1>
-      <p className={subtitle()}>{frontpage('posts.subtitle')}</p>
+      <h1 className={title({ size: 'display' })}>
+        <MotsCinetiques texte={toolbar('articles')} />
+      </h1>
+      <p
+        style={{ ['--i' as string]: 1 }}
+        className={subtitle({ class: 'apparait-tard' })}
+      >
+        {frontpage('posts.subtitle')}
+      </p>
       {posts.length > 0 ? (
-        <ul className='mt-8 divide-y divide-trait'>
-          {posts.map((post) => (
-            <PostListItem key={post._id} post={post} locale={locale} />
+        <ul className='mt-10 divide-y divide-trait border-t-2 border-encre'>
+          {posts.map((post, index) => (
+            <PostListItem
+              key={post._id}
+              post={post}
+              locale={locale}
+              vedette={index === 0}
+              rang={index % 3}
+            />
           ))}
         </ul>
       ) : (
-        <div className='mt-8 colonne-lecture'>
+        <div
+          style={{ ['--i' as string]: 2 }}
+          className='apparait-tard mt-8 colonne-lecture'
+        >
           <p className='text-texte-2'>{articles('empty')}</p>
           <Link
             href='/'
-            className='mt-4 inline-flex text-petit font-medium text-accent hover:text-accent-survol hover:underline'
+            className='mt-4 inline-flex min-h-11 items-center text-petit font-medium text-accent hover:text-accent-survol hover:underline'
           >
             {notFound('home')}
           </Link>

@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { CodeForm } from '@/components/code-form';
 import { ConsumeLinkForm } from '@/components/consume-link-form';
+import { MotsCinetiques } from '@/components/home-sections';
 import { Notice } from '@/components/notice';
 import { title } from '@/components/primitives';
 import { isLoginToken } from '@/lib/login-format';
@@ -28,9 +29,13 @@ export default async function ConnectPage({ params }: Props) {
   const t = await getTranslations('login');
   const usable = isLoginToken(token);
 
+  // Le titre monte mot à mot ; le bouton, seul geste attendu, est là d'emblée.
+  // Le formulaire de code, simple recours, se pose ensuite.
   return (
     <div className='min-h-[50vh]'>
-      <h1 className={title()}>{t('connect.title')}</h1>
+      <h1 className={title()}>
+        <MotsCinetiques texte={t('connect.title')} />
+      </h1>
       {usable ? (
         <>
           <p className='mt-4 colonne-lecture text-chapo text-texte-2'>
@@ -57,19 +62,21 @@ export default async function ConnectPage({ params }: Props) {
           </Notice>
         </div>
       )}
-      <CodeForm
-        locale={locale}
-        labels={{
-          title: t('codeTitle'),
-          intro: t('codeIntro'),
-          emailLabel: t('emailLabel'),
-          codeLabel: t('codeLabel'),
-          submit: t('codeSubmit'),
-          checking: t('codeChecking'),
-          error: t('codeError'),
-          invalid: t('invalid')
-        }}
-      />
+      <div style={{ ['--i' as string]: 1 }} className='apparait-tard'>
+        <CodeForm
+          locale={locale}
+          labels={{
+            title: t('codeTitle'),
+            intro: t('codeIntro'),
+            emailLabel: t('emailLabel'),
+            codeLabel: t('codeLabel'),
+            submit: t('codeSubmit'),
+            checking: t('codeChecking'),
+            error: t('codeError'),
+            invalid: t('invalid')
+          }}
+        />
+      </div>
     </div>
   );
 }

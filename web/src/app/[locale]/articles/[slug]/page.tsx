@@ -7,6 +7,8 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ChevronRightLinearIcon } from '@/components/icons';
 import { title } from '@/components/primitives';
+import { MotsCinetiques } from '@/components/home-sections';
+import styles from '@/components/editorial.module.css';
 import { PostListItem } from '@/components/post-list-item';
 import { ShareArticle } from '@/components/share-article';
 import { Link } from '@/navigation';
@@ -99,8 +101,13 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
         <ChevronRightLinearIcon className='rotate-180' size={16} />
         {t('back')}
       </Link>
-      <h1 className={title({ class: 'mt-6' })}>{currentPost.title}</h1>
-      <p className='mt-4 flex flex-wrap gap-x-4 text-petit text-texte-3'>
+      <h1 className={title({ class: 'mt-6' })}>
+        <MotsCinetiques texte={currentPost.title} />
+      </h1>
+      <p
+        style={{ ['--i' as string]: 0 }}
+        className='apparait-tard mt-4 flex flex-wrap gap-x-4 text-petit text-texte-3'
+      >
         <time dateTime={currentPost.date}>
           {formatDate(currentPost.date, locale)}
         </time>
@@ -120,11 +127,14 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
           height={600}
           width={1200}
           removeWrapper
-          className='mt-8 aspect-video w-full rounded-panneau object-cover'
+          className={`${styles.image} mt-8 aspect-video w-full rounded-panneau object-cover`}
         />
       )}
       <Divider className='mt-8 bg-trait' />
-      <div className='mt-4 flex w-full items-center justify-between gap-4'>
+      <div
+        style={{ ['--i' as string]: 1 }}
+        className='apparait-tard mt-4 flex w-full items-center justify-between gap-4'
+      >
         <User
           name={currentPost.author.name}
           avatarProps={{ src: currentPost.author.avatar }}
@@ -134,10 +144,10 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
       </div>
       <Divider className='mt-4 bg-trait' />
       <div
-        className='texte-riche mt-10'
+        className={`${styles.corps} texte-riche mt-10`}
         dangerouslySetInnerHTML={{ __html: currentPost.body.html }}
       />
-      <div className='mt-8 flex flex-wrap gap-2'>
+      <div data-reveal='monte' className='mt-8 flex flex-wrap gap-2'>
         {currentPost.tags.split(', ').map((tag) => (
           <Chip key={tag} variant='flat' radius='sm'>
             {tag}
@@ -145,8 +155,13 @@ const PostLayout = async ({ params }: PostLayoutProps) => {
         ))}
       </div>
       <ul className='mt-16 divide-y divide-trait border-t border-trait'>
-        {relevantPosts.map((post) => (
-          <PostListItem key={post._id} post={post} locale={locale} />
+        {relevantPosts.map((post, index) => (
+          <PostListItem
+            key={post._id}
+            post={post}
+            locale={locale}
+            rang={index}
+          />
         ))}
       </ul>
     </article>
