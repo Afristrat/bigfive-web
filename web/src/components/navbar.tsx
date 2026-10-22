@@ -62,13 +62,38 @@ export const Navbar = ({
   };
 
   return (
-    <header className='sticky top-0 z-entete border-b border-trait bg-fond/[0.92] backdrop-blur-sm print:hidden'>
+    <header className='sticky top-0 z-entete border-b border-trait bg-fond/[0.86] backdrop-blur-md backdrop-saturate-150 print:hidden'>
       <div className='conteneur flex min-h-16 items-center gap-2 max-[440px]:px-3.5'>
         <NextLink
-          className='flex items-center rounded-petit'
+          className='flex items-center gap-2.5 rounded-petit'
           href='/'
           aria-label={labels.home}
         >
+          {/* Marque pentagonale : son contour safran se referme au fil du
+              défilement de la page, fil conducteur du site. */}
+          <svg
+            aria-hidden='true'
+            viewBox='0 0 24 24'
+            className='size-6 flex-none overflow-visible'
+          >
+            <polygon
+              points='12,2 21.5,8.9 17.9,20 6.1,20 2.5,8.9'
+              className='fill-none stroke-trait'
+              strokeWidth='2'
+              strokeLinejoin='round'
+            />
+            <polygon
+              points='12,2 21.5,8.9 17.9,20 6.1,20 2.5,8.9'
+              pathLength={1}
+              className='marque-trace fill-none stroke-safran'
+              strokeWidth='2.25'
+              strokeLinejoin='round'
+            />
+            <polygon
+              points='12,8.2 16,10.6 14.4,15.6 9.4,15.2 8.3,11'
+              className='fill-encre'
+            />
+          </svg>
           <Wordmark />
         </NextLink>
         <nav
@@ -137,6 +162,10 @@ export const Navbar = ({
           </nav>
         </details>
       </div>
+      <span
+        aria-hidden='true'
+        className='rail absolute inset-x-0 -bottom-px h-0.5 bg-safran'
+      />
     </header>
   );
 };
