@@ -1,5 +1,8 @@
+import type { CSSProperties } from 'react';
 import { notFound, redirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import styles from '@/components/formulaires.module.css';
+import { MotsCinetiques } from '@/components/home-sections';
 import { LoginForm } from '@/components/login-form';
 import { Notice } from '@/components/notice';
 import { PasswordLoginForm } from '@/components/password-login-form';
@@ -42,10 +45,18 @@ export default async function LoginPage({ params, searchParams }: Props) {
   }
 
   const t = await getTranslations('login');
+  // Le titre monte mot à mot, puis le chapeau et les deux voies de connexion
+  // entrent en cascade (rang --i).
+  const rang = (i: number): CSSProperties => ({ ['--i' as string]: i });
   return (
     <div className='min-h-[50vh]'>
-      <h1 className={title()}>{t('title')}</h1>
-      <p className='mt-4 colonne-lecture text-chapo text-texte-2'>
+      <h1 className={title()}>
+        <MotsCinetiques texte={t('title')} />
+      </h1>
+      <p
+        style={rang(1)}
+        className={`mt-4 colonne-lecture text-chapo text-texte-2 ${styles.entree}`}
+      >
         {t('intro')}
       </p>
       {erreur && (
@@ -55,48 +66,52 @@ export default async function LoginPage({ params, searchParams }: Props) {
           </Notice>
         </div>
       )}
-      <LoginForm
-        locale={locale}
-        next={target || undefined}
-        labels={{
-          emailLabel: t('emailLabel'),
-          submit: t('submit'),
-          sending: t('sending'),
-          invalid: t('invalid'),
-          sent: t('sent'),
-          sentHelp: t('sentHelp'),
-          code: {
-            title: t('codeTitle'),
-            intro: t('codeIntro'),
+      <div style={rang(2)} className={styles.entree}>
+        <LoginForm
+          locale={locale}
+          next={target || undefined}
+          labels={{
             emailLabel: t('emailLabel'),
-            codeLabel: t('codeLabel'),
-            submit: t('codeSubmit'),
-            checking: t('codeChecking'),
-            error: t('codeError'),
-            invalid: t('invalid')
-          }
-        }}
-      />
+            submit: t('submit'),
+            sending: t('sending'),
+            invalid: t('invalid'),
+            sent: t('sent'),
+            sentHelp: t('sentHelp'),
+            code: {
+              title: t('codeTitle'),
+              intro: t('codeIntro'),
+              emailLabel: t('emailLabel'),
+              codeLabel: t('codeLabel'),
+              submit: t('codeSubmit'),
+              checking: t('codeChecking'),
+              error: t('codeError'),
+              invalid: t('invalid')
+            }
+          }}
+        />
+      </div>
       {/* Voie des administrateurs Tenga (mot de passe puis code TOTP), repliée :
           le lien reste la voie ordinaire et le secours. */}
-      <PasswordLoginForm
-        locale={locale}
-        next={target || undefined}
-        labels={{
-          summary: t('password.summary'),
-          emailLabel: t('password.emailLabel'),
-          passwordLabel: t('password.passwordLabel'),
-          submit: t('password.submit'),
-          checking: t('password.checking'),
-          failed: t('password.failed'),
-          invalid: t('password.invalid'),
-          totpTitle: t('password.totpTitle'),
-          totpIntro: t('password.totpIntro'),
-          totpLabel: t('password.totpLabel'),
-          totpSubmit: t('password.totpSubmit'),
-          totpFailed: t('password.totpFailed')
-        }}
-      />
+      <div style={rang(3)} className={styles.entree}>
+        <PasswordLoginForm
+          locale={locale}
+          next={target || undefined}
+          labels={{
+            summary: t('password.summary'),
+            emailLabel: t('password.emailLabel'),
+            passwordLabel: t('password.passwordLabel'),
+            submit: t('password.submit'),
+            checking: t('password.checking'),
+            failed: t('password.failed'),
+            invalid: t('password.invalid'),
+            totpTitle: t('password.totpTitle'),
+            totpIntro: t('password.totpIntro'),
+            totpLabel: t('password.totpLabel'),
+            totpSubmit: t('password.totpSubmit'),
+            totpFailed: t('password.totpFailed')
+          }}
+        />
+      </div>
     </div>
   );
 }

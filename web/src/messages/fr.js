@@ -290,7 +290,7 @@ const french = {
   login: {
     title: 'Connexion',
     intro:
-      'Saisissez votre adresse e-mail. Nous vous enverrons un lien de connexion et un code, valables 15 minutes et utilisables une seule fois. Aucun mot de passe à retenir.',
+      'Saisissez votre adresse e-mail. Nous vous enverrons un lien de connexion et un code, valables 15 minutes et utilisables une seule fois. Aucun mot de passe à retenir ; seuls les administrateurs Tenga peuvent aussi se connecter par mot de passe.',
     emailLabel: 'Adresse e-mail',
     submit: 'Recevoir mon lien de connexion',
     sending: 'Envoi en cours…',

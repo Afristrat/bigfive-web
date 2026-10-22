@@ -289,7 +289,7 @@ const english = {
   login: {
     title: 'Sign in',
     intro:
-      'Enter your e-mail address. We will send you a sign-in link and a code, valid for 15 minutes and usable once. There is no password to remember.',
+      'Enter your e-mail address. We will send you a sign-in link and a code, valid for 15 minutes and usable once. There is no password to remember; only Tenga administrators can also sign in with a password.',
     emailLabel: 'E-mail address',
     submit: 'Send me a sign-in link',
     sending: 'Sending…',
