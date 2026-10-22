@@ -44,10 +44,7 @@ export function ResultBody({
       : []
   );
   return (
-    <section
-      aria-labelledby='detail'
-      className='mt-4 rounded-panneau border border-trait bg-surface p-[clamp(1.375rem,3vw,2.25rem)] shadow-carte'
-    >
+    <section aria-labelledby='detail' className='carte mt-4'>
       <h2 id='detail' className={title({ size: 'section' })}>
         {labels.detailTitle}
       </h2>

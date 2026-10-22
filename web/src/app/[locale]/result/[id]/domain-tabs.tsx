@@ -41,7 +41,7 @@ export function DomainTabs({ label, rtl, panels }: DomainTabsProps) {
       <div
         role='tablist'
         aria-label={label}
-        className='my-6 flex flex-wrap gap-2.5 print:hidden'
+        className='my-6 flex flex-wrap gap-2 print:hidden'
       >
         {panels.map((panel, index) => {
           const active = index === selected;
@@ -60,7 +60,7 @@ export function DomainTabs({ label, rtl, panels }: DomainTabsProps) {
               onClick={() => setSelected(index)}
               onKeyDown={(event) => onKeyDown(event, index)}
               className={clsx(
-                'inline-flex min-h-12 items-center gap-2.5 rounded-full border-[1.5px] px-[18px] text-[15.5px] font-bold transition-colors duration-normale',
+                'appui inline-flex min-h-11 items-center gap-2 rounded-controle border px-4 text-[0.9375rem] font-medium',
                 active
                   ? 'border-accent bg-accent text-sur-accent'
                   : 'border-trait-fort bg-surface text-encre hover:bg-creux'
@@ -73,7 +73,7 @@ export function DomainTabs({ label, rtl, panels }: DomainTabsProps) {
                   height='16'
                   fill='none'
                   stroke='currentColor'
-                  strokeWidth='2.4'
+                  strokeWidth='2'
                   strokeLinecap='round'
                   strokeLinejoin='round'
                   aria-hidden='true'

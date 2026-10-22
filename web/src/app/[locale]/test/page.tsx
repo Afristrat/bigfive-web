@@ -16,7 +16,7 @@ export default async function TestPage({ params }: Props) {
   return (
     <>
       <h1 className='sr-only'>{t('heading')}</h1>
-      <div className='mx-auto max-w-[56.25rem]'>
+      <div className='mx-auto max-w-[48rem]'>
         <Survey
           questions={questions}
           labels={{

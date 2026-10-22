@@ -3,8 +3,8 @@ import { Report, getTestResult } from '@/actions';
 import { B5Error } from '@/types';
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
-import { boutonPrincipal, title } from '@/components/primitives';
-import { DomainShape } from '@/components/domain-shape';
+import { title } from '@/components/primitives';
+import { secondaryButtonClass } from '@/components/form-styles';
 import { RadarChart } from '@/components/radar-chart';
 import { ScoreBar } from '@/components/score-bar';
 import { basePath } from '@/config/site';
@@ -69,8 +69,8 @@ interface ResultsProps {
   showExpanded: boolean;
 }
 
-const carte =
-  'rounded-panneau border border-trait bg-surface p-[clamp(1.375rem,3vw,2.25rem)] shadow-carte';
+// Panneau (direction § 8.5) : surface, filet, rayon 10 px, sans ombre.
+const carte = 'carte';
 
 const Results = ({ report, locale, showExpanded }: ResultsProps) => {
   const t = useTranslations('results');
@@ -89,13 +89,11 @@ const Results = ({ report, locale, showExpanded }: ResultsProps) => {
   return (
     <>
       <header>
-        <p className='inline-flex rounded-full bg-creux px-3.5 py-1.5 text-legende font-medium text-encre'>
+        <h1 className={title()}>{t('title')}</h1>
+        <p className='mt-2 text-petit text-texte-3'>
           {formatDate(report.timestamp, locale)}
         </p>
-        <h1 className={title({ size: 'display', className: 'mt-4' })}>
-          {t('title')}
-        </h1>
-        <p className='mt-4 colonne-lecture text-chapo text-texte-2'>
+        <p className='mt-6 colonne-lecture text-chapo text-texte-2'>
           {t('intro')}
         </p>
       </header>
@@ -127,7 +125,7 @@ const Results = ({ report, locale, showExpanded }: ResultsProps) => {
               }}
             />
           )}
-          <p className='mt-4 text-center text-petit text-texte-2'>
+          <p className='mt-4 text-center text-legende text-texte-3'>
             {t('scales', {
               domainMin: formatNombre(24, locale),
               domainMax: formatNombre(120, locale),
@@ -138,22 +136,21 @@ const Results = ({ report, locale, showExpanded }: ResultsProps) => {
         </section>
 
         <section aria-label={t('factorsTitle')} className={carte}>
-          <ul className='flex flex-col gap-7'>
+          <ul className='flex flex-col divide-y divide-trait'>
             {domains.map(({ code, domain }, index) => (
-              <li key={code} className='break-inside-avoid'>
-                <div className='flex items-center gap-3'>
-                  <span className='grid h-10 w-10 flex-none place-items-center rounded-petit bg-accent-doux text-accent'>
-                    <DomainShape domain={code} size={18} />
-                  </span>
-                  <span className='text-corps font-bold text-encre'>
+              <li
+                key={code}
+                className='break-inside-avoid py-5 first:pt-0 last:pb-0'
+              >
+                <div className='flex items-baseline gap-3'>
+                  <span className='text-corps font-semibold text-encre'>
                     {domainLabel(code, locale, 'short')}
-                    {level[domain.scoreText] && (
-                      <span className='sr-only'>
-                        {' '}
-                        ({level[domain.scoreText]})
-                      </span>
-                    )}
                   </span>
+                  {level[domain.scoreText] && (
+                    <span className='text-petit font-medium text-texte-2'>
+                      {level[domain.scoreText]}
+                    </span>
+                  )}
                   <span className='ms-auto'>
                     <ScoreValue
                       valeur={formatNombre(domain.score, locale)}
@@ -162,7 +159,7 @@ const Results = ({ report, locale, showExpanded }: ResultsProps) => {
                     />
                   </span>
                 </div>
-                <div className='mt-2.5'>
+                <div className='mt-2'>
                   <ScoreBar
                     score={domain.score}
                     min={24}
@@ -171,7 +168,7 @@ const Results = ({ report, locale, showExpanded }: ResultsProps) => {
                     rang={index}
                   />
                 </div>
-                <p className='mt-2.5 text-petit text-texte-2'>
+                <p className='mt-2 text-petit text-texte-2'>
                   {domain.shortDescription}
                 </p>
               </li>
@@ -207,13 +204,7 @@ const Results = ({ report, locale, showExpanded }: ResultsProps) => {
 
       <div className='mt-6 flex flex-wrap gap-3 print:hidden'>
         <PrintButton label={t('print')} />
-        <Link
-          href='/'
-          className={boutonPrincipal({
-            className:
-              'border-trait-fort bg-surface text-encre shadow-none hover:bg-creux'
-          })}
-        >
+        <Link href='/' className={secondaryButtonClass}>
           {t('backHome')}
         </Link>
       </div>

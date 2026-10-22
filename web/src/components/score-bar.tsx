@@ -24,13 +24,13 @@ export function ScoreBar({
     <span
       aria-hidden='true'
       className={clsx(
-        'regle-piste relative block overflow-hidden rounded-full bg-piste',
-        taille === 'domaine' ? 'h-2.5' : 'h-2'
+        'regle-piste relative block overflow-hidden rounded-petit bg-piste',
+        taille === 'domaine' ? 'h-2' : 'h-1.5'
       )}
     >
       <span
         className={clsx(
-          'regle-trait absolute inset-y-0 start-0 origin-left rounded-full bg-accent rtl:origin-right',
+          'regle-trait absolute inset-y-0 start-0 origin-left rounded-petit bg-accent rtl:origin-right',
           anime && 'animate-tracer'
         )}
         style={{
