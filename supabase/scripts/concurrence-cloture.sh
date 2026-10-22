@@ -64,10 +64,24 @@ pid_a=$!
 
 sleep 1.5
 
-# Session B : soumission d'un résultat par le participant.
+# Session B : soumission d'un résultat par le participant. La charge est VALIDE au sens de
+# la migration 0015 (forme « tenga-scores-1 » : 120 réponses entières de 1 à 5 ; cinq domaines
+# de score 72 et de count 24, six facettes numérotées de 1 à 6 de score 12 et de count 4) :
+# une charge minimale serait refusée (22023) avant d'atteindre le contrôle de la campagne
+# ouverte, et la course ne prouverait plus rien. Même charge que le test SQL 39.
 {
   printf "BEGIN;\nSELECT set_config('request.jwt.claims', '{\"sub\": \"%s\", \"role\": \"authenticated\"}', true);\nSET LOCAL ROLE authenticated;\n" "$pa"
-  printf "SELECT app.soumettre_resultat('%s', '{\"1\": 3}'::jsonb, '{\"O\": 50}'::jsonb, 'v1', 'c1');\nCOMMIT;\n" "$part"
+  cat <<SQL
+SELECT app.soumettre_resultat('$part',
+  (SELECT jsonb_object_agg(i::text, 3) FROM generate_series(1, 120) i),
+  jsonb_build_object('format', 'tenga-scores-1')
+    || (SELECT jsonb_object_agg(d, jsonb_build_object('score', 72, 'count', 24,
+          'facettes', (SELECT jsonb_object_agg(f::text, jsonb_build_object('score', 12, 'count', 4))
+                         FROM generate_series(1, 6) f)))
+          FROM unnest(ARRAY['N', 'E', 'O', 'A', 'C']) d),
+  'v1', 'c1');
+COMMIT;
+SQL
 } | psql_run > "$tmp/b.out" 2> "$tmp/b.err" || true
 
 wait "$pid_a" || { echo "concurrence-cloture: ÉCHEC : la clôture a échoué" >&2; cat "$tmp/a.err" >&2; exit 1; }

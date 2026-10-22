@@ -28,6 +28,7 @@ export default async function AccountPage({ params }: Props) {
   ]);
   const t = await getTranslations('account');
   const roles = await getTranslations('roles');
+  const results = await getTranslations('mesResultats');
 
   return (
     <div className='grid gap-10 lg:grid-cols-12'>
@@ -43,6 +44,9 @@ export default async function AccountPage({ params }: Props) {
           </dd>
         </dl>
         <div className='mt-8 flex flex-wrap gap-3'>
+          <Link href='/mes-resultats' className={secondaryButtonClass}>
+            {results('title')}
+          </Link>
           {admin && (
             <Link href='/admin' className={secondaryButtonClass}>
               {t('adminLink')}

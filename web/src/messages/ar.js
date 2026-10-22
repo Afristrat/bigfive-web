@@ -1,4 +1,11 @@
 // Boutons et intitulés au nom verbal (مصدر), jamais à l'impératif genré.
+import niveauxAr from './espace/niveaux.ar.js';
+import passationAr from './espace/passation.ar.js';
+import mesResultatsAr from './espace/mesResultats.ar.js';
+import rapportAr from './espace/rapport.ar.js';
+import binomeAr from './espace/binome.ar.js';
+import syntheseAr from './espace/synthese.ar.js';
+
 const arabic = {
   language: {
     label: 'اللغة'
@@ -666,32 +673,14 @@ const arabic = {
   },
   results: {
     title: 'ملفك وفق العوامل الخمسة الكبرى',
-    factorsTitle: 'العوامل الخمسة الكبرى',
-    radar: {
-      title: 'مخطط راداري للعوامل الخمسة الكبرى',
-      summary: 'مخطط راداري بخمسة محاور، من {min} إلى {max}.',
-      domain: 'البعد',
-      score: 'الدرجة'
-    },
-    scales:
-      'سلّم الأبعاد: من {domainMin} إلى {domainMax}. سلّم السمات الفرعية: من {facetMin} إلى {facetMax}.',
-    detailTitle: 'التفصيل حسب البعد',
-    detailHint: 'اختر بعدًا لعرض سماته الفرعية الست.',
     idLabel: 'رمز هذه النتيجة',
     idHint: 'احتفظ به للعودة إلى هذه النتيجة لاحقًا.',
     copied: 'تم نسخ الرمز',
     backHome: 'العودة إلى الصفحة الرئيسية',
     intro:
       'هذا ملفك. القراءة الأولى له لك أنت، بفضول: فهو يصف ميولًا، لا مزايا ولا عيوبًا. لا شيء هنا يصنّفك، ولا شيء يختبر كفاءاتك، ولا شيء تشخيص.',
-    outOf: 'من {max}',
-    level: {
-      low: 'منخفض',
-      neutral: 'في المنتصف',
-      high: 'مرتفع'
-    },
-    facets: 'السمات الفرعية',
-    learnMore: 'مزيد من المعلومات عن هذا البعد',
-    neuroticismGloss: 'الحساسية تجاه المشاعر السلبية والضغط، وليست تشخيصًا.',
+    interpretationNote:
+      'نصوص تفسير كل سمة فرعية قيد المراجعة: ما دام النص لم يُراجَع، يُعرض مستوى السمة فقط.',
     print: 'طباعة أو حفظ بصيغة PDF',
     copyId: 'نسخ الرمز',
     loading: 'جارٍ التحميل',
@@ -979,7 +968,13 @@ const arabic = {
     urlOrId: 'رابط أو رمز النتيجة',
     getResult: 'احصل على النتيجة',
     viewPrevious: 'عرض النتيجة السابقة'
-  }
+  },
+  niveaux: niveauxAr,
+  passation: passationAr,
+  mesResultats: mesResultatsAr,
+  rapport: rapportAr,
+  binome: binomeAr,
+  synthese: syntheseAr
 };
 
 export default arabic;

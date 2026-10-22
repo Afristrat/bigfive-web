@@ -1,4 +1,11 @@
 // Espaces insécables (U+00A0) avant les signes doubles et dans les guillemets.
+import niveauxFr from './espace/niveaux.fr.js';
+import passationFr from './espace/passation.fr.js';
+import mesResultatsFr from './espace/mesResultats.fr.js';
+import rapportFr from './espace/rapport.fr.js';
+import binomeFr from './espace/binome.fr.js';
+import syntheseFr from './espace/synthese.fr.js';
+
 const french = {
   language: {
     label: 'Langue'
@@ -688,33 +695,14 @@ const french = {
   },
   results: {
     title: 'Votre profil selon les cinq grands facteurs',
-    factorsTitle: 'Les cinq grands facteurs',
-    radar: {
-      title: 'Radar des cinq grands facteurs',
-      summary: 'Graphique en radar à cinq axes, de {min} à {max}.',
-      domain: 'Domaine',
-      score: 'Score'
-    },
-    scales:
-      'Échelle des domaines : {domainMin} à {domainMax}. Échelle des facettes : {facetMin} à {facetMax}.',
-    detailTitle: 'Détail par domaine',
-    detailHint: 'Choisissez un domaine pour voir ses six facettes.',
     idLabel: 'Identifiant de ce résultat',
     idHint: 'Conservez-le pour retrouver ce résultat plus tard.',
     copied: 'Identifiant copié',
     backHome: 'Retour à l’accueil',
     intro:
       'Voici votre profil. Lisez-le d’abord pour vous, avec curiosité : il décrit des tendances, pas des qualités ni des défauts. Rien ici ne vous classe, rien ne constitue un test de compétences, rien n’est un diagnostic.',
-    outOf: 'sur {max}',
-    level: {
-      low: 'bas',
-      neutral: 'au milieu',
-      high: 'élevé'
-    },
-    facets: 'Facettes',
-    learnMore: 'En savoir plus sur cette dimension',
-    neuroticismGloss:
-      'Sensibilité aux émotions négatives et au stress ; ce n’est pas un diagnostic.',
+    interpretationNote:
+      'Les textes d’interprétation de chaque facette sont en cours de relecture : tant qu’un texte n’a pas été relu, seul le niveau de la facette est affiché.',
     print: 'Imprimer ou enregistrer en PDF',
     copyId: 'Copier l’identifiant',
     loading: 'Chargement',
@@ -1013,7 +1001,13 @@ const french = {
     urlOrId: 'URL ou ID de votre résultat',
     getResult: 'Obtenez le résultat',
     viewPrevious: 'Afficher le résultat précédent'
-  }
+  },
+  niveaux: niveauxFr,
+  passation: passationFr,
+  mesResultats: mesResultatsFr,
+  rapport: rapportFr,
+  binome: binomeFr,
+  synthese: syntheseFr
 };
 
 export default french;

@@ -1,11 +1,32 @@
 import { getLocalizedItems } from '@/lib/question-overrides';
 import { Survey } from './survey';
-import { saveTest } from '@/actions';
+import { savePublicTest } from '@/actions';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { formatNombre } from '@/lib/format';
+import { Notice } from '@/components/notice';
+import {
+  loadParticipationsAPasser,
+  type ParticipationPassation
+} from '@/lib/passation-data';
+import { currentViewer } from '@/lib/session';
+import { Link } from '@/navigation';
 
 interface Props {
   params: Promise<{ locale: string }>;
+}
+
+// Une personne connectée qui a un questionnaire de campagne à passer doit le
+// faire depuis sa passation : ce parcours public écrit ailleurs. Aucune panne de
+// lecture ne doit empêcher le parcours public.
+async function participationsAPasser(): Promise<ParticipationPassation[]> {
+  try {
+    const state = await currentViewer();
+    return state.status === 'ok'
+      ? await loadParticipationsAPasser(state.viewer)
+      : [];
+  } catch {
+    return [];
+  }
 }
 
 export default async function TestPage({ params }: Props) {
@@ -13,10 +34,30 @@ export default async function TestPage({ params }: Props) {
   setRequestLocale(locale);
   const questions = getLocalizedItems(locale);
   const t = await getTranslations('test');
+  const p = await getTranslations('passation');
+  const aPasser = await participationsAPasser();
   return (
     <>
       <h1 className='sr-only'>{t('heading')}</h1>
       <div className='mx-auto max-w-[56.25rem]'>
+        {aPasser.map((participation) => (
+          <Notice
+            key={participation.participationId}
+            ton='avis'
+            titre={p('encartTitle', {
+              organisation: participation.organisationNom
+            })}
+            className='mb-6'
+          >
+            <p>{p('encartText', { campagne: participation.campagneTitre })}</p>
+            <Link
+              href={`/mes-resultats/${participation.participationId}/questionnaire`}
+              className='font-semibold text-accent underline'
+            >
+              {p('encartCta')}
+            </Link>
+          </Notice>
+        ))}
         <Survey
           questions={questions}
           labels={{
@@ -41,7 +82,8 @@ export default async function TestPage({ params }: Props) {
             reload: t('reload'),
             nextHelp: t('nextHelp')
           }}
-          saveTest={saveTest}
+          onSubmit={savePublicTest}
+          storageKey='b5'
           locale={locale}
         />
       </div>

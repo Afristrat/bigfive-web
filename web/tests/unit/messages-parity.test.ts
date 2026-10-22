@@ -23,7 +23,13 @@ const namespaces = [
   'campaigns',
   'invitations',
   'invitation',
-  'members'
+  'members',
+  'niveaux',
+  'passation',
+  'mesResultats',
+  'rapport',
+  'binome',
+  'synthese'
 ] as const;
 
 describe('parité des messages fr / en / ar', () => {

@@ -3,20 +3,17 @@
 import { connectToDatabase } from '@/db';
 import { ObjectId } from 'mongodb';
 import { B5Error, DbResult } from '@/types';
-import calculateScore from '@bigfive-org/score';
-import generateResult, {
-  getInfo,
-  Language,
-  Domain
-} from '@bigfive-org/results';
 import { getItems } from '@bigfive-org/questions';
 import { testId, testSchema } from '@/schemas';
 import { isRateLimited, limits } from '@/lib/rate-limit';
 import { QUESTIONNAIRE_VERSION } from '@/lib/question-overrides';
+import {
+  profilDepuisScores,
+  scoresDepuisReponsesMongo,
+  type ProfilCalcule
+} from '@/lib/moteur';
 
 const collectionName = process.env.DB_COLLECTION || 'results';
-const resultLanguages = getInfo().languages;
-const resultLanguageIds = new Set(resultLanguages.map((l) => l.id));
 // Domaine et facette de chaque question font foi côté serveur, jamais ceux du client.
 const itemsById = new Map(getItems('en').map((item) => [item.id, item]));
 
@@ -28,16 +25,13 @@ const notFound = (id: string): B5Error =>
 
 export type Report = {
   id: string;
-  timestamp: number;
-  availableLanguages: Language[];
-  language: string;
-  results: Domain[];
+  timestamp: Date;
+  profil: ProfilCalcule;
 };
 
-export async function getTestResult(
-  id: string,
-  language?: string
-): Promise<Report | undefined> {
+// Résultat public : le profil vient du moteur unique (cinq niveaux), jamais des
+// textes du paquet de résultats d’origine.
+export async function getTestResult(id: string): Promise<Report> {
   const parsedId = testId.safeParse({ id });
   if (!parsedId.success) throw notFound(id);
   if (await isRateLimited('getResult', limits.getResult)) {
@@ -55,23 +49,10 @@ export async function getTestResult(
       console.error(`The test results with id ${id} are not found!`);
       throw notFound(id);
     }
-    // La langue sert de chemin de module dans @bigfive-org/results : seule une
-    // langue de la liste fermée est acceptée.
-    const selectedLanguage =
-      language && resultLanguageIds.has(language)
-        ? language
-        : resultLanguageIds.has(report.lang)
-          ? report.lang
-          : 'en';
-    const scores = calculateScore({ answers: report.answers });
-    const results = generateResult({ lang: selectedLanguage, scores });
-    return {
-      id: report._id.toString(),
-      timestamp: report.dateStamp,
-      availableLanguages: resultLanguages,
-      language: selectedLanguage,
-      results
-    };
+    const profil = profilDepuisScores(
+      scoresDepuisReponsesMongo(report.answers)
+    );
+    return { id: report._id.toString(), timestamp: report.dateStamp, profil };
   } catch (error) {
     if (error instanceof B5Error) {
       throw error;
@@ -111,4 +92,12 @@ export async function saveTest(testResult: DbResult) {
       message: 'Failed to save test result!'
     });
   }
+}
+
+/** Parcours public (défaut conservé) : enregistre dans MongoDB et renvoie l'adresse du résultat. */
+export async function savePublicTest(
+  testResult: DbResult
+): Promise<{ href: string }> {
+  const { id } = await saveTest(testResult);
+  return { href: `/result/${id}` };
 }

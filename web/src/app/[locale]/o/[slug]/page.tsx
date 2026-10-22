@@ -23,7 +23,9 @@ import {
   loadOrgPage,
   parseOrgSlug
 } from '@/lib/campaign-data';
+import { peutLireResultats } from '@/lib/consultant-data';
 import { formatNombre, isoler } from '@/lib/format';
+import { localizedPath } from '@/lib/safe-path';
 import { requireViewer } from '@/lib/session';
 
 interface Props {
@@ -71,6 +73,14 @@ export default async function OrganizationPage({ params }: Props) {
   const account = await getTranslations('account');
   const tm = await getTranslations('members');
   const tr = await getTranslations('roles');
+  const ts = await getTranslations('synthese');
+  const trp = await getTranslations('rapport');
+  // Résultats individuels : le consultant et l'administrateur Tenga seulement
+  // (le responsable n'y a pas accès).
+  const peutLireLesResultats = peutLireResultats({
+    isAdmin: page.isAdmin,
+    role: page.role
+  });
 
   const languages = {
     fr: account('languages.fr'),
@@ -266,6 +276,31 @@ export default async function OrganizationPage({ params }: Props) {
                               }
                             }}
                           />
+                          {campaign.statut === 'close' && (
+                            <a
+                              href={localizedPath(
+                                locale,
+                                `/o/${slug}/campagnes/${campaign.id}/synthese`
+                              )}
+                              aria-label={ts('lienAria', { titre })}
+                              className='mt-2 inline-block underline'
+                            >
+                              {ts('lien')}
+                            </a>
+                          )}
+                          {peutLireLesResultats &&
+                            campaign.statut !== 'brouillon' && (
+                              <a
+                                href={localizedPath(
+                                  locale,
+                                  `/o/${slug}/campagnes/${campaign.id}/resultats`
+                                )}
+                                aria-label={trp('liste.lienAria', { titre })}
+                                className='mt-2 inline-block underline ms-4'
+                              >
+                                {trp('liste.lien')}
+                              </a>
+                            )}
                         </td>
                       </tr>
                     );

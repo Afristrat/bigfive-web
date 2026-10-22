@@ -1,5 +1,5 @@
 // Libellés des domaines et des facettes, lexique de docs/design/voix-de-marque.md
-// (§ 4.1 et § 4.3). Les titres du paquet @bigfive-org/results contiennent des
+// (§ 4.1 et § 4.3). Les titres du paquet de résultats d’origine contiennent des
 // contresens (« Conscience », « Convivialité ») : aucun composant ne les affiche.
 
 export type DomainCode = 'O' | 'C' | 'E' | 'A' | 'N';
@@ -36,130 +36,141 @@ const domains: Record<DomainCode, Record<LabelLocale, Label>> = {
   }
 };
 
-// Facettes 1 à 6 de chaque domaine, dans l'ordre de l'IPIP-NEO-120. Les
-// libellés de facette n'ont pas de forme courte : la forme longue sert aux deux.
+// Facettes 1 à 6 de chaque domaine. Les libellés français sont ceux de la
+// bibliothèque de textes (docs/design/bibliotheque-textes/facettes.json, champ
+// libelle.fr) : un test les compare au fichier. Les libellés anglais et arabes
+// en sont des traductions NON RELUES (défaut non validé ; l'arabe est à faire
+// relire par un locuteur natif). Pas de forme courte : la forme longue sert aux
+// deux.
 const facets: Record<DomainCode, Record<LabelLocale, readonly string[]>> = {
   N: {
     fr: [
-      'Anxiété',
-      'Colère',
-      'Humeur dépressive',
-      'Timidité sociale',
-      'Impulsivité',
+      'Inquiétude et appréhension',
+      'Irritabilité',
+      'Tristesse et doute sur soi',
+      'Gêne en situation sociale',
+      'Tendance à céder aux envies',
       'Vulnérabilité au stress'
     ],
     ar: [
-      'القلق',
-      'الغضب',
-      'المزاج الاكتئابي',
-      'الحرج الاجتماعي',
-      'الاندفاعية',
+      'القلق والتوجّس',
+      'سرعة الغضب',
+      'الحزن والشك في الذات',
+      'الحرج في المواقف الاجتماعية',
+      'الميل إلى الاستسلام للرغبات',
       'الهشاشة أمام الضغط'
     ],
     en: [
-      'Anxiety',
-      'Anger',
-      'Depressive mood',
-      'Self-consciousness',
-      'Immoderation',
+      'Worry and apprehension',
+      'Irritability',
+      'Sadness and self-doubt',
+      'Discomfort in social situations',
+      'Tendency to give in to urges',
       'Vulnerability to stress'
     ]
   },
   E: {
     fr: [
-      'Chaleur relationnelle',
-      'Sociabilité',
+      'Aisance à nouer des liens',
+      'Goût de la compagnie et des foules',
       'Affirmation de soi',
       'Niveau d’activité',
-      'Recherche de sensations',
-      'Gaieté'
+      'Goût de l’aventure et du risque',
+      'Joie de vivre et regard positif'
     ],
     ar: [
-      'الودّ',
-      'الاجتماعية',
+      'سهولة بناء العلاقات',
+      'حبّ الصحبة والتجمعات',
       'توكيد الذات',
       'مستوى النشاط',
-      'البحث عن الإثارة',
-      'البهجة'
+      'حبّ المغامرة والمخاطرة',
+      'بهجة الحياة والنظرة الإيجابية'
     ],
     en: [
-      'Friendliness',
-      'Gregariousness',
+      'Ease in forming connections',
+      'Enjoyment of company and crowds',
       'Assertiveness',
       'Activity level',
-      'Excitement-seeking',
-      'Cheerfulness'
+      'Taste for adventure and risk',
+      'Zest for life and positive outlook'
     ]
   },
   O: {
     fr: [
-      'Imagination',
+      'Imagination et rêverie',
       'Sensibilité artistique',
-      'Ouverture aux émotions',
-      'Goût de la nouveauté',
+      'Intensité et écoute des émotions',
+      'Goût de la variété',
       'Curiosité intellectuelle',
-      'Ouverture aux valeurs'
+      'Ouverture aux positions non conventionnelles'
     ],
     ar: [
-      'الخيال',
-      'الاهتمامات الفنية',
-      'الانفتاح على المشاعر',
-      'حبّ التجديد',
+      'الخيال وأحلام اليقظة',
+      'الحساسية الفنية',
+      'شدّة المشاعر والإصغاء إليها',
+      'حبّ التنوّع',
       'الفضول الفكري',
-      'الانفتاح على القيم'
+      'الانفتاح على المواقف غير التقليدية'
     ],
     en: [
-      'Imagination',
-      'Artistic interests',
-      'Emotionality',
-      'Adventurousness',
-      'Intellect',
-      'Openness to values'
+      'Imagination and daydreaming',
+      'Artistic sensitivity',
+      'Intensity and awareness of emotions',
+      'Taste for variety',
+      'Intellectual curiosity',
+      'Openness to unconventional positions'
     ]
   },
   A: {
     fr: [
-      'Confiance',
-      'Franchise',
-      'Altruisme',
+      'Confiance accordée aux autres',
+      'Absence d’usage des autres à ses propres fins',
+      'Souci d’aider les autres',
       'Coopération',
-      'Modestie',
-      'Compassion'
+      'Retenue dans l’opinion de soi et sa mise en avant',
+      'Compassion envers les personnes en difficulté'
     ],
-    ar: ['الثقة', 'الصراحة', 'الإيثار', 'التعاون', 'التواضع', 'التعاطف'],
+    ar: [
+      'الثقة بالآخرين',
+      'عدم استغلال الآخرين لتحقيق مصالح شخصية',
+      'الحرص على مساعدة الآخرين',
+      'التعاون',
+      'التحفّظ في تقدير الذات وإبرازها',
+      'الرحمة بمن هم في ضيق'
+    ],
     en: [
-      'Trust',
-      'Straightforwardness',
-      'Altruism',
+      'Trust in others',
+      'Not using others for one’s own ends',
+      'Concern for helping others',
       'Cooperation',
-      'Modesty',
-      'Sympathy'
+      'Restraint in self-regard and self-promotion',
+      'Compassion for people in difficulty'
     ]
   },
   C: {
     fr: [
-      'Sentiment d’efficacité',
-      'Sens de l’organisation',
-      'Sens du devoir',
-      'Recherche de réussite',
+      'Confiance déclarée dans sa maîtrise des tâches',
+      'Organisation et rangement',
+      'Respect des engagements et des règles',
+      'Effort et engagement au travail',
       'Autodiscipline',
-      'Prudence'
+      'Réflexion avant d’agir'
     ],
     ar: [
-      'الإحساس بالكفاءة',
-      'التنظيم',
-      'الشعور بالواجب',
-      'السعي إلى الإنجاز',
+      'الثقة المعلنة في إتقان المهام',
+      'التنظيم والترتيب',
+      'احترام الالتزامات والقواعد',
+      'الجهد والالتزام في العمل',
       'الانضباط الذاتي',
-      'الحذر'
+      'التفكير قبل التصرّف'
     ],
     en: [
-      'Self-efficacy',
-      'Orderliness',
-      'Dutifulness',
-      'Achievement-striving',
+      'Stated confidence in mastering tasks',
+      'Organisation and tidiness',
+      'Keeping commitments and following rules',
+      'Effort and commitment at work',
       'Self-discipline',
-      'Cautiousness'
+      'Thinking before acting'
     ]
   }
 };

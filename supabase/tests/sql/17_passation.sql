@@ -41,6 +41,21 @@ LANGUAGE sql AS $$
     format($q$select app.soumettre_resultat(%L, %L::jsonb, %L::jsonb, %L, %L)::text$q$, p_participation, p_reponses, p_scores, p_vq, p_vc))
 $$;
 
+-- Contrat de passation de la migration 0015 : réponses (120 entiers de 1 à 5) et scores
+-- « tenga-scores-1 » valides, que la base accepte (les refus de forme sont éprouvés par 39).
+CREATE FUNCTION pg_temp.rep_ok() RETURNS text
+LANGUAGE sql AS $$
+  SELECT (SELECT jsonb_object_agg(i::text, 3) FROM generate_series(1, 120) i)::text
+$$;
+CREATE FUNCTION pg_temp.sc_ok() RETURNS text
+LANGUAGE sql AS $$
+  SELECT (jsonb_build_object('format', 'tenga-scores-1')
+          || (SELECT jsonb_object_agg(d, jsonb_build_object('score', 72, 'count', 24, 'moyenne', 3,
+                'facettes', (SELECT jsonb_object_agg(f::text, jsonb_build_object('score', 12, 'count', 4, 'moyenne', 3))
+                               FROM generate_series(1, 6) f)))
+                FROM unnest(ARRAY['N', 'E', 'O', 'A', 'C']) d))::text
+$$;
+
 -- Personnages : pa et pb participants A, pc participant A sans accès (rôle retiré plus loin), ra responsable A,
 -- ca consultant affecté A, cx consultant B, rb responsable B, ad administrateur Tenga.
 INSERT INTO auth.users (id, email) VALUES
@@ -137,20 +152,20 @@ SELECT is(pg_temp.soumettre('a0000000-0000-4000-8000-000000000001', 'd0000000-00
 SELECT is((SELECT count(*)::int FROM app.results), 0, 'aucun résultat enregistré par ces refus');
 
 -- ===== Soumission =====
-SELECT is(pg_temp.soumettre('a0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', '{"1": 3, "2": 4, "3": 5}', '{"O": 62, "C": 48}', 'v2', 'c7'),
+SELECT is(pg_temp.soumettre('a0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', pg_temp.rep_ok(), pg_temp.sc_ok(), 'v2', 'c7'),
   'd0000000-0000-4000-8000-000000000001', 'soumettre : renvoie l''identifiant de participation');
 SELECT is((SELECT organization_id::text || '|' || user_id::text || '|' || scores::text || '|' || questionnaire_version || '|' || calcul_version FROM app.results WHERE participation_id = 'd0000000-0000-4000-8000-000000000001'),
-  'a1000000-0000-4000-8000-00000000000a|a0000000-0000-4000-8000-000000000001|{"C": 48, "O": 62}|v2|c7', 'le résultat porte l''organisation de la campagne, la personne, les scores et les deux versions');
+  'a1000000-0000-4000-8000-00000000000a|a0000000-0000-4000-8000-000000000001|' || pg_temp.sc_ok()::jsonb::text || '|v2|c7', 'le résultat porte l''organisation de la campagne, la personne, les scores et les deux versions');
 SELECT is((SELECT count(*)::int FROM app.attempts WHERE participation_id = 'd0000000-0000-4000-8000-000000000001'), 0, 'la tentative est effacée à la soumission');
 SELECT is((SELECT statut || '|' || (terminee_le IS NOT NULL)::text FROM app.participations WHERE id = 'd0000000-0000-4000-8000-000000000001'), 'terminee|true', 'la participation est terminée');
 SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.soumettre' AND acteur = 'a0000000-0000-4000-8000-000000000001' AND ressource_id = 'd0000000-0000-4000-8000-000000000001'), 1, 'la soumission est journalisée une fois');
 SELECT is(pg_temp.soumettre('a0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', '{"1": 1}', '{"O": 1}'), 'ERR:23505:Résultat déjà soumis', 'une seule soumission par participation');
 SELECT is(pg_temp.sauver('a0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', 0, '{"1": 1}'), 'ERR:23505:Résultat déjà soumis', 'plus de sauvegarde après la soumission');
-SELECT is((SELECT scores::text FROM app.results), '{"C": 48, "O": 62}', 'le résultat soumis est resté intact');
+SELECT is((SELECT scores::text FROM app.results), pg_temp.sc_ok()::jsonb::text, 'le résultat soumis est resté intact');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated', 'select count(*) from app.results'), '1', 'le titulaire lit son résultat');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000002', 'authenticated', 'select count(*) from app.results'), '0', 'un autre participant ne le lit pas');
 -- Soumission directe, sans sauvegarde préalable
-SELECT is(pg_temp.soumettre('a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000002', '{"1": 2}', '{"O": 30}'), 'd0000000-0000-4000-8000-000000000002', 'soumettre sans sauvegarde préalable : accepté');
+SELECT is(pg_temp.soumettre('a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000002', pg_temp.rep_ok(), pg_temp.sc_ok()), 'd0000000-0000-4000-8000-000000000002', 'soumettre sans sauvegarde préalable : accepté');
 SELECT is((SELECT statut || '|' || (commencee_le IS NOT NULL)::text || '|' || (terminee_le IS NOT NULL)::text FROM app.participations WHERE id = 'd0000000-0000-4000-8000-000000000002'), 'terminee|true|true', 'la date de début est posée même sans sauvegarde préalable');
 
 -- ===== Lecture individuelle : une fonction, journal avant résultat =====
@@ -171,16 +186,16 @@ SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.
 
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000004', 'authenticated',
   $q$select concat_ws('|', participation_id, organization_id, reponses, scores, questionnaire_version, calcul_version) from app.lire_resultat_individuel('d0000000-0000-4000-8000-000000000001')$q$),
-  'd0000000-0000-4000-8000-000000000001|a1000000-0000-4000-8000-00000000000a|{"1": 3, "2": 4, "3": 5}|{"C": 48, "O": 62}|v2|c7',
+  'd0000000-0000-4000-8000-000000000001|a1000000-0000-4000-8000-00000000000a|' || pg_temp.rep_ok()::jsonb::text || '|' || pg_temp.sc_ok()::jsonb::text || '|v2|c7',
   'lire_resultat_individuel, consultant affecté : reçoit réponses, scores et versions');
 SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000004'
             AND ressource_type = 'participation' AND ressource_id = 'd0000000-0000-4000-8000-000000000001' AND organization_id = 'a1000000-0000-4000-8000-00000000000a'), 1,
   'la lecture est journalisée : lecteur, participation et organisation');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', $q$select scores::text from app.lire_resultat_individuel('d0000000-0000-4000-8000-000000000001')$q$),
-  '{"C": 48, "O": 62}', 'lire_resultat_individuel, administrateur Tenga : lit');
+  pg_temp.sc_ok()::jsonb::text, 'lire_resultat_individuel, administrateur Tenga : lit');
 SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000008'), 1, 'la lecture de l''administrateur est journalisée aussi');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000004', 'authenticated', $q$select scores::text from app.lire_resultat_individuel('d0000000-0000-4000-8000-000000000001')$q$),
-  '{"C": 48, "O": 62}', 'lire_resultat_individuel : une seconde lecture fonctionne');
+  pg_temp.sc_ok()::jsonb::text, 'lire_resultat_individuel : une seconde lecture fonctionne');
 SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000004'), 2, 'chaque lecture écrit sa propre ligne de journal');
 SELECT ok(
   (SELECT position('private.journaliser' IN p.prosrc) > 0 AND position('private.journaliser' IN p.prosrc) < position('RETURN QUERY' IN p.prosrc)

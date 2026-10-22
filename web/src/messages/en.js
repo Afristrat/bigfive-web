@@ -1,3 +1,10 @@
+import niveauxEn from './espace/niveaux.en.js';
+import passationEn from './espace/passation.en.js';
+import mesResultatsEn from './espace/mesResultats.en.js';
+import rapportEn from './espace/rapport.en.js';
+import binomeEn from './espace/binome.en.js';
+import syntheseEn from './espace/synthese.en.js';
+
 const english = {
   language: {
     label: 'Language'
@@ -683,33 +690,14 @@ const english = {
   },
   results: {
     title: 'Your profile across the five major factors',
-    factorsTitle: 'The five major factors',
-    radar: {
-      title: 'Five-factor radar chart',
-      summary: 'Radar chart with five axes, from {min} to {max}.',
-      domain: 'Domain',
-      score: 'Score'
-    },
-    scales:
-      'Domain scale: {domainMin} to {domainMax}. Facet scale: {facetMin} to {facetMax}.',
-    detailTitle: 'Detail by domain',
-    detailHint: 'Choose a domain to see its six facets.',
     idLabel: 'Result ID',
     idHint: 'Keep it to find this result again later.',
     copied: 'ID copied',
     backHome: 'Back to home',
     intro:
       'Here is your profile. Read it first for yourself, with curiosity: it describes tendencies, not qualities or flaws. Nothing here ranks you, nothing is a test of skills, nothing is a diagnosis.',
-    outOf: 'out of {max}',
-    level: {
-      low: 'low',
-      neutral: 'in the middle',
-      high: 'high'
-    },
-    facets: 'Facets',
-    learnMore: 'Learn more about this dimension',
-    neuroticismGloss:
-      'Sensitivity to negative emotions and stress; this is not a diagnosis.',
+    interpretationNote:
+      'The interpretation texts for each facet are being reviewed: until a text has been reviewed, only the facet’s level is shown.',
     print: 'Print or save as PDF',
     copyId: 'Copy ID',
     loading: 'Loading',
@@ -1008,7 +996,13 @@ const english = {
     urlOrId: 'URL or ID of your result',
     getResult: 'Get result',
     viewPrevious: 'View Previous Result'
-  }
+  },
+  niveaux: niveauxEn,
+  passation: passationEn,
+  mesResultats: mesResultatsEn,
+  rapport: rapportEn,
+  binome: binomeEn,
+  synthese: syntheseEn
 };
 
 export default english;
