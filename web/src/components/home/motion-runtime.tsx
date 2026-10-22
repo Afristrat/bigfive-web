@@ -46,21 +46,30 @@ export function MotionRuntime(): null {
       requestAnimationFrame(pas);
     };
 
+    // Un élément entièrement rogné (masque, volet) n'intersecte jamais : on
+    // observe alors son parent, qui porte la même position.
+    const cibles = new Map<Element, HTMLElement[]>();
+    horsEcran.forEach((el) => {
+      const rogne = ['masque', 'volet'].includes(el.dataset.reveal ?? '');
+      const cible = rogne && el.parentElement ? el.parentElement : el;
+      cibles.set(cible, [...(cibles.get(cible) ?? []), el]);
+    });
     const observateur = new IntersectionObserver(
       (entrees) => {
         for (const entree of entrees) {
           if (!entree.isIntersecting) continue;
-          const el = entree.target as HTMLElement;
-          observateur.unobserve(el);
-          const prepare = el.hasAttribute('data-pret');
-          el.removeAttribute('data-pret');
-          el.setAttribute('data-vu', '');
-          if (prepare && el.dataset.compteur) lancerCompteur(el);
+          observateur.unobserve(entree.target);
+          for (const el of cibles.get(entree.target) ?? []) {
+            const prepare = el.hasAttribute('data-pret');
+            el.removeAttribute('data-pret');
+            el.setAttribute('data-vu', '');
+            if (prepare && el.dataset.compteur) lancerCompteur(el);
+          }
         }
       },
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.01 }
+      { rootMargin: '0px 0px -12% 0px', threshold: 0 }
     );
-    horsEcran.forEach((el) => observateur.observe(el));
+    cibles.forEach((_, cible) => observateur.observe(cible));
 
     // Boutons aimantés : un léger décalage vers le pointeur, pointeur fin seulement.
     const nettoyages: Array<() => void> = [];

@@ -72,7 +72,7 @@ export default async function Home({ params }: HomeProps) {
         >
           <MotsCinetiques texte={h('title')} />
         </h1>
-        <div className='-me-6 ms-auto mt-6 w-[86%] max-w-[420px] sm:-me-4 lg:col-span-5 lg:row-span-2 lg:row-start-1 lg:m-0 lg:w-full lg:max-w-none'>
+        <div className='mx-auto mt-8 w-[82%] max-w-[380px] lg:col-span-5 lg:row-span-2 lg:row-start-1 lg:m-0 lg:w-full lg:max-w-none'>
           <HeroRadar
             noms={domainCodes.map((code) => domainLabel(code, locale, 'short'))}
             profils={ratios}

@@ -446,6 +446,13 @@
 [data-pret] .barre-reglee {
   transform: scaleX(0);
 }
+.barre-verticale {
+  transform-origin: 50% 0;
+  transition: transform 1400ms var(--courbe-glisse) 200ms;
+}
+[data-pret] .barre-verticale {
+  transform: scaleY(0);
+}
 
 /* Titre cinétique : chaque mot monte derrière son propre masque. */
 .mot {

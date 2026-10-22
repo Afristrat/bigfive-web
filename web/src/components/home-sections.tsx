@@ -143,40 +143,14 @@ export async function HomeSections({
           </p>
         </div>
         <div data-reveal='trace' className='relative mt-12'>
-          <svg
+          <span
             aria-hidden='true'
-            className='absolute start-[7px] top-2 h-[calc(100%-1rem)] w-[2px] md:hidden'
-            viewBox='0 0 2 100'
-            preserveAspectRatio='none'
-          >
-            <line
-              x1='1'
-              y1='0'
-              x2='1'
-              y2='100'
-              pathLength={1}
-              className='trace-svg stroke-safran'
-              strokeWidth='2'
-              vectorEffect='non-scaling-stroke'
-            />
-          </svg>
-          <svg
+            className='barre-verticale absolute start-[7px] top-2 block h-[calc(100%-1rem)] w-0.5 bg-safran md:hidden'
+          />
+          <span
             aria-hidden='true'
-            className='absolute inset-x-0 top-[7px] hidden h-[2px] w-full md:block'
-            viewBox='0 0 100 2'
-            preserveAspectRatio='none'
-          >
-            <line
-              x1='0'
-              y1='1'
-              x2='100'
-              y2='1'
-              pathLength={1}
-              className='trace-svg stroke-safran'
-              strokeWidth='2'
-              vectorEffect='non-scaling-stroke'
-            />
-          </svg>
+            className='barre-reglee absolute inset-x-0 top-[7px] hidden h-0.5 bg-safran md:block'
+          />
           <ol role='list' className='grid gap-10 md:grid-cols-3 md:gap-8'>
             {steps.map((key, index) => (
               <li
@@ -455,7 +429,7 @@ export async function HomeClosing({
       <svg
         aria-hidden='true'
         viewBox='0 0 600 600'
-        className='pointer-events-none absolute -end-24 -top-16 w-[min(560px,90vw)] opacity-90'
+        className='pointer-events-none absolute -bottom-24 -end-20 w-[300px] opacity-90 md:-end-10 md:bottom-auto md:top-1/2 md:w-[440px] md:-translate-y-1/2'
       >
         <polygon
           points='300,40 547,220 453,510 147,510 53,220'

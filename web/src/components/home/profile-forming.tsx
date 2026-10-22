@@ -133,8 +133,8 @@ export function ProfileForming({
 
       <div className='mt-10 grid gap-x-12 lg:mt-14 lg:grid-cols-12'>
         {/* La scène reste épinglée : en haut sur mobile, à droite sur grand écran. */}
-        <div className='sticky top-16 z-[1] -mx-5 bg-fond/95 px-5 pb-2 pt-2 sm:-mx-8 sm:px-8 lg:order-2 lg:col-span-6 lg:mx-0 lg:h-[calc(100dvh-5rem)] lg:bg-transparent lg:px-0 lg:pt-6'>
-          <figure className='mx-auto flex h-full max-w-[520px] flex-col justify-center max-lg:max-w-[300px]'>
+        <div className='sticky top-16 z-[1] -mx-5 border-b border-trait bg-fond px-5 pb-2 pt-2 lg:border-b-0 sm:-mx-8 sm:px-8 lg:order-2 lg:col-span-6 lg:mx-0 lg:h-[calc(100dvh-5rem)] lg:bg-transparent lg:px-0 lg:pt-6'>
+          <figure className='mx-auto flex h-full max-w-[520px] flex-col justify-center max-lg:max-w-[260px]'>
             <svg
               viewBox='0 0 600 600'
               className='w-full overflow-visible'
