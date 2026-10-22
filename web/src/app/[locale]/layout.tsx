@@ -1,4 +1,5 @@
 import '@/styles/globals.css';
+import '@/styles/cadre.css';
 import { Metadata, Viewport } from 'next';
 import { fontArabe, fontDisplay, fontLatin } from '@/config/fonts';
 import { MotionRuntime } from '@/components/home/motion-runtime';

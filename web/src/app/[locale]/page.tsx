@@ -3,11 +3,8 @@ import { allPosts } from 'contentlayer/generated';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { boutonPrincipal, heading, title } from '@/components/primitives';
 import { ArrowRightIcon } from '@/components/icons';
-import {
-  HomeClosing,
-  HomeSections,
-  MotsCinetiques
-} from '@/components/home-sections';
+import { HomeClosing, HomeSections } from '@/components/home-sections';
+import { MotsCinetiques } from '@/components/mots-cinetiques';
 import { HeroRadar } from '@/components/home/hero-radar';
 import { ratioDeScore } from '@/components/home/pentagone';
 import { PostListItem } from '@/components/post-list-item';

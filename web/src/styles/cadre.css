@@ -1,0 +1,222 @@
+/* ---------------------------------------------------------------------------
+   Cadre du site : en-tête, pied de page, pages méthode, présentation, 404 et
+   erreur. Même grammaire que l'accueil (globals.css) : --courbe pour les
+   entrées et les filets, --ressort pour la marque, transform, opacity,
+   clip-path et stroke-dashoffset seulement. Sous « réduire les animations »,
+   la règle globale ramène chaque durée à zéro : tout est à son état final.
+   --------------------------------------------------------------------------- */
+
+/* Filet de navigation : sous le libellé de la page courante (aria-current),
+   il croît depuis le début de ligne ; au survol, un filet neutre l'annonce.
+   Changer de page fait se retirer l'ancien filet et croître le nouveau. */
+.filet {
+  position: relative;
+}
+.filet::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0.75rem;
+  bottom: 0.5rem;
+  height: 2px;
+  background-color: rgb(var(--c-accent));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition:
+    transform 280ms var(--courbe),
+    background-color 160ms var(--courbe);
+}
+[dir='rtl'] .filet::after {
+  transform-origin: 100% 50%;
+}
+.filet-serre::after {
+  inset-inline: 0;
+  bottom: 0.375rem;
+}
+.filet[aria-current]:not([aria-current='false'])::after {
+  transform: scaleX(1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .filet:not([aria-current]):hover::after,
+  .filet[aria-current='false']:hover::after {
+    background-color: rgb(var(--c-trait-fort));
+    transform: scaleX(1);
+  }
+}
+@media (forced-colors: active) {
+  .filet::after {
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+}
+
+/* Marque de l'en-tête : au survol, le cœur du pentagone respire. */
+.marque-coeur {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transition: transform 600ms var(--ressort);
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .marque:hover .marque-coeur {
+    transform: scale(1.18);
+  }
+}
+
+/* Ombre de l'en-tête : elle n'apparaît qu'une fois la page défilée, liée au
+   défilement lui-même ; sans minuterie de défilement, le filet du bas suffit. */
+.entete-ombre {
+  opacity: 0;
+  background: linear-gradient(rgb(17 22 43 / 0.08), rgb(17 22 43 / 0));
+}
+.dark .entete-ombre {
+  background: linear-gradient(rgb(0 0 0 / 0.35), rgb(0 0 0 / 0));
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .entete-ombre {
+      animation: fondu linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 140px;
+    }
+  }
+}
+
+/* Bouton du menu : les trois traits se replient en croix à l'ouverture. */
+.burger path {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transition:
+    transform 260ms var(--courbe),
+    opacity 160ms var(--courbe);
+}
+details[open] > summary .burger-haut {
+  transform: translateY(5px) rotate(45deg);
+}
+details[open] > summary .burger-milieu {
+  opacity: 0;
+  transform: scaleX(0.3);
+}
+details[open] > summary .burger-bas {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+/* Menu ouvert : les entrées suivent le panneau, en cascade courte. */
+.menu-entree {
+  animation: cadre-entre 240ms var(--courbe) both;
+  animation-delay: calc(40ms + var(--i, 0) * 30ms);
+}
+@keyframes cadre-entre {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Pentagone tracé (méthode, présentation, 404, erreur) : la grille paraît, les
+   axes se tracent, puis le contour safran se dessine jusqu'à la part donnée ;
+   un contour incomplet dit le chemin interrompu. */
+.pentagone-grille {
+  fill: none;
+  stroke: rgb(var(--c-grille));
+  stroke-width: 1;
+  animation: fondu 500ms var(--courbe) both;
+}
+.pentagone-axe {
+  stroke: rgb(var(--c-grille));
+  stroke-width: 1;
+}
+.pentagone-contour {
+  fill: none;
+  stroke: rgb(var(--c-safran));
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: var(--part, 1) 2;
+  animation: pentagone-dessin 1500ms var(--courbe-glisse) 450ms both;
+}
+@keyframes pentagone-dessin {
+  from {
+    stroke-dashoffset: var(--part, 1);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.pentagone-sommet {
+  fill: rgb(var(--c-safran));
+  stroke: rgb(var(--c-fond));
+  stroke-width: 3;
+  paint-order: stroke;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: ouvrir 420ms var(--ressort) both;
+}
+.pentagone-attente {
+  fill: rgb(var(--c-fond));
+  stroke: rgb(var(--c-trait-fort));
+  stroke-width: 1.5;
+  stroke-dasharray: 2 2.5;
+}
+.pentagone-forme {
+  fill: rgb(var(--c-texte-2));
+}
+@media print {
+  .pentagone-grille,
+  .pentagone-contour,
+  .pentagone-sommet,
+  .menu-entree {
+    animation: none !important;
+  }
+}
+
+/* Sommaire collant de la page méthode : la section lue porte le filet. */
+.sommaire-collant {
+  background-color: rgb(var(--c-fond) / 0.9);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .sommaire-collant {
+    background-color: rgb(var(--c-fond) / 0.82);
+    backdrop-filter: blur(12px) saturate(1.5);
+  }
+}
+
+/* Aside « comment lire » : son filet d'accent se trace de haut en bas. */
+.filet-vertical {
+  transform-origin: 50% 0;
+  transition: transform 900ms var(--courbe-glisse) 150ms;
+}
+[data-pret] .filet-vertical {
+  transform: scaleY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pentagone-grille,
+  .pentagone-contour,
+  .pentagone-sommet,
+  .menu-entree {
+    animation: none;
+  }
+}
+
+/* Panneau du menu : il s'ouvre depuis son bouton, en fin de ligne. */
+.menu-panneau {
+  animation: menu-ouvre 200ms var(--courbe) both;
+}
+@keyframes menu-ouvre {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-panneau {
+    animation: none;
+  }
+}

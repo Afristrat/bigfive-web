@@ -156,28 +156,6 @@ export const SunIcon = ({
   </svg>
 );
 
-export const MenuIcon = ({
-  size = 22,
-  width,
-  height,
-  ...props
-}: IconSvgProps) => (
-  <svg
-    aria-hidden='true'
-    focusable='false'
-    height={size || height}
-    viewBox='0 0 24 24'
-    width={size || width}
-    fill='none'
-    stroke='currentColor'
-    strokeWidth={1.75}
-    strokeLinecap='round'
-    {...props}
-  >
-    <path d='M4 7h16M4 12h16M4 17h16' />
-  </svg>
-);
-
 export const ArrowRightIcon = ({
   size = 20,
   width,

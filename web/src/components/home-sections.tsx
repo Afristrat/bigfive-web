@@ -40,24 +40,6 @@ const rang = (i: number): CSSProperties => ({ ['--i' as string]: i });
 const textLink =
   'lien-fleche inline-flex min-h-11 items-center gap-2 text-petit font-medium text-accent underline-offset-4 transition-colors duration-courte ease-tenga hover:text-accent-survol hover:underline';
 
-// Titre cinétique : chaque mot dans son masque. Le texte reste un seul titre
-// pour les lecteurs d'écran ; sans animation, les mots sont simplement posés.
-export function MotsCinetiques({ texte }: { texte: string }): ReactElement {
-  const mots = texte.split(/\s+/).filter(Boolean);
-  return (
-    <>
-      {mots.map((mot, i) => (
-        <span key={`${mot}-${i}`}>
-          <span className='mot'>
-            <span style={rang(i)}>{mot}</span>
-          </span>
-          {i < mots.length - 1 ? ' ' : null}
-        </span>
-      ))}
-    </>
-  );
-}
-
 // Phrases d'un paragraphe, pour les révéler ligne à ligne.
 const phrases = (texte: string): string[] =>
   texte.split(/(?<=[.!?؟])\s+/).filter(Boolean);
