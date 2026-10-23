@@ -501,7 +501,7 @@ SELECT is(pg_temp.designer(pg_temp.u_ad2(), pg_temp.u_q(4)), 'true',
 SELECT is(pg_temp.designer(pg_temp.u_ad2(), pg_temp.u_q(5)), 'ERR:PT429:Plafond de désignations atteint',
   'la 6e désignation du second administrateur dans l''heure est refusée');
 
--- ===== Conservation : 30 jours, verdict courant conservé et anonymisé (décision d'Amine) =====
+-- ===== Conservation : 30 jours maximum (décision d'Amine) ; verdict courant conservé et anonymisé : défaut non validé =====
 -- Verdicts anciens écrits directement (superutilisateur), du plus ancien au plus récent :
 --   A2/milieu : 40 jours (antérieur), 31 jours (courant)        -> le premier purgé, le second anonymisé
 --   A3/milieu : 31 jours (antérieur), 29 jours (courant)        -> le premier purgé, le second intact

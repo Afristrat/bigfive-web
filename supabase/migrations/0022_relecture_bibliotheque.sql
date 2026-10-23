@@ -2,7 +2,9 @@
 -- comparatif DISC et Big Five : faire relire les blocs, en commençant par ceux
 -- qui apparaissent le plus).
 --
--- Conservation : verdict courant conservé et anonymisé : décision d'Amine.
+-- Conservation : verdict courant conservé et anonymisé : défaut non validé.
+-- (Décision d'Amine : 30 jours maximum ; le maintien anonymisé du verdict
+-- courant au-delà est un choix du chef d'équipe, non validé.)
 --
 -- Besoin : les 150 blocs d'interprétation de la bibliothèque
 -- (docs/design/bibliotheque-textes/facettes.json, copie
@@ -118,12 +120,13 @@
 --     empreinte, verdict, commentaire, date), jamais ceux des autres.
 --
 -- DÉCISIONS D'AMINE appliquées ici : historique réservé aux super
--- administrateurs ; conservation de 30 jours, verdict courant conservé et
--- anonymisé ; plafonds de 200 verdicts et de 5 désignations par heure et par
--- personne ; avis par e-mail à la désignation ; texte modifié, bloc « à relire ».
--- DÉFAUT NON VALIDÉ par Amine : un relecteur désigné inactif depuis la durée de
--- conservation des comptes vides perd son compte à la purge quotidienne (règle
--- de 0018, inchangée).
+-- administrateurs ; conservation de 30 jours maximum ; plafonds de 200 verdicts
+-- et de 5 désignations par heure et par personne ; avis par e-mail à la
+-- désignation ; texte modifié, bloc « à relire ».
+-- DÉFAUTS NON VALIDÉS par Amine : (1) verdict courant conservé et anonymisé :
+-- défaut non validé (bloc, empreinte, verdict et date gardés au-delà de 30 jours) ;
+-- (2) un relecteur désigné inactif depuis la durée de conservation des comptes
+-- vides perd son compte à la purge quotidienne (règle de 0018, inchangée).
 -- Résiduel : les verrous consultatifs (plafond, verdicts simultanés) ne
 -- s'éprouvent qu'avec deux sessions réelles ; aucune instance de test n'est
 -- permise et la production n'accepte que des transactions annulées : la

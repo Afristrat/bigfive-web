@@ -414,7 +414,8 @@ BEGIN
   END IF;
   RAISE NOTICE 'OK : plafonds : 200e verdict de l''heure accepté, 201e refusé (PT429) ; 5e désignation acceptée (langue du compte rendue), 6e refusée ; rejeu sans erreur ; aucun refus n''écrit';
 
-  -- 12. Conservation : 30 jours ; verdict courant conservé et anonymisé (décision d'Amine). La
+  -- 12. Conservation : 30 jours maximum (décision d'Amine) ; verdict courant conservé et
+  --     anonymisé : défaut non validé. La
   --     purge de l'historique est appelée seule : la purge quotidienne n'est pas jouée ici.
   INSERT INTO app.relectures_blocs (bloc, empreinte, verdict, commentaire, relecteur, cree_le) VALUES
     ('A2/milieu', v_e3, 'relu',       'épreuve 40 jours', v_ad, now() - interval '40 days'),
