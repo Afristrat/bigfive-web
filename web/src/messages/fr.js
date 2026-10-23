@@ -6,6 +6,7 @@ import rapportFr from './espace/rapport.fr.js';
 import binomeFr from './espace/binome.fr.js';
 import syntheseFr from './espace/synthese.fr.js';
 import apercuFr from './espace/apercu.fr.js';
+import relectureFr from './espace/relecture.fr.js';
 import pilotageFr from './espace/pilotage.fr.js';
 
 const french = {
@@ -1173,6 +1174,7 @@ const french = {
   binome: binomeFr,
   synthese: syntheseFr,
   apercu: apercuFr,
+  relecture: relectureFr,
   pilotage: pilotageFr,
   // Mouvement du parcours (questionnaire et résultat).
   flow: {
