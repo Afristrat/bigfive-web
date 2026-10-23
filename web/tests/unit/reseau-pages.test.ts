@@ -139,6 +139,8 @@ beforeEach(() => {
 // Écran de la personne.
 
 const releve = {
+  ferme: false,
+  nbReponses: 0,
   campagneOuverte: true,
   moi: null,
   membres: [],
@@ -202,6 +204,26 @@ describe('page du relevé : /mes-resultats/reseau/[participation]', () => {
     expect(
       lire('src/app/[locale]/mes-resultats/reseau/[participation]/page.tsx')
     ).toContain('/connexion?next=${encodeURIComponent(chemin)}');
+  });
+
+  it('relevé fermé avec ma ligne : seulement retrait et opposition', async () => {
+    loadReleveReseau.mockResolvedValue({
+      ferme: true,
+      nbReponses: 3,
+      campagneOuverte: false,
+      moi: {
+        informeLe: '2026-10-23T09:00:00Z',
+        opposeLe: null,
+        accordRepondreLe: '2026-10-23T09:05:00Z',
+        accordCarteLe: null
+      },
+      membres: [],
+      reponses: []
+    });
+    const html = await rendreReleve();
+    expect(html).toContain('data-etape="ferme"');
+    expect(html).toContain(fr.reseau.retrait.bouton);
+    expect(html).not.toContain('<fieldset');
   });
 
   it('noindex et rendu dynamique', async () => {

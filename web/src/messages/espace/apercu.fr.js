@@ -53,7 +53,8 @@ const apercuFr = {
     consentement: 'Accord',
     releve: 'Relevé vide',
     repondu: 'Relevé rempli',
-    oppose: 'Opposition'
+    oppose: 'Opposition',
+    ferme: 'Relevé fermé'
   },
   campagneLegende: 'Campagne',
   campagnes: {

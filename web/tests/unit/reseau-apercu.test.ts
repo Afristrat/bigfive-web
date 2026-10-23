@@ -98,6 +98,16 @@ describe('relevé fictif', () => {
     expect(r.membres).toEqual([]);
   });
 
+  it('relevé fermé : ma ligne et un nombre de réponses, jamais l’équipe', () => {
+    const r = releveApercu('AM', 'ferme', 'ouverte');
+    expect(r.ferme).toBe(true);
+    expect(r.campagneOuverte).toBe(false);
+    expect(r.membres).toEqual([]);
+    expect(r.reponses).toEqual([]);
+    expect(r.nbReponses).toBeGreaterThan(0);
+    expect(r.moi?.accordRepondreLe).toBeTruthy();
+  });
+
   it('campagne close', () => {
     expect(releveApercu('AM', 'repondu', 'close').campagneOuverte).toBe(false);
     expect(releveApercu('AM', 'repondu', 'ouverte').campagneOuverte).toBe(true);

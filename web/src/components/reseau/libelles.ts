@@ -30,6 +30,7 @@ export type LibellesReseau = {
     carte: string;
     carteAide: string;
     refusAide: string;
+    confirmerRefus: string;
     enregistrer: string;
   };
   mentions: {
@@ -67,6 +68,7 @@ export type LibellesReseau = {
   };
   close: { titre: string; texte: string };
   brouillon: { titre: string; texte: string };
+  ferme: { titre: string; texte: string };
   oppose: { titre: string; texte: string; lever: string };
   opposer: { bouton: string; aide: string; confirmer: string; annuler: string };
   retrait: {
@@ -133,6 +135,7 @@ export function libellesReseau(t: Traducteur, contact: string): LibellesReseau {
       carte: t('consentement.carte'),
       carteAide: t('consentement.carteAide'),
       refusAide: t('consentement.refusAide'),
+      confirmerRefus: t('consentement.confirmerRefus'),
       enregistrer: t('consentement.enregistrer')
     },
     mentions: {
@@ -183,6 +186,7 @@ export function libellesReseau(t: Traducteur, contact: string): LibellesReseau {
     },
     close: { titre: t('close.titre'), texte: t('close.texte') },
     brouillon: { titre: t('brouillon.titre'), texte: t('brouillon.texte') },
+    ferme: { titre: t('ferme.titre'), texte: t('ferme.texte') },
     oppose: {
       titre: t('oppose.titre'),
       texte: t('oppose.texte'),

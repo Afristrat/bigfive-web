@@ -170,17 +170,23 @@ export function EcranReseau({
     }
   );
 
-  const numeroEtape = ETAPES.indexOf(etape as (typeof ETAPES)[number]);
-  const bandeau = ouverte
-    ? null
-    : statutCampagne === 'brouillon'
-      ? libelles.brouillon
-      : libelles.close;
+  // Interrupteur fermé avec ma ligne : retrait et opposition seulement.
+  const ferme = releve.ferme;
+  const vue = ferme ? 'ferme' : etape;
+  const numeroEtape = ferme
+    ? -1
+    : ETAPES.indexOf(etape as (typeof ETAPES)[number]);
+  const bandeau =
+    ouverte || ferme
+      ? null
+      : statutCampagne === 'brouillon'
+        ? libelles.brouillon
+        : libelles.close;
   const accordsOuverts =
     interaction.panneau === 'accords' || interaction.panneau === 'refus';
 
   return (
-    <div data-etape={etape} className='flex flex-col gap-10'>
+    <div data-etape={vue} className='flex flex-col gap-10'>
       {numeroEtape >= 0 && (
         <Avancement
           etape={etape}
@@ -203,11 +209,45 @@ export function EcranReseau({
       )}
 
       <section
-        key={etape}
+        key={vue}
         aria-labelledby={`${base}-titre`}
         className={clsx('flex flex-col gap-6', styles.etape)}
       >
-        {etape === 'information' && (
+        {ferme && (
+          <>
+            <h2
+              id={`${base}-titre`}
+              ref={titre}
+              tabIndex={-1}
+              className={titreClass}
+            >
+              {etape === 'oppose'
+                ? libelles.oppose.titre
+                : libelles.ferme.titre}
+            </h2>
+            <p className={texteClass}>{libelles.ferme.texte}</p>
+            {etape === 'oppose' && (
+              <>
+                <p className={texteClass}>{libelles.oppose.texte}</p>
+                <p>
+                  <button
+                    type='button'
+                    className={secondaryButtonClass}
+                    aria-disabled={pending ? true : undefined}
+                    onClick={() =>
+                      envoyer(() => actions.informer(participationId, false))
+                    }
+                  >
+                    {libelles.oppose.lever}
+                  </button>
+                </p>
+              </>
+            )}
+            <Mentions libelles={libelles} />
+          </>
+        )}
+
+        {!ferme && etape === 'information' && (
           <EtapeInformation
             base={base}
             titre={titre}
@@ -219,7 +259,7 @@ export function EcranReseau({
           />
         )}
 
-        {etape === 'consentement' && (
+        {!ferme && etape === 'consentement' && (
           <>
             <h2
               id={`${base}-titre`}
@@ -252,7 +292,7 @@ export function EcranReseau({
           </>
         )}
 
-        {etape === 'releve' && (
+        {!ferme && etape === 'releve' && (
           <>
             <h2
               id={`${base}-titre`}
@@ -334,7 +374,7 @@ export function EcranReseau({
           </>
         )}
 
-        {etape === 'oppose' && (
+        {!ferme && etape === 'oppose' && (
           <>
             <h2
               id={`${base}-titre`}
@@ -377,7 +417,9 @@ export function EcranReseau({
         ) : null}
       </LiveMessage>
 
-      {(etape === 'consentement' || etape === 'releve') && (
+      {(ferme
+        ? etape !== 'oppose'
+        : etape === 'consentement' || etape === 'releve') && (
         <div className='flex flex-col gap-4 border-t border-trait pt-8'>
           {peutRetirer(releve) && (
             <ActionConfirmee
@@ -658,7 +700,10 @@ function FormulaireAccords({
         id={`${base}-repondre`}
         name='repondre'
         checked={repondre}
-        onChange={setRepondre}
+        onChange={(valeur) => {
+          setRepondre(valeur);
+          if (valeur) dispatch({ type: 'repondreRecoche' });
+        }}
         libelle={libelles.consentement.repondre}
         aide={libelles.consentement.refusAide}
         refEntree={caseRepondre}
@@ -676,12 +721,12 @@ function FormulaireAccords({
           id={`${base}-refus`}
           panneau='refus'
           aide={libelles.consentement.refusAide}
-          confirmer={libelles.consentement.enregistrer}
+          confirmer={libelles.consentement.confirmerRefus}
           annuler={libelles.accords.annuler}
           working={libelles.working}
           pending={pending}
           enregistrer={enregistrer}
-          onConfirmer={() => onEnvoyer(false, carte)}
+          onConfirmer={() => onEnvoyer(repondre, carte)}
           onAnnuler={() => dispatch({ type: 'fermer' })}
         />
       ) : (

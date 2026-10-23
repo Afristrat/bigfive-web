@@ -358,8 +358,8 @@ describe('loadReleveReseau : app.reseau_releve', () => {
     expect(rpc).not.toHaveBeenCalled();
   });
 
-  it('interrupteur fermé : null (donc 404)', async () => {
-    rpc.mockResolvedValue({ ouvert: false });
+  it('interrupteur fermé, sans ligne de membre : null (donc 404)', async () => {
+    rpc.mockResolvedValue({ ouvert: false, moi: null });
     expect(await loadReleveReseau(VIEWER, PART)).toBeNull();
     expect(rpc).toHaveBeenCalledWith('reseau_releve', {
       p_participation: PART
@@ -367,9 +367,37 @@ describe('loadReleveReseau : app.reseau_releve', () => {
     expect(select).not.toHaveBeenCalled();
   });
 
+  it('interrupteur fermé avec ma ligne : mon état seul, jamais l’équipe', async () => {
+    rpc.mockResolvedValue({
+      ouvert: false,
+      moi: {
+        informe_le: '2026-10-23T09:00:00Z',
+        oppose_le: null,
+        accord_repondre_le: '2026-10-23T09:05:00Z',
+        accord_carte_le: null,
+        nb_reponses: 4
+      }
+    });
+    expect(await loadReleveReseau(VIEWER, PART)).toEqual({
+      ferme: true,
+      nbReponses: 4,
+      campagneOuverte: false,
+      moi: {
+        informeLe: '2026-10-23T09:00:00Z',
+        opposeLe: null,
+        accordRepondreLe: '2026-10-23T09:05:00Z',
+        accordCarteLe: null
+      },
+      membres: [],
+      reponses: []
+    });
+  });
+
   it('relevé ouvert : met en forme sans rien ajouter', async () => {
     rpc.mockResolvedValue(releveOuvert());
     expect(await loadReleveReseau(VIEWER, PART)).toEqual({
+      ferme: false,
+      nbReponses: 1,
       campagneOuverte: true,
       moi: {
         informeLe: '2026-10-23T09:00:00Z',
@@ -402,7 +430,33 @@ describe('loadReleveReseau : app.reseau_releve', () => {
         membres: [{ participation_id: M1, nom: 'K', email: 'k@x.y' }]
       })
     ],
-    ['clé en trop quand fermé', { ouvert: false, membres: [] }],
+    ['clé en trop quand fermé', { ouvert: false, moi: null, membres: [] }],
+    ['fermé sans la clé moi', { ouvert: false }],
+    [
+      'fermé : réponses d’autrui ou nombre absent',
+      {
+        ouvert: false,
+        moi: {
+          informe_le: '2026-10-23T09:00:00Z',
+          oppose_le: null,
+          accord_repondre_le: null,
+          accord_carte_le: null
+        }
+      }
+    ],
+    [
+      'fermé : nombre de réponses négatif',
+      {
+        ouvert: false,
+        moi: {
+          informe_le: '2026-10-23T09:00:00Z',
+          oppose_le: null,
+          accord_repondre_le: null,
+          accord_carte_le: null,
+          nb_reponses: -1
+        }
+      }
+    ],
     [
       'confiance hors échelle',
       releveOuvert({
@@ -590,6 +644,9 @@ describe('contrats de source', () => {
 
   it('l’écran applique la logique d’interaction testée (sans DOM)', () => {
     const s = source('components/reseau/ecran-reseau.tsx');
+    // La confirmation du refus envoie l’état réel des cases, jamais un faux en dur.
+    expect(s).not.toMatch(/onEnvoyer\(false,/);
+    expect(s).toContain("type: 'repondreRecoche'");
     expect(s).toContain('reduireInteraction');
     expect(s).toContain('messageReseau(');
     expect(s).toContain('doitConfirmerRefus(');

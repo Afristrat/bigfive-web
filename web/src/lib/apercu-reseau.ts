@@ -25,13 +25,14 @@ import {
 
 const CHEMIN = '/admin/apercu-resultats';
 
-/** Étapes montrables : les trois temps, le relevé rempli et l'opposition. */
+/** Étapes montrables : les trois temps, le relevé rempli, l'opposition et le relevé fermé par l'interrupteur. */
 export const ETAPES_APERCU_RESEAU = [
   'information',
   'consentement',
   'releve',
   'repondu',
-  'oppose'
+  'oppose',
+  'ferme'
 ] as const;
 export type EtapeApercuReseau = (typeof ETAPES_APERCU_RESEAU)[number];
 
@@ -97,6 +98,23 @@ export function releveApercu(
     .map((p) => ({ participationId: IDENTIFIANTS[p], nom: nomCollegue(p) }))
     .sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
 
+  // Interrupteur fermé : mon état et le nombre de mes réponses, rien d'autre.
+  if (etape === 'ferme') {
+    return {
+      ferme: true,
+      nbReponses: membres.length * LIENS.length,
+      campagneOuverte: false,
+      moi: {
+        informeLe: DATE,
+        opposeLe: null,
+        accordRepondreLe: DATE,
+        accordCarteLe: DATE
+      },
+      membres: [],
+      reponses: []
+    };
+  }
+
   const moi: EtatMoi | null =
     etape === 'information'
       ? null
@@ -124,6 +142,8 @@ export function releveApercu(
       : [];
 
   return {
+    ferme: false,
+    nbReponses: reponses.length,
     campagneOuverte: campagne === 'ouverte',
     moi,
     // Comme la base : aucun membre tant que je ne suis pas informé, ni si je suis opposé.

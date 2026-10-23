@@ -29,6 +29,8 @@ const moi = (surcharge: Partial<EtatMoi> = {}): EtatMoi => ({
 });
 
 const releve = (surcharge: Partial<ReleveReseau> = {}): ReleveReseau => ({
+  ferme: false,
+  nbReponses: 0,
   campagneOuverte: true,
   moi: null,
   membres: [

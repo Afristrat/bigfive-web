@@ -50,6 +50,7 @@ const reseauEn = {
       'The map is shown only if every member of the team agrees; otherwise the workshop presents indicators without names.',
     refusAide:
       'Without the first box, you do not answer; this choice has no consequence. Unticking the first box deletes any answers already saved.',
+    confirmerRefus: 'Confirm: delete my answers',
     enregistrer: 'Save my choice'
   },
   // À relire par Amine (relecteur juridique) : texte non validé.
@@ -113,6 +114,11 @@ const reseauEn = {
     titre: 'Campaign closed',
     texte:
       'The survey no longer accepts answers or changes. You can still withdraw your answers and object to being named.'
+  },
+  ferme: {
+    titre: 'Survey closed',
+    texte:
+      'The survey is closed to answers; you can still withdraw your answers or object to being named.'
   },
   brouillon: {
     titre: 'Survey not open yet',

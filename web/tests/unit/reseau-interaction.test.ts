@@ -115,6 +115,26 @@ describe('panneaux et focus', () => {
     });
   });
 
+  it('« répondre » recoché pendant la confirmation du refus : la confirmation se referme', () => {
+    const refus = apres(
+      { type: 'ouvrir', panneau: 'accords' },
+      { type: 'ouvrir', panneau: 'refus' },
+      { type: 'focusApplique' }
+    );
+    // Le focus reste sur la case que la personne vient de cocher.
+    expect(reduireInteraction(refus, { type: 'repondreRecoche' })).toEqual({
+      panneau: 'accords',
+      focus: null
+    });
+  });
+
+  it('« répondre » recoché hors confirmation : rien ne change', () => {
+    const accords = apres({ type: 'ouvrir', panneau: 'accords' });
+    expect(reduireInteraction(accords, { type: 'repondreRecoche' })).toBe(
+      accords
+    );
+  });
+
   it('succès : tout se ferme, le focus va au titre de l’étape', () => {
     expect(
       apres({ type: 'ouvrir', panneau: 'retrait' }, { type: 'succes' })

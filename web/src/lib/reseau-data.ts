@@ -85,7 +85,23 @@ export async function loadMesRelevesReseauOuVide(
 
 const date = z.string().min(1);
 
-const releveFerme = z.object({ ouvert: z.literal(false) }).strict();
+// Interrupteur fermé : mon état seul (ou null sans ligne de membre), jamais
+// l'équipe ni les réponses.
+const releveFerme = z
+  .object({
+    ouvert: z.literal(false),
+    moi: z
+      .object({
+        informe_le: date,
+        oppose_le: date.nullable(),
+        accord_repondre_le: date.nullable(),
+        accord_carte_le: date.nullable(),
+        nb_reponses: z.number().int().nonnegative()
+      })
+      .strict()
+      .nullable()
+  })
+  .strict();
 const releveOuvert = z
   .object({
     ouvert: z.literal(true),
@@ -124,8 +140,9 @@ const estRefus = (error: unknown): boolean =>
     error.status === 403);
 
 /**
- * Mon relevé pour une participation. `null` quand l'interrupteur est fermé ou
- * que la base refuse (404 uniforme). Lève si l'identifiant est hors format, si
+ * Mon relevé pour une participation. `null` quand l'interrupteur est fermé et
+ * que je n'ai pas de ligne de membre, ou que la base refuse (404 uniforme).
+ * Fermé avec ma ligne : mon état seul, pour retirer ou m'opposer. Lève si l'identifiant est hors format, si
  * la réponse sort du contrat ou si la passerelle tombe.
  */
 export async function loadReleveReseau(
@@ -139,8 +156,25 @@ export async function loadReleveReseau(
       { p_participation },
       releveSchema
     );
-    if (!lu.ouvert) return null;
+    if (!lu.ouvert) {
+      if (lu.moi === null) return null;
+      return {
+        ferme: true,
+        nbReponses: lu.moi.nb_reponses,
+        campagneOuverte: false,
+        moi: {
+          informeLe: lu.moi.informe_le,
+          opposeLe: lu.moi.oppose_le,
+          accordRepondreLe: lu.moi.accord_repondre_le,
+          accordCarteLe: lu.moi.accord_carte_le
+        },
+        membres: [],
+        reponses: []
+      };
+    }
     return {
+      ferme: false,
+      nbReponses: lu.reponses.length,
       campagneOuverte: lu.campagne_ouverte,
       moi: lu.moi && {
         informeLe: lu.moi.informe_le,

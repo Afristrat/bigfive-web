@@ -40,8 +40,17 @@ export type MembreReseau = {
   nom: string | null;
 };
 
-/** Ce que rend app.reseau_releve quand l'interrupteur est ouvert. */
+/**
+ * Ce que rend app.reseau_releve. Interrupteur ouvert : `ferme` faux, tout est
+ * rempli. Interrupteur fermé avec ma ligne de membre : `ferme` vrai, mon état
+ * et le nombre de mes réponses seulement (jamais l'équipe ni les réponses) ;
+ * l'écran ne propose alors que le retrait et l'opposition. Fermé sans ma
+ * ligne : le chargeur rend null (404).
+ */
 export type ReleveReseau = {
+  ferme: boolean;
+  /** Nombre de mes réponses enregistrées (relevé fermé : seule information lue). */
+  nbReponses: number;
   campagneOuverte: boolean;
   moi: EtatMoi | null;
   /** Autres membres du groupe, informés et non opposés ; vide tant que je ne suis pas informé ou si je suis opposé. */
@@ -118,6 +127,7 @@ export function etapeReseau(moi: EtatMoi | null): EtapeReseau {
 /** Y a-t-il quelque chose à retirer (réponses ou accords) ? */
 export const peutRetirer = (releve: ReleveReseau): boolean =>
   releve.reponses.length > 0 ||
+  releve.nbReponses > 0 ||
   releve.moi?.accordRepondreLe != null ||
   releve.moi?.accordCarteLe != null;
 

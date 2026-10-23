@@ -313,7 +313,8 @@ describe('vue réseau', () => {
     ['consentement', 'consentement'],
     ['releve', 'releve'],
     ['repondu', 'releve'],
-    ['oppose', 'oppose']
+    ['oppose', 'oppose'],
+    ['ferme', 'ferme']
   ])('étape %s : écran %s', async (etape, attendu) => {
     const html = await rendre({ vue: 'reseau', etape });
     expect(html).toContain(`data-etape="${attendu}"`);
@@ -345,7 +346,8 @@ describe('vue réseau', () => {
       'consentement',
       'releve',
       'repondu',
-      'oppose'
+      'oppose',
+      'ferme'
     ]) {
       expect(html).toContain(
         `href="/admin/apercu-resultats?vue=reseau&amp;profil=SR&amp;etape=${etape}&amp;campagne=ouverte"`

@@ -51,6 +51,7 @@ const reseauFr = {
       'La carte n’est montrée que si chaque membre de l’équipe l’accepte ; sinon, l’atelier ne présente que des indicateurs sans noms.',
     refusAide:
       'Sans la première case, vous ne répondez pas ; ce choix n’a aucune conséquence. Décocher la première case supprime les réponses déjà enregistrées.',
+    confirmerRefus: 'Confirmer : supprimer mes réponses',
     enregistrer: 'Enregistrer mon choix'
   },
   // À relire par Amine (relecteur juridique) : texte non validé.
@@ -115,6 +116,11 @@ const reseauFr = {
     titre: 'Campagne close',
     texte:
       'Le relevé n’accepte plus de réponses ni de modifications. Vous pouvez encore retirer vos réponses et vous opposer à être cité.'
+  },
+  ferme: {
+    titre: 'Relevé fermé',
+    texte:
+      'Le relevé est fermé aux réponses ; vous pouvez toujours retirer vos réponses ou vous opposer à être cité.'
   },
   brouillon: {
     titre: 'Relevé pas encore ouvert',

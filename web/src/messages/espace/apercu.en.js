@@ -53,7 +53,8 @@ const apercuEn = {
     consentement: 'Consent',
     releve: 'Empty survey',
     repondu: 'Completed survey',
-    oppose: 'Objection'
+    oppose: 'Objection',
+    ferme: 'Survey closed'
   },
   campagneLegende: 'Campaign',
   campagnes: {

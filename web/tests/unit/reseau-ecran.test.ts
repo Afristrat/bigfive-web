@@ -48,6 +48,8 @@ const moi = (surcharge: Partial<EtatMoi> = {}): EtatMoi => ({
 });
 
 const releve = (surcharge: Partial<ReleveReseau> = {}): ReleveReseau => ({
+  ferme: false,
+  nbReponses: 0,
   campagneOuverte: true,
   moi: null,
   membres: [],
@@ -353,6 +355,47 @@ describe('déclencheurs, confirmations et accords', () => {
     expect(debut).toContain(
       `<ol aria-label="${echappe(fr.reseau.etapes.legende)}"`
     );
+  });
+});
+
+describe('relevé fermé (interrupteur), ma ligne présente', () => {
+  const ferme = (surcharge: Partial<EtatMoi> = {}, nbReponses = 0) =>
+    rendre(
+      releve({
+        ferme: true,
+        nbReponses,
+        campagneOuverte: false,
+        moi: moi(surcharge)
+      })
+    );
+
+  it('le texte de fermeture, le retrait et l’opposition, rien d’autre', () => {
+    const html = ferme({}, 3);
+    expect(html).toContain('data-etape="ferme"');
+    expect(html).toContain(echappe(fr.reseau.ferme.texte));
+    expect(html).toContain(echappe(fr.reseau.retrait.bouton));
+    expect(html).toContain(echappe(fr.reseau.opposer.bouton));
+    expect(html).not.toContain('<fieldset');
+    expect(html).not.toContain('type="checkbox"');
+    expect(html).not.toContain('type="submit"');
+    expect(html).not.toContain('aria-current="step"');
+    expect(html).not.toContain(echappe(fr.reseau.close.texte));
+  });
+
+  it('rien à retirer (aucune réponse, aucun accord) : pas de bouton de retrait', () => {
+    expect(ferme()).not.toContain(echappe(fr.reseau.retrait.bouton));
+  });
+
+  it('un accord sans réponse suffit pour proposer le retrait', () => {
+    expect(ferme({ accordCarteLe: '2026-10-23T09:05:00Z' })).toContain(
+      echappe(fr.reseau.retrait.bouton)
+    );
+  });
+
+  it('opposé : lever l’opposition, pas de nouvelle opposition', () => {
+    const html = ferme({ opposeLe: '2026-10-23T09:10:00Z' });
+    expect(html).toContain(echappe(fr.reseau.oppose.lever));
+    expect(html).not.toContain(echappe(fr.reseau.opposer.bouton));
   });
 });
 

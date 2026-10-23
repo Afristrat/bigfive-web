@@ -33,7 +33,9 @@ export type EvenementInteraction =
   | { type: 'ouvrir'; panneau: Panneau }
   | { type: 'fermer' }
   | { type: 'succes' }
-  | { type: 'focusApplique' };
+  | { type: 'focusApplique' }
+  /** La case « répondre » est cochée de nouveau : plus rien à confirmer. */
+  | { type: 'repondreRecoche' };
 
 export const INTERACTION_INITIALE: EtatInteraction = {
   panneau: null,
@@ -74,6 +76,11 @@ export function reduireInteraction(
       return { panneau: null, focus: { cible: 'titre' } };
     case 'focusApplique':
       return etat.focus === null ? etat : { ...etat, focus: null };
+    case 'repondreRecoche':
+      // La confirmation du refus se referme ; le focus reste sur la case.
+      return etat.panneau === 'refus'
+        ? { panneau: 'accords', focus: null }
+        : etat;
   }
 }
 
