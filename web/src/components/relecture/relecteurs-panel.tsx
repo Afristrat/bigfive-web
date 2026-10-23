@@ -20,7 +20,8 @@ import { boutonPrincipal } from '@/components/primitives';
 
 export type RelecteurLigne = {
   userId: string;
-  adresse: string;
+  /** null : compte sans adresse (mention « adresse absente »). */
+  adresse: string | null;
   /** Date de désignation, déjà mise en forme dans la langue de la page. */
   ajouteLe: string;
   /** Case de confirmation, avec l'adresse. */
@@ -41,6 +42,7 @@ export type RelecteursLabels = {
   plafond: string;
   erreur: string;
   legende: string;
+  sansAdresse: string;
   colAdresse: string;
   colAjout: string;
   colAction: string;
@@ -236,7 +238,13 @@ export function RelecteursPanel({
                         scope='row'
                         className={`${td} break-all text-start font-semibold`}
                       >
-                        <bdi dir='ltr'>{ligne.adresse}</bdi>
+                        {ligne.adresse === null ? (
+                          <span className='font-normal text-texte-2'>
+                            {labels.sansAdresse}
+                          </span>
+                        ) : (
+                          <bdi dir='ltr'>{ligne.adresse}</bdi>
+                        )}
                       </th>
                       <td className={`${td} chiffres whitespace-nowrap`}>
                         {ligne.ajouteLe}

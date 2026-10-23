@@ -4,6 +4,7 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import fr from '@/messages/fr.js';
+import { nomProfilApercu } from '@/lib/apercu-resultats';
 import { empreinteBloc } from '@/lib/bibliotheque';
 import type { EvenementRelecture } from '@/lib/relecture-atelier';
 
@@ -203,9 +204,43 @@ describe('blocs et filtres', { timeout: 30_000 }, () => {
     );
   });
 
-  it('profils fictifs : codes affichés avec le nom fictif accessible', async () => {
+  it('profils fictifs : puces lisibles, code et nom fictif affichés', async () => {
     const html = await rendre({ statut: 'tous' });
-    expect(html).toMatch(/<abbr[^>]*title="[^"]+"[^>]*>AM<\/abbr>/);
+    expect(html).not.toContain('<abbr');
+    expect(html).toContain(`>${nomProfilApercu('AM')}<`);
+    expect(html).toMatch(/>AM<\/span>/);
+  });
+
+  it('région vivante persistante au niveau de la page, même quand la sélection est vide', async () => {
+    const html = await rendre({ statut: 'relu' });
+    expect(nbBlocs(html)).toBe(0);
+    expect(html).toMatch(
+      /id="annonces-relecture"[^>]*role="status"|role="status"[^>]*id="annonces-relecture"/
+    );
+    const pleine = await rendre();
+    const region = pleine.indexOf('id="annonces-relecture"');
+    expect(region).toBeGreaterThan(-1);
+    // Hors de tout bloc : après la liste.
+    expect(region).toBeGreaterThan(pleine.lastIndexOf('data-bloc="'));
+  });
+
+  it('formulaires de verdict : aucun repère nommé, un groupe légendé par bloc ; titres focalisables', async () => {
+    const html = await rendre({ statut: 'tous' });
+    expect(html).not.toMatch(/<form[^>]*aria-label=/);
+    expect(html.split('<legend').length - 1).toBe(150);
+    expect(html).toMatch(
+      /<h2 id="bloc-N1-bas-titre" tabindex="-1"|<h2 tabindex="-1" id="bloc-N1-bas-titre"/
+    );
+    expect(html).toContain('id="selection-relecture"');
+  });
+
+  it('textes saisis en sens d’écriture automatique (commentaire et champ)', async () => {
+    const mien = evenement('N1/bas', 'a_corriger');
+    loadHistorique.mockResolvedValue([mien]);
+    loadEtat.mockResolvedValue(etatDe([mien]));
+    const html = await rendre({ statut: 'a_corriger' });
+    expect(html).toMatch(/<textarea[^>]*dir="auto"/);
+    expect(html).toMatch(/dir="auto"[^>]*>Accord à revoir</);
   });
 
   it('historique indisponible : message, aucun formulaire de verdict', async () => {
@@ -310,6 +345,19 @@ describe('relecteurs désignés', () => {
     expect(html).toContain(fr.relecture.relecteurs.titre);
     expect(html).toContain('nezha@tenga.test');
     expect(html).toContain('name="email"');
+  });
+
+  it('compte sans adresse : ligne conservée, mention « adresse absente »', async () => {
+    estAdministrateur.mockResolvedValue(true);
+    loadRelecteurs.mockResolvedValue([
+      {
+        userId: '22222222-2222-4222-8222-222222222222',
+        adresse: null,
+        ajouteLe: '2026-10-23T09:00:00Z'
+      }
+    ]);
+    const html = await rendre();
+    expect(html).toContain(fr.relecture.relecteurs.sansAdresse);
   });
 
   it('liste indisponible : message, formulaire de désignation conservé', async () => {

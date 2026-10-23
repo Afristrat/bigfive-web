@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { MotsCinetiques } from '@/components/mots-cinetiques';
 import { title } from '@/components/primitives';
+import { AnnoncesRelecture } from '@/components/relecture/annonces-relecture';
 import {
   BlocCarte,
   type BlocCarteLabels,
@@ -38,6 +39,7 @@ import {
   loadRelecteurs,
   requireRelecteur
 } from '@/lib/relecture-data';
+import { REPLI_FOCUS_ID } from '@/lib/relecture-focus';
 import { Link } from '@/navigation';
 
 interface Props {
@@ -149,7 +151,9 @@ export default async function RelecturePage({ params, searchParams }: Props) {
       historiqueVide: t(admin ? 'bloc.historiqueVide' : 'bloc.mesVerdictsVide'),
       verdict: {
         ...verdict,
-        groupe: t('formulaire.groupe', { bloc: b.bloc.id })
+        groupe: t('formulaire.groupe', {
+          bloc: isolerEnArabe(b.bloc.id, locale)
+        })
       }
     };
   };
@@ -162,10 +166,11 @@ export default async function RelecturePage({ params, searchParams }: Props) {
       qui: t('bloc.par', {
         qui: e.estMoi
           ? t('bloc.vous')
-          : e.relecteurNom ??
-            (e.relecteurAdresse
+          : e.relecteurNom
+            ? isolerEnArabe(e.relecteurNom, locale)
+            : e.relecteurAdresse
               ? isolerEnArabe(e.relecteurAdresse, locale)
-              : t('bloc.auteurEfface'))
+              : t('bloc.auteurEfface')
       }),
       commentaire: e.commentaire,
       ancienTexte:
@@ -211,7 +216,7 @@ export default async function RelecturePage({ params, searchParams }: Props) {
           {t('indisponible')}
         </p>
       ) : (
-        <>
+        <AnnoncesRelecture>
           <section
             aria-labelledby='avancement-titre'
             className='grid gap-x-8 gap-y-6 border-t-2 border-encre py-10 lg:grid-cols-12'
@@ -318,7 +323,8 @@ export default async function RelecturePage({ params, searchParams }: Props) {
                 ? t('frequenceObservee')
                 : t('frequenceIndisponible')}
             </p>
-            <p className='chiffres'>
+            {/* Repli du focus quand un verdict vide la sélection. */}
+            <p id={REPLI_FOCUS_ID} tabIndex={-1} className='chiffres'>
               {t('selection', { n: formatNombre(retenus.length, locale) })}
             </p>
           </div>
@@ -345,7 +351,7 @@ export default async function RelecturePage({ params, searchParams }: Props) {
               ))}
             </ol>
           )}
-        </>
+        </AnnoncesRelecture>
       )}
 
       {admin && (
@@ -369,17 +375,20 @@ export default async function RelecturePage({ params, searchParams }: Props) {
             lignes={
               relecteurs === null
                 ? null
-                : relecteurs.map((r) => ({
-                    userId: r.userId,
-                    adresse: r.adresse,
-                    ajouteLe: formatDate(r.ajouteLe, locale, FUSEAU_MAROC),
-                    confirmer: t('relecteurs.confirmer', {
-                      adresse: isolerEnArabe(r.adresse, locale)
-                    }),
-                    retirerAria: t('relecteurs.retirerAria', {
-                      adresse: r.adresse
-                    })
-                  }))
+                : relecteurs.map((r) => {
+                    // Compte sans adresse (GoTrue le permet) : mention à la place.
+                    const adresse =
+                      r.adresse === null
+                        ? t('relecteurs.sansAdresse')
+                        : isolerEnArabe(r.adresse, locale);
+                    return {
+                      userId: r.userId,
+                      adresse: r.adresse,
+                      ajouteLe: formatDate(r.ajouteLe, locale, FUSEAU_MAROC),
+                      confirmer: t('relecteurs.confirmer', { adresse }),
+                      retirerAria: t('relecteurs.retirerAria', { adresse })
+                    };
+                  })
             }
             labels={{
               adresse: t('relecteurs.adresse'),
@@ -393,6 +402,7 @@ export default async function RelecturePage({ params, searchParams }: Props) {
               plafond: t('relecteurs.plafond'),
               erreur: t('relecteurs.erreur'),
               legende: t('relecteurs.legende'),
+              sansAdresse: t('relecteurs.sansAdresse'),
               colAdresse: t('relecteurs.colAdresse'),
               colAjout: t('relecteurs.colAjout'),
               colAction: t('relecteurs.colAction'),

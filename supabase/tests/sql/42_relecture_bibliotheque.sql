@@ -10,7 +10,9 @@
 -- app.frequence_facettes (histogramme, rien sous le seuil d'anonymat),
 -- app.designer_relecteur (langue du compte rendue pour l'avis ; plafond de 5 désignations
 -- par heure et par personne), app.retirer_relecteur, app.lister_relecteurs (super
--- administrateur seul). Conservation : private.purger_historique_relecture, appelée par
+-- administrateur seul). Verdicts inscrits au journal sans auteur ni identifiant ;
+-- app.exporter_mes_donnees gagne la clé « relecture ». Conservation :
+-- private.purger_historique_relecture, appelée par
 -- private.purger_quotidien, efface à 30 jours tout verdict qui n'est plus le verdict courant
 -- de son couple (bloc, empreinte) et anonymise le verdict courant échu ; le déclencheur
 -- d'immuabilité ne laisse passer que ce contexte (tenga_owner et réglage de la fonction).
@@ -18,7 +20,7 @@
 -- annulée : scripts/epreuve-relecture.sql.
 -- (Enveloppé dans une transaction annulée par scripts/test-sql.sh.)
 SET LOCAL search_path TO tests, pg_catalog, public;
-SELECT plan(122);
+SELECT plan(131);
 
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
@@ -211,7 +213,10 @@ SELECT is(
   'private.purger_historique_relecture : SECURITY DEFINER, search_path vide, tenga_owner, exécutable par aucun rôle de l''API');
 SELECT matches(pg_get_functiondef('private.purger_quotidien()'::regprocedure), 'PERFORM private\.purger_historique_relecture\(\);',
   'la purge quotidienne appelle la purge de l''historique de relecture');
-SELECT is(private.duree_historique_relecture(), interval '30 days', 'conservation de l''historique de relecture : 30 jours');
+SELECT is(md5(replace((SELECT p.prosrc FROM pg_proc p WHERE p.oid = 'private.purger_quotidien()'::regprocedure),
+                       E'  PERFORM private.purger_historique_relecture();\n', '')),
+  '0fef778e812a5b2227b95447fc62eff3', 'le corps de la purge quotidienne est celui de 0018, hors la seule ligne ajoutée (md5)');
+SELECT is(private.duree_historique_relecture(), interval '30 days', 'conservation de l''historique de relecture : 30 jours (décision d''Amine)');
 
 -- ===== suis_relecteur =====
 SELECT is(pg_temp.appel(pg_temp.u_ad(), 'select app.suis_relecteur()::text'), 'true', 'un super administrateur est relecteur de droit');
@@ -273,14 +278,16 @@ SELECT is(
        ('13 verdict inconnu',        'N1/bas',     pg_temp.e1(),               'valide',     NULL),
        ('14 correction sans texte',  'N1/bas',     pg_temp.e1(),               'a_corriger', NULL),
        ('15 correction en blanc',    'N1/bas',     pg_temp.e1(),               'a_corriger', E'  \n\t '),
-       ('16 commentaire trop long',  'N1/bas',     pg_temp.e1(),               'relu',       repeat('x', 2001))
+       ('16 commentaire trop long',  'N1/bas',     pg_temp.e1(),               'relu',       repeat('x', 2001)),
+       ('17 correction en blancs Unicode', 'N1/bas', pg_temp.e1(),             'a_corriger', E'\u00a0\u202f\u3000\u2009\ufeff')
      ) AS c(nom, bloc, emp, verdict, com)),
   (SELECT string_agg(c.nom || '=' || pg_temp.invalide(), E'\n' ORDER BY c.nom)
      FROM unnest(ARRAY['01 bloc nul', '02 facette 7', '03 domaine inconnu', '04 niveau inconnu', '05 minuscule',
                        '06 espace final', '07 empreinte nulle', '08 empreinte courte', '09 empreinte majuscule',
                        '10 empreinte non hexa', '11 verdict nul', '12 verdict majuscule', '13 verdict inconnu',
-                       '14 correction sans texte', '15 correction en blanc', '16 commentaire trop long']) AS c(nom)),
-  'seize entrées invalides : 22023, un seul message');
+                       '14 correction sans texte', '15 correction en blanc', '16 commentaire trop long',
+                       '17 correction en blancs Unicode']) AS c(nom)),
+  'dix-sept entrées invalides (dont un commentaire fait d''espaces Unicode) : 22023, un seul message');
 SELECT is((SELECT count(*)::int FROM app.relectures_blocs) + (SELECT count(*)::int FROM private.audit_log WHERE action ~ '^relecture\.(relu|a_corriger)$'),
   0, 'aucun refus n''a écrit de verdict ni de journal');
 
@@ -293,16 +300,16 @@ SELECT is(pg_temp.relire(pg_temp.u_rl(), 'N1/bas', pg_temp.e1(), 'relu', repeat(
 SELECT is((SELECT string_agg(r.bloc || '|' || r.empreinte || '|' || r.verdict || '|' || char_length(r.commentaire)::text || '|' || r.relecteur::text
                              || '|' || r.anonymise::text, ',' ORDER BY r.ordre) FROM app.relectures_blocs r),
   'N1/bas|' || pg_temp.e1() || '|relu|2000|' || pg_temp.u_rl()::text || '|false', 'une seule ligne écrite, rangée telle quelle, non anonymisée');
-SELECT is((SELECT string_agg(l.acteur::text || '|' || l.ressource_type || '|' || (l.ressource_id = r.id)::text, ',')
-             FROM private.audit_log l CROSS JOIN app.relectures_blocs r WHERE l.action = 'relecture.relu'),
-  pg_temp.u_rl()::text || '|relecture|true', 'une seule ligne de journal relecture.relu, liée au verdict');
+SELECT is((SELECT string_agg(coalesce(l.acteur::text, '-') || '|' || l.ressource_type || '|' || coalesce(l.ressource_id::text, '-'), ',')
+             FROM private.audit_log l WHERE l.action = 'relecture.relu'),
+  '-|relecture|-', 'une seule ligne de journal relecture.relu, sans auteur ni identifiant de verdict');
 
-SELECT ok(pg_temp.relire(pg_temp.u_ad(), 'N1/bas', pg_temp.e1(), 'a_corriger', E'  À reformuler : « vous » pluriel.\n ') !~ '^ERR',
+SELECT ok(pg_temp.relire(pg_temp.u_ad(), 'N1/bas', pg_temp.e1(), 'a_corriger', E'\u00a0 À reformuler : « vous » pluriel.\u202f\n\u3000') !~ '^ERR',
   'le super administrateur demande une correction, commentaire à l''appui');
-SELECT is((SELECT r.commentaire FROM app.relectures_blocs r WHERE r.verdict = 'a_corriger'),
-  'À reformuler : « vous » pluriel.', 'le commentaire est rangé sans les blancs qui l''entourent');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'relecture.a_corriger' AND acteur = pg_temp.u_ad()),
-  1, 'une ligne de journal relecture.a_corriger');
+SELECT is((SELECT string_agg(r.commentaire, ' / ') FROM app.relectures_blocs r WHERE r.verdict = 'a_corriger'),
+  'À reformuler : « vous » pluriel.', 'le commentaire est rangé sans les blancs qui l''entourent, espaces Unicode comprises');
+SELECT is((SELECT count(*)::text || '|' || count(acteur)::text || '|' || count(ressource_id)::text FROM private.audit_log WHERE action = 'relecture.a_corriger'),
+  '1|0|0', 'une ligne de journal relecture.a_corriger, sans auteur ni identifiant');
 SELECT is(pg_temp.appel(NULL, 'select string_agg(x.bloc || ''|'' || x.verdict, '','') from app.etat_relecture_blocs() x', 'service_role'),
   'N1/bas|a_corriger', 'état servi : le dernier verdict sur ce texte (à corriger)');
 SELECT ok(pg_temp.relire(pg_temp.u_rl(), 'N1/bas', pg_temp.e1(), 'relu', repeat('y', 2000)) !~ '^ERR',
@@ -353,6 +360,31 @@ SELECT ok(pg_temp.appel(pg_temp.u_nx(), 'select count(*)::text from app.historiq
 SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action ~ '^relecture\.' AND to_jsonb(audit_log)::text ~ '@'),
   0, 'aucune ligne de journal de relecture ne contient d''adresse');
 
+-- ===== Droit d'accès : app.exporter_mes_donnees gagne la clé « relecture » =====
+SELECT is(pg_temp.appel(pg_temp.u_rl(), 'select (select string_agg(k, '','' order by k collate "C") from jsonb_object_keys(app.exporter_mes_donnees()) k)'),
+  'appartenances,binomes,compte,exporte_le,journal,participations,profil,relecture,resultats,tentatives',
+  'l''export garde ses clés de 0021 et gagne « relecture »');
+SELECT is(pg_temp.appel(pg_temp.u_rl(), $q$select (e -> 'relecture' ->> 'ajoute_le' is not null)::text || '|' || jsonb_array_length(e -> 'relecture' -> 'verdicts')::text
+                                          || '|' || (select string_agg(k, ',' order by k) from jsonb_object_keys(e -> 'relecture' -> 'verdicts' -> 0) k)
+                                          || '|' || (e::text like '%À reformuler%')::text
+                                        from app.exporter_mes_donnees() e$q$),
+  'true|4|bloc,commentaire,cree_le,empreinte,verdict|false',
+  'export de la relectrice : date de désignation et ses quatre verdicts (cinq clés), jamais le verdict de l''administrateur');
+SELECT is(pg_temp.appel(pg_temp.u_ad(), $q$select coalesce(e -> 'relecture' ->> 'ajoute_le', '-') || '|' || jsonb_array_length(e -> 'relecture' -> 'verdicts')::text
+                                          || '|' || (e -> 'relecture' -> 'verdicts' -> 0 ->> 'commentaire')
+                                        from app.exporter_mes_donnees() e$q$),
+  '-|1|À reformuler : « vous » pluriel.', 'export de l''administrateur (non désigné) : pas de date de désignation, son seul verdict');
+SELECT is((SELECT md5(replace(p.prosrc, $blk$    'relecture', pg_catalog.jsonb_build_object(
+      'ajoute_le', (SELECT rb.ajoute_le FROM private.relecteurs_bibliotheque rb WHERE rb.user_id = v_uid),
+      'verdicts', COALESCE((
+        SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+                 'bloc', v.bloc, 'empreinte', v.empreinte, 'verdict', v.verdict,
+                 'commentaire', v.commentaire, 'cree_le', v.cree_le) ORDER BY v.ordre)
+        FROM app.relectures_blocs v WHERE v.relecteur = v_uid), '[]'::jsonb)),
+$blk$, ''))
+             FROM pg_proc p WHERE p.oid = 'app.exporter_mes_donnees()'::regprocedure),
+  '308646a222566783617d442bf2188be6', 'le corps de l''export est celui de 0021, hors la seule clé « relecture » ajoutée (md5)');
+
 -- ===== Accès direct et historique en ajout seul =====
 SELECT is(pg_temp.appel(pg_temp.u_rl(), 'select count(*)::text from app.relectures_blocs'),
   'ERR:42501:permission denied for table relectures_blocs', 'la relectrice ne lit pas la table directement');
@@ -370,10 +402,12 @@ SELECT throws_ok($$TRUNCATE app.relectures_blocs$$,
   '55000', 'Historique de relecture en ajout seul', 'l''historique ne se vide pas, même par un superutilisateur');
 SELECT throws_ok(format('UPDATE app.relectures_blocs SET relecteur = %L WHERE relecteur = %L', pg_temp.u_ad(), pg_temp.u_rl()),
   '55000', 'Historique de relecture en ajout seul', 'un verdict ne change pas d''auteur');
+SELECT throws_ok(format('UPDATE app.relectures_blocs SET relecteur = NULL WHERE relecteur = %L', pg_temp.u_rl()),
+  '55000', 'Historique de relecture en ajout seul', 'l''auteur d''un verdict ne s''efface que pendant l''effacement de son compte, même par une écriture directe');
 SELECT throws_ok($$UPDATE app.relectures_blocs SET commentaire = NULL, relecteur = NULL, anonymise = true WHERE verdict = 'a_corriger'$$,
   '55000', 'Historique de relecture en ajout seul', 'un verdict récent ne s''anonymise pas hors purge, même par un superutilisateur');
 SELECT throws_ok(format('INSERT INTO app.relectures_blocs (bloc, empreinte, verdict) VALUES (%L, %L, %L)', 'N2/bas', pg_temp.e1(), 'a_corriger'),
-  '23514', NULL, 'contrainte : une correction exige un commentaire, même en écriture directe');
+  '23514', NULL, 'contrainte : une correction exige un commentaire, même par une écriture directe');
 SELECT throws_ok(format('INSERT INTO app.relectures_blocs (bloc, empreinte, verdict, commentaire, anonymise) VALUES (%L, %L, %L, %L, true)', 'N2/bas', pg_temp.e1(), 'relu', 'x'),
   '23514', NULL, 'contrainte : un verdict anonymisé ne porte ni commentaire ni relecteur');
 
@@ -420,7 +454,7 @@ SELECT is((SELECT count(*)::int || '|' || count(*) FILTER (WHERE relecteur IS NU
 SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action ~ '^relecture\.'), 17,
   'journal conservé : 2 désignations, 1 lecture de liste, 5 verdicts, 8 lectures d''historique, 1 retrait ; aucun refus');
 
--- ===== Plafond des verdicts : 200 par heure et par personne (défaut non validé) =====
+-- ===== Plafond des verdicts : 200 par heure et par personne (décision d'Amine) =====
 -- L'administrateur a déjà rendu un verdict dans l'heure ; on complète à 199 dans la fenêtre,
 -- plus 50 verdicts de plus d'une heure qui ne comptent pas.
 INSERT INTO app.relectures_blocs (bloc, empreinte, verdict, relecteur, cree_le)
@@ -434,18 +468,19 @@ SELECT is((SELECT count(*)::int FROM app.relectures_blocs r WHERE r.relecteur = 
   199, 'fixture : 199 verdicts de l''administrateur dans l''heure, 50 au-delà');
 SELECT ok(pg_temp.relire(pg_temp.u_ad(), 'C6/haut', pg_temp.hx(5000), 'relu') ~ '^[0-9a-f]{8}-',
   'plafond des verdicts : le 200e de l''heure est accepté (les verdicts de plus d''une heure ne comptent pas)');
+SELECT set_config('zz.journal_relu', (SELECT count(*)::text FROM private.audit_log l WHERE l.action = 'relecture.relu'), true);
 SELECT is(pg_temp.relire(pg_temp.u_ad(), 'C6/haut', pg_temp.hx(5001), 'relu'), 'ERR:PT429:Plafond de verdicts atteint',
   'plafond des verdicts : le 201e de l''heure est refusé (PT429)');
-SELECT is((SELECT count(*)::int || '|' || (SELECT count(*)::int FROM private.audit_log l WHERE l.action = 'relecture.relu' AND l.acteur = pg_temp.u_ad())
+SELECT is((SELECT count(*)::text || '|' || (SELECT count(*)::text FROM private.audit_log l WHERE l.action = 'relecture.relu')
              FROM app.relectures_blocs r WHERE r.relecteur = pg_temp.u_ad() AND r.empreinte = pg_temp.hx(5001)),
-  '0|1', 'le verdict refusé n''écrit rien, ni verdict ni journal');
+  '0|' || current_setting('zz.journal_relu'), 'le verdict refusé n''écrit rien, ni verdict ni journal');
 SELECT is(pg_temp.relire(pg_temp.u_ad(), 'C6/haut', pg_temp.hx(5000), 'relu'),
   (SELECT string_agg(r.id::text, ',') FROM app.relectures_blocs r WHERE r.empreinte = pg_temp.hx(5000)),
   'au plafond, le verdict rejoué à l''identique rend encore la ligne existante (aucune écriture)');
 SELECT ok(pg_temp.relire(pg_temp.u_ad2(), 'C6/haut', pg_temp.hx(5001), 'relu') ~ '^[0-9a-f]{8}-',
   'le plafond est par personne : un autre super administrateur rend son verdict');
 
--- ===== Plafond des désignations : 5 par heure et par personne (défaut non validé) =====
+-- ===== Plafond des désignations : 5 par heure et par personne (décision d'Amine) =====
 -- L'administrateur a déjà désigné deux personnes dans l'heure (rl, nx).
 SELECT is(pg_temp.designer(pg_temp.u_ad(), pg_temp.u_q(1)) || ',' || pg_temp.designer(pg_temp.u_ad(), pg_temp.u_q(2))
           || ',' || pg_temp.designer(pg_temp.u_ad(), pg_temp.u_q(3)),
@@ -466,7 +501,7 @@ SELECT is(pg_temp.designer(pg_temp.u_ad2(), pg_temp.u_q(4)), 'true',
 SELECT is(pg_temp.designer(pg_temp.u_ad2(), pg_temp.u_q(5)), 'ERR:PT429:Plafond de désignations atteint',
   'la 6e désignation du second administrateur dans l''heure est refusée');
 
--- ===== Conservation : 30 jours, verdict courant conservé et anonymisé =====
+-- ===== Conservation : 30 jours, verdict courant conservé et anonymisé (décision d'Amine) =====
 -- Verdicts anciens écrits directement (superutilisateur), du plus ancien au plus récent :
 --   A2/milieu : 40 jours (antérieur), 31 jours (courant)        -> le premier purgé, le second anonymisé
 --   A3/milieu : 31 jours (antérieur), 29 jours (courant)        -> le premier purgé, le second intact
@@ -480,7 +515,7 @@ INSERT INTO app.relectures_blocs (bloc, empreinte, verdict, commentaire, relecte
   ('A4/milieu', pg_temp.e3(), 'relu',       NULL,                 pg_temp.u_pl(), now() - interval '1 day');
 SELECT set_config('zz.autres_avant', (SELECT string_agg(r.id::text || r.verdict || coalesce(r.commentaire, '') || coalesce(r.relecteur::text, ''), ',' ORDER BY r.ordre)
                                         FROM app.relectures_blocs r WHERE r.empreinte <> pg_temp.e3()), true);
-SELECT private.purger_quotidien();
+SELECT lives_ok('SELECT private.purger_quotidien()', 'la purge quotidienne s''exécute sans erreur');
 SELECT is((SELECT count(*)::text || '|' || count(*) FILTER (WHERE r.cree_le < now() - interval '30 days')::text
              FROM app.relectures_blocs r WHERE r.empreinte = pg_temp.e3()),
   '4|1', 'purge : les verdicts antérieurs de 31 et 40 jours sont effacés (reste 4 lignes, dont une seule de plus de 30 jours)');
@@ -505,7 +540,7 @@ SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l.action LIKE 'pu
   0, 'les traces de purge de l''historique n''ont pas d''acteur');
 SELECT is(pg_temp.appel(pg_temp.u_ad(), 'select string_agg(coalesce(x.relecteur_nom, ''-'') || ''|'' || coalesce(x.relecteur_adresse, ''-'') || ''|'' || coalesce(x.commentaire, ''-'') || ''|'' || x.est_moi::text, '','') from app.historique_relecture() x where x.bloc = ''A2/milieu'''),
   '-|-|-|false', 'le super administrateur lit le verdict anonymisé sans nom, sans adresse, sans commentaire');
-SELECT private.purger_quotidien();
+SELECT lives_ok('SELECT private.purger_quotidien()', 'la seconde passe de la purge quotidienne s''exécute sans erreur');
 SELECT is((SELECT (SELECT quantite FROM private.audit_log WHERE action = 'purge.relectures' ORDER BY id DESC LIMIT 1)::text || '|'
                   || (SELECT quantite FROM private.audit_log WHERE action = 'purge.relectures_anonymisees' ORDER BY id DESC LIMIT 1)::text
                   || '|' || (SELECT count(*)::text FROM app.relectures_blocs r WHERE r.empreinte = pg_temp.e3())),
@@ -544,5 +579,8 @@ SELECT is(pg_temp.appel(NULL, $q$delete from app.relectures_blocs r where r.bloc
 SELECT is((SELECT string_agg(coalesce(r.commentaire, '-'), ',') FROM app.relectures_blocs r WHERE r.bloc = 'A5/milieu'),
   '-', 'et lui seul : le verdict courant du bloc reste');
 SELECT set_config('tenga.purge_relecture', '', true);
+SELECT is((SELECT count(*)::int FROM private.audit_log l
+            WHERE l.action ~ '^relecture\.(relu|a_corriger)$' AND (l.acteur IS NOT NULL OR l.ressource_id IS NOT NULL)),
+  0, 'aucune ligne de journal de verdict ne porte d''auteur ni d''identifiant : la table est la seule trace nominative');
 
 SELECT * FROM finish();

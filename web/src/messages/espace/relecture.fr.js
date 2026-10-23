@@ -26,7 +26,7 @@ const relectureFr = {
   frequenceObservee:
     'Fréquence observée sur les résultats enregistrés, sans aucune donnée individuelle.',
   frequenceIndisponible:
-    'Fréquence observée indisponible : les résultats sont encore trop peu nombreux pour respecter le seuil d’anonymat. Les blocs portés par les profils fictifs passent d’abord.',
+    'Fréquence observée indisponible : résultats encore trop peu nombreux pour respecter le seuil d’anonymat, ou lecture momentanément impossible. Les blocs portés par les profils fictifs passent d’abord.',
   selection: 'Blocs dans cette sélection : {n}',
   vide: 'Aucun bloc dans cette sélection.',
   indisponible:
@@ -77,6 +77,7 @@ const relectureFr = {
     vide: 'Aucun relecteur désigné.',
     indisponible: 'La liste des relecteurs est momentanément indisponible.',
     legende: 'Relecteurs désignés et date de désignation',
+    sansAdresse: 'adresse absente',
     colAdresse: 'Adresse',
     colAjout: 'Désignation',
     colAction: 'Action',
@@ -87,7 +88,7 @@ const relectureFr = {
     envoi: 'Enregistrement en cours',
     ajoute: 'Adresse désignée.',
     deja: 'Cette adresse est déjà désignée.',
-    inconnu: 'Compte suspendu : désignation refusée.',
+    inconnu: 'Compte inconnu ou suspendu : désignation refusée.',
     invalide: 'Adresse invalide.',
     erreur: 'La désignation n’a pas pu être enregistrée. Réessayez.',
     plafond: 'Trop de désignations en une heure : réessayez un peu plus tard.',

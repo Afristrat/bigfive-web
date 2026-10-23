@@ -123,13 +123,18 @@ describe('catalogue des 150 blocs', () => {
     expect(blocs.some((b) => b.accords === null)).toBe(true);
   });
 
-  it('aucun bloc n’est relu dans le fichier aujourd’hui', () => {
-    expect(blocs.every((b) => !b.reluDansLeFichier)).toBe(true);
+  it('le champ « relecture » du fichier n’est jamais une source d’affichage', () => {
+    const source = readFileSync(
+      resolve(__dirname, '../../src/lib/bibliotheque.ts'),
+      'utf8'
+    );
+    expect(source).not.toMatch(/\.relecture\b|\bNON_RELU\b|reluDansLeFichier/);
+    expect(blocs.every((b) => !('reluDansLeFichier' in b))).toBe(true);
   });
 });
 
 describe('état de la base par-dessus le fichier', () => {
-  it('sans état chargé : le fichier fait foi (non relu, masqué à la personne)', () => {
+  it('sans état chargé : non relu, masqué à la personne (le fichier ne fait jamais foi)', () => {
     expect(blocFacette('N1/bas', 'fr', 'personne')).toEqual({
       etat: 'en_relecture'
     });
@@ -182,7 +187,7 @@ describe('état de la base par-dessus le fichier', () => {
     });
   });
 
-  it('un état vide (base joignable, aucun verdict) laisse le fichier faire foi', () => {
+  it('un état vide (base joignable, aucun verdict) : non relu, masqué à la personne', () => {
     appliquerEtatRelecture([]);
     expect(blocFacette('N1/bas', 'fr', 'personne').etat).toBe('en_relecture');
   });

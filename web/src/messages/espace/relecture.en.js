@@ -26,7 +26,7 @@ const relectureEn = {
   frequenceObservee:
     'Frequency observed across stored results, without any individual data.',
   frequenceIndisponible:
-    'Observed frequency unavailable: there are still too few results to respect the anonymity threshold. Blocks carried by the fictitious profiles come first.',
+    'Observed frequency unavailable: too few results yet to respect the anonymity threshold, or reading momentarily impossible. Blocks carried by the fictitious profiles come first.',
   selection: 'Blocks in this selection: {n}',
   vide: 'No block in this selection.',
   indisponible:
@@ -78,6 +78,7 @@ const relectureEn = {
     vide: 'No designated reviewer.',
     indisponible: 'The list of reviewers is temporarily unavailable.',
     legende: 'Designated reviewers and designation date',
+    sansAdresse: 'no address',
     colAdresse: 'Address',
     colAjout: 'Designation',
     colAction: 'Action',
@@ -88,7 +89,7 @@ const relectureEn = {
     envoi: 'Saving',
     ajoute: 'Address designated.',
     deja: 'This address is already designated.',
-    inconnu: 'Suspended account: designation refused.',
+    inconnu: 'Unknown or suspended account: designation refused.',
     invalide: 'Invalid address.',
     erreur: 'The designation could not be saved. Please try again.',
     plafond:

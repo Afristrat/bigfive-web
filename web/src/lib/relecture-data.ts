@@ -150,14 +150,15 @@ export async function loadFrequences(
 const relecteurRows = z.array(
   z.object({
     user_id: z.string().uuid(),
-    adresse: z.string(),
+    // Un compte GoTrue peut n'avoir aucune adresse : la ligne reste listée.
+    adresse: z.string().nullable(),
     ajoute_le: z.string()
   })
 );
 
 export type RelecteurDesigne = {
   userId: string;
-  adresse: string;
+  adresse: string | null;
   ajouteLe: string;
 };
 

@@ -4,7 +4,7 @@ DECLARE
   d text := pg_get_functiondef('app.frequence_facettes()'::regprocedure);
   n text := d;
 BEGIN
-  n := replace(n, $a$IF v_n < v_seuil THEN
+  n := replace(n, $a$IF v_seuil IS NULL OR v_n < v_seuil THEN
     RETURN;
   END IF;$a$, '');
   IF n = d THEN

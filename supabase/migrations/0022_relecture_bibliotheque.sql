@@ -2,7 +2,7 @@
 -- comparatif DISC et Big Five : faire relire les blocs, en commençant par ceux
 -- qui apparaissent le plus).
 --
--- Conservation : verdict courant conservé et anonymisé : défaut non validé.
+-- Conservation : verdict courant conservé et anonymisé : décision d'Amine.
 --
 -- Besoin : les 150 blocs d'interprétation de la bibliothèque
 -- (docs/design/bibliotheque-textes/facettes.json, copie
@@ -25,9 +25,12 @@
 --   app.relectures_blocs : historique en ajout seul. Bloc, empreinte, verdict,
 --     commentaire, relecteur, date, drapeau « anonymise » ; colonne « ordre »
 --     croissante pour départager deux verdicts de la même transaction. Ni
---     modification, ni suppression, ni vidage, même par un superutilisateur, sauf :
---     relecteur passe à NULL à l'effacement du compte du relecteur, et la purge
---     de conservation ci-dessous (seule à pouvoir effacer ou anonymiser).
+--     modification, ni suppression, ni vidage, même par une écriture directe d'un
+--     superutilisateur, sauf : relecteur passe à NULL pendant l'effacement du
+--     compte du relecteur (et seulement alors), et la purge de conservation
+--     ci-dessous (seule à pouvoir effacer ou anonymiser). Cette table est la SEULE
+--     trace nominative des verdicts, 30 jours au plus : le journal inscrit chaque
+--     verdict sans auteur ni identifiant.
 --
 --   Les deux tables : RLS forcée, aucun droit pour anon, authenticated ni
 --   service_role, écriture refusée à l'API (private.refuser_ecriture_api) ;
@@ -62,10 +65,13 @@
 --     entrée, 22023 « Relecture invalide : bloc, empreinte, verdict ou
 --     commentaire », sans écriture. Le même verdict rejoué par le même relecteur
 --     sur le même texte avec le même commentaire n'écrit rien et rend la ligne
---     existante (double clic). Plafond : 200 verdicts écrits par heure glissante
---     et par personne (PT429 « Plafond de verdicts atteint », sans écriture).
---     Verrous consultatifs par personne puis par bloc. Journal relecture.relu ou
---     relecture.a_corriger (type relecture).
+--     existante (double clic). Les blancs qui entourent le commentaire sont
+--     retirés, espaces Unicode comprises (insécables, fines, idéographique...).
+--     Plafond (décision d'Amine) : 200 verdicts écrits par heure glissante et par
+--     personne (PT429 « Plafond de verdicts atteint », sans écriture). Verrous
+--     consultatifs par personne puis par bloc. Journal relecture.relu ou
+--     relecture.a_corriger (type relecture) SANS acteur ni identifiant de verdict
+--     (décision 4 d'Amine : 30 jours au plus pour qui a jugé quoi).
 --
 --   app.historique_relecture() RETURNS TABLE (...)
 --     Relecteur seulement. Filtré EN BASE selon app.suis_admin_tenga() (décision
@@ -74,7 +80,7 @@
 --     verdict anonymisé) ; un relecteur désigné ne lit que SES verdicts, sans nom
 --     ni adresse (les colonnes sont NULL), et jamais ceux des autres. Du plus
 --     récent au plus ancien, avec est_moi. Chaque lecture est journalisée
---     (relecture.lister, quantité = lignes rendues à l'appelant). L'état courant
+--     (relecture.lister, quantité = lignes effectivement rendues). L'état courant
 --     de chaque bloc, sans aucune identité, est app.etat_relecture_blocs.
 --
 --   app.etat_relecture_blocs() RETURNS TABLE (bloc, empreinte, verdict)
@@ -87,7 +93,8 @@
 --     Relecteur seulement. Histogramme des scores de facette (format
 --     tenga-scores-1) sur l'ensemble des résultats, pour trier les blocs par
 --     fréquence d'affichage. Aucune ligne tant que le nombre de résultats est
---     sous private.settings.seuil_anonymat (5 au moins). Ni identifiant, ni
+--     sous private.settings.seuil_anonymat (5 au moins), ni si ce seuil est
+--     illisible. Ni identifiant, ni
 --     organisation, ni date. Le niveau (et donc le bloc) est déduit par
 --     l'application avec ses propres seuils : la base ne les duplique pas.
 --
@@ -98,21 +105,29 @@
 --     Tenga »). Désigner : compte existant et non suspendu (22023 « Compte
 --     inconnu » ou « Compte suspendu ») ; ajoute vrai si ajouté, faux si déjà
 --     relecteur ; langue du profil du compte (fr, ar ou en), pour l'avis envoyé
---     par l'application dans la langue du compte. Plafond : 5 désignations par
+--     par l'application dans la langue du compte. Plafond (décision d'Amine) : 5 désignations par
 --     heure glissante et par personne, comptées au journal (PT429 « Plafond de
 --     désignations atteint », sans écriture) ; une désignation rejouée n'y compte
 --     pas. Retirer : vrai si retiré, faux si absent. Journal relecture.designer,
 --     relecture.retirer (type utilisateur) et relecture.lister_relecteurs
 --     (quantité). Aucune adresse au journal.
 --
--- DÉFAUTS NON VALIDÉS par Amine : (1) verdict courant conservé et anonymisé
--- au-delà de 30 jours (bloc, empreinte, verdict, date) ; (2) plafonds de 200
--- verdicts et de 5 désignations par heure et par personne ; (3) un relecteur
--- désigné inactif depuis la durée de conservation des comptes vides perd son
--- compte à la purge quotidienne (règle de 0018, inchangée) ; (4) le journal
--- (private.audit_log, durée conservation_journal_mois) garde l'acteur et
--- l'identifiant de chaque verdict : un super administrateur qui lit le journal
--- peut rattacher un verdict anonymisé à son auteur jusqu'à la purge du journal.
+--   app.exporter_mes_donnees() (droit d'accès) : redéfinie à l'identique de 0021,
+--     plus la clé « relecture » : date de désignation de la personne (NULL si elle
+--     n'est pas relectrice désignée) et ses propres verdicts encore en base (bloc,
+--     empreinte, verdict, commentaire, date), jamais ceux des autres.
+--
+-- DÉCISIONS D'AMINE appliquées ici : historique réservé aux super
+-- administrateurs ; conservation de 30 jours, verdict courant conservé et
+-- anonymisé ; plafonds de 200 verdicts et de 5 désignations par heure et par
+-- personne ; avis par e-mail à la désignation ; texte modifié, bloc « à relire ».
+-- DÉFAUT NON VALIDÉ par Amine : un relecteur désigné inactif depuis la durée de
+-- conservation des comptes vides perd son compte à la purge quotidienne (règle
+-- de 0018, inchangée).
+-- Résiduel : les verrous consultatifs (plafond, verdicts simultanés) ne
+-- s'éprouvent qu'avec deux sessions réelles ; aucune instance de test n'est
+-- permise et la production n'accepte que des transactions annulées : la
+-- mutation de contrôle (tests/mutations-concurrence) reste à jouer.
 --
 -- Contraintes tenues : SECURITY DEFINER, search_path vide, objets qualifiés ;
 -- propriétaire tenga_owner (migrate.sh) ; EXECUTE pour authenticated seul, sauf
@@ -126,7 +141,7 @@
 -- 1. Tables -----------------------------------------------------------------
 CREATE TABLE private.relecteurs_bibliotheque (
   user_id   uuid PRIMARY KEY REFERENCES auth.users (id) ON DELETE CASCADE,
-  ajoute_le timestamptz NOT NULL DEFAULT now()
+  ajoute_le timestamptz NOT NULL DEFAULT pg_catalog.now()
 );
 COMMENT ON TABLE private.relecteurs_bibliotheque IS
   'Relecteurs de la bibliothèque désignés par un super administrateur. Aucun accès direct par l''API.';
@@ -140,7 +155,7 @@ CREATE TABLE app.relectures_blocs (
   verdict     text NOT NULL CHECK (verdict IN ('relu', 'a_corriger')),
   commentaire text CHECK (commentaire IS NULL OR pg_catalog.char_length(commentaire) BETWEEN 1 AND 2000),
   relecteur   uuid REFERENCES auth.users (id) ON DELETE SET NULL,
-  cree_le     timestamptz NOT NULL DEFAULT now(),
+  cree_le     timestamptz NOT NULL DEFAULT pg_catalog.now(),
   anonymise   boolean NOT NULL DEFAULT false,
   CONSTRAINT relectures_blocs_commentaire_si_a_corriger CHECK (verdict <> 'a_corriger' OR commentaire IS NOT NULL OR anonymise),
   CONSTRAINT relectures_blocs_anonymise_sans_identite CHECK (NOT anonymise OR (commentaire IS NULL AND relecteur IS NULL))
@@ -150,7 +165,7 @@ CREATE INDEX relectures_blocs_bloc_idx ON app.relectures_blocs (bloc, empreinte,
 -- plafond des verdicts (verdicts d'une personne dans l'heure).
 CREATE INDEX relectures_blocs_relecteur_idx ON app.relectures_blocs (relecteur, cree_le) WHERE relecteur IS NOT NULL;
 COMMENT ON TABLE app.relectures_blocs IS
-  'Historique en ajout seul des verdicts de relecture de la bibliothèque (bloc, empreinte du texte, verdict). Aucun texte, aucune donnée sur les personnes évaluées. Conservé 30 jours, verdict courant anonymisé au-delà. Aucun accès direct par l''API.';
+  'Historique en ajout seul des verdicts de relecture de la bibliothèque (bloc, empreinte du texte, verdict). Seule trace nominative des verdicts (le journal les inscrit sans auteur), 30 jours au plus : verdicts antérieurs effacés, verdict courant anonymisé au-delà. Aucun texte, aucune donnée sur les personnes évaluées. Aucun accès direct par l''API.';
 ALTER TABLE app.relectures_blocs ENABLE ROW LEVEL SECURITY, FORCE ROW LEVEL SECURITY;
 
 -- 2. Verrous ----------------------------------------------------------------
@@ -180,9 +195,10 @@ AS $$
   SELECT interval '30 days'
 $$;
 
--- L'historique ne se réécrit pas, même par une fonction fautive ou un
--- superutilisateur. Exceptions : relecteur passe à NULL quand le compte du
--- relecteur est effacé (ON DELETE SET NULL) ; dans le contexte de la purge
+-- L'historique ne se réécrit pas, même par une fonction fautive ou une
+-- écriture directe d'un superutilisateur. Exceptions : relecteur passe à NULL
+-- pendant l'effacement du compte du relecteur (ON DELETE SET NULL : le compte
+-- n'existe plus), et seulement alors ; dans le contexte de la purge
 -- (rôle courant tenga_owner ET réglage tenga.purge_relecture, que pose
 -- private.purger_historique_relecture le temps de ses écritures), une ligne échue qui
 -- n'est plus le verdict courant de son couple (bloc, empreinte) s'efface, et une
@@ -215,6 +231,12 @@ BEGIN
   IF NEW.id <> OLD.id OR NEW.ordre <> OLD.ordre OR NEW.bloc <> OLD.bloc
      OR NEW.empreinte <> OLD.empreinte OR NEW.verdict <> OLD.verdict OR NEW.cree_le <> OLD.cree_le
      OR (NEW.relecteur IS DISTINCT FROM OLD.relecteur AND NEW.relecteur IS NOT NULL) THEN
+    RAISE EXCEPTION 'Historique de relecture en ajout seul' USING ERRCODE = '55000';
+  END IF;
+  -- L'auteur ne s'efface que si son compte n'existe plus, ou par l'anonymisation
+  -- de la purge (éprouvée juste après).
+  IF NEW.relecteur IS NULL AND OLD.relecteur IS NOT NULL AND NOT NEW.anonymise
+     AND EXISTS (SELECT 1 FROM auth.users u WHERE u.id = OLD.relecteur) THEN
     RAISE EXCEPTION 'Historique de relecture en ajout seul' USING ERRCODE = '55000';
   END IF;
   IF (NEW.commentaire IS DISTINCT FROM OLD.commentaire OR NEW.anonymise <> OLD.anonymise)
@@ -271,7 +293,11 @@ SET search_path = ''
 AS $$
 DECLARE
   v_uid uuid := auth.uid();
-  v_com text := NULLIF(pg_catalog.btrim(p_commentaire, E' \t\r\n'), '');
+  -- Blancs retirés aux deux bouts, espaces Unicode comprises (même ensemble que
+  -- String.prototype.trim côté application).
+  v_com text := NULLIF(pg_catalog.regexp_replace(p_commentaire,
+                  '^[\s\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+|[\s\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+$',
+                  '', 'g'), '');
   v_id  uuid;
 BEGIN
   IF v_uid IS NULL THEN
@@ -302,7 +328,7 @@ BEGIN
   IF FOUND THEN
     RETURN v_id;
   END IF;
-  -- Plafond (défaut non validé par Amine) : 200 verdicts écrits par heure glissante et par personne.
+  -- Plafond (décision d'Amine) : 200 verdicts écrits par heure glissante et par personne.
   IF (SELECT pg_catalog.count(*) FROM app.relectures_blocs r
        WHERE r.relecteur = v_uid AND r.cree_le > pg_catalog.now() - interval '1 hour') >= 200 THEN
     RAISE EXCEPTION 'Plafond de verdicts atteint' USING ERRCODE = 'PT429';
@@ -310,7 +336,8 @@ BEGIN
   INSERT INTO app.relectures_blocs (bloc, empreinte, verdict, commentaire, relecteur)
   VALUES (p_bloc, p_empreinte, p_verdict, v_com, v_uid)
   RETURNING id INTO v_id;
-  PERFORM private.journaliser(v_uid, 'relecture.' || p_verdict, 'relecture', v_id);
+  -- Journal sans auteur ni identifiant : la table reste la seule trace nominative.
+  PERFORM private.journaliser(NULL, 'relecture.' || p_verdict, 'relecture', NULL);
   RETURN v_id;
 END
 $$;
@@ -337,9 +364,6 @@ BEGIN
     RAISE EXCEPTION 'Réservé aux relecteurs de la bibliothèque' USING ERRCODE = '42501';
   END IF;
   v_admin := COALESCE(app.suis_admin_tenga(), false);
-  SELECT pg_catalog.count(*)::integer INTO v_n
-    FROM app.relectures_blocs r WHERE v_admin OR r.relecteur = v_uid;
-  PERFORM private.journaliser(v_uid, 'relecture.lister', NULL, NULL, NULL, v_n);
   RETURN QUERY
     SELECT r.id, r.bloc, r.empreinte, r.verdict, r.commentaire,
            NULLIF(pr.nom, ''), u.email::text, COALESCE(r.relecteur = v_uid, false), r.cree_le
@@ -348,6 +372,9 @@ BEGIN
       LEFT JOIN app.profiles pr ON v_admin AND pr.user_id = r.relecteur
      WHERE v_admin OR r.relecteur = v_uid
      ORDER BY r.ordre DESC;
+  -- Quantité = lignes effectivement rendues par la requête ci-dessus.
+  GET DIAGNOSTICS v_n = ROW_COUNT;
+  PERFORM private.journaliser(v_uid, 'relecture.lister', NULL, NULL, NULL, v_n);
 END
 $$;
 
@@ -385,7 +412,7 @@ BEGIN
   END IF;
   SELECT pg_catalog.count(*)::integer INTO v_n
     FROM app.results r WHERE r.scores ->> 'format' = 'tenga-scores-1';
-  IF v_n < v_seuil THEN
+  IF v_seuil IS NULL OR v_n < v_seuil THEN
     RETURN;
   END IF;
   RETURN QUERY
@@ -424,7 +451,7 @@ BEGIN
   IF p_utilisateur IS NULL OR NOT EXISTS (SELECT 1 FROM auth.users u WHERE u.id = p_utilisateur) THEN
     RAISE EXCEPTION 'Compte inconnu' USING ERRCODE = '22023';
   END IF;
-  IF EXISTS (SELECT 1 FROM auth.users u WHERE u.id = p_utilisateur AND u.banned_until > now()) THEN
+  IF EXISTS (SELECT 1 FROM auth.users u WHERE u.id = p_utilisateur AND u.banned_until > pg_catalog.now()) THEN
     RAISE EXCEPTION 'Compte suspendu' USING ERRCODE = '22023';
   END IF;
   v_langue := COALESCE((SELECT pr.langue FROM app.profiles pr WHERE pr.user_id = p_utilisateur), 'fr');
@@ -434,7 +461,7 @@ BEGIN
     RETURN QUERY SELECT false, v_langue;
     RETURN;
   END IF;
-  -- Plafond (défaut non validé par Amine) : 5 désignations par heure glissante et par personne, lues au journal.
+  -- Plafond (décision d'Amine) : 5 désignations par heure glissante et par personne, lues au journal.
   IF (SELECT pg_catalog.count(*) FROM private.audit_log l
        WHERE l.action = 'relecture.designer' AND l.acteur = v_uid
          AND l.cree_le > pg_catalog.now() - interval '1 hour') >= 5 THEN
@@ -496,13 +523,14 @@ BEGIN
   IF NOT app.suis_admin_tenga() THEN
     RAISE EXCEPTION 'Réservé aux administrateurs Tenga' USING ERRCODE = '42501';
   END IF;
-  SELECT pg_catalog.count(*)::integer INTO v_n FROM private.relecteurs_bibliotheque r;
-  PERFORM private.journaliser(v_uid, 'relecture.lister_relecteurs', NULL, NULL, NULL, v_n);
   RETURN QUERY
     SELECT r.user_id, u.email::text, r.ajoute_le
       FROM private.relecteurs_bibliotheque r
       JOIN auth.users u ON u.id = r.user_id
      ORDER BY r.ajoute_le, r.user_id;
+  -- Quantité = lignes effectivement rendues par la requête ci-dessus.
+  GET DIAGNOSTICS v_n = ROW_COUNT;
+  PERFORM private.journaliser(v_uid, 'relecture.lister_relecteurs', NULL, NULL, NULL, v_n);
 END
 $$;
 
@@ -628,6 +656,85 @@ BEGIN
 END
 $$;
 
+-- 4.11 Droit d'accès : app.exporter_mes_donnees() redéfinie À L'IDENTIQUE de
+-- 0021 (mêmes signature, attributs, clés et forme), plus la seule clé
+-- « relecture » : date de désignation de la personne (NULL si elle n'est pas
+-- relectrice désignée) et ses propres verdicts encore en base, du plus ancien
+-- au plus récent. Jamais les verdicts des autres. Droits inchangés (section 5).
+CREATE OR REPLACE FUNCTION app.exporter_mes_donnees()
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_uid    uuid := auth.uid();
+  v_export jsonb;
+BEGIN
+  IF v_uid IS NULL THEN
+    RAISE EXCEPTION 'Connexion requise' USING ERRCODE = '42501';
+  END IF;
+  SELECT pg_catalog.jsonb_build_object(
+    'exporte_le', now(),
+    'compte', pg_catalog.jsonb_build_object(
+      'id', v_uid,
+      'email', (SELECT u.email FROM auth.users u WHERE u.id = v_uid),
+      'administrateur_tenga', app.suis_admin_tenga()),
+    'profil', (SELECT pg_catalog.to_jsonb(p) - 'user_id' FROM app.profiles p WHERE p.user_id = v_uid),
+    'appartenances', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+               'organisation', o.nom, 'identifiant', o.slug, 'role', m.role, 'depuis', m.cree_le) ORDER BY m.cree_le, o.slug)
+      FROM app.memberships m JOIN app.organizations o ON o.id = m.organization_id
+      WHERE m.user_id = v_uid), '[]'::jsonb),
+    'participations', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+               'participation', p.id, 'campagne', c.titre, 'organisation', o.nom, 'statut', p.statut,
+               'ouverte_le', p.ouverte_le, 'commencee_le', p.commencee_le, 'terminee_le', p.terminee_le)
+               ORDER BY p.ouverte_le, p.id)
+      FROM app.participations p
+      JOIN app.campaigns c ON c.id = p.campaign_id
+      JOIN app.organizations o ON o.id = p.organization_id
+      WHERE p.user_id = v_uid), '[]'::jsonb),
+    'tentatives', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+               'participation', a.participation_id, 'questionnaire_version', a.questionnaire_version,
+               'reponses', a.reponses, 'revision', a.revision, 'mis_a_jour_le', a.mis_a_jour_le,
+               'expire_le', a.expire_le) ORDER BY a.cree_le, a.participation_id)
+      FROM app.attempts a WHERE a.user_id = v_uid), '[]'::jsonb),
+    'resultats', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+               'participation', r.participation_id, 'reponses', r.reponses, 'scores', r.scores,
+               'questionnaire_version', r.questionnaire_version, 'calcul_version', r.calcul_version,
+               'soumis_le', r.soumis_le) ORDER BY r.soumis_le, r.participation_id)
+      FROM app.results r WHERE r.user_id = v_uid), '[]'::jsonb),
+    'binomes', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+               'binome', b.id, 'organisation', o.nom, 'ma_participation', mine.id,
+               'propose_le', b.propose_le,
+               'mon_accord_le', CASE WHEN mine.id = b.participation_a THEN b.accord_a_le ELSE b.accord_b_le END,
+               'statut', CASE WHEN b.retire_le IS NOT NULL THEN 'retire'
+                              WHEN b.accord_a_le IS NOT NULL AND b.accord_b_le IS NOT NULL THEN 'actif'
+                              ELSE 'en_attente' END,
+               'retire_le', b.retire_le) ORDER BY b.propose_le, b.id)
+      FROM app.binomes b
+      JOIN app.participations mine ON mine.user_id = v_uid AND mine.id IN (b.participation_a, b.participation_b)
+      JOIN app.organizations o ON o.id = b.organization_id), '[]'::jsonb),
+    'relecture', pg_catalog.jsonb_build_object(
+      'ajoute_le', (SELECT rb.ajoute_le FROM private.relecteurs_bibliotheque rb WHERE rb.user_id = v_uid),
+      'verdicts', COALESCE((
+        SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+                 'bloc', v.bloc, 'empreinte', v.empreinte, 'verdict', v.verdict,
+                 'commentaire', v.commentaire, 'cree_le', v.cree_le) ORDER BY v.ordre)
+        FROM app.relectures_blocs v WHERE v.relecteur = v_uid), '[]'::jsonb)),
+    'journal', COALESCE((
+      SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object('action', l.action, 'date', l.cree_le) ORDER BY l.id)
+      FROM private.audit_log l WHERE l.acteur = v_uid), '[]'::jsonb)
+  ) INTO v_export;
+  PERFORM private.journaliser(v_uid, 'compte.exporter', 'utilisateur', v_uid);
+  RETURN v_export;
+END
+$$;
+
 -- 5. Droits : défense en profondeur (comme 0021), puis EXECUTE pour
 -- authenticated seul, sauf l'état servi (service_role seul) et les fonctions
 -- de private (aucun rôle de l'API).
@@ -639,6 +746,7 @@ REVOKE ALL ON FUNCTION app.frequence_facettes() FROM PUBLIC, anon, service_role;
 REVOKE ALL ON FUNCTION app.designer_relecteur(uuid) FROM PUBLIC, anon, service_role;
 REVOKE ALL ON FUNCTION app.retirer_relecteur(uuid) FROM PUBLIC, anon, service_role;
 REVOKE ALL ON FUNCTION app.lister_relecteurs() FROM PUBLIC, anon, service_role;
+REVOKE ALL ON FUNCTION app.exporter_mes_donnees() FROM PUBLIC, anon, service_role;
 REVOKE ALL ON FUNCTION private.duree_historique_relecture() FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON FUNCTION private.verifier_historique_relecture() FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON FUNCTION private.purger_historique_relecture() FROM PUBLIC, anon, authenticated, service_role;
@@ -650,3 +758,4 @@ GRANT EXECUTE ON FUNCTION app.frequence_facettes() TO authenticated;
 GRANT EXECUTE ON FUNCTION app.designer_relecteur(uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION app.retirer_relecteur(uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION app.lister_relecteurs() TO authenticated;
+GRANT EXECUTE ON FUNCTION app.exporter_mes_donnees() TO authenticated;

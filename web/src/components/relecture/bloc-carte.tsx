@@ -145,7 +145,7 @@ export function BlocCarte({
             {labels.statuts[statut]}
           </PastilleStatut>
         </p>
-        <h2 id={titreId} className='mt-3 text-titre-3 text-encre'>
+        <h2 id={titreId} tabIndex={-1} className='mt-3 text-titre-3 text-encre'>
           {labels.facette}
         </h2>
         <p className='mt-1 text-petit text-texte-2'>{labels.domaine}</p>
@@ -161,13 +161,14 @@ export function BlocCarte({
           ) : (
             <ul role='list' className='mt-2 flex flex-wrap gap-2'>
               {profils.map((p) => (
-                <li key={p.code}>
-                  <abbr
-                    title={p.nom}
-                    className='inline-flex min-w-9 justify-center rounded-controle border border-trait px-2 py-0.5 font-display text-petit font-medium text-encre no-underline'
-                  >
+                <li
+                  key={p.code}
+                  className='inline-flex items-baseline gap-1.5 rounded-controle border border-trait px-2 py-0.5 text-petit'
+                >
+                  <span className='font-display font-medium text-encre'>
                     {p.code}
-                  </abbr>
+                  </span>
+                  <bdi className='text-texte-2'>{p.nom}</bdi>
                 </li>
               ))}
             </ul>
@@ -218,6 +219,7 @@ export function BlocCarte({
             locale={locale}
             bloc={bloc.id}
             empreinte={bloc.empreinte}
+            titreId={titreId}
             labels={labels.verdict}
           />
           <details className='mt-6' open={atelier.statut === 'a_corriger'}>
@@ -243,7 +245,10 @@ export function BlocCarte({
                       )}
                     </p>
                     {h.commentaire && (
-                      <p className='mt-1.5 whitespace-pre-line text-petit text-encre [overflow-wrap:anywhere]'>
+                      <p
+                        dir='auto'
+                        className='mt-1.5 whitespace-pre-line text-petit text-encre [overflow-wrap:anywhere]'
+                      >
                         {h.commentaire}
                       </p>
                     )}

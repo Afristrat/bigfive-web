@@ -239,8 +239,12 @@ BEGIN
   IF pg_temp.relire(v_rl, 'N1/bas', v_e1, 'relu') IS DISTINCT FROM v_id THEN
     RAISE EXCEPTION 'un verdict rejoué n''a pas rendu la ligne existante';
   END IF;
-  SELECT count(*) INTO v_n FROM private.audit_log WHERE action = 'relecture.relu' AND acteur = v_rl AND ressource_type = 'relecture' AND ressource_id = v_id::uuid;
-  IF v_n <> 1 THEN RAISE EXCEPTION 'journal du verdict : % ligne(s) au lieu de 1', v_n; END IF;
+  SELECT count(*) INTO v_n FROM private.audit_log
+   WHERE action = 'relecture.relu' AND cree_le = now() AND acteur IS NULL AND ressource_type = 'relecture' AND ressource_id IS NULL;
+  IF v_n <> 1 THEN RAISE EXCEPTION 'journal du verdict : % ligne(s) sans auteur ni identifiant au lieu de 1', v_n; END IF;
+  SELECT count(*) INTO v_n FROM private.audit_log
+   WHERE action ~ '^relecture\.(relu|a_corriger)$' AND cree_le = now() AND (acteur IS NOT NULL OR ressource_id IS NOT NULL);
+  IF v_n <> 0 THEN RAISE EXCEPTION 'un verdict est inscrit au journal avec son auteur ou son identifiant'; END IF;
   v_r := pg_temp.relire(v_ad, 'N1/bas', v_e1, 'a_corriger', E'  Tournure à revoir.\n');
   IF v_r !~ v_uuid_re THEN RAISE EXCEPTION 'demande de correction de l''administrateur : %', v_r; END IF;
   IF (SELECT r.commentaire FROM app.relectures_blocs r WHERE r.id = v_r::uuid) IS DISTINCT FROM 'Tournure à revoir.' THEN
@@ -279,7 +283,11 @@ BEGIN
   IF v_n <> 3 THEN RAISE EXCEPTION 'journal des lectures d''historique : % ligne(s) au lieu de 3', v_n; END IF;
   SELECT count(*) INTO v_n FROM private.audit_log l WHERE l.action ~ '^relecture\.' AND l.acteur IN (v_ad, v_rl, v_nx) AND to_jsonb(l)::text ~ '@';
   IF v_n <> 0 THEN RAISE EXCEPTION 'une ligne de journal de relecture contient une adresse'; END IF;
-  RAISE NOTICE 'OK : historique filtré en base (super administrateur : tout, avec le nom ; relectrice désignée : ses seuls verdicts, sans identité), refusé aux autres ; chaque lecture journalisée, sans adresse';
+  v_r := pg_temp.comme(v_rl, 'authenticated', format('select (e -> ''relecture'' ->> ''ajoute_le'' is not null)::text || ''|'' || (select count(*) from jsonb_array_elements(e -> ''relecture'' -> ''verdicts'') x where x ->> ''empreinte'' in (%L, %L))::text || ''|'' || (e::text like ''%%Tournure%%'')::text from app.exporter_mes_donnees() e', v_e1, v_e2));
+  IF v_r IS DISTINCT FROM 'true|3|false' THEN
+    RAISE EXCEPTION 'export de la relectrice : % (attendu : date de désignation, ses trois verdicts, pas celui de l''administrateur)', v_r;
+  END IF;
+  RAISE NOTICE 'OK : historique filtré en base (super administrateur : tout, avec le nom ; relectrice désignée : ses seuls verdicts, sans identité), refusé aux autres ; chaque lecture journalisée, sans adresse ; l''export de la relectrice porte ses seuls verdicts';
 
   -- 8. Historique en ajout seul (écritures directes du superutilisateur de l'épreuve).
   BEGIN
@@ -374,7 +382,7 @@ BEGIN
   IF v_n <> 3 THEN RAISE EXCEPTION '% verdict(s) sans auteur au lieu de 3', v_n; END IF;
   RAISE NOTICE 'OK : retrait réservé au super administrateur, journalisé, effectif ; effacer un compte retire sa désignation et garde ses verdicts sans auteur';
 
-  -- 11. Plafonds (défauts non validés) : 200 verdicts et 5 désignations par heure et par personne.
+  -- 11. Plafonds (décision d'Amine) : 200 verdicts et 5 désignations par heure et par personne.
   SELECT count(*) INTO v_n FROM app.relectures_blocs r WHERE r.relecteur = v_ad AND r.cree_le > now() - interval '1 hour';
   INSERT INTO app.relectures_blocs (bloc, empreinte, verdict, relecteur, cree_le)
     SELECT 'C6/haut', repeat('e9', 28) || lpad(to_hex(i), 8, '0'), 'relu', v_ad, now() - interval '59 minutes'
@@ -406,7 +414,8 @@ BEGIN
   END IF;
   RAISE NOTICE 'OK : plafonds : 200e verdict de l''heure accepté, 201e refusé (PT429) ; 5e désignation acceptée (langue du compte rendue), 6e refusée ; rejeu sans erreur ; aucun refus n''écrit';
 
-  -- 12. Conservation : 30 jours ; verdict courant conservé et anonymisé (défaut non validé).
+  -- 12. Conservation : 30 jours ; verdict courant conservé et anonymisé (décision d'Amine). La
+  --     purge de l'historique est appelée seule : la purge quotidienne n'est pas jouée ici.
   INSERT INTO app.relectures_blocs (bloc, empreinte, verdict, commentaire, relecteur, cree_le) VALUES
     ('A2/milieu', v_e3, 'relu',       'épreuve 40 jours', v_ad, now() - interval '40 days'),
     ('A2/milieu', v_e3, 'a_corriger', 'épreuve 31 jours', v_ad, now() - interval '31 days'),
@@ -426,12 +435,12 @@ BEGIN
     IF SQLERRM <> v_ajout_seul THEN RAISE EXCEPTION 'message inattendu : %', SQLERRM; END IF;
   END;
   PERFORM set_config('tenga.purge_relecture', '', true);
-  PERFORM private.purger_quotidien();
+  PERFORM private.purger_historique_relecture();
   SELECT string_agg(r.bloc || '|' || r.verdict || '|' || coalesce(r.commentaire, '-') || '|' || coalesce((r.relecteur = v_ad)::text, '-') || '|' || r.anonymise::text,
                     ',' ORDER BY r.ordre) INTO v_r
     FROM app.relectures_blocs r WHERE r.empreinte = v_e3;
   IF v_r IS DISTINCT FROM 'A2/milieu|a_corriger|-|-|true,A3/milieu|a_corriger|épreuve 29 jours|true|false,A3/milieu|relu|-|true|false' THEN
-    RAISE EXCEPTION 'conservation après la purge quotidienne : % (attendu : 40 jours effacé, courant de 31 jours anonymisé, 29 jours et moins intacts)', v_r;
+    RAISE EXCEPTION 'conservation après la purge de l''historique : % (attendu : 40 jours effacé, courant de 31 jours anonymisé, 29 jours et moins intacts)', v_r;
   END IF;
   IF coalesce(current_setting('tenga.purge_relecture', true), '') <> '' THEN
     RAISE EXCEPTION 'le réglage de purge survit à la purge';

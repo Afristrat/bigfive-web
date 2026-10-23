@@ -8,10 +8,11 @@ import type { FacetteCode, Niveau } from '@/lib/moteur';
 // serveur : jamais importé depuis un composant client (voir le test).
 //
 // Relecture (migration 0022) : le fichier reste la seule source du TEXTE ; la
-// base dit, pour une empreinte du texte, « relu » ou « à corriger ». L'état de
-// la base s'applique PAR-DESSUS le champ « relecture » du fichier : un bloc dont
-// le texte servi a un verdict en base suit ce verdict, sinon le fichier fait
-// foi. Un texte modifié change d'empreinte et n'hérite d'aucun verdict.
+// base seule dit, pour une empreinte du texte, « relu » ou « à corriger ». Un
+// bloc n'est relu QUE par un verdict « relu » en base sur l'empreinte du texte
+// servi : le champ « relecture » du fichier n'est jamais lu. Sans état chargé
+// (démarrage, base injoignable), tout bloc est non relu, donc masqué à la
+// personne. Un texte modifié change d'empreinte et n'hérite d'aucun verdict.
 
 export type Audience = 'personne' | 'consultant' | 'administrateur';
 export type Accord = 'm' | 'f' | 'n';
@@ -33,7 +34,6 @@ type TexteBrut = {
   question: string;
 };
 type BlocBrut = {
-  relecture: string;
   fr: TexteBrut;
 };
 type FacetteBrute = {
@@ -50,8 +50,6 @@ export const BIBLIOTHEQUE: { version: string; empreinte: string } = {
   version: donnees.version,
   empreinte: '1f8fe4cd78116805f2218d506e4935cedb11f0a1e0705a106df6fa9293c3e808'
 };
-
-const NON_RELU = 'non relue';
 
 const ORDRE_NIVEAUX: readonly Niveau[] = [
   'bas',
@@ -121,8 +119,6 @@ export type BlocBibliotheque = {
   /** Formes accordées, seulement si le texte porte des marques d'accord. */
   accords: { m: BlocResolu; f: BlocResolu } | null;
   empreinte: string;
-  /** Le champ « relecture » du fichier dit le bloc relu. */
-  reluDansLeFichier: boolean;
 };
 
 const catalogue: readonly BlocBibliotheque[] = facettes.flatMap((f) =>
@@ -146,8 +142,7 @@ const catalogue: readonly BlocBibliotheque[] = facettes.flatMap((f) =>
         accords: marque
           ? { m: resoudre(brut.fr, 'm'), f: resoudre(brut.fr, 'f') }
           : null,
-        empreinte: empreinteTexte(brut.fr),
-        reluDansLeFichier: brut.relecture !== NON_RELU
+        empreinte: empreinteTexte(brut.fr)
       }
     ];
   })
@@ -273,15 +268,13 @@ function rafraichirSiPerime(): void {
   void rafraichirEtatRelecture();
 }
 
-const estRelu = (id: string, brut: BlocBrut): boolean => {
+/** Relu seulement par un verdict « relu » en base sur l'empreinte du texte servi. */
+const estRelu = (id: string): boolean => {
   const empreinte = empreintes.get(id);
-  const verdict =
-    empreinte === undefined
-      ? undefined
-      : etatPartage().verdicts?.get(cle(id, empreinte));
-  return verdict === undefined
-    ? brut.relecture !== NON_RELU
-    : verdict === 'relu';
+  return (
+    empreinte !== undefined &&
+    etatPartage().verdicts?.get(cle(id, empreinte)) === 'relu'
+  );
 };
 
 /**
@@ -308,7 +301,7 @@ export function blocFacette(
     return { etat: 'en_relecture' };
   }
   rafraichirSiPerime();
-  const nonRelu = !estRelu(id, brut);
+  const nonRelu = !estRelu(id);
   const afficherAuxPersonnes =
     options.afficherNonRelus ??
     process.env.BIBLIOTHEQUE_NON_RELUS_PERSONNES === 'afficher';

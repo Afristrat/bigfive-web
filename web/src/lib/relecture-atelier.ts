@@ -129,11 +129,10 @@ export function assemblerAtelier(
     const dernier =
       historique.find((e) => e.empreinte === bloc.empreinte) ?? null;
     const verdict = servi.get(`${bloc.id}|${bloc.empreinte}`);
+    // Seule la base dit « relu » : sans verdict sur le texte servi, à relire.
     const statut: StatutAtelier =
       verdict === undefined
-        ? bloc.reluDansLeFichier
-          ? 'relu'
-          : 'a_relire'
+        ? 'a_relire'
         : verdict === 'relu'
           ? 'relu'
           : 'a_corriger';
