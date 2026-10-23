@@ -1,10 +1,10 @@
-import { Link as NextUILink } from '@nextui-org/link';
 import { FacebookIcon, LinkedInIcon, MastadonIcon, TwitterIcon } from './icons';
-import { Tooltip } from '@nextui-org/react';
 import { basePath } from '@/config/site';
 
 interface ShareArticleProps {
   slug: string;
+  // Intitulé accessible de chaque lien, réseau inséré : « Partager sur LinkedIn ».
+  label: (reseau: string) => string;
 }
 
 const socialMedia = [
@@ -24,26 +24,31 @@ const socialMedia = [
     url: 'https://www.facebook.com/sharer/sharer.php?u='
   },
   {
-    name: 'Mastadon',
+    name: 'Mastodon',
     icon: MastadonIcon,
     url: 'https://mastodon.social/share?url='
   }
 ];
 
-export function ShareArticle({ slug }: ShareArticleProps) {
+// Liens de partage : cibles de 44 px, intitulé traduit (lu par les lecteurs
+// d'écran et affiché au survol), ouverts dans un nouvel onglet.
+export function ShareArticle({ slug, label }: ShareArticleProps) {
   return (
-    <div className='flex gap-2'>
+    <ul role='list' className='flex gap-1'>
       {socialMedia.map(({ name, icon: Icon, url }) => (
-        <Tooltip key={name} content={`Share on ${name}`} placement='top'>
-          <NextUILink
-            isExternal
+        <li key={name}>
+          <a
             href={`${url}${basePath}/articles/${slug}`}
-            aria-label={name}
+            target='_blank'
+            rel='noopener noreferrer'
+            aria-label={label(name)}
+            title={label(name)}
+            className='appui inline-flex size-11 items-center justify-center rounded-controle text-texte-3 hover:text-accent'
           >
-            <Icon size={24} className='text-default-500 hover:text-primary' />
-          </NextUILink>
-        </Tooltip>
+            <Icon size={20} />
+          </a>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

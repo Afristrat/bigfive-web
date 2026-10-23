@@ -2,6 +2,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { LiveMessage } from '@/components/live-message';
+import { Notice } from '@/components/notice';
 import { PendingButton } from '@/components/pending-button';
 
 describe('LiveMessage', () => {
@@ -49,5 +50,22 @@ describe('PendingButton', () => {
 
   it('au repos : pas d’aria-disabled', () => {
     expect(render(false)).not.toContain('aria-disabled');
+  });
+
+  it('le trait d’attente n’existe que pendant l’envoi, caché aux lecteurs d’écran', () => {
+    expect(render(true)).toMatch(/<span aria-hidden="true" data-attente=""/);
+    expect(render(false)).not.toContain('data-attente');
+  });
+});
+
+describe('Notice', () => {
+  const render = (ton: 'info' | 'succes' | 'erreur'): string =>
+    renderToStaticMarkup(createElement(Notice, { ton, children: 'Message' }));
+
+  it('un succès porte une coche décorative, un refus est une alerte', () => {
+    expect(render('succes')).toMatch(/role="status"/);
+    expect(render('succes')).toMatch(/<svg aria-hidden="true"/);
+    expect(render('info')).not.toContain('<svg');
+    expect(render('erreur')).toMatch(/role="alert"/);
   });
 });

@@ -7,7 +7,8 @@ import { useLocale } from 'next-intl';
 
 import { LanguageMenu } from '@/components/language-menu';
 import { ThemeSwitch } from '@/components/theme-switch';
-import { MenuIcon, Wordmark } from '@/components/icons';
+import { Marque } from '@/components/cadre/marque';
+import { Wordmark } from '@/components/icons';
 import { Link as NextLink } from '../navigation';
 
 export type NavbarLabels = {
@@ -27,9 +28,9 @@ interface NavbarProps {
 }
 
 // Page courante : texte en encre et filet d'accent de 2 px sous le libellé, pour
-// que la couleur ne soit jamais le seul signal (direction § 8.1).
-const lienActif =
-  'text-encre after:absolute after:inset-x-3 after:bottom-2 after:h-0.5 after:bg-accent';
+// que la couleur ne soit jamais le seul signal (direction § 8.1). Le filet
+// (classe filet, cadre.css) croît sous la nouvelle page et se retire de l'autre.
+const lienActif = 'text-encre';
 const lienInactif = 'text-texte-2 hover:text-encre';
 
 export const Navbar = ({
@@ -65,35 +66,13 @@ export const Navbar = ({
     <header className='sticky top-0 z-entete border-b border-trait bg-fond/[0.86] backdrop-blur-md backdrop-saturate-150 print:hidden'>
       <div className='conteneur flex min-h-16 items-center gap-2 max-[440px]:px-3.5'>
         <NextLink
-          className='flex items-center gap-2.5 rounded-petit'
+          className='marque flex items-center gap-2.5 rounded-petit'
           href='/'
           aria-label={labels.home}
         >
           {/* Marque pentagonale : son contour safran se referme au fil du
               défilement de la page, fil conducteur du site. */}
-          <svg
-            aria-hidden='true'
-            viewBox='0 0 24 24'
-            className='size-6 flex-none overflow-visible'
-          >
-            <polygon
-              points='12,2 21.5,8.9 17.9,20 6.1,20 2.5,8.9'
-              className='fill-none stroke-trait'
-              strokeWidth='2'
-              strokeLinejoin='round'
-            />
-            <polygon
-              points='12,2 21.5,8.9 17.9,20 6.1,20 2.5,8.9'
-              pathLength={1}
-              className='marque-trace fill-none stroke-safran'
-              strokeWidth='2.25'
-              strokeLinejoin='round'
-            />
-            <polygon
-              points='12,8.2 16,10.6 14.4,15.6 9.4,15.2 8.3,11'
-              className='fill-encre'
-            />
-          </svg>
+          <Marque trace='defilement' className='size-6' />
           <Wordmark />
         </NextLink>
         <nav
@@ -109,7 +88,7 @@ export const Navbar = ({
                     href={item.href}
                     aria-current={isActive ? 'page' : undefined}
                     className={clsx(
-                      'relative inline-flex min-h-11 items-center whitespace-nowrap rounded-petit px-3 text-[0.9375rem] font-medium transition-colors duration-courte ease-tenga',
+                      'filet inline-flex min-h-11 items-center whitespace-nowrap rounded-petit px-3 text-[0.9375rem] font-medium transition-colors duration-courte ease-tenga',
                       isActive ? lienActif : lienInactif
                     )}
                   >
@@ -134,13 +113,29 @@ export const Navbar = ({
             aria-label={isMenuOpen ? labels.closeMenu : labels.openMenu}
             className='grid size-11 cursor-pointer list-none place-items-center rounded-controle border border-trait bg-surface text-encre transition-colors duration-courte ease-tenga hover:bg-creux [&::-webkit-details-marker]:hidden'
           >
-            <MenuIcon />
+            {/* Trois traits qui se replient en croix à l'ouverture. */}
+            <svg
+              aria-hidden='true'
+              focusable='false'
+              viewBox='0 0 24 24'
+              width={22}
+              height={22}
+              fill='none'
+              stroke='currentColor'
+              strokeWidth={1.75}
+              strokeLinecap='round'
+              className='burger'
+            >
+              <path className='burger-haut' d='M4 7h16' />
+              <path className='burger-milieu' d='M4 12h16' />
+              <path className='burger-bas' d='M4 17h16' />
+            </svg>
           </summary>
           <nav
             aria-label={labels.mainNav}
-            className='absolute end-0 top-14 z-menu grid w-[min(300px,calc(100vw-32px))] origin-top-right gap-0.5 rounded-panneau border border-trait bg-surface p-2 shadow-flottant motion-safe:animate-apparaitre rtl:origin-top-left dark:shadow-flottant-sombre'
+            className='absolute end-0 top-14 z-menu grid w-[min(300px,calc(100vw-32px))] origin-top-right gap-0.5 rounded-panneau border border-trait bg-surface p-2 shadow-flottant menu-panneau rtl:origin-top-left dark:shadow-flottant-sombre'
           >
-            {navMenuItems.map((item) => {
+            {navMenuItems.map((item, index) => {
               const isActive = isCurrentPath(item.href);
               return (
                 <NextLink
@@ -148,8 +143,9 @@ export const Navbar = ({
                   href={item.href}
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => setIsMenuOpen(false)}
+                  style={{ ['--i' as string]: index }}
                   className={clsx(
-                    'relative flex min-h-12 items-center rounded-controle px-3.5 text-titre-3 font-medium',
+                    'menu-entree relative flex min-h-12 items-center rounded-controle px-3.5 text-titre-3 font-medium',
                     isActive
                       ? 'bg-accent-doux text-encre after:absolute after:inset-y-3 after:start-0 after:w-0.5 after:bg-accent'
                       : 'text-encre hover:bg-creux'
@@ -165,6 +161,10 @@ export const Navbar = ({
       <span
         aria-hidden='true'
         className='rail absolute inset-x-0 -bottom-px h-0.5 bg-safran'
+      />
+      <span
+        aria-hidden='true'
+        className='entete-ombre pointer-events-none absolute inset-x-0 top-full h-6'
       />
     </header>
   );

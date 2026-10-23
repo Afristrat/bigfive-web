@@ -10,8 +10,10 @@ export const inputClassNames = {
   errorMessage: 'text-erreur'
 } as const;
 
+// Le bouton d'envoi rogne son contenu : le trait d'attente (PendingButton)
+// court le long de son pied sans en déborder.
 export const submitButtonClass =
-  'appui h-auto min-h-11 min-w-[140px] rounded-controle px-5 py-2 text-base font-medium data-[pressed=true]:scale-[0.97] motion-reduce:transition-none';
+  'appui relative overflow-hidden h-auto min-h-11 min-w-[140px] rounded-controle px-5 py-2 text-base font-medium data-[pressed=true]:scale-[0.97] motion-reduce:transition-none';
 
 export const selectClass =
   'block min-h-11 w-full max-w-md rounded-controle border border-trait-fort bg-surface px-3 text-corps text-encre transition-colors duration-courte ease-tenga hover:border-encre focus-visible:border-accent motion-reduce:transition-none';

@@ -11,6 +11,10 @@ const french = {
   language: {
     label: 'Langue'
   },
+  footer: {
+    tagline:
+      'Le questionnaire de personnalité de Tenga Conseil : 120 affirmations, cinq domaines, trente facettes, d’après l’IPIP-NEO-120.'
+  },
   a11y: {
     skip: 'Aller au contenu',
     mainNav: 'Navigation principale',
@@ -21,29 +25,30 @@ const french = {
     toLight: 'Passer au thème clair'
   },
   home: {
+    eyebrow: 'Questionnaire de personnalité, par Tenga Conseil',
     specimenTag: 'Exemple, valeurs fictives',
     peak: {
-      lead: 'Un profil se dessine, un facteur après l’autre.'
+      lead: 'À mesure que vous lisez, le profil se dessine, un facteur après l’autre.'
     },
     figures: {
       items: 'affirmations',
       factors: 'grands facteurs',
-      facets: 'facettes décrites',
+      facets: 'facettes',
       languages: 'langues'
     },
-    title: 'Décider sur des repères, pas sur des impressions.',
-    lead: 'Un questionnaire de 120 affirmations, sans limite de temps. Nous vous disons d’où il vient, ce qu’il mesure et ce qu’il ne mesure pas.',
+    title: 'Des mots précis sur votre façon de travailler.',
+    lead: '120 affirmations, sans limite de temps, tirées d’un inventaire public. Vous obtenez un profil sur cinq grands facteurs et trente facettes, avec ses sources et ses limites.',
     stake: {
-      title: 'L’enjeu',
+      title: 'Le point de départ',
       problem:
-        'Une équipe mal composée. Un changement mal compris. Une formation qui rate sa cible. Bien des décisions humaines se prennent sur une intuition.',
+        'On compose une équipe. On conduit un changement. On choisit une formation. Chaque fois, il faut comprendre comment les personnes travaillent.',
       answer:
-        'Tenga Assessments offre un autre point d’appui : des repères communs et publics, dont vous pouvez vérifier chaque source.'
+        'Le questionnaire donne un vocabulaire commun pour en parler\u00A0: cinq facteurs, trente facettes, des définitions publiques. Il ouvre la conversation\u00A0; il ne la remplace pas.'
     },
     research: {
-      title: 'Ce que dit la recherche, et ce qu’elle ne dit pas',
+      title: 'Ce que la recherche établit, et jusqu’où',
       intro:
-        'Nous citons nos sources, avec leurs chiffres et leurs limites. Trois constats.',
+        'Trois constats, sans en forcer la portée. Les références complètes sont publiées.',
       structure: {
         title: 'Une structure qui voyage',
         text: 'Les cinq grands facteurs ont été retrouvés dans la plupart des cultures étudiées, dans des dizaines de langues.'
@@ -54,12 +59,12 @@ const french = {
       },
       groups: {
         title: 'Des groupes, pas des personnes',
-        text: 'Ces résultats décrivent des tendances de groupe. Ils ne prédisent pas une personne, et les traits ne sont qu’un élément parmi d’autres : les compétences, l’expérience et le contexte comptent aussi.'
+        text: 'Ces résultats décrivent des tendances de groupe. Ils ne prédisent pas une personne, et les traits ne sont qu’un élément parmi d’autres\u00A0: les compétences, l’expérience et le contexte comptent aussi.'
       },
       link: 'Consulter la méthode et les références'
     },
     limits: {
-      title: 'Ce que le questionnaire ne fait pas',
+      title: 'Ce que le questionnaire ne fera pas',
       intro: 'Une méthode se juge aussi à ce qu’elle refuse de promettre.',
       diagnosis: {
         title: 'Il ne pose pas de diagnostic',
@@ -71,7 +76,7 @@ const french = {
       },
       mirror: {
         title: 'Il ne dit que ce que vous dites de vous',
-        text: 'Ses résultats reposent sur vos propres réponses : une information précieuse, mais partielle.'
+        text: 'Ses résultats reposent sur vos propres réponses\u00A0: une information précieuse, mais partielle.'
       },
       sorting: {
         title: 'Il n’est pas conçu pour trier des candidats',
@@ -79,15 +84,16 @@ const french = {
       }
     },
     how: {
-      title: 'Comment cela se passe',
-      intro: 'Trois étapes, à votre rythme.',
+      title: 'Trois temps, à votre rythme',
+      intro:
+        'Rien à préparer, rien à réviser\u00A0: il n’y a ni bonne ni mauvaise réponse.',
       answer: {
         title: 'Vous répondez',
-        text: '120 affirmations, sans limite de temps. Pour chacune, vous dites comment vous êtes habituellement, pas comment vous aimeriez être. Vous pouvez vous arrêter et reprendre plus tard sur cet appareil.'
+        text: '120 affirmations, sans limite de temps. Pour chacune, dites comment vous êtes d’habitude, pas comment vous aimeriez être. Vous pouvez vous arrêter et reprendre plus tard sur cet appareil.'
       },
       read: {
         title: 'Vous lisez votre profil',
-        text: 'Cinq grands facteurs, trente facettes, décrits comme des tendances. Rien ne vous classe, rien n’est un diagnostic.'
+        text: 'Cinq grands facteurs et trente facettes, chacun décrit comme une tendance. Rien ne vous classe, rien n’est un diagnostic.'
       },
       keep: {
         title: 'Vous le conservez',
@@ -96,28 +102,44 @@ const french = {
     },
     method: {
       measured:
-        'Cinq grands facteurs de la personnalité : ouverture à l’expérience, conscienciosité, extraversion, agréabilité, névrosisme. Chacun se décompose en six facettes, soit trente tendances décrites séparément.'
+        'Cinq grands facteurs de la personnalité\u00A0: ouverture à l’expérience, conscienciosité, extraversion, agréabilité, névrosisme. Chacun se décompose en six facettes, soit trente tendances décrites séparément.'
     },
     factors: {
       title: 'Cinq facteurs. Trente facettes. Aucun verdict.',
       facets: 'Six facettes',
       N: 'Sensibilité aux émotions négatives et au stress, plus ou moins vive selon les personnes. C’est une tendance d’humeur, pas un diagnostic.',
-      E: 'Énergie dans les échanges et dans l’action. Certains se ressourcent avec les autres ; d’autres, dans le calme.',
-      O: 'Curiosité, imagination, goût de la nouveauté. Certains explorent d’abord ; d’autres s’appuient sur ce qui a fait ses preuves. Les deux manières servent.',
-      A: 'Coopération, confiance, souci d’autrui. Certains privilégient l’harmonie ; d’autres, la franchise.',
-      C: 'Organisation, sens du devoir, persévérance. Certains planifient tout ; d’autres improvisent mieux.'
+      E: 'Énergie dans les échanges et dans l’action. Certains se ressourcent avec les autres\u00A0; d’autres, dans le calme.',
+      O: 'Curiosité, imagination, goût de la nouveauté. Certains explorent d’abord\u00A0; d’autres s’appuient sur ce qui a fait ses preuves. Les deux manières servent.',
+      A: 'Coopération, confiance, souci d’autrui. Certains privilégient l’harmonie\u00A0; d’autres, la franchise.',
+      C: 'Organisation, sens du devoir, persévérance. Certains planifient tout\u00A0; d’autres improvisent mieux.'
     },
-    languages: {
-      title: 'Trois langues',
-      text: 'Disponible en français, en arabe et en anglais.'
+    sheet: {
+      title: 'Fiche de l’instrument',
+      intro: 'De quoi vérifier par vous-même, sans nous croire sur parole.',
+      inventory: 'Inventaire',
+      inventoryValue: 'IPIP-NEO-120, de John A. Johnson (2014)',
+      origin: 'Origine des affirmations',
+      originValue: 'International Personality Item Pool',
+      status: 'Statut',
+      statusValue: 'Domaine public',
+      content: 'Contenu',
+      contentValue:
+        '{items} affirmations, {factors} facteurs, {facets} facettes',
+      languages: 'Langues',
+      duration: 'Durée',
+      durationValue: 'Sans limite de temps',
+      wording: 'Formulations',
+      wordingValue:
+        'Quelques-unes retouchées, sans changer la facette mesurée ni le sens de cotation.',
+      validation: 'Validation de cette version',
+      validationValue:
+        'Aucune étude de validation à ce jour. Nous le disons, plutôt que de le laisser deviner.'
     },
     reference: {
-      title: 'D’où vient le questionnaire',
-      text: 'Les 120 affirmations proviennent de l’IPIP-NEO-120 de John A. Johnson (2014), construit à partir de l’International Personality Item Pool. L’inventaire est placé dans le domaine public : chacun peut le lire, le critiquer et le vérifier.',
       methodLink: 'Méthode et références'
     },
     faq: {
-      title: 'Vos questions, nos réponses',
+      title: 'Trois questions avant de commencer',
       all: 'Toutes les questions fréquentes'
     },
     trust: {
@@ -125,7 +147,7 @@ const french = {
       text: 'Tenga Conseil est le tiers entre votre direction et vos équipes. Le consultant restitue, explique et recadre. Il ne transmet rien d’individuel à l’organisation.'
     },
     closing: {
-      text: 'Répondez au questionnaire pour vous-même, ou demandez une présentation pour votre organisation. Tenga Conseil vous répond pour convenir d’un échange.'
+      text: 'Pour vous-même, le questionnaire est ouvert dès maintenant. Pour votre organisation, demandez une présentation\u00A0: Tenga Conseil vous répond pour convenir d’un échange.'
     }
   },
   radar: {
@@ -159,27 +181,46 @@ const french = {
     seo: {
       title: 'À propos de Tenga Assessments',
       description:
-        'Tenga Assessments est le service de questionnaires de personnalité de Tenga Conseil, cabinet de conseil marocain.'
+        'Le service de questionnaires de personnalité de Tenga Conseil, cabinet de conseil marocain : un instrument du domaine public, des sources consultables, des limites écrites noir sur blanc.'
     },
     title: 'À propos',
-    p1: 'Tenga Conseil est un cabinet de conseil marocain. Tenga Assessments est son service de questionnaires de personnalité, proposé aux organisations que le cabinet accompagne : directions, équipes de ressources humaines, consultants.',
-    p2: 'Nous avons choisi un instrument dont la méthode est publique et dont chaque source peut être consultée, parce qu’un outil qui touche à la personne doit pouvoir être contrôlé. C’est l’IPIP-NEO-120 de John A. Johnson (2014), issu de l’International Personality Item Pool et placé dans le domaine public. Il décrit la personnalité selon les cinq grands facteurs : ouverture à l’expérience, conscienciosité, extraversion, agréabilité et névrosisme, détaillés en trente facettes.',
-    p3: 'Il est proposé en français, en arabe et en anglais. Quelques formulations ont été retouchées ; chacune conserve la facette mesurée et le sens de cotation de la question d’origine. Cette version n’a fait l’objet d’aucune étude de validation : nous le disons, plutôt que de le laisser deviner.',
-    p4: 'Les résultats décrivent des tendances habituelles de comportement. Ils ne mesurent pas des compétences et ne constituent pas un diagnostic. Notre règle tient en quatre mots : comprendre avant de juger.',
-    contact_faq:
-      'Une question ? Consultez d’abord les <link>questions fréquentes</link>.',
-    contact_email: 'Si vous n’y trouvez pas la réponse, écrivez-nous à {email}.'
+    headline: 'Un questionnaire dont chaque source se vérifie.',
+    lead: 'Tenga Assessments est le service de questionnaires de personnalité de Tenga Conseil, cabinet de conseil marocain. Nous le proposons aux organisations que nous accompagnons : directions, équipes de ressources humaines, consultants.',
+    instrument: {
+      title: 'L’instrument',
+      text: 'Le questionnaire est l’IPIP-NEO-120 de John A. Johnson (2014), tiré de l’International Personality Item Pool et placé dans le domaine public. Nous l’avons choisi parce que sa méthode est publiée et que chacune de ses sources peut être consultée. Un outil qui touche à la personne doit pouvoir être contrôlé.'
+    },
+    model: {
+      title: 'Ce qu’il décrit',
+      text: 'Cinq grands facteurs de la personnalité, détaillés en trente facettes : l’ouverture à l’expérience, la conscienciosité, l’extraversion, l’agréabilité et le névrosisme.'
+    },
+    languages: {
+      title: 'Trois langues',
+      text: 'Vous pouvez y répondre en français, en arabe ou en anglais. Nous avons retouché quelques formulations ; chacune garde la facette mesurée et le sens de cotation de la question d’origine.'
+    },
+    limits: {
+      title: 'Ce qu’il ne prétend pas',
+      text: 'Cette version n’a fait l’objet d’aucune étude de validation. Les résultats décrivent des tendances habituelles de comportement, d’après vos propres réponses. Ce n’est ni un test de compétences ni un diagnostic.'
+    },
+    rule: 'Notre règle',
+    contact: {
+      title: 'Une question ?'
+    },
+    contact_faq: 'Commencez par les <link>questions fréquentes</link>.',
+    contact_email: 'Si la réponse n’y est pas, écrivez-nous à {email}.'
   },
   faq: {
     title: 'Questions fréquentes',
+    lead: 'Avant de répondre au questionnaire, et après : des réponses courtes, sans détour.',
     error: {
-      question: 'Une erreur s’est affichée sur le site : que faire ?',
-      answer: 'Décrivez-nous ce qui s’est passé par e-mail à {email}.'
+      question: 'Le site affiche une erreur. Que faire ?',
+      answer:
+        'Écrivez-nous à {email} en précisant la page concernée, ce que vous étiez en train de faire et le message affiché.'
     },
     print: {
       question: 'Comment imprimer mes résultats ?',
       answer:
-        'Depuis la page de résultats, utilisez la fonction d’impression de votre navigateur, ou enregistrez la page au format PDF.'
+        'Ouvrez la page de vos résultats, puis lancez l’impression de votre navigateur ou enregistrez la page au format PDF.'
     },
     science: {
       question: 'Est-ce scientifique ?',
@@ -194,17 +235,17 @@ const french = {
     source: {
       question: 'D’où viennent les questions ?',
       answer:
-        'Les questions et le calcul des scores proviennent de l’International Personality Item Pool (ipip.ori.org), placé dans le domaine public : il s’agit de l’IPIP-NEO-120 de John A. Johnson (2014). Tenga Conseil a retouché quelques formulations, sans changer ce que mesure chaque question.'
+        'Du domaine public. Les questions et le calcul des scores sont ceux de l’IPIP-NEO-120 de John A. Johnson (2014), issu de l’International Personality Item Pool (ipip.ori.org). Tenga Conseil a retouché quelques formulations, sans changer ce que mesure chaque question.'
     },
     answers: {
       question: 'Y a-t-il de bonnes et de mauvaises réponses ?',
       answer:
-        'Non. Chaque affirmation décrit une manière d’être. Répondez selon ce qui vous ressemble habituellement, pas selon ce que vous aimeriez être.'
+        'Non. Chaque affirmation décrit une manière d’être, ni qualité ni défaut. Répondez selon ce qui vous ressemble d’habitude, pas selon ce que vous aimeriez être.'
     },
     diagnosis: {
-      question: 'Le questionnaire établit-il un diagnostic ?',
+      question: 'Le questionnaire pose-t-il un diagnostic ?',
       answer:
-        'Non. Il décrit des tendances de comportement d’après vos propres réponses. Il n’est pas un test de compétences, d’intelligence ni un examen de santé.'
+        'Non. Il décrit des tendances de comportement d’après vos propres réponses. Ce n’est ni un test de compétences, ni un test d’intelligence, ni un examen de santé.'
     }
   },
   toolbar: {
@@ -212,11 +253,11 @@ const french = {
     home_aria: 'Accueil de Tenga Assessments',
     open_menu: 'Ouvrir le menu',
     close_menu: 'Fermer le menu',
-    result: 'Résultat',
+    result: 'Retrouver un résultat',
     articles: 'Articles',
     privacy: 'Confidentialité',
     about: 'À propos',
-    see_results: 'Voir vos résultats',
+    see_results: 'Retrouver un résultat',
     faq: 'Questions fréquentes',
     account: 'Mon compte',
     presentation: 'Demander une présentation',
@@ -232,7 +273,7 @@ const french = {
     },
     title: 'Demander une présentation',
     intro:
-      'Dites-nous qui vous êtes et ce que vous cherchez à éclairer\u00A0: décision d’équipe, accompagnement d’un changement, développement de vos cadres. Tenga Conseil vous répond à l’adresse indiquée pour convenir d’une présentation.',
+      'Pour une équipe, un accompagnement du changement ou le développement de vos cadres : décrivez votre contexte en quelques lignes. Un consultant de Tenga Conseil vous répond par écrit, dans la langue de votre choix, pour convenir d’un échange.',
     requiredNote: 'Tous les champs sont obligatoires, sauf le message.',
     fields: {
       name: 'Prénom et nom',
@@ -291,6 +332,7 @@ const french = {
         'Il vous écrit à l’adresse indiquée, dans la langue choisie, pour convenir d’un échange.',
       back: 'Retour à l’accueil'
     },
+    stepSend: 'Vous décrivez votre contexte et envoyez ce formulaire.',
     cta: 'Demander une présentation',
     aboutLink:
       'Vous souhaitez une présentation de Tenga Assessments pour votre organisation\u00A0? <link>Faites-en la demande</link>.'
@@ -298,55 +340,76 @@ const french = {
   login: {
     title: 'Connexion',
     intro:
-      'Saisissez votre adresse e-mail. Nous vous enverrons un lien de connexion et un code, valables 15 minutes et utilisables une seule fois. Aucun mot de passe à retenir.',
+      'Recevez par e-mail un lien de connexion. Il est valable 15 minutes et ne sert qu’une fois.',
+    stepsLabel: 'Étapes de la connexion',
+    steps: {
+      address: 'Saisissez votre adresse e-mail.',
+      open: 'Ouvrez le message reçu.',
+      confirm:
+        'Cliquez sur le lien, ou saisissez sur cette page le code à 6 chiffres du message.'
+    },
     emailLabel: 'Adresse e-mail',
-    submit: 'Recevoir mon lien de connexion',
-    sending: 'Envoi en cours…',
-    invalid: 'Veuillez saisir une adresse e-mail valide.',
-    sent: 'Si cette adresse peut se connecter, un message vient de lui être envoyé, avec un lien et un code valables 15 minutes.',
+    submit: 'Recevoir le lien',
+    sending: 'Envoi…',
+    invalid: 'Saisissez une adresse e-mail valide.',
+    sent: 'Si cette adresse peut se connecter, un message vient d’y être envoyé : un lien et un code, valables 15 minutes.',
     sentHelp:
-      'Rien au bout de quelques minutes\u00a0? Vérifiez vos courriers indésirables, puis demandez un nouveau lien.',
-    codeTitle: 'Message ouvert sur un autre appareil\u00a0?',
-    codeIntro: 'Saisissez ici le code à 6 chiffres reçu dans le message.',
+      'Rien reçu après quelques minutes ? Regardez dans les courriers indésirables, ou demandez un nouveau lien.',
+    retry: 'Demander un nouveau lien',
+    codeTitle: 'Message ouvert sur un autre appareil ?',
+    codeIntro: 'Saisissez ici le code à 6 chiffres du message.',
     codeLabel: 'Code à 6 chiffres',
     codeSubmit: 'Valider le code',
     codeChecking: 'Vérification…',
-    codeError:
-      'Ce code est incorrect ou expiré. Demandez un nouveau lien de connexion.',
+    codeInvalid: 'Vérifiez l’adresse e-mail et les 6 chiffres du code.',
+    codeError: 'Code incorrect ou expiré. Demandez un nouveau lien.',
     linkError:
-      'Ce lien de connexion est invalide ou a expiré. Demandez-en un nouveau.',
+      'Ce lien de connexion n’est plus valable. Demandez-en un nouveau.',
     password: {
-      summary: 'Administrateur Tenga : me connecter avec un mot de passe',
+      summary: 'Administrateur Tenga : connexion par mot de passe',
+      intro:
+        'Votre mot de passe, puis le code de votre application d’authentification.',
+      stepOne: 'Étape 1 sur 2',
+      stepTwo: 'Étape 2 sur 2',
       emailLabel: 'Adresse e-mail',
       passwordLabel: 'Mot de passe',
-      submit: 'Me connecter',
+      submit: 'Continuer',
       checking: 'Vérification…',
       failed:
-        'Connexion impossible. Vérifiez vos identifiants ou recevez un lien de connexion par e-mail.',
+        'Connexion refusée. Vérifiez vos identifiants, ou recevez un lien de connexion par e-mail.',
       invalid: 'Saisissez votre adresse e-mail et votre mot de passe.',
-      totpTitle: 'Code de vérification',
+      totpTitle: 'Code d’authentification',
       totpIntro:
         'Saisissez le code à 6 chiffres affiché par votre application d’authentification.',
       totpLabel: 'Code à 6 chiffres',
-      totpSubmit: 'Valider le code',
+      totpSubmit: 'Me connecter',
       totpFailed:
-        'Code incorrect ou expiré. Recommencez avec votre mot de passe.'
+        'Code refusé. Saisissez le code suivant, ou recommencez depuis le mot de passe.',
+      restart: 'Recommencer',
+      forgot: {
+        open: 'Mot de passe oublié ?',
+        title: 'Mot de passe oublié',
+        intro:
+          'Recevez un lien de connexion par e-mail. Il vous mène à Mon compte, où vous choisirez un nouveau mot de passe avec le code de votre application d’authentification.',
+        lock: 'Un mot de passe verrouillé après plusieurs échecs le reste jusqu’à son déverrouillage par un autre administrateur Tenga.',
+        submit: 'Recevoir le lien',
+        back: 'Retour au mot de passe'
+      }
     },
     connect: {
-      title: 'Confirmer la connexion',
+      title: 'Ouvrir votre session',
       intro:
-        'Cliquez sur le bouton pour ouvrir votre session. Le lien ne sert qu’une seule fois.',
-      button: 'Ouvrir ma session',
-      opening: 'Ouverture…',
+        'Le lien ne sert qu’une fois : il est utilisé au moment où vous cliquez sur le bouton.',
+      button: 'Me connecter',
+      opening: 'Connexion…',
       error:
-        'Ce lien est invalide, expiré ou déjà utilisé. Demandez-en un nouveau.',
+        'Ce lien n’est plus valable : il a expiré ou a déjà servi. Demandez-en un nouveau.',
       newLink: 'Demander un nouveau lien'
     }
   },
   account: {
     title: 'Mon compte',
-    intro:
-      'Votre profil et vos rôles. Seules ces informations sont conservées à votre sujet ici.',
+    intro: 'Votre adresse de connexion, votre profil et vos rôles.',
     profileTitle: 'Profil',
     emailLabel: 'Adresse de connexion',
     nameLabel: 'Nom',
@@ -361,51 +424,52 @@ const french = {
     saving: 'Enregistrement…',
     saved: 'Profil enregistré.',
     invalid: 'Vérifiez le nom (120 caractères au plus) et la langue.',
-    error: 'Le profil n’a pas pu être enregistré. Réessayez dans un instant.',
+    error: 'Le profil n’a pas été enregistré. Réessayez dans un instant.',
     rolesTitle: 'Vos rôles',
-    noRoles: 'Aucun rôle pour le moment.',
+    noRoles: 'Aucun rôle pour l’instant.',
     security: {
       title: 'Sécurité de la connexion',
       intro:
-        'Réservé aux administrateurs Tenga. Le mot de passe exige un code d’authentification à chaque connexion ; le lien de connexion par e-mail reste disponible en secours.',
+        'Réservé aux administrateurs Tenga. La connexion par mot de passe demande aussi le code de votre application d’authentification ; le lien de connexion par e-mail reste possible.',
       totpTitle: 'Application d’authentification',
       totpActive:
-        'Active. Un code est demandé à chaque connexion par mot de passe.',
-      totpInactive:
-        'Pas encore activée. Activez-la avant de définir un mot de passe.',
+        'Activée. Son code est demandé à chaque connexion par mot de passe.',
+      totpInactive: 'Non activée. Activez-la avant de définir un mot de passe.',
       totpStart: 'Activer l’application d’authentification',
       totpStarting: 'Préparation…',
       totpScan:
-        'Scannez ce code avec votre application d’authentification, puis saisissez le code à 6 chiffres qu’elle affiche.',
-      totpQrAlt: 'Code QR à scanner',
-      totpSecretLabel: 'Ou saisissez cette clé à la main',
+        'Scannez ce code QR avec votre application d’authentification, puis saisissez le code à 6 chiffres qu’elle affiche.',
+      totpQrAlt: 'Code QR d’activation de l’application d’authentification',
+      totpSecretLabel: 'Ou saisissez cette clé dans l’application :',
       totpCodeLabel: 'Code à 6 chiffres',
       totpConfirm: 'Confirmer',
       totpConfirming: 'Vérification…',
       totpEnabled: 'Application d’authentification activée.',
       totpFailed:
-        'Code incorrect. Vérifiez l’heure de votre appareil et réessayez.',
-      error: 'L’opération a échoué. Réessayez dans un instant.',
+        'Code refusé. Vérifiez l’heure de votre appareil, puis réessayez.',
+      error: 'L’opération n’a pas abouti. Réessayez dans un instant.',
       passwordTitle: 'Mot de passe',
       passwordIntro:
-        '12 caractères au moins, sans règle de composition ; une phrase de plusieurs mots convient. Les mots de passe courants sont refusés.',
+        'L’ancien mot de passe n’est pas demandé : le code de votre application d’authentification suffit. 12 caractères au moins, sans règle de composition ; une phrase de plusieurs mots convient. Les mots de passe trop courants sont refusés.',
       newLabel: 'Nouveau mot de passe',
-      confirmLabel: 'Confirmer le mot de passe',
+      confirmLabel: 'Confirmez le mot de passe',
       codeLabel: 'Code d’authentification (6 chiffres)',
       save: 'Enregistrer le mot de passe',
       saving: 'Enregistrement…',
       saved: 'Mot de passe enregistré.',
       needsTotp: 'Activez d’abord l’application d’authentification.',
-      mismatch: 'Les deux mots de passe ne correspondent pas.',
+      mismatch: 'Les deux saisies ne correspondent pas.',
       invalid: 'Vérifiez les trois champs.',
-      codeFailed: 'Code d’authentification incorrect.',
+      codeFailed: 'Code d’authentification refusé.',
       rateLimited: 'Trop de tentatives. Réessayez plus tard.',
       weak: {
-        too_short: 'Au moins 12 caractères.',
-        too_long: '72 octets au plus (environ 72 caractères simples).',
-        common: 'Ce mot de passe est trop courant ou déjà compromis.',
-        repetitive: 'Évitez de répéter un seul caractère.',
-        contains_email: 'Le mot de passe ne doit pas contenir votre adresse.'
+        too_short: '12 caractères au moins.',
+        too_long: '72 octets au plus (environ 72 caractères non accentués).',
+        common:
+          'Ce mot de passe est refusé : il est trop courant ou identique à l’actuel.',
+        repetitive: 'Évitez un seul caractère répété.',
+        contains_email:
+          'Le mot de passe ne doit pas contenir votre adresse e-mail.'
       }
     },
     adminLink: 'Administration Tenga',
@@ -640,13 +704,13 @@ const french = {
   invitation: {
     title: 'Votre invitation',
     invalid:
-      'Cette invitation n’est plus valable. Demandez-en une nouvelle à l’organisation qui vous a écrit.',
+      'Cette invitation n’est plus valable. Demandez-en une nouvelle à l’organisation qui vous l’a envoyée.',
     greeting: 'Bonjour {prenom},',
     greetingNeutral: 'Bonjour,',
     intro:
-      '{organisation} vous invite à répondre au questionnaire de personnalité de Tenga Assessments, dans le cadre de la campagne «\u00a0{campagne}\u00a0».',
+      '{organisation} vous invite à répondre au questionnaire de personnalité de Tenga Assessments, pour la campagne «\u00a0{campagne}\u00a0».',
     messageTitle: 'Message joint à l’invitation',
-    expires: 'Cette invitation est valable jusqu’au {date}.',
+    expires: 'Invitation valable jusqu’au {date}.',
     acceptHelp:
       'En l’acceptant, vous ouvrez votre espace personnel sur Tenga Assessments.',
     button: 'Accepter l’invitation',
@@ -805,19 +869,27 @@ const french = {
     }
   },
   articles: {
-    back: 'Retour aux articles',
+    back: 'Tous les articles',
     readingTime: '{minutes} min de lecture',
-    empty: 'Aucun article n’est encore publié dans cette langue.'
+    empty: 'Aucun article n’est encore publié dans cette langue.',
+    lead: 'Lectures sur la personnalité et la psychologie.',
+    inEnglish: 'Ces articles sont rédigés en anglais.',
+    related: 'À lire ensuite',
+    tags: 'Thèmes',
+    share: 'Partager sur {reseau}'
   },
   notFound: {
-    title: 'Page introuvable',
-    text: 'L’adresse demandée n’existe pas ou n’est plus disponible.',
-    home: 'Retour à l’accueil'
+    title: 'Cette page n’existe pas',
+    text: 'L’adresse a peut-être été mal saisie, ou la page a été déplacée. Repartez de l’accueil, ou commencez directement le questionnaire.',
+    home: 'Retour à l’accueil',
+    test: 'Commencer le questionnaire'
   },
   error: {
-    title: 'Une erreur est survenue',
-    text: 'Réessayez dans un instant. Si l’erreur persiste, écrivez-nous.',
-    retry: 'Réessayer'
+    title: 'Cette page n’a pas pu s’afficher',
+    text: 'Un problème technique a interrompu l’affichage. Réessayez dans un instant.',
+    retry: 'Réessayer',
+    contact: 'Si le problème persiste, écrivez-nous à <mail>{email}</mail>.',
+    code: 'Code de l’incident, à nous indiquer :'
   },
   // Page « Méthode et références ». Chaque chiffre est celui lu dans la source
   // (docs/design/dossier-preuves.md, fiche indiquée dans src/lib/method-references.ts).
@@ -828,13 +900,13 @@ const french = {
         'L’instrument, les cinq domaines et les trente facettes, et les références de la recherche, avec leurs chiffres exacts et leurs limites.'
     },
     title: 'Méthode et références',
-    lead: 'Un instrument ouvert, des travaux de recherche publiés, des chiffres que vous pouvez vérifier vous-même.',
+    lead: 'Sur quoi repose le questionnaire, ce que la recherche publiée établit, et ce qu’elle n’établit pas. Chaque chiffre renvoie à sa source.',
     toc: 'Sur cette page',
     verified:
-      'Chaque référence a été consultée le 20 octobre 2026. Les citations sont traduites de l’anglais par nos soins, et chaque fiche indique ce qui a été lu : texte intégral, résumé de l’éditeur ou page web.',
+      'Références consultées le 20 octobre 2026. Les citations sont traduites de l’anglais par nos soins ; chaque fiche dit ce que nous avons lu : le texte intégral, le résumé de l’éditeur ou une page web.',
     labels: {
       finding: 'Ce que la source établit',
-      limit: 'À garder en tête',
+      limit: 'Ses limites',
       evidence: 'Niveau de preuve',
       reading: {
         full: 'Texte intégral lu',
@@ -846,23 +918,23 @@ const french = {
     instrument: {
       title: 'L’instrument',
       intro:
-        'Le questionnaire s’appuie sur l’IPIP-NEO-120 de John A. Johnson, publié en 2014 dans le Journal of Research in Personality. Ses 120 affirmations éclairent les cinq grands facteurs de la personnalité et leurs trente facettes, pour une lecture fine plutôt qu’une simple étiquette. Il puise dans l’International Personality Item Pool, une banque d’affirmations que son site officiel déclare placée dans le domaine public : un instrument ouvert, dont chaque question peut être lue et examinée.',
+        'Le questionnaire reprend l’IPIP-NEO-120, publié par John A. Johnson en 2014 dans le Journal of Research in Personality. Ses 120 affirmations couvrent les cinq grands facteurs de la personnalité et, sous chacun, six facettes. Le résultat donne un score pour chacun des cinq domaines et pour chacune des trente facettes. Les affirmations viennent de l’International Personality Item Pool, dont le site officiel les déclare dans le domaine public : chacune peut être lue et examinée.',
       notNeo:
-        'Il mesure des facettes proches de celles du NEO PI-R, un instrument commercial distinct, sans être celui-ci.'
+        'Ses facettes sont proches de celles du NEO PI-R, un instrument commercial distinct ; ce n’est pas le NEO PI-R.'
     },
     domains: {
-      title: 'Ce que mesurent les cinq domaines et les trente facettes',
+      title: 'Cinq domaines, trente facettes',
       intro:
-        'Chaque domaine décrit une tendance, jamais une qualité ni un défaut : une manière d’aborder le monde, avec ses forces propres. Chacun se décline en six facettes, décrites une à une.',
+        'Chaque domaine décrit une tendance, pas une qualité ni un défaut. Un score indique où se placent vos réponses entre les deux pôles de cette tendance ; il ne vous compare à personne. Chaque domaine se décline en six facettes.',
       facets: 'Les six facettes'
     },
     research: {
       title: 'Ce que dit la recherche',
       intro:
-        'Seize références, chacune présentée avec ses auteurs, son année, sa revue, les chiffres exacts lus dans la source et son niveau de preuve. Nous retenons les travaux dont le niveau de preuve est fort ou partiel, et nous disons lequel : vous savez toujours sur quoi vous vous appuyez.',
+        'Les références sont classées par question. Pour chacune : auteurs, année, revue, chiffres relevés dans la source, niveau de preuve et limites. Nous ne retenons que des travaux à preuve forte ou partielle, et nous indiquons lequel.',
       reading: {
         title: 'Comment lire les chiffres',
-        text: 'Une corrélation va de 0 à 1 : plus elle est proche de 1, plus deux mesures évoluent ensemble. Son carré donne la part de variance partagée : une corrélation de 0,19 correspond à environ 3,6 % (calcul de notre dossier de preuves). Une moyenne cache des écarts entre études, et une association n’est pas une cause.'
+        text: 'Une corrélation va de −1 à 1. Plus elle s’éloigne de 0, plus deux mesures varient ensemble ; négative, l’une baisse quand l’autre monte. Son carré donne la part de variance partagée : une corrélation de 0,19 correspond à environ 3,6 % (calcul de notre dossier de preuves). Une moyenne masque les écarts entre études, et une association n’est pas une cause.'
       },
       groups: {
         instrument: 'Les sources de l’instrument',
@@ -875,9 +947,9 @@ const french = {
       }
     },
     gaps: {
-      title: 'Les questions que la recherche laisse ouvertes',
+      title: 'Ce que la recherche n’établit pas encore',
       intro:
-        'Une recherche n’est jamais exhaustive, et une étude introuvable ne prouve pas qu’elle n’existe pas. Voici, en toute transparence, ce que la littérature consultée n’établit pas encore.',
+        'Ce que nos recherches n’ont pas trouvé. Une étude introuvable ne prouve pas qu’elle n’existe pas ; ces trois manques restent ouverts.',
       morocco:
         'Aucune étude d’invariance de mesure de l’IPIP-NEO-120 entre le Maroc et un autre pays, ni entre l’arabe ou le français marocains et l’anglais.',
       team: 'Aucune étude qui compare des personnes recevant un rapport de personnalité à un groupe témoin, sur des critères de leadership.',

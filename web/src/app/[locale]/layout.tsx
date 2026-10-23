@@ -1,4 +1,5 @@
 import '@/styles/globals.css';
+import '@/styles/cadre.css';
 import { Metadata, Viewport } from 'next';
 import { fontArabe, fontDisplay, fontLatin } from '@/config/fonts';
 import { MotionRuntime } from '@/components/home/motion-runtime';
@@ -149,7 +150,10 @@ export default async function RootLayout({
               <MotionRuntime />
               <Footer
                 footerLinks={footerLinks}
-                labels={{ nav: t('a11y.footerNav') }}
+                labels={{
+                  nav: t('a11y.footerNav'),
+                  tagline: t('footer.tagline')
+                }}
               />
             </div>
           </Providers>

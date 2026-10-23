@@ -3,7 +3,13 @@
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/navigation';
+import { PentagoneTrace } from '@/components/cadre/pentagone-trace';
+import { MotsCinetiques } from '@/components/mots-cinetiques';
 import { boutonPrincipal, subtitle, title } from '@/components/primitives';
+
+// Même source que supportEmail (config/site), lue ici directement : ce module
+// serveur ne peut pas être importé dans un composant client.
+const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || '';
 
 export default function Error({
   error,
@@ -20,30 +26,72 @@ export default function Error({
   }, [error]);
 
   // Le message technique n'est jamais montré ; seul le digest aide le support.
+  // Le pentagone s'interrompt à mi-parcours : le chemin reprendra au nouvel essai.
   return (
-    <section className='colonne-lecture py-16'>
-      <h1 className={title()}>{t('title')}</h1>
-      <p className={subtitle()}>{t('text')}</p>
-      <div className='mt-8 flex flex-wrap items-center gap-4'>
-        <button
-          type='button'
-          onClick={() => reset()}
-          className={boutonPrincipal()}
+    <section className='grid items-center gap-x-12 gap-y-10 py-10 lg:grid-cols-12 lg:py-16'>
+      <PentagoneTrace
+        part={0.6}
+        className='mx-auto max-w-[220px] lg:order-last lg:col-span-5 lg:max-w-[340px]'
+      />
+      <div className='lg:col-span-7'>
+        <h1 className={title()}>
+          <MotsCinetiques texte={t('title')} />
+        </h1>
+        <p
+          style={{ ['--i' as string]: 0 }}
+          className={subtitle({ class: 'apparait-tard' })}
         >
-          {t('retry')}
-        </button>
-        <Link
-          href='/'
-          className='inline-flex min-h-11 items-center text-petit font-medium text-accent hover:text-accent-survol hover:underline'
-        >
-          {n('home')}
-        </Link>
-      </div>
-      {error.digest && (
-        <p className='mt-4 text-legende text-texte-3 chiffres'>
-          <bdi dir='ltr'>{error.digest}</bdi>
+          {t('text')}
         </p>
-      )}
+        <div
+          style={{ ['--i' as string]: 1 }}
+          className='apparait-tard mt-8 flex flex-wrap items-center gap-4'
+        >
+          <button
+            type='button'
+            onClick={() => reset()}
+            className={boutonPrincipal()}
+          >
+            {t('retry')}
+          </button>
+          <Link
+            href='/'
+            className='inline-flex min-h-11 items-center text-petit font-medium text-accent hover:text-accent-survol hover:underline'
+          >
+            {n('home')}
+          </Link>
+        </div>
+        {(supportEmail || error.digest) && (
+          <div
+            style={{ ['--i' as string]: 2 }}
+            className='apparait-tard mt-10 max-w-[38em] border-t border-trait pt-4 text-petit text-texte-2'
+          >
+            {supportEmail && (
+              <p>
+                {t.rich('contact', {
+                  email: supportEmail,
+                  mail: (chunks) => (
+                    <a
+                      href={`mailto:${supportEmail}`}
+                      className='font-medium text-accent underline underline-offset-2 hover:text-accent-survol'
+                    >
+                      <bdi dir='ltr'>{chunks}</bdi>
+                    </a>
+                  )
+                })}
+              </p>
+            )}
+            {error.digest && (
+              <p className='mt-1 text-legende text-texte-3'>
+                {t('code')}{' '}
+                <bdi dir='ltr' className='chiffres font-medium text-encre'>
+                  {error.digest}
+                </bdi>
+              </p>
+            )}
+          </div>
+        )}
+      </div>
     </section>
   );
 }

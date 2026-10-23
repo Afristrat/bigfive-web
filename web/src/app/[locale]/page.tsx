@@ -1,13 +1,11 @@
+import { CSSProperties } from 'react';
 import { compareDesc } from 'date-fns';
 import { allPosts } from 'contentlayer/generated';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { boutonPrincipal, heading, title } from '@/components/primitives';
 import { ArrowRightIcon } from '@/components/icons';
-import {
-  HomeClosing,
-  HomeSections,
-  MotsCinetiques
-} from '@/components/home-sections';
+import { HomeClosing, HomeSections } from '@/components/home-sections';
+import { MotsCinetiques } from '@/components/mots-cinetiques';
 import { HeroRadar } from '@/components/home/hero-radar';
 import { ratioDeScore } from '@/components/home/pentagone';
 import { PostListItem } from '@/components/post-list-item';
@@ -15,6 +13,8 @@ import { secondaryButtonClass } from '@/components/form-styles';
 import { Link } from '@/navigation';
 import { basePath } from '@/config/site';
 import { DomainCode, domainCodes, domainLabel } from '@/lib/domain-labels';
+import { formatNombre, localeRegionale } from '@/lib/format';
+import '@/components/home/accueil.css';
 
 interface HomeProps {
   params: Promise<{ locale: string }>;
@@ -29,6 +29,16 @@ const profils: ReadonlyArray<Record<DomainCode, number>> = [
   { O: 64, C: 108, E: 52, A: 96, N: 41 },
   { O: 112, C: 58, E: 99, A: 61, N: 83 }
 ];
+
+// Repères de coupe de la planche : coin, position, filets visibles.
+const coins = [
+  'start-0 top-0 border-s border-t',
+  'end-0 top-0 border-e border-t',
+  'bottom-0 start-0 border-b border-s',
+  'bottom-0 end-0 border-b border-e'
+] as const;
+
+const rang = (i: number): CSSProperties => ({ ['--i' as string]: i });
 
 export async function generateMetadata({ params }: HomeProps) {
   const { locale } = await params;
@@ -54,6 +64,13 @@ export default async function Home({ params }: HomeProps) {
   const ratios = profils.map((profil) =>
     domainCodes.map((code) => ratioDeScore(profil[code]))
   );
+  const regionale = localeRegionale(locale);
+  const chiffres = [
+    { valeur: 120, label: h('figures.items') },
+    { valeur: 5, label: h('figures.factors') },
+    { valeur: 30, label: h('figures.facets') },
+    { valeur: 3, label: h('figures.languages') }
+  ];
 
   // Articles seulement dans la langue exacte de la page (aucun en FR ni en AR).
   const posts = allPosts
@@ -63,32 +80,52 @@ export default async function Home({ params }: HomeProps) {
 
   return (
     <>
-      {/* Ouverture : le titre monte mot à mot en début de ligne ; en fin de
-          ligne, le radar vivant des cinq facteurs, en trois plans. Sur mobile, le
-          radar s'intercale entre le titre et le chapeau. */}
-      <section className='grid items-center gap-x-8 pb-16 lg:min-h-[calc(100dvh-8rem)] lg:grid-cols-12 lg:pb-20'>
-        <h1
-          className={`${title({ size: 'display' })} max-w-[11em] lg:col-span-7 lg:row-start-1`}
-        >
-          <MotsCinetiques texte={h('title')} />
-        </h1>
-        <div className='mx-auto mt-8 w-[82%] max-w-[380px] lg:col-span-5 lg:row-span-2 lg:row-start-1 lg:m-0 lg:w-full lg:max-w-none'>
+      {/* Ouverture : l'intitulé, le titre qui monte mot à mot, puis, en fin de
+          ligne, le radar vivant posé sur sa planche ; sur mobile, la planche
+          s'intercale entre le titre et le chapeau. En pied, la fiche chiffrée
+          de l'instrument, réglée par un filet d'encre. */}
+      <section className='grid gap-x-10 pb-16 lg:min-h-[calc(100dvh-8rem)] lg:grid-cols-12 lg:content-center lg:pb-20'>
+        <div className='lg:col-span-7 lg:row-start-1'>
+          <p
+            style={rang(0)}
+            className='apparait-tard flex items-center gap-3 text-petit font-medium text-texte-2'
+          >
+            <span aria-hidden='true' className='block h-px w-10 bg-safran' />
+            {h('eyebrow')}
+          </p>
+          <h1
+            className={`${title({ size: 'display' })} mt-6 max-w-[11em] lg:mt-8`}
+          >
+            <MotsCinetiques texte={h('title')} />
+          </h1>
+        </div>
+
+        <div className='relative mx-auto mt-10 w-[86%] max-w-[400px] p-4 sm:p-6 lg:col-span-5 lg:row-span-2 lg:row-start-1 lg:m-0 lg:w-full lg:max-w-none lg:self-center'>
+          {coins.map((coin, i) => (
+            <span
+              key={coin}
+              aria-hidden='true'
+              style={rang(i)}
+              className={`planche-coin ${coin}`}
+            />
+          ))}
           <HeroRadar
             noms={domainCodes.map((code) => domainLabel(code, locale, 'short'))}
             profils={ratios}
             legende={h('specimenTag')}
           />
         </div>
+
         <div className='lg:col-span-7 lg:row-start-2 lg:self-start'>
           <p
-            style={{ ['--i' as string]: 1 }}
-            className='apparait-tard mt-8 max-w-[34em] text-chapo text-texte-2 lg:mt-8'
+            style={rang(1)}
+            className='apparait-tard mt-8 max-w-[33em] text-chapo text-texte-2'
           >
             {h('lead')}
           </p>
           <div
-            style={{ ['--i' as string]: 2 }}
-            className='apparait-tard mt-8 flex flex-wrap gap-3'
+            style={rang(2)}
+            className='apparait-tard mt-9 flex flex-wrap gap-3'
           >
             <Link href='/test' data-aimant='' className={boutonPrincipal()}>
               {t('call_to_action')}
@@ -102,22 +139,39 @@ export default async function Home({ params }: HomeProps) {
               {p('cta')}
             </Link>
           </div>
-          <p
-            style={{ ['--i' as string]: 3 }}
-            className='apparait-tard mt-10 max-w-[38em] border-t border-trait pt-4 text-petit text-texte-3 [&_a]:font-medium [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-2'
-          >
-            {t.rich('description.reference', {
-              ipip: (chunks) => (
-                <a
-                  href='https://ipip.ori.org'
-                  rel='noopener noreferrer'
-                  target='_blank'
-                >
-                  {chunks}
-                </a>
-              )
-            })}
-          </p>
+        </div>
+
+        <div className='relative mt-16 lg:col-span-12 lg:mt-20'>
+          <span
+            aria-hidden='true'
+            className='fiche-filet absolute inset-x-0 top-0 block h-0.5 bg-encre'
+          />
+          <dl className='grid grid-cols-2 gap-x-6 gap-y-8 pt-8 md:grid-cols-4'>
+            {chiffres.map((chiffre, i) => (
+              <div
+                key={chiffre.label}
+                style={rang(i + 4)}
+                className='apparait-tard flex flex-col-reverse gap-1'
+              >
+                <dt className='text-petit font-medium text-texte-2'>
+                  {chiffre.label}
+                </dt>
+                <dd className='chiffres font-display text-[clamp(2.75rem,1.9rem+3.6vw,4.75rem)] font-semibold leading-none tracking-[-0.04em] text-encre'>
+                  <span
+                    data-compteur={chiffre.valeur}
+                    data-ouverture={1000 + i * 90}
+                    data-locale={regionale}
+                    aria-hidden='true'
+                  >
+                    {formatNombre(chiffre.valeur, locale)}
+                  </span>
+                  <span className='sr-only'>
+                    {formatNombre(chiffre.valeur, locale)}
+                  </span>
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
@@ -140,7 +194,9 @@ export default async function Home({ params }: HomeProps) {
         </section>
       )}
 
-      <HomeClosing locale={locale} />
+      <div className='mt-8'>
+        <HomeClosing locale={locale} />
+      </div>
     </>
   );
 }

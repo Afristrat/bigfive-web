@@ -1,6 +1,10 @@
-import { ReactElement } from 'react';
+import { CSSProperties, ReactElement, ReactNode } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { PentagoneTrace } from '@/components/cadre/pentagone-trace';
+import { Sommaire } from '@/components/cadre/sommaire';
+import { DomainShape } from '@/components/domain-shape';
 import { ArrowRightIcon } from '@/components/icons';
+import { MotsCinetiques } from '@/components/mots-cinetiques';
 import { subtitle, title } from '@/components/primitives';
 import { basePath } from '@/config/site';
 import { domainCodes, domainLabel, facetLabel } from '@/lib/domain-labels';
@@ -22,10 +26,10 @@ type Translate = Awaited<ReturnType<typeof methodTranslations>>;
 
 const servedLocales = ['fr', 'ar', 'en'];
 
-const section = 'mt-16 border-t border-trait pt-10 lg:mt-20 lg:pt-12';
+const rang = (i: number): CSSProperties => ({ ['--i' as string]: i });
 
 const textLink =
-  'inline-flex min-h-11 items-center gap-2 text-petit font-medium text-accent underline-offset-4 transition-colors duration-courte ease-tenga hover:text-accent-survol hover:underline';
+  'lien-fleche inline-flex min-h-11 items-center gap-2 text-petit font-medium text-accent underline-offset-4 transition-colors duration-courte ease-tenga hover:text-accent-survol hover:underline';
 
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
@@ -46,11 +50,24 @@ export async function generateMetadata({ params }: Props) {
 }
 
 // Une fiche de référence : auteurs, année, revue, lien, niveau de preuve, mode
-// de lecture, puis ce que la source établit et ses limites.
-function Reference({ id, t }: { id: string; t: Translate }): ReactElement {
+// de lecture, puis ce que la source établit et ses limites. Les fiches montent
+// à leur entrée dans l'écran, la seconde colonne un temps après la première.
+function Reference({
+  id,
+  colonne,
+  t
+}: {
+  id: string;
+  colonne: number;
+  t: Translate;
+}): ReactElement {
   const reference = methodReferenceById(id);
   return (
-    <li className='flex flex-col gap-3 border-t border-trait py-6'>
+    <li
+      data-reveal='monte'
+      style={rang(colonne)}
+      className='flex flex-col gap-3 border-t border-trait py-6'
+    >
       <h4 className='text-titre-3 text-encre'>
         <bdi dir='ltr'>
           {reference.authors}
@@ -103,13 +120,61 @@ function Group({ id, t }: { id: MethodGroupId; t: Translate }): ReactElement {
   const group = methodGroups.find((item) => item.id === id);
   return (
     <div className='mt-10'>
-      <h3 className='text-titre-2 text-encre'>{t(`research.groups.${id}`)}</h3>
+      <h3 data-reveal='monte' className='text-titre-2 text-encre'>
+        {t(`research.groups.${id}`)}
+      </h3>
       <ul role='list' className='mt-4 grid gap-x-8 min-[900px]:grid-cols-2'>
-        {(group?.refs ?? []).map((ref) => (
-          <Reference key={ref} id={ref} t={t} />
+        {(group?.refs ?? []).map((ref, index) => (
+          <Reference key={ref} id={ref} colonne={index % 2} t={t} />
         ))}
       </ul>
     </div>
+  );
+}
+
+// Section de la page : son numéro d'ordre en safran devant le titre ; un filet
+// safran ouvre la bordure et le titre monte de son masque à l'entrée dans
+// l'écran (moteur MotionRuntime). La marge d'ancrage tient compte de l'en-tête
+// et du sommaire collants.
+function Section({
+  id,
+  numero,
+  titre,
+  children
+}: {
+  id: string;
+  numero: number;
+  titre: string;
+  children: ReactNode;
+}): ReactElement {
+  return (
+    <section
+      id={id}
+      aria-labelledby={`${id}-titre`}
+      className='relative mt-16 scroll-mt-20 border-t border-trait pt-10 lg:mt-20 lg:scroll-mt-32 lg:pt-12'
+    >
+      <span
+        aria-hidden='true'
+        data-reveal='volet'
+        className='absolute -top-px start-0 block h-0.5 w-16 bg-safran'
+      />
+      <div className='flex items-baseline gap-4 sm:gap-6'>
+        <span
+          aria-hidden='true'
+          className='chiffres flex-none font-display text-titre-section leading-none text-safran'
+        >
+          {String(numero).padStart(2, '0')}
+        </span>
+        <h2
+          id={`${id}-titre`}
+          data-reveal='masque'
+          className={title({ size: 'section' })}
+        >
+          {titre}
+        </h2>
+      </div>
+      {children}
+    </section>
   );
 }
 
@@ -142,63 +207,65 @@ export default async function MethodPage({
 
   return (
     <article>
-      <header>
-        <h1 className={title()}>{t('title')}</h1>
-        <p className={subtitle()}>{t('lead')}</p>
-        <p className='mt-4 max-w-[48em] text-petit text-texte-3'>
-          {t('verified')}
-        </p>
-        <nav aria-label={t('toc')} className='mt-6'>
-          <ul role='list' className='flex flex-wrap gap-x-6 gap-y-1'>
-            {toc.map((item) => (
-              <li key={item.id}>
-                <a href={`#${item.id}`} className={textLink}>
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      {/* Ouverture : le titre monte mot à mot ; en fin de ligne, le pentagone
+          des cinq domaines se trace, chaque forme au bout de son axe. */}
+      <header className='grid items-center gap-x-12 lg:grid-cols-12'>
+        <div className='lg:col-span-8'>
+          <h1 className={title({ size: 'display' })}>
+            <MotsCinetiques texte={t('title')} />
+          </h1>
+          <p style={rang(0)} className={subtitle({ class: 'apparait-tard' })}>
+            {t('lead')}
+          </p>
+          <p
+            style={rang(1)}
+            className='apparait-tard mt-4 max-w-[48em] text-petit text-texte-3'
+          >
+            {t('verified')}
+          </p>
+        </div>
+        <PentagoneTrace
+          formes
+          className='hidden max-w-[300px] justify-self-end lg:col-span-4 lg:block'
+        />
       </header>
 
-      <section
-        id='instrument'
-        aria-labelledby='instrument-titre'
-        className={section}
-      >
-        <h2 id='instrument-titre' className={title({ size: 'section' })}>
-          {t('instrument.title')}
-        </h2>
-        <p className='mt-3 colonne-lecture text-chapo text-texte-2'>
+      <Sommaire label={t('toc')} items={toc} />
+
+      <Section id='instrument' numero={1} titre={t('instrument.title')}>
+        <p
+          data-reveal='monte'
+          className='mt-3 colonne-lecture text-chapo text-texte-2'
+        >
           {t('instrument.intro')}
         </p>
-        <p className='mt-3 colonne-lecture text-texte-2'>
+        <p
+          data-reveal='monte'
+          style={rang(1)}
+          className='mt-3 colonne-lecture text-texte-2'
+        >
           {t('instrument.notNeo')}
         </p>
         <Group id='instrument' t={t} />
-      </section>
+      </Section>
 
-      <section
-        id='domaines'
-        aria-labelledby='domaines-titre'
-        className={section}
-      >
-        <h2 id='domaines-titre' className={title({ size: 'section' })}>
-          {t('domains.title')}
-        </h2>
-        <p className='mt-3 colonne-lecture text-texte-2'>
+      <Section id='domaines' numero={2} titre={t('domains.title')}>
+        <p data-reveal='monte' className='mt-3 colonne-lecture text-texte-2'>
           {t('domains.intro')}
         </p>
         <ul
           role='list'
           className='mt-8 grid gap-x-8 border-t border-trait min-[800px]:grid-cols-2'
         >
-          {domainCodes.map((code) => (
+          {domainCodes.map((code, index) => (
             <li
               key={code}
+              data-reveal='monte'
+              style={rang(index % 2)}
               className='flex flex-col gap-3 border-b border-trait py-6'
             >
-              <h3 className='text-titre-3 text-encre'>
+              <h3 className='flex items-center gap-3 text-titre-3 text-encre'>
+                <DomainShape domain={code} size={18} className='text-accent' />
                 {domainLabel(code, locale, 'long')}
               </h3>
               <p className='text-texte-2'>{h(`factors.${code}`)}</p>
@@ -216,20 +283,21 @@ export default async function MethodPage({
             </li>
           ))}
         </ul>
-      </section>
+      </Section>
 
-      <section
-        id='recherche'
-        aria-labelledby='recherche-titre'
-        className={section}
-      >
-        <h2 id='recherche-titre' className={title({ size: 'section' })}>
-          {t('research.title')}
-        </h2>
-        <p className='mt-3 colonne-lecture text-texte-2'>
+      <Section id='recherche' numero={3} titre={t('research.title')}>
+        <p data-reveal='monte' className='mt-3 colonne-lecture text-texte-2'>
           {t('research.intro')}
         </p>
-        <aside className='mt-6 colonne-lecture border-s-2 border-accent ps-5'>
+        {/* Son filet d'accent se trace de haut en bas à l'entrée dans l'écran. */}
+        <aside
+          data-reveal='trace'
+          className='relative mt-6 colonne-lecture ps-5'
+        >
+          <span
+            aria-hidden='true'
+            className='filet-vertical absolute inset-y-0 start-0 block w-0.5 bg-accent'
+          />
           <h3 className='text-titre-3 text-encre'>
             {t('research.reading.title')}
           </h3>
@@ -238,30 +306,34 @@ export default async function MethodPage({
         {researchGroups.map((id) => (
           <Group key={id} id={id} t={t} />
         ))}
-      </section>
+      </Section>
 
-      <section id='lacunes' aria-labelledby='lacunes-titre' className={section}>
-        <h2 id='lacunes-titre' className={title({ size: 'section' })}>
-          {t('gaps.title')}
-        </h2>
-        <p className='mt-3 colonne-lecture text-texte-2'>{t('gaps.intro')}</p>
+      <Section id='lacunes' numero={4} titre={t('gaps.title')}>
+        <p data-reveal='monte' className='mt-3 colonne-lecture text-texte-2'>
+          {t('gaps.intro')}
+        </p>
         <ul
           role='list'
           className='mt-6 grid gap-x-8 border-t border-trait min-[900px]:grid-cols-3'
         >
-          {gaps.map((key) => (
-            <li key={key} className='border-b border-trait py-5 text-texte-2'>
+          {gaps.map((key, index) => (
+            <li
+              key={key}
+              data-reveal='monte'
+              style={rang(index)}
+              className='border-b border-trait py-5 text-texte-2'
+            >
               {t(`gaps.${key}`)}
             </li>
           ))}
         </ul>
-        <p className='mt-8'>
+        <p data-reveal='monte' className='mt-8'>
           <Link href='/presentation' className={textLink}>
             {p('cta')}
             <ArrowRightIcon size={18} />
           </Link>
         </p>
-      </section>
+      </Section>
     </article>
   );
 }

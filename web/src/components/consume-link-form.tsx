@@ -1,10 +1,9 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button } from '@nextui-org/button';
 import { consumeLoginLink, type AuthFormState } from '@/actions/auth';
 import { Notice } from '@/components/notice';
-import { submitButtonClass } from '@/components/form-styles';
+import { PendingButton } from '@/components/pending-button';
 import { Link } from '@/navigation';
 
 export type ConsumeLabels = {
@@ -35,7 +34,7 @@ export function ConsumeLinkForm({
     <form action={formAction} className='mt-8 flex flex-col gap-5'>
       <input type='hidden' name='token' value={token} />
       <input type='hidden' name='locale' value={locale} />
-      {state.status !== 'idle' && (
+      {state.status !== 'idle' && !pending && (
         <div className='max-w-md'>
           <Notice ton='erreur'>
             <p>{labels.error}</p>
@@ -46,14 +45,10 @@ export function ConsumeLinkForm({
         </div>
       )}
       <div>
-        <Button
-          type='submit'
-          color='primary'
-          isLoading={pending}
-          className={submitButtonClass}
-        >
-          {pending ? labels.opening : labels.button}
-        </Button>
+        <PendingButton
+          pending={pending}
+          label={pending ? labels.opening : labels.button}
+        />
       </div>
     </form>
   );
