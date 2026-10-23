@@ -82,7 +82,7 @@ table.refs td[data-controle]{white-space:nowrap}
 .absent{color:var(--mut);font-style:italic}
 footer{margin-top:32px}
 @media (max-width:760px){main{padding:16px}h1{font-size:1.5rem}section.niveau{padding:12px}}
-@media print{:root,:root[data-theme=dark]{${CLAIR}}.toc{display:none}body{background:#fff;color:#1d1f21}section.niveau,.para,.reco{break-inside:avoid}section.niveau{border:0;padding:0}.recos{grid-template-columns:1fr}.reco dl{display:grid;grid-template-columns:9em 1fr;gap:.15em 1em;align-items:baseline}.reco dt{margin-top:0}#n2-relations .radar svg{width:min(100%,210px)}#n2-relations .halteres{max-width:none}#n2-relations .halteres svg{display:block;width:85%;margin:0 auto}}
+@media print{:root,:root[data-theme=dark]{${CLAIR}}.toc{display:none}body{background:#fff;color:#1d1f21}section.niveau{break-before:page}.para,.reco{break-inside:avoid}section.niveau{border:0;padding:0}.recos{grid-template-columns:1fr}.reco dl{display:grid;grid-template-columns:9em 1fr;gap:.15em 1em;align-items:baseline}.reco dt{margin-top:0}#n2-relations .radar svg{width:min(100%,170px)}#n2-relations .halteres{max-width:none}#n2-relations .halteres svg{display:block;width:72%;margin:0 auto}#n2-relations .sec+.sec:has(.visuels){break-before:page}#n2-relations .sec h3{break-after:avoid}#n2-relations .visuels,#n3-equipe .visuels{display:flex;flex-direction:column}#n2-relations .halteres,#n3-equipe .chaleur{order:-1}#n2-relations .paire{order:-2}}
 ${CSS_SANS_AVATAR}`;
 
 // Couleurs de profil en variables : une valeur claire, une valeur sombre, claire à l'impression.
@@ -227,14 +227,15 @@ export function rendreHtml({ rapport, cas, faits, profils, bib, variante } = {})
 
   // Visuels par niveau
   const dejaRadar = new Set();
+  const dejaPaire = new Set(); // radar et écarts d'un binôme : une seule fois, dans sa première sous-section
   const visuelSection = (num, titreSection, idSection) => {
     const cites = codesCites(`${titreSection} ${idSection}`.replace(/[-_/×]/g, ' '), codes);
     if (num === 1 && cites.length >= 1 && !dejaRadar.has(cites[0])) {
       const p = parCode[cites[0]]; dejaRadar.add(p.code);
       return `<div class="visuels paire">${avatar(p, 56, variante)}${visuel(radarSvg([p], { taille: 260, titre: 'Radar de ' + p.nom }))}</div>`;
     }
-    if (num === 2 && cites.length >= 2) {
-      const [a, b] = [parCode[cites[0]], parCode[cites[1]]];
+    if (num === 2 && cites.length >= 2 && !dejaPaire.has(cites[0] + '×' + cites[1])) {
+      const [a, b] = [parCode[cites[0]], parCode[cites[1]]]; dejaPaire.add(a.code + '×' + b.code);
       return `<div class="visuels"><div class="paire">${avatar(a, 48, variante)}<span aria-hidden="true">×</span>${avatar(b, 48, variante)}</div>`
         + visuel(radarSvg([a, b], { titre: 'Radar de ' + a.nom + ' et ' + b.nom }))
         + visuel(dumbbellSvg(a, b, titres, ecart)) + '</div>';

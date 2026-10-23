@@ -2784,8 +2784,6 @@ Dans une ligne hiérarchique, ce chapitre ne doit pas alimenter l’évaluation 
 
 ### AM et KB : synergies probables sur la tâche
 
-**\[AM\]**×**\[KB\]**
-
 Hypothèse
 
 Les réponses d’AM et de KB sont voisines sur le domaine N (écart 0,46), le domaine A (écart 0,29) et le domaine C (écart 0,08). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine N, une façon voisine de réagir à l’incertitude et à la pression, qui peut faciliter le partage des inquiétudes sur le calendrier ; pour le domaine A, une manière voisine de coopérer et de traiter un désaccord, qui peut faciliter une franchise ou une prudence partagée ; pour le domaine C, un rapport voisin à l’organisation et au suivi des engagements, qui peut faciliter l’accord sur les points d’étape. Dans une ligne hiérarchique, ces points de rencontre peuvent aider à poser des attentes claires sans longue négociation (règles ECART-proche, CAL-NAT-ligne).
@@ -2853,8 +2851,6 @@ Poser en entretien à AM : « Comment faites-vous pour mener à terme une tâche
 Texte type de la bibliothèque : `O4/haut` `O4/plutot_bas`
 
 ### AM et KB : frictions probables sur la tâche
-
-**\[AM\]**×**\[KB\]**
 
 Hypothèse
 
@@ -2934,8 +2930,6 @@ Texte type de la bibliothèque : `O4/haut` `O4/plutot_bas`
 
 ### AM et KB : règles de fonctionnement proposées
 
-**\[AM\]**×**\[KB\]**
-
 Hypothèse
 
 Règle proposée : les priorités de la semaine sont écrites et validées ensemble par AM et KB, pour limiter les changements non dits (règle CAL-NAT-ligne).
@@ -2998,8 +2992,6 @@ Faire valider les règles par la personne chargée du cadre juridique et par le 
 
 ### AM et KB : scénarios et pré-mortem (hypothèses)
 
-**\[AM\]**×**\[KB\]**
-
 Hypothèse
 
 Pré-mortem (hypothèse) : imaginons qu’à l’échéance du lancement, la relation entre AM et KB ait nui au projet. Les causes à instruire en premier seraient des priorités modifiées sans que l’écart de méthode ait été dit, un alignement apparent qui masque un désaccord non exprimé, et un suivi vécu comme un contrôle. Il s’agit de situations de coordination à prévenir, pas de défauts de l’une ou de l’autre des deux personnes (règles CAL-NAT-ligne, CAL-TACHE-projet).
@@ -3041,8 +3033,6 @@ Vérification
 Refaire le point avec les deux personnes à 60 jours : les règles ont-elles été tenues, et l’écart a-t-il été utile ou gênant dans les faits ?
 
 ### AM et KB : recommandations (coaching, formation, organisation)
-
-**\[AM\]**×**\[KB\]**
 
 Hypothèse
 
@@ -3150,8 +3140,6 @@ Faire relire en entretien, dans la langue de travail de la relation, quelques af
 
 ### AM et SR : synergies probables sur la tâche
 
-**\[AM\]**×**\[SR\]**
-
 Hypothèse
 
 Les réponses d’AM et de SR sont voisines sur le domaine E (écart 0,04), le domaine O (écart 0,38) et le domaine A (écart 0,04). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine E, un niveau voisin d’énergie relationnelle, qui peut faciliter un rythme d’échange accepté par les deux ; pour le domaine O, une ouverture voisine aux idées nouvelles, qui peut faciliter l’accord sur le degré de changement souhaitable ; pour le domaine A, une manière voisine de coopérer et de traiter un désaccord, qui peut faciliter une franchise ou une prudence partagée. Dans un lien fonctionnel, ils peuvent aider les deux fonctions à se comprendre sans autorité commune (règles ECART-proche, CAL-NAT-fonctionnel).
@@ -3219,8 +3207,6 @@ Poser en entretien à AM : « Dans quelles situations est-il utile pour vous de 
 Texte type de la bibliothèque : `E3/haut` `E3/plutot_haut`
 
 ### AM et SR : frictions probables sur la tâche
-
-**\[AM\]**×**\[SR\]**
 
 Hypothèse
 
@@ -3310,8 +3296,6 @@ Texte type de la bibliothèque : `E3/haut` `E3/plutot_haut`
 
 ### AM et SR : règles de fonctionnement proposées
 
-**\[AM\]**×**\[SR\]**
-
 Hypothèse
 
 Règle proposée : toute demande d’une fonction à l’autre est formulée avec son échéance et son niveau de priorité ; la réponse précise ce qui sera fait et ce qui sera reporté (règle CAL-NAT-fonctionnel).
@@ -3364,8 +3348,6 @@ Faire valider les règles par la personne chargée du cadre juridique et par le 
 
 ### AM et SR : scénarios et pré-mortem (hypothèses)
 
-**\[AM\]**×**\[SR\]**
-
 Hypothèse
 
 Pré-mortem (hypothèse) : imaginons qu’à l’échéance du lancement, la relation entre AM et SR ait nui au projet. Les causes à instruire en premier seraient des demandes entre fonctions sans arbitrage clair, relancées sans réponse, chaque fonction estimant avoir été claire. Il s’agit de situations de coordination à prévenir, pas de défauts de l’une ou de l’autre des deux personnes (règles CAL-NAT-fonctionnel, CAL-TACHE-projet).
@@ -3407,8 +3389,6 @@ Vérification
 Refaire le point avec les deux personnes à 60 jours : les règles ont-elles été tenues, et l’écart a-t-il été utile ou gênant dans les faits ?
 
 ### AM et SR : recommandations (coaching, formation, organisation)
-
-**\[AM\]**×**\[SR\]**
 
 Hypothèse
 
@@ -3516,8 +3496,6 @@ Demander aux deux personnes à quel moment le travail de l’une dépend de celu
 
 ### AM et HT : synergies probables sur la tâche
 
-**\[AM\]**×**\[HT\]**
-
 Hypothèse
 
 Les réponses d’AM et de HT sont voisines sur le domaine O (écart 0,29) et le domaine C (écart 0,29). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine O, une ouverture voisine aux idées nouvelles, qui peut faciliter l’accord sur le degré de changement souhaitable ; pour le domaine C, un rapport voisin à l’organisation et au suivi des engagements, qui peut faciliter l’accord sur les points d’étape. En mentorat, ils peuvent donner un terrain d’entente pour les premiers échanges (règles ECART-proche, CAL-NAT-mentorat).
@@ -3595,8 +3573,6 @@ Poser en entretien à AM : « Que se passe-t-il pour vous quand vous devez ralen
 Texte type de la bibliothèque : `E4/haut` `E4/milieu`
 
 ### AM et HT : frictions probables sur la tâche
-
-**\[AM\]**×**\[HT\]**
 
 Hypothèse
 
@@ -3686,8 +3662,6 @@ Texte type de la bibliothèque : `E4/haut` `E4/milieu`
 
 ### AM et HT : règles de fonctionnement proposées
 
-**\[AM\]**×**\[HT\]**
-
 Hypothèse
 
 Règle proposée : les rencontres ont un rythme fixé à l’avance, des objectifs d’apprentissage écrits par HT, et un temps de parole réservé à HT (règle CAL-NAT-mentorat).
@@ -3750,8 +3724,6 @@ Faire valider les règles par la personne chargée du cadre juridique et par le 
 
 ### AM et HT : scénarios et pré-mortem (hypothèses)
 
-**\[AM\]**×**\[HT\]**
-
 Hypothèse
 
 Pré-mortem (hypothèse) : imaginons qu’à l’échéance du lancement, la relation entre AM et HT ait nui au projet. Les causes à instruire en premier seraient des rencontres trop espacées ou trop générales, et un cadre d’apprentissage qui n’a jamais été posé. Il s’agit de situations de coordination à prévenir, pas de défauts de l’une ou de l’autre des deux personnes (règles CAL-NAT-mentorat, CAL-TACHE-projet).
@@ -3793,8 +3765,6 @@ Vérification
 Refaire le point avec les deux personnes à 60 jours : les règles ont-elles été tenues, et l’écart a-t-il été utile ou gênant dans les faits ?
 
 ### AM et HT : recommandations (coaching, formation, organisation)
-
-**\[AM\]**×**\[HT\]**
 
 Hypothèse
 
@@ -3898,8 +3868,6 @@ Faire relire en entretien, dans la langue de travail de la relation, quelques af
 
 ### KB et SR : synergies probables sur la tâche
 
-**\[KB\]**×**\[SR\]**
-
 Hypothèse
 
 Les réponses de KB et de SR sont voisines sur le domaine A (écart 0,33). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine A, une manière voisine de coopérer et de traiter un désaccord, qui peut faciliter une franchise ou une prudence partagée. Entre client et fournisseur internes, ils peuvent réduire les malentendus sur la demande (règles ECART-proche, CAL-NAT-client-fournisseur).
@@ -3977,8 +3945,6 @@ Poser en entretien à KB : « Qu’est-ce qui change pour vous quand un lieu res
 Texte type de la bibliothèque : `C2/haut` `C2/milieu`
 
 ### KB et SR : frictions probables sur la tâche
-
-**\[KB\]**×**\[SR\]**
 
 Hypothèse
 
@@ -4078,8 +4044,6 @@ Texte type de la bibliothèque : `C2/haut` `C2/milieu`
 
 ### KB et SR : règles de fonctionnement proposées
 
-**\[KB\]**×**\[SR\]**
-
 Hypothèse
 
 Règle proposée : toute demande est écrite avec un critère d’acceptation ; le fournisseur (KB) la reformule avant de produire (règle CAL-NAT-client-fournisseur).
@@ -4142,8 +4106,6 @@ Faire valider les règles par la personne chargée du cadre juridique et par le 
 
 ### KB et SR : scénarios et pré-mortem (hypothèses)
 
-**\[KB\]**×**\[SR\]**
-
 Hypothèse
 
 Pré-mortem (hypothèse) : imaginons qu’à l’échéance du lancement, la relation entre KB et SR ait nui au projet. Les causes à instruire en premier seraient une demande mal formulée, un livrable qui n’y correspond pas, et des reprises concentrées près des échéances. Il s’agit de situations de coordination à prévenir, pas de défauts de l’une ou de l’autre des deux personnes (règles CAL-NAT-client-fournisseur, CAL-TACHE-projet).
@@ -4185,8 +4147,6 @@ Vérification
 Refaire le point avec les deux personnes à 60 jours : les règles ont-elles été tenues, et l’écart a-t-il été utile ou gênant dans les faits ?
 
 ### KB et SR : recommandations (coaching, formation, organisation)
-
-**\[KB\]**×**\[SR\]**
 
 Hypothèse
 
@@ -4290,8 +4250,6 @@ Demander aux deux personnes à quel moment le travail de l’une dépend de celu
 
 ### KB et HT : synergies probables sur la tâche
 
-**\[KB\]**×**\[HT\]**
-
 Hypothèse
 
 Les réponses de KB et de HT sont voisines sur le domaine C (écart 0,38). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine C, un rapport voisin à l’organisation et au suivi des engagements, qui peut faciliter l’accord sur les points d’étape. Entre pairs, ils peuvent faciliter la décision commune en l’absence d’arbitre (règles ECART-proche, CAL-NAT-pairs).
@@ -4369,8 +4327,6 @@ Poser en entretien à KB : « Qu’est-ce qui vous convainc d’essayer une mét
 Texte type de la bibliothèque : `O4/plutot_bas` `O4/plutot_haut`
 
 ### KB et HT : frictions probables sur la tâche
-
-**\[KB\]**×**\[HT\]**
 
 Hypothèse
 
@@ -4460,8 +4416,6 @@ Texte type de la bibliothèque : `O4/plutot_bas` `O4/plutot_haut`
 
 ### KB et HT : règles de fonctionnement proposées
 
-**\[KB\]**×**\[HT\]**
-
 Hypothèse
 
 Règle proposée : un désaccord non résolu sous un délai convenu est porté devant une tierce personne désignée à l’avance (règle CAL-NAT-pairs).
@@ -4524,8 +4478,6 @@ Faire valider les règles par la personne chargée du cadre juridique et par le 
 
 ### KB et HT : scénarios et pré-mortem (hypothèses)
 
-**\[KB\]**×**\[HT\]**
-
 Hypothèse
 
 Pré-mortem (hypothèse) : imaginons qu’à l’échéance du lancement, la relation entre KB et HT ait nui au projet. Les causes à instruire en premier seraient des décisions communes reportées faute d’arbitre, ou prises par défaut par l’une des deux personnes. Il s’agit de situations de coordination à prévenir, pas de défauts de l’une ou de l’autre des deux personnes (règles CAL-NAT-pairs, CAL-TACHE-projet).
@@ -4567,8 +4519,6 @@ Vérification
 Refaire le point avec les deux personnes à 60 jours : les règles ont-elles été tenues, et l’écart a-t-il été utile ou gênant dans les faits ?
 
 ### KB et HT : recommandations (coaching, formation, organisation)
-
-**\[KB\]**×**\[HT\]**
 
 Hypothèse
 
@@ -4672,8 +4622,6 @@ Faire relire en entretien, dans la langue de travail de la relation, quelques af
 
 ### SR et HT : synergies probables sur la tâche
 
-**\[SR\]**×**\[HT\]**
-
 Hypothèse
 
 Les réponses de SR et de HT sont voisines sur le domaine N (écart 0,5). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine N, une façon voisine de réagir à l’incertitude et à la pression, qui peut faciliter le partage des inquiétudes sur le calendrier. En co-direction, ils peuvent aider à parler d’une seule voix quand c’est utile (règles ECART-proche, CAL-NAT-co-direction).
@@ -4751,8 +4699,6 @@ Poser en entretien à SR : « Comment décidez-vous d’exprimer un désaccord o
 Texte type de la bibliothèque : `A4/milieu` `A4/haut`
 
 ### SR et HT : frictions probables sur la tâche
-
-**\[SR\]**×**\[HT\]**
 
 Hypothèse
 
@@ -4852,8 +4798,6 @@ Texte type de la bibliothèque : `A4/milieu` `A4/haut`
 
 ### SR et HT : règles de fonctionnement proposées
 
-**\[SR\]**×**\[HT\]**
-
 Hypothèse
 
 Règle proposée : les deux personnes conviennent d’une règle écrite pour trancher à deux : qui décide de quoi, et que faire en cas d’avis opposés (règle CAL-NAT-co-direction).
@@ -4916,8 +4860,6 @@ Faire valider les règles par la personne chargée du cadre juridique et par le 
 
 ### SR et HT : scénarios et pré-mortem (hypothèses)
 
-**\[SR\]**×**\[HT\]**
-
 Hypothèse
 
 Pré-mortem (hypothèse) : imaginons qu’à l’échéance du lancement, la relation entre SR et HT ait nui au projet. Les causes à instruire en premier seraient des messages divergents adressés au siège et à l’équipe, et des décisions qui n’engagent en pratique qu’une des deux personnes. Il s’agit de situations de coordination à prévenir, pas de défauts de l’une ou de l’autre des deux personnes (règles CAL-NAT-co-direction, CAL-TACHE-projet).
@@ -4959,8 +4901,6 @@ Vérification
 Refaire le point avec les deux personnes à 60 jours : les règles ont-elles été tenues, et l’écart a-t-il été utile ou gênant dans les faits ?
 
 ### SR et HT : recommandations (coaching, formation, organisation)
-
-**\[SR\]**×**\[HT\]**
 
 Hypothèse
 
