@@ -44,7 +44,8 @@ const hungarian = {
       subtop: 'A',
       subtop2:
         ' a leginkább tudományosan validált és megbízható pszichológiai modell a személyiség mérésére.',
-      reference: `A teszteket és az értékelést ezen az oldalon az <a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a> oldalon gyűjtötték, a készlet <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>-ből származik.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'A következő teszt 120 kérdést tartalmaz, amelyek kitöltése körülbelül 10 percet vesz igénybe.',
       result:
         'A teszt kitöltése után részletes személyiségjelentést kapsz az alábbi területeken:',

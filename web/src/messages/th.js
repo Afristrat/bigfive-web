@@ -44,9 +44,8 @@ const thai = {
       subtop: 'นี่',
       subtop2:
         ' เป็นแบบจำลองทางจิตวิทยาที่เชื่อถือได้และสามารถตรวจสอบได้ทางวิทยาศาสตร์เพื่อวัดบุคลิกภาพ',
-      reference: `การทดสอบและการประเมินผลสําหรับเว็บไซต์นี้รวบรวมจาก
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-ชุดวัดบุคลิกภาพจาก <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'การทดสอบต่อไปนี้ประกอบด้วยคำถาม 120 ข้อ ซึ่งคาดว่าจะใช้เวลาประมาณ 10 นาทีในการทำ',
       result:
         'หลังจากที่คุณทําการทดสอบเสร็จแล้ว คุณจะได้รับรายงานบุคลิกภาพโดยละเอียดในปัจจัยต่อไปนี้:',

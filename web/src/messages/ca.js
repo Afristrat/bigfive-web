@@ -45,9 +45,8 @@ const catalan = {
       subtop: 'El',
       subtop2:
         ' és el model psicològic més científicament validat i fiable per mesurar la personalitat.',
-      reference: `Els tests i les avaluacions d'aquest lloc s'han recollit de
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-l'inventari és de <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'El següent test conté 120 preguntes que es calcula que et prendran uns 10 minuts per completar.',
       result:
         'Després de completar el test, rebràs un informe detallat de la teva personalitat en els següents dominis:',

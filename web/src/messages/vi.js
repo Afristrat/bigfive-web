@@ -43,9 +43,8 @@ const vietnamese = {
       subtop: 'Các',
       subtop2:
         ' là mô hình tâm lý học được xác thực khoa học và đáng tin cậy nhất để đo lường tính cách.',
-      reference: `Các bài kiểm tra và đánh giá cho trang web này được thu thập từ
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-bảng kiểm kê từ <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Bài kiểm tra sau đây chứa 120 câu hỏi và dự kiến sẽ mất khoảng 10 phút để hoàn thành.',
       result:
         'Sau khi bạn hoàn thành bài kiểm tra, bạn sẽ nhận được báo cáo chi tiết về tính cách trong các lĩnh vực sau:',

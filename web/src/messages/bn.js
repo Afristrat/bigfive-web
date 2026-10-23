@@ -46,9 +46,8 @@ const bengali = {
       subtop: 'এটি',
       subtop2:
         'বৈজ্ঞানিকভাবে পরীক্ষিত এবং নির্ভরযোগ্য মনস্তাত্ত্বিক মডেল যা পার্সোনালিটি মূল্যায়ন করে।',
-      reference: `এই সাইটের প্রশ্নমালা এবং মূল্যায়ন পদ্ধতি
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a> এর
-ইনভেন্টরি থেকে <i>জনসনের (2014) IPIP NEO-PI-R 120-আইটেম হতে</i> সংগৃহীত।`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'এই পরীক্ষায় ১২০টি প্রশ্ন রয়েছে। এতে আপনার ১০-১৫ মিনিট সময় প্রয়োজন হবে।',
       result:
         'টেস্টটি সম্পূর্ণ করার পর আপনি উল্লেখিত ৫টি পার্সোনালিটি ডোমেইনে একটি বিস্তারিত রিপোর্ট পাবেন:',

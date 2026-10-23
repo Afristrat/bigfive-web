@@ -43,9 +43,8 @@ const romanian = {
       subtop: 'The',
       subtop2:
         ' este cel mai validat științific și de încredere model psihologic pentru măsurarea personalității.',
-      reference: `Testele și evaluările pentru acest site sunt colectate de la
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventarul este de la <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Testul următor conține 120 de întrebări și este estimat să dureze aproximativ 10 minute pentru a fi completat.',
       result:
         'După ce ai completat testul, vei primi un raport detaliat al personalității în următoarele domenii:',

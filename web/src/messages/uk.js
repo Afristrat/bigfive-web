@@ -45,9 +45,8 @@ const ukrainian = {
       subtop: 'Це',
       subtop2:
         'найбільш науково обґрунтована і надійна психологічна модель для визначення особистості.',
-      reference: `Тести і аналізи для цієї сторінки взяті з
-<a href="http://ipip.ori.org" rel="noopener" target="_blank"> ipip.ori.org </a>,
-inventory is from <i> Johnson's (2014) 120-item IPIP NEO-PI-R </ i> .`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Наступний тест складається з 120 питань і займе приблизно 10 хвилин вашого часу.',
       result:
         'Після проходження тесту ви отримаєте детальний опис вашої особистості по наступним аспектам:',

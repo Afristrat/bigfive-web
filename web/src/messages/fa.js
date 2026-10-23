@@ -44,10 +44,8 @@ const persian = {
       subtop: 'این',
       subtop2:
         ' معتبرترین و قابل اعتمادترین مدل روانشناختی برای سنجش شخصیت است.',
-      reference: `آزمون‌ها و ارزیابی‌ها برای این سایت از
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>
-جمع آوری شده است،
-و این موجودی از <i>نیروی 120 آیتمی جانسون (2014) IPIP NEO-PI-R</i> است.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'آزمون شامل 120 سؤال است که حدود 10 دقیقه زمان می‌برد تا کامل شود.',
       result:
         'پس از اتمام آزمون، گزارشی دقیق در زمینه‌های زیر دریافت خواهید کرد:',

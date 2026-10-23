@@ -44,9 +44,8 @@ const turkish = {
       top: 'Kendinizi daha iyi tanıyın <violet>ücretsiz</violet>, açık kaynaklı kişilik testi ile.',
       subtop: 'En',
       subtop2: ' bilimsel olarak doğrulanmış ve güvenilir kişilik modelidir.',
-      reference: `Bu site için testler ve değerlendirme 
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a> adresinden toplanmıştır,
-envanter <i>Johnson'un (2014) 120 maddelik IPIP NEO-PI-R</i>.'den alınmıştır.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Aşağıdaki test 120 soru içerir ve tamamlamanız yaklaşık 10 dakika sürer.',
       result:
         'Testi tamamladıktan sonra aşağıdaki alanlarda ayrıntılı bir kişilik raporu alacaksınız:',

@@ -44,9 +44,8 @@ const japanese = {
       subtop: 'ザ・',
       subtop2:
         ' は、人格を測定するための最も科学的に検証された信頼できる心理モデルです。',
-      reference: `Tests and evaluation for this site is gathered from
-  <a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-  inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: '次のテストには120の質問が含まれており、完了するまでに約10分かかると推定されています。',
       result:
         'テストが完了すると、次のドメインで詳細なパーソナリティレポートが届きます。',

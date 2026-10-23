@@ -44,9 +44,8 @@ const bulgarian = {
       subtop: 'Тестът',
       subtop2:
         ' е най-научно валидираният и надежден метод за оценка на личността..',
-      reference: `Тестът и оценката на този сайт са събрани от
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-наборът е от <i>Джонсън (2014) 120-компонентен IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Настоящият тест съдържа 120 въпроса, които би трябвало да ви отнемат около 10 минути.',
       result:
         'След като попълните теста, ще получите детайлен доклад на личността Ви със следните компоненти:',

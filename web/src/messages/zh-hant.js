@@ -43,9 +43,8 @@ const chineseTraditional = {
       top: '通過一個 <violet>免費</violet>、開源的人格測試更好地了解你自己。',
       subtop: '這',
       subtop2: '是最具科學驗證和可靠性的人格測量心理模型。',
-      reference: `該網站的測試和評估來自
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-題庫來自 <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>。`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: '以下測試包含120道題目，估計需要約10分鐘完成。',
       result: '完成測試後，你將收到以下領域的詳細人格報告：',
       tests_taken: '到目前為止已完成的測試'
