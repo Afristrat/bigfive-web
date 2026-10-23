@@ -16,7 +16,7 @@ const NIVEAUX = [
   { id: 'n5-accompagnement', court: 'Accompagnement', titre: 'Plan d\'accompagnement' }
 ];
 // Couleur de profil : [clair, sombre]. Clair >= 5:1 sur fond clair, sombre >= 6,8:1 sur carte sombre.
-const COULEURS = { AM: ['#0b6e6e', '#4fc3c3'], KB: ['#8a5a00', '#e0a83a'], SR: ['#a3306b', '#f08cb9'], HT: ['#3a4fa3', '#8fa6f5'] };
+const COULEURS = { AM: ['#141a33', '#c8cde0'], KB: ['#b07514', '#e0a640'], SR: ['#a3306b', '#f08cb9'], HT: ['#3a4fa3', '#8fa6f5'] };
 const PALETTE = [['#0b6e6e', '#4fc3c3'], ['#8a5a00', '#e0a83a'], ['#a3306b', '#f08cb9'], ['#3a4fa3', '#8fa6f5'], ['#4d6b17', '#a6d05c'], ['#7a3b8f', '#d29be6']];
 const NBSP = ' '; // espace insécable avant : ; ? !
 const CONFIANCE = { faible: 'faible', moyenne: 'moyenne', elevee: 'élevée', 'élevée': 'élevée' };
