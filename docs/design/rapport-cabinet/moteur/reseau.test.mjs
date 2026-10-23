@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
-  lireReseau, suffisance, relaisPrevus, ajouterReseau,
+  lireReseau, suffisance, relaisPrevus, ajouterReseau, perimetreAJour,
   REPONDANTS_MIN, TAUX_REPONSE_MIN_PCT, VALEUR_SIGNIFICATIVE, VALEUR_HEBDOMADAIRE, LIENS
 } from './reseau.mjs';
 
@@ -252,4 +252,19 @@ test('déterminisme : même entrée, même sortie, entrée non modifiée', () =>
   assert.equal(JSON.stringify(lireReseau(copie(CAS))), JSON.stringify(lireReseau(copie(CAS))));
   lireReseau(CAS);
   assert.equal(JSON.stringify(CAS), avant);
+});
+
+test('perimetreAJour : vrai seulement si le relevé couvre exactement les personnes qui consentent à l’analyse d’équipe', () => {
+  const rr = lireReseau(copie(CAS));
+  assert.equal(perimetreAJour(rr, CAS), true);
+  assert.equal(perimetreAJour({ ...rr, perimetre: [...rr.perimetre].reverse() }, CAS), true, 'l’ordre ne compte pas');
+  const retire = copie(CAS);
+  retire.personnes.find((p) => p.code === 'KB').consentements.equipe = false;
+  assert.equal(perimetreAJour(rr, retire), false, 'consentement retiré après le relevé');
+  assert.equal(perimetreAJour(lireReseau(retire), CAS), false, 'consentement donné après le relevé');
+  assert.equal(perimetreAJour({ ...rr, perimetre: ['AM', 'AM', 'KB', 'SR'] }, CAS), false, 'même taille, code en doublon');
+  assert.equal(perimetreAJour({ ...rr, perimetre: ['AM', 'KB', 'SR', 'ZZ'] }, CAS), false, 'même taille, code étranger');
+  assert.equal(perimetreAJour({ releve: true }, CAS), false, 'périmètre absent');
+  assert.equal(perimetreAJour(undefined, CAS), false);
+  assert.equal(perimetreAJour(rr, undefined), false);
 });

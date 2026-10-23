@@ -2,7 +2,7 @@
 // Fonction pure : aucun aléa, aucun calcul de score. Tout nombre cité vient de faits.json, du cas ou de leurs listes.
 // construire(ctx) -> { niveaux: [n3, n4], recommandations, reference_ids }
 import { paragraphe, recommandation, section, liste, fmt, DOMAINES } from './outils.mjs';
-import { relaisPrevus, LIENS } from '../moteur/reseau.mjs';
+import { relaisPrevus, perimetreAJour, LIENS } from '../moteur/reseau.mjs';
 
 const NB = ' ';
 const gui = (s) => `«${NB}${s}${NB}»`;
@@ -368,13 +368,14 @@ export function construire(ctx) {
 
   // Réseau réel et écarts avec la structure prévue (étape 2). Jamais un classement de personnes : des positions et des
   // décomptes, toute lecture en hypothèse à vérifier en entretien. Sans accord de chaque personne représentée, aucun nom.
+  // Une personne non représentée (opposée ou non informée) n'est jamais nommée : son opposition ne doit pas être visible de l'équipe.
   let secReseau = null;
   if (releve) {
-    const perimetreAJour = rr.perimetre.length === participants.length && rr.perimetre.every((x) => codesP.has(x));
+    const aJour = perimetreAJour(rr, cas);
     const fictifR = rr.statut === 'fictif';
     const pluriel = (n, s, p = `${s}s`) => (n > 1 ? p : s);
     const specR = [];
-    if (!perimetreAJour) {
+    if (!aJour) {
       specR.push(c("Le relevé du réseau réel n'est pas repris ici : le moteur l'a lu avant un changement de consentement à l'analyse d'équipe, et il doit être recalculé sur le périmètre actuel avant toute lecture."));
     } else if (!rr.suffisant) {
       specR.push(c(`Relevé insuffisant : ${rr.n_repondants} ${pluriel(rr.n_repondants, 'répondant')} sur ${rr.n_representes} ${pluriel(rr.n_representes, 'personne représentée', 'personnes représentées')}, quand la lecture exige au moins ${rr.seuils.repondants_min} répondants et au moins ${rr.seuils.taux_reponse_min_pct} pour cent de réponses. Aucune lecture du réseau réel n'est produite : un lien que ne déclare pas une personne qui n'a pas répondu n'est pas un lien inexistant.${fictifR ? ' Relevé de démonstration fictif.' : ''}`));
@@ -390,15 +391,15 @@ export function construire(ctx) {
       const FREQ_TXT = { 2: 'chaque mois', 3: 'chaque semaine', 4: 'chaque jour' };
       const e = rr.ecarts;
       const nP = rr.paires_possibles;
-      const nonRep = rr.non_representes;
+      const nNonRep = rr.non_representes.length;
 
       if (fictifR) specR.push(c("Relevé de démonstration fictif : les réponses de cette section sont toutes inventées pour illustrer la lecture ; personne n'a répondu au relevé du réseau réel."));
       specR.push(c(`Le relevé pose à chaque membre de l'équipe, sur la liste fermée des autres membres, quatre questions : à qui il demande conseil, de qui il reçoit une information utile, à qui il pourrait signaler une erreur sans crainte, de qui il attend le travail pour avancer. Un lien réel est retenu à partir de ${gui('chaque mois')} pour le conseil, l'information et la dépendance, et de ${gui('plutôt oui')} pour la confiance (conventions de ce rapport). Un lien n'est dit réciproque que si les deux personnes l'ont déclaré ; un lien déclaré d'un seul côté est présenté tel quel, jamais corrigé.`));
       specR.push(c(`Seuils de lecture, conventions de ce rapport : au moins ${rr.seuils.repondants_min} répondants et au moins ${rr.seuils.taux_reponse_min_pct} pour cent de réponses parmi les personnes représentées. Ici, ${rr.n_repondants} répondants sur ${rr.n_representes} personnes représentées : le relevé est lu.`));
-      if (nonRep.length) {
-        specR.push(c(nominatif
-          ? `${nonRep.length > 1 ? 'Non représentées' : 'Non représentée'} dans ce relevé : ${liste(nonRep)}. ${nonRep.length > 1 ? 'Leurs liens' : 'Ses liens'}, dans les deux sens, sont retirés de la lecture ; ${nonRep.length > 1 ? 'ces personnes ne sont pas décrites' : "cette personne n'est pas décrite"} comme sans lien dans l'équipe.`
-          : `${nonRep.length} ${pluriel(nonRep.length, 'personne non représentée', 'personnes non représentées')} dans ce relevé : leurs liens, dans les deux sens, sont retirés de la lecture, et rien n'est dit de leur place dans l'équipe.`));
+      if (nNonRep) {
+        specR.push(c(nNonRep > 1
+          ? `${nNonRep} personnes non représentées dans ce relevé : leurs liens, dans les deux sens, sont retirés de la lecture, et rien n'est dit de leur place dans l'équipe.`
+          : "1 personne non représentée dans ce relevé : ses liens, dans les deux sens, sont retirés de la lecture, et rien n'est dit de sa place dans l'équipe."));
       }
       specR.push(c(`Garantie du relevé : aucun usage pour une décision d'emploi ou une évaluation des personnes. Il sert à décrire avec l'équipe, en atelier de restitution, sa façon réelle de travailler ; les questions d'éthique propres à l'analyse de réseau en organisation sont traitées par ${nom('borgatti-molina-2003')} (2003).`));
       specR.push(c(nominatif

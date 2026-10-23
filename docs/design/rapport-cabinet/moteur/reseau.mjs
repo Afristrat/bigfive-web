@@ -34,6 +34,16 @@ export function relaisPrevus(relations, codes) {
   return codes.filter((code) => sequences.some((r) => aval(r) === code) && sequences.some((r) => amont(r) === code));
 }
 
+/** Fraîcheur du relevé : vrai seulement si rr.perimetre coïncide exactement (même taille, mêmes codes, sans doublon) avec les
+ * personnes du cas qui consentent à l'analyse d'équipe. Un consentement retiré ou donné après le relevé le rend caduc : ni texte
+ * ni carte ne doivent alors le lire. Partagée par le texte du rapport (niveau34) et sa carte (rendu). */
+export function perimetreAJour(rr, cas) {
+  const releve = rr?.perimetre;
+  if (!Array.isArray(releve)) return false;
+  const actuel = new Set((cas?.personnes ?? []).filter((p) => p.consentements?.equipe === true).map((p) => p.code));
+  return releve.length === actuel.size && new Set(releve).size === releve.length && releve.every((c) => actuel.has(c));
+}
+
 /** Faits complets écrits par calculer.mjs : les faits du moteur, puis faits.reseau_reel. moteur.mjs reste sans import (ses mutants sont copiés seuls). */
 export function ajouterReseau(faits, cas) {
   return { ...faits, reseau_reel: lireReseau(cas) };

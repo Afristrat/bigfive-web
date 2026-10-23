@@ -634,3 +634,39 @@ test('réseau réel : consentement à l’équipe retiré après le calcul, le r
   assert.match(t, /doit être recalculé/);
   assert.ok(!/\bKB\b/.test(t));
 });
+
+// Équipe de cinq : NR, opposée au relevé, reste dans l'analyse d'équipe ; les quatre autres répondent et acceptent la carte nominative.
+const avecOpposition = () => {
+  const ctx = base();
+  const clone = (x) => ({ ...copie(x), code: 'NR', nom: 'Nadia R.' });
+  ctx.cas.personnes.push(clone(ctx.cas.personnes.find((p) => p.code === 'HT')));
+  ctx.profils.push(clone(ctx.profils.find((p) => p.code === 'HT')));
+  ctx.cas.reseau_reel.membres.push({ code: 'NR', informe: true, oppose: true, accord_repondre: false, accord_carte: false, a_repondu: false });
+  return relire(ctx);
+};
+
+test('réseau réel : une opposition avec carte nominative, la personne opposée n’est jamais nommée, seulement décomptée', () => {
+  const ctx = avecOpposition();
+  const rr = ctx.faits.reseau_reel;
+  assert.deepEqual([rr.non_representes, rr.suffisant, rr.carte_nominative], [['NR'], true, true]);
+  const r = construire(ctx);
+  const t = texteReseau(r) + '\n' + verifsReseau(r);
+  assert.ok(!/\bNR\b|Nadia/.test(t), 'personne opposée nommée');
+  assert.ok(!/Non représentée/.test(t));
+  assert.match(t, /1 personne non représentée dans ce relevé : ses liens, dans les deux sens, sont retirés de la lecture, et rien n'est dit de sa place dans l'équipe\./);
+  assert.match(t, /Chaque personne représentée a accepté que la carte nominative/);
+  assert.deepEqual(auditContenu(ctx, r), []);
+});
+
+test('réseau réel : deux personnes non représentées, décompte au pluriel et aucun nom', () => {
+  const ctx = avecOpposition();
+  const clone = (x) => ({ ...copie(x), code: 'OM', nom: 'Omar M.' });
+  ctx.cas.personnes.push(clone(ctx.cas.personnes.find((p) => p.code === 'NR')));
+  ctx.profils.push(clone(ctx.profils.find((p) => p.code === 'NR')));
+  ctx.cas.reseau_reel.membres.push({ code: 'OM', informe: false, oppose: false, accord_repondre: false, accord_carte: false, a_repondu: false });
+  relire(ctx);
+  assert.deepEqual(ctx.faits.reseau_reel.non_representes, ['NR', 'OM']);
+  const t = texteReseau(construire(ctx));
+  assert.ok(!/\b(NR|OM)\b|Nadia|Omar/.test(t));
+  assert.match(t, /2 personnes non représentées dans ce relevé : leurs liens, dans les deux sens, sont retirés de la lecture, et rien n'est dit de leur place dans l'équipe\./);
+});

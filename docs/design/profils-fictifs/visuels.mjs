@@ -107,7 +107,6 @@ export function reseauSvg(ps, relations, natures = {}, options = {}) {
   if (reel && !L) throw new Error(`reseauSvg : type de lien inconnu ${options.lien}`);
   const echelle = reel ? ECHELLE_REEL[options.lien === 'confiance' ? 'confiance' : 'frequence'] : null;
   const marqueur = options.marqueur ?? 'reseau-fleche';
-  const nonRepresentes = new Set(options.nonRepresentes ?? []);
   const T = 420, H = T + (reel ? 60 : 40), cx = T / 2, cy = T / 2, R = 140, r = 24;
   const pos = Object.fromEntries(ps.map((p, i) => {
     const a = -Math.PI / 2 + (2 * Math.PI * i) / ps.length;
@@ -123,7 +122,7 @@ export function reseauSvg(ps, relations, natures = {}, options = {}) {
       sens: l.reciproque ? 'reciproque' : (l.declare_par === l.b ? 'b->a' : 'a->b'),
       largeur: echelle.epais[Math.max(l.a_vers_b ?? 0, l.b_vers_a ?? 0)] ?? 1.2
     }))
-    : relations).filter((l) => pos[l.a] && pos[l.b] && !nonRepresentes.has(l.a) && !nonRepresentes.has(l.b));
+    : relations).filter((l) => pos[l.a] && pos[l.b]);
   const n = (v) => v.toFixed(1);
   const traits = rels.map((l, i) => {
     const [de, vers] = l.sens === 'b->a' ? [pos[l.b], pos[l.a]] : [pos[l.a], pos[l.b]];
@@ -133,13 +132,11 @@ export function reseauSvg(ps, relations, natures = {}, options = {}) {
     const tiret = l.interdependance === 'mise-en-commun' ? ' stroke-dasharray="6 5"' : '';
     return `<line class="lien-reseau" style="--i:${i}" x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke-width="${reel ? l.largeur : epais[l.frequence] ?? 1.5}"${tiret}${fleche}/>`;
   }).join('');
-  // Étiquette vers l'extérieur du cercle, jamais sur un trait. Une personne non représentée reste sur la carte, en creux, sans aucun lien.
+  // Étiquette vers l'extérieur du cercle, jamais sur un trait. Seules les personnes passées dans ps sont dessinées.
   const noeuds = Object.values(pos).map(({ x, y, a, p }) => {
     const c = Math.cos(a), sn = Math.sin(a);
     const ancre = c > 0.3 ? 'start' : c < -0.3 ? 'end' : 'middle';
-    const absent = nonRepresentes.has(p.code);
-    const forme = absent ? marque(p.forme, x, y, r * 0.62, 'none', `stroke="${p.couleur}" stroke-width="2" stroke-dasharray="3 3"`) : marque(p.forme, x, y, r * 0.62, p.couleur);
-    return `<g class="noeud">${forme}<text class="ent" x="${n(x + c * (r + 4))}" y="${n(y + sn * (r + 6) + 4.5)}" text-anchor="${ancre}">${esc(absent ? `${p.code}, non représentée` : p.code)}</text></g>`;
+    return `<g class="noeud">${marque(p.forme, x, y, r * 0.62, p.couleur)}<text class="ent" x="${n(x + c * (r + 4))}" y="${n(y + sn * (r + 6) + 4.5)}" text-anchor="${ancre}">${esc(p.code)}</text></g>`;
   }).join('');
   const legendeReel = () => {
     const paliers = Object.keys(echelle.epais).map(Number).sort((u, v) => v - u);
