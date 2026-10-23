@@ -11,7 +11,7 @@ const apercuEn = {
     groupe: 'Group'
   },
   profilLegende: 'Fictitious profile',
-  simulationTitre: 'Simulate BIBLIOTHEQUE_NON_RELUS_PERSONNES=afficher',
+  simulationTitre: 'Simulate showing unreviewed texts',
   simulationAide:
     'Without this setting, the participant sees “text under review” for every unreviewed block, as in production today. With it, the team sees the final rendering with the texts. No environment variable is changed.',
   simulationOff: 'Setting off: rendering exactly as it is actually served.',

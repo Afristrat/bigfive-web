@@ -11,7 +11,7 @@ const apercuFr = {
     groupe: 'Groupe'
   },
   profilLegende: 'Profil fictif',
-  simulationTitre: 'Simuler BIBLIOTHEQUE_NON_RELUS_PERSONNES=afficher',
+  simulationTitre: 'Simuler l’affichage des textes non relus',
   simulationAide:
     'Sans ce réglage, le participant voit « texte en relecture » pour chaque bloc non relu, comme aujourd’hui en production. Avec lui, l’équipe voit le rendu final avec les textes. Aucune variable d’environnement n’est modifiée.',
   simulationOff: 'Réglage désactivé : rendu tel qu’il est réellement servi.',

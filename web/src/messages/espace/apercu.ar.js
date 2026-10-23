@@ -11,7 +11,7 @@ const apercuAr = {
     groupe: 'المجموعة'
   },
   profilLegende: 'ملف وهمي',
-  simulationTitre: 'محاكاة BIBLIOTHEQUE_NON_RELUS_PERSONNES=afficher',
+  simulationTitre: 'محاكاة عرض النصوص غير المراجَعة',
   simulationAide:
     'من دون هذا الإعداد يرى المشارك عبارة «النص قيد المراجعة» لكل مقطع لم تتم مراجعته، كما هو الحال اليوم في الإنتاج. ومعه يرى الفريق العرض النهائي بالنصوص. لا يتغير أي متغير بيئة.',
   simulationOff: 'الإعداد معطَّل: العرض كما يُقدَّم فعلياً.',
