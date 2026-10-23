@@ -62,6 +62,13 @@ app.relectures_blocs|relectures_blocs_insertion_owner|INSERT|tenga_owner
 app.relectures_blocs|relectures_blocs_lecture_owner|SELECT|tenga_owner
 app.relectures_blocs|relectures_blocs_modification_owner|UPDATE|tenga_owner
 app.relectures_blocs|relectures_blocs_suppression_owner|DELETE|tenga_owner
+app.reseau_membres|reseau_membres_insertion_owner|INSERT|tenga_owner
+app.reseau_membres|reseau_membres_lecture_owner|SELECT|tenga_owner
+app.reseau_membres|reseau_membres_modification_owner|UPDATE|tenga_owner
+app.reseau_membres|reseau_membres_suppression_owner|DELETE|tenga_owner
+app.reseau_reponses|reseau_reponses_insertion_owner|INSERT|tenga_owner
+app.reseau_reponses|reseau_reponses_lecture_owner|SELECT|tenga_owner
+app.reseau_reponses|reseau_reponses_suppression_owner|DELETE|tenga_owner
 app.results|results_insertion_owner|INSERT|tenga_owner
 app.results|results_lecture_owner|SELECT|tenga_owner
 app.results|results_lecture_proprietaire|SELECT|authenticated
@@ -175,6 +182,7 @@ app.mdp_rembourser>service_role
 app.mdp_succes>service_role
 app.mdp_tentative>service_role
 app.mes_binomes>authenticated
+app.mes_releves_reseau>authenticated
 app.mes_resultats>authenticated
 app.mettre_a_jour_profil>authenticated
 app.mon_role>authenticated
@@ -183,6 +191,12 @@ app.proposer_binome>authenticated
 app.relire_bloc>authenticated
 app.renommer_groupe>authenticated
 app.repondre_binome>authenticated
+app.reseau_consentir>authenticated
+app.reseau_informer>authenticated
+app.reseau_lire>authenticated
+app.reseau_releve>authenticated
+app.reseau_repondre>authenticated
+app.reseau_retirer>authenticated
 app.retirer_admin_tenga>authenticated
 app.retirer_compte_sans_appartenance>service_role
 app.retirer_membre>authenticated

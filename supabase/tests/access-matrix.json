@@ -1,6 +1,6 @@
 {
-  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 5 : objets des lots 1 (socle), 2 (campagnes, invitations, passation), 3 (mes résultats) et 4 (groupes, composition, agrégats photographiés). Version 9 : consentement du binôme (migration 0021). Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 (lot 1), 14 à 19 (lots 2 et 3), 24 à 26 (lot 4) et 27 à 31 (migration 0006 : groupe porté par l'invitation) transcrivent ces cellules (identités simulées, rôle réel).",
-  "version": 9,
+  "_doc": "Matrice d'accès unique (plan § 7), écrite indépendamment des règles. Elle alimentera les tests TypeScript et les tests SQL. Format détaillé dans README.md. Version 5 : objets des lots 1 (socle), 2 (campagnes, invitations, passation), 3 (mes résultats) et 4 (groupes, composition, agrégats photographiés). Version 9 : consentement du binôme (migration 0021). Version 10 : relevé du réseau réel (migration 0023, test 43), interrupteur fermé par défaut. Une cellule absente se lit « refuse ». Les tests SQL 09 à 11 (lot 1), 14 à 19 (lots 2 et 3), 24 à 26 (lot 4) et 27 à 31 (migration 0006 : groupe porté par l'invitation) transcrivent ces cellules (identités simulées, rôle réel).",
+  "version": 10,
   "personnages": [
     {
       "id": "anonyme",
@@ -600,6 +600,106 @@
         }
       },
       "note": "Migration 0021 : scores des deux participations (jamais les réponses), SEULEMENT si les deux accords existent et si la proposition n'est pas retirée, pour les deux personnes concernées, le consultant de l'organisation et l'administrateur Tenga. Refus 42501 de même message pour un binôme inexistant ou interdit (le responsable, un autre participant, un consultant d'une autre organisation, l'anonyme) ; 55000 pour une personne autorisée sans double consentement. Facette O6 retirée de toute ligne qui n'est pas celle de l'appelant (défaut non validé, plan § 6 question 5). Lecture journalisée (binome.lire, quantité 2) avant le renvoi ; aucun refus ne laisse de trace."
+    },
+    {
+      "objet": "app.reseau_membres",
+      "type": "table",
+      "cellules": {},
+      "note": "Migration 0023 : relevé du réseau réel, une ligne par participation informée (art. 5 §3 de la loi 09-08) : information, opposition, accord de réponse, accord de carte, datés. Fermée à tous, même en lecture : aucun droit de table ni règle pour anon, authenticated ou service_role ; tout passe par les fonctions du relevé. Appartenance au groupe et organisation garanties par des clés composites ; effacement en cascade."
+    },
+    {
+      "objet": "app.reseau_reponses",
+      "type": "table",
+      "cellules": {},
+      "note": "Migration 0023 : liens déclarés (conseil, information, confiance, dépendance) entre membres informés d'un même groupe. Fermée à tous, même en lecture. Le responsable de l'organisation n'a aucun accès, ni à la table ni aux réponses."
+    },
+    {
+      "objet": "app.mes_releves_reseau",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "responsable_a": "autorise",
+          "consultant_affecte_a": "autorise",
+          "consultant_autre": "autorise",
+          "responsable_b": "autorise",
+          "membre_a_et_b": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Migration 0023 : mes participations éligibles (dans un groupe de leur campagne), avec organisation, campagne et statut. Interrupteur private.settings.reseau_releve_ouvert fermé (défaut) : seulement les participations qui ont déjà une ligne de membre (chemin du retrait et de l'opposition) ; une personne sans participation éligible n'obtient aucune ligne."
+    },
+    {
+      "objet": "app.reseau_releve",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "membre_a_et_b": "autorise"
+        }
+      },
+      "note": "Migration 0023 : titulaire de la participation seul. Interrupteur fermé : {\"ouvert\": false, \"moi\": null} sans ligne de membre, sinon {\"ouvert\": false, \"moi\": {dates, \"nb_reponses\"}}, jamais la liste de l'équipe ni une donnée d'autrui. Sinon son état, les autres membres informés et non opposés de son groupe (nom de profil ; vide tant qu'il n'est pas informé ou s'il est opposé) et ses SEULES réponses. Participation d'autrui, inexistante ou hors groupe : P0002, même message."
+    },
+    {
+      "objet": "app.reseau_informer",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "membre_a_et_b": "autorise"
+        }
+      },
+      "note": "Migration 0023 : titulaire seul, campagne ouverte ou close. Information lue (interrupteur ouvert exigé, sinon 55000) ; opposition (accords effacés, liens entrants ET sortants supprimés), permise même interrupteur fermé (défaut protecteur, non validé), ou levée de l'opposition (interrupteur ouvert). Journalisée (reseau.informer, reseau.opposer)."
+    },
+    {
+      "objet": "app.reseau_consentir",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "membre_a_et_b": "autorise"
+        }
+      },
+      "note": "Migration 0023 : titulaire seul, interrupteur ouvert, campagne ouverte, informé et non opposé (sinon 55000). Accord de réponse et accord de carte indépendants ; retirer l'accord de réponse supprime ses réponses. Journalisée (reseau.consentir)."
+    },
+    {
+      "objet": "app.reseau_repondre",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "membre_a_et_b": "autorise"
+        }
+      },
+      "note": "Migration 0023 : titulaire seul, interrupteur ouvert, campagne ouverte, accord de réponse posé (sinon 55000). Remplace atomiquement toutes ses réponses ; une personne citée hors de son groupe, opposée ou non informée, un doublon ou une valeur hors échelle refusent tout l'envoi (22023, rien n'est écrit). Journalisée (reseau.repondre, quantité = lignes)."
+    },
+    {
+      "objet": "app.reseau_retirer",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "participant_a": "autorise",
+          "participant_b": "autorise",
+          "membre_a_et_b": "autorise"
+        }
+      },
+      "note": "Migration 0023 : titulaire seul, à tout moment (interrupteur ouvert ou fermé, campagne ouverte ou close). Supprime ses réponses et efface ses deux accords. Journalisée (reseau.retirer, quantité = lignes supprimées)."
+    },
+    {
+      "objet": "app.reseau_lire",
+      "type": "function",
+      "cellules": {
+        "execute": {
+          "consultant_affecte_a": "autorise",
+          "admin_tenga": "autorise"
+        }
+      },
+      "note": "Migration 0023 : réponses brutes de la campagne, par groupe (effectif, état de chaque membre informé, liens), pour le consultant de l'organisation et l'administrateur Tenga. Le responsable ne lit RIEN ; un consultant d'une autre organisation, un participant, l'anonyme sont refusés (42501, même message qu'une campagne inexistante). Lecture journalisée (reseau.lire, quantité = réponses) avant le renvoi ; aucun refus ne laisse de trace."
     },
     {
       "objet": "app.mes_resultats",
