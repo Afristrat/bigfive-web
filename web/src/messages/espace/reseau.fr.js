@@ -9,9 +9,9 @@ const reseauFr = {
   liste: {
     titre: 'Relevé du réseau de votre équipe',
     intro:
-      'Quatre questions sur vos échanges de travail avec les membres de votre équipe. Répondre est facultatif.',
-    ouvrir: 'Ouvrir le relevé',
-    ouvrirAria: 'Ouvrir le relevé de la campagne {titre}',
+      'Votre situation dans le relevé des échanges de travail de votre équipe.',
+    ouvrir: 'Voir mon relevé',
+    ouvrirAria: 'Voir mon relevé de la campagne {titre}',
     statut: {
       brouillon: 'Campagne en préparation',
       ouverte: 'Campagne ouverte',
@@ -122,7 +122,11 @@ const reseauFr = {
     texte:
       'Le relevé est fermé aux réponses ; vous pouvez toujours retirer vos réponses ou vous opposer à être cité.',
     leverPlusTard:
-      'Vous pourrez lever votre opposition à la réouverture du relevé.'
+      'Vous pourrez lever votre opposition à la réouverture du relevé.',
+    texteOpposition:
+      'Le relevé est fermé aux réponses ; vous pouvez toujours vous opposer à être cité.',
+    texteOppose:
+      'Votre opposition est enregistrée. Le relevé est fermé aux réponses.'
   },
   brouillon: {
     titre: 'Relevé pas encore ouvert',

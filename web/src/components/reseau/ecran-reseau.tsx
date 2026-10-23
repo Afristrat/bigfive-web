@@ -221,11 +221,16 @@ export function EcranReseau({
               tabIndex={-1}
               className={titreClass}
             >
-              {etape === 'oppose'
-                ? libelles.oppose.titre
-                : libelles.ferme.titre}
+              {libelles.ferme.titre}
             </h2>
-            <p className={texteClass}>{libelles.ferme.texte}</p>
+            {/* Le texte ne nomme que les actions réellement proposées. */}
+            <p className={texteClass}>
+              {etape === 'oppose'
+                ? libelles.ferme.texteOppose
+                : peutRetirer(releve)
+                  ? libelles.ferme.texte
+                  : libelles.ferme.texteOpposition}
+            </p>
             {/* La base refuse de lever une opposition relevé fermé : on dit
                 seulement quand ce sera possible. */}
             {etape === 'oppose' && (

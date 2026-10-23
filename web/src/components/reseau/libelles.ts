@@ -68,7 +68,16 @@ export type LibellesReseau = {
   };
   close: { titre: string; texte: string };
   brouillon: { titre: string; texte: string };
-  ferme: { titre: string; texte: string; leverPlusTard: string };
+  ferme: {
+    titre: string;
+    /** Non opposé, retrait et opposition proposés. */
+    texte: string;
+    /** Non opposé, rien à retirer : opposition seule. */
+    texteOpposition: string;
+    /** Opposé : aucune action relevé fermé. */
+    texteOppose: string;
+    leverPlusTard: string;
+  };
   oppose: { titre: string; texte: string; lever: string };
   opposer: { bouton: string; aide: string; confirmer: string; annuler: string };
   retrait: {
@@ -189,6 +198,8 @@ export function libellesReseau(t: Traducteur, contact: string): LibellesReseau {
     ferme: {
       titre: t('ferme.titre'),
       texte: t('ferme.texte'),
+      texteOpposition: t('ferme.texteOpposition'),
+      texteOppose: t('ferme.texteOppose'),
       leverPlusTard: t('ferme.leverPlusTard')
     },
     oppose: {

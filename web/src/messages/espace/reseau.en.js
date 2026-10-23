@@ -7,10 +7,9 @@ const reseauEn = {
   title: 'Team network',
   liste: {
     titre: 'Your team’s network survey',
-    intro:
-      'Four questions about how you work with the members of your team. Taking part is optional.',
-    ouvrir: 'Open the survey',
-    ouvrirAria: 'Open the network survey for the campaign {titre}',
+    intro: 'Your status in your team’s working-relationships survey.',
+    ouvrir: 'View my survey',
+    ouvrirAria: 'View my survey for the campaign {titre}',
     statut: {
       brouillon: 'Campaign in preparation',
       ouverte: 'Campaign open',
@@ -120,7 +119,11 @@ const reseauEn = {
     texte:
       'The survey is closed to answers; you can still withdraw your answers or object to being named.',
     leverPlusTard:
-      'You will be able to withdraw your objection when the survey reopens.'
+      'You will be able to withdraw your objection when the survey reopens.',
+    texteOpposition:
+      'The survey is closed to answers; you can still object to being named.',
+    texteOppose:
+      'Your objection has been recorded. The survey is closed to answers.'
   },
   brouillon: {
     titre: 'Survey not open yet',

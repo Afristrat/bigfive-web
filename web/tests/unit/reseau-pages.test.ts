@@ -3,6 +3,8 @@ import { resolve } from 'node:path';
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import ar from '@/messages/ar.js';
+import en from '@/messages/en.js';
 import fr from '@/messages/fr.js';
 
 // Pages du relevé : écran de la personne (404 uniforme), lien depuis « Mes
@@ -267,6 +269,21 @@ describe('« Mes résultats » : lien vers le relevé', () => {
     const html = await rendreMesResultats();
     expect(html).toContain(`href="/mes-resultats/reseau/${PART}"`);
     expect(html).toContain(fr.reseau.liste.titre);
+    expect(html).toContain(`>${fr.reseau.liste.ouvrir}</a>`);
+  });
+
+  it('libellés neutres : la liste ignore l’interrupteur, elle ne promet pas de répondre', () => {
+    expect(fr.reseau.liste.ouvrir).toBe('Voir mon relevé');
+    for (const [lang, motif] of [
+      ['fr', /répond|réponse|questions/i],
+      ['en', /answer|question/i],
+      ['ar', /إجاب|أسئلة|سؤال/]
+    ] as const) {
+      const catalogue = { fr, en, ar }[lang].reseau.liste;
+      for (const cle of ['intro', 'ouvrir', 'ouvrirAria'] as const) {
+        expect(catalogue[cle], `${lang} ${cle}`).not.toMatch(motif);
+      }
+    }
   });
 
   it('passe par l’enveloppe tolérante aux pannes', () => {

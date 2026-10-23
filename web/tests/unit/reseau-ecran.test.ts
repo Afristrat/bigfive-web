@@ -401,6 +401,30 @@ describe('relevé fermé (interrupteur), ma ligne présente', () => {
     expect(html).not.toContain(echappe(fr.reseau.oppose.texte));
   });
 
+  it('opposé : jamais le texte qui promet retrait et opposition', () => {
+    const html = ferme({ opposeLe: '2026-10-23T09:10:00Z' });
+    expect(html).toContain(echappe(fr.reseau.ferme.texteOppose));
+    expect(html).not.toContain(echappe(fr.reseau.ferme.texte));
+    expect(html).not.toContain(echappe(fr.reseau.ferme.texteOpposition));
+    // Le texte précède la phrase de réouverture.
+    expect(html.indexOf(echappe(fr.reseau.ferme.texteOppose))).toBeLessThan(
+      html.indexOf(echappe(fr.reseau.ferme.leverPlusTard))
+    );
+  });
+
+  it('non opposé, rien à retirer : le texte ne parle que de l’opposition', () => {
+    const html = ferme();
+    expect(html).toContain(echappe(fr.reseau.ferme.texteOpposition));
+    expect(html).not.toContain(echappe(fr.reseau.ferme.texte));
+    expect(html).not.toContain(echappe(fr.reseau.retrait.bouton));
+  });
+
+  it('non opposé, quelque chose à retirer : le texte annonce les deux actions', () => {
+    const html = ferme({}, 2);
+    expect(html).toContain(echappe(fr.reseau.ferme.texte));
+    expect(html).not.toContain(echappe(fr.reseau.ferme.texteOpposition));
+  });
+
   it('non opposé : le bouton d’opposition, sans la phrase de réouverture', () => {
     const html = ferme();
     expect(html).toContain(echappe(fr.reseau.opposer.bouton));
