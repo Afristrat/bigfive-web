@@ -13,6 +13,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(45);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -97,7 +108,7 @@ UPDATE app.campaigns SET statut = 'close', cloture_le = now() WHERE id = 'c00000
 -- ===== Garde : les données de ce fichier ont le sens attendu =====
 SELECT is((SELECT count(*)::int FROM app.results), 4, 'fixture : quatre résultats (A1 deux, A2 un, B1 un)');
 SELECT is((SELECT statut FROM app.campaigns WHERE id = 'c0000000-0000-4000-8000-0000000000a2'), 'close', 'fixture : la campagne A2 est close');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lister'), 0, 'avant tout appel, aucune consultation au journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.lister'), 0, 'avant tout appel, aucune consultation au journal');
 
 -- ===== Le consultant de l'organisation liste =====
 SELECT is(pg_temp.liste('a0000000-0000-4000-8000-000000000004', 'c0000000-0000-4000-8000-0000000000a1'),
@@ -131,29 +142,29 @@ SELECT is(pg_temp.liste('a0000000-0000-4000-8000-000000000005', 'c0000000-0000-4
   '1', 'consultant B : la liste de sa propre campagne B1');
 
 -- ===== Journal : une consultation autorisée, une ligne, sans identité =====
-SELECT is((SELECT count(*)::int FROM private.audit_log
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log
             WHERE action = 'resultat.lister' AND acteur = 'a0000000-0000-4000-8000-000000000004'
               AND ressource_id = 'c0000000-0000-4000-8000-0000000000a3'),
   1, 'la consultation de A3 est inscrite au journal, une ligne');
-SELECT is((SELECT quantite FROM private.audit_log
+SELECT is((SELECT quantite FROM pg_temp.journal_test audit_log
             WHERE action = 'resultat.lister' AND ressource_id = 'c0000000-0000-4000-8000-0000000000a3'),
   0, 'la ligne de journal d''une liste vide porte la quantité 0');
 SELECT is((SELECT string_agg(DISTINCT ressource_type || '|' || organization_id::text || '|' || acteur::text, ',')
-             FROM private.audit_log
+             FROM pg_temp.journal_test audit_log
             WHERE action = 'resultat.lister' AND ressource_id = 'c0000000-0000-4000-8000-0000000000a2'),
   'campagne|a1000000-0000-4000-8000-00000000000a|a0000000-0000-4000-8000-000000000004',
   'la ligne de journal porte le type campagne, l''organisation de la campagne et le consultant réel comme acteur');
-SELECT is((SELECT string_agg(DISTINCT quantite::text, ',') FROM private.audit_log
+SELECT is((SELECT string_agg(DISTINCT quantite::text, ',') FROM pg_temp.journal_test audit_log
             WHERE action = 'resultat.lister' AND ressource_id = 'c0000000-0000-4000-8000-0000000000a2'),
   '1', 'les lignes de journal portent le nombre de lignes rendues (A2 : une)');
-SELECT is((SELECT string_agg(DISTINCT quantite::text, ',') FROM private.audit_log
+SELECT is((SELECT string_agg(DISTINCT quantite::text, ',') FROM pg_temp.journal_test audit_log
             WHERE action = 'resultat.lister' AND ressource_id = 'c0000000-0000-4000-8000-0000000000a1'),
   '2', 'les lignes de journal portent le nombre de lignes rendues (A1 : deux)');
-SELECT is((SELECT count(*)::int FROM private.audit_log
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log
             WHERE action = 'resultat.lister' AND acteur = 'a0000000-0000-4000-8000-000000000008'
               AND ressource_id = 'c0000000-0000-4000-8000-0000000000b1' AND organization_id = 'a1000000-0000-4000-8000-00000000000b'),
   1, 'la consultation de l''administrateur Tenga est inscrite avec l''organisation de la campagne');
-SELECT is((SELECT count(*)::int FROM private.audit_log l
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l
             WHERE l.action = 'resultat.lister' AND to_jsonb(l)::text ~ '@'),
   0, 'aucune ligne de journal ne contient d''adresse');
 
@@ -186,7 +197,7 @@ SELECT is(pg_temp.liste('a0000000-0000-4000-8000-000000000004', 'c0000000-0000-4
   'ERR:42501:permission denied for function lister_resultats_campagne', 'service_role n''exécute pas la fonction, même sous l''identité du consultant');
 SELECT is(pg_temp.liste(NULL, 'c0000000-0000-4000-8000-0000000000a1'),
   'ERR:42501:Connexion requise', 'sans identité : refusé');
-SELECT is((SELECT count(*)::int FROM private.audit_log
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log
             WHERE action = 'resultat.lister'
               AND (acteur IN ('a0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000003',
                               'a0000000-0000-4000-8000-000000000006', 'a0000000-0000-4000-8000-000000000009',

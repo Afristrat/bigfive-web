@@ -12,6 +12,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(150);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -117,7 +128,7 @@ CREATE FUNCTION pg_temp.reps(p_j jsonb) RETURNS text LANGUAGE sql AS $$
 $$;
 -- Lignes de journal du relevé pour l'organisation A (jamais tout le journal).
 CREATE FUNCTION pg_temp.journal(p_action text) RETURNS integer LANGUAGE sql AS $$
-  SELECT count(*)::integer FROM private.audit_log l WHERE l.action = p_action AND l.organization_id = pg_temp.org_a()
+  SELECT count(*)::integer FROM pg_temp.journal_test l WHERE l.action = p_action AND l.organization_id = pg_temp.org_a()
 $$;
 
 CREATE FUNCTION pg_temp.ferme() RETURNS text LANGUAGE sql AS $$ SELECT 'ERR:55000:Relevé du réseau fermé' $$;
@@ -196,7 +207,7 @@ UPDATE app.campaigns SET statut = 'ouverte', ouverte_le = now() WHERE id IN (pg_
 -- ===== Garde : les données de ce fichier ont le sens attendu =====
 SELECT is((SELECT count(*)::int FROM app.group_members gm WHERE gm.group_id = pg_temp.g1()), 5,
   'fixture : cinq personnes dans le groupe G1 (Alice, Bruno, Camille, Driss, Ghita)');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l.action ~ '^reseau\.' AND l.organization_id IN (pg_temp.org_a(), pg_temp.org_b())), 0,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l.action ~ '^reseau\.' AND l.organization_id IN (pg_temp.org_a(), pg_temp.org_b())), 0,
   'avant tout appel, aucune ligne de journal du relevé pour les organisations du fichier');
 
 -- ===== Structure : tables protégées =====
@@ -510,7 +521,7 @@ SELECT is(
 SELECT is(pg_temp.lire(pg_temp.u(8), pg_temp.k1(), 'service_role'), 'ERR:42501:permission denied for function reseau_lire', 'service_role n''exécute pas reseau_lire');
 SELECT is((SELECT string_agg(DISTINCT l.acteur::text || '|' || l.ressource_type || '|' || l.ressource_id::text || '|' || l.quantite::text, ','
                              ORDER BY l.acteur::text || '|' || l.ressource_type || '|' || l.ressource_id::text || '|' || l.quantite::text)
-             FROM private.audit_log l WHERE l.action = 'reseau.lire' AND l.organization_id IN (pg_temp.org_a(), pg_temp.org_b())),
+             FROM pg_temp.journal_test l WHERE l.action = 'reseau.lire' AND l.organization_id IN (pg_temp.org_a(), pg_temp.org_b())),
   pg_temp.u(8)::text || '|campagne|' || pg_temp.k1()::text || '|3,' || pg_temp.u(10)::text || '|campagne|' || pg_temp.k1()::text || '|3',
   'lecture journalisée (acteur réel, campagne, quantité = réponses) ; aucun refus n''est journalisé');
 
@@ -518,9 +529,9 @@ SELECT is((SELECT string_agg(DISTINCT l.acteur::text || '|' || l.ressource_type 
 SELECT is(pg_temp.journal('reseau.informer') || ',' || pg_temp.journal('reseau.opposer') || ',' || pg_temp.journal('reseau.consentir') || ','
           || pg_temp.journal('reseau.repondre') || ',' || pg_temp.journal('reseau.retirer'),
   '6,2,6,6,3', 'journal : six informations, deux oppositions, six consentements, six réponses, trois retraits ; aucun refus');
-SELECT is((SELECT string_agg(l.quantite::text, ',' ORDER BY l.id) FROM private.audit_log l WHERE l.action = 'reseau.repondre' AND l.organization_id = pg_temp.org_a()),
+SELECT is((SELECT string_agg(l.quantite::text, ',' ORDER BY l.id) FROM pg_temp.journal_test l WHERE l.action = 'reseau.repondre' AND l.organization_id = pg_temp.org_a()),
   '4,3,2,2,2,1', 'la quantité de chaque réponse est le nombre de lignes enregistrées');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l.action ~ '^reseau\.' AND l.organization_id = pg_temp.org_a()
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l.action ~ '^reseau\.' AND l.organization_id = pg_temp.org_a()
              AND (to_jsonb(l)::text ~ '(@|Alice|Bruno|Camille|Driss|Élise|Ghita)' OR l.acteur IS NULL)), 0,
   'aucune ligne du journal du relevé ne contient de nom ni d''adresse ; chacune a son acteur');
 
@@ -577,7 +588,7 @@ SELECT is((pg_temp.j(pg_temp.rel(pg_temp.u(13), pg_temp.p(13))) #>> '{moi,nb_rep
           || (position(pg_temp.p(14)::text IN pg_temp.rel(pg_temp.u(13), pg_temp.p(13))) + position('Jamal' IN pg_temp.rel(pg_temp.u(13), pg_temp.p(13))))::text,
   '1|0', 'fermé : Inès voit le nombre de ses réponses, jamais la personne citée');
 SELECT is(pg_temp.mes(pg_temp.u(13)) || ',' || pg_temp.mes(pg_temp.u(6)), '1,0', 'fermé : liste filtrée (Inès a une ligne, Farid non)');
-SELECT set_config('zz.repere', (SELECT coalesce(max(l.id), 0)::text FROM private.audit_log l), true);
+SELECT set_config('zz.repere', (SELECT coalesce(max(l.id), 0)::text FROM pg_temp.journal_test l), true);
 UPDATE private.settings SET conservation_reseau_mois = 36;
 SELECT private.purger_quotidien();
 SELECT is(pg_temp.en_base(pg_temp.p(2)) || '/' || pg_temp.en_base(pg_temp.p(3)) || '/' || (SELECT count(*)::text FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(5)),
@@ -590,11 +601,11 @@ SELECT is((SELECT string_agg(pg_temp.code(m.participation_id), ',' ORDER BY pg_t
   'A,B,C,D', 'conservation de 2 mois : le membre de 3 mois (Élise) est purgé, les autres restent');
 SELECT is((SELECT count(*)::text FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(13)) || '/' || pg_temp.en_base(pg_temp.p(13)),
   '1/J:conseil:3', 'le membre aux réponses récentes (Inès) n''est pas purgé, sa réponse reste');
-SELECT ok((SELECT l.quantite >= 1 FROM private.audit_log l WHERE l.action = 'purge.reseau_reponses' AND l.id > current_setting('zz.repere')::bigint ORDER BY l.id DESC LIMIT 1)
-          AND (SELECT l.quantite >= 1 FROM private.audit_log l WHERE l.action = 'purge.reseau_membres' AND l.id > current_setting('zz.repere')::bigint ORDER BY l.id DESC LIMIT 1),
+SELECT ok((SELECT l.quantite >= 1 FROM pg_temp.journal_test l WHERE l.action = 'purge.reseau_reponses' AND l.id > current_setting('zz.repere')::bigint ORDER BY l.id DESC LIMIT 1)
+          AND (SELECT l.quantite >= 1 FROM pg_temp.journal_test l WHERE l.action = 'purge.reseau_membres' AND l.id > current_setting('zz.repere')::bigint ORDER BY l.id DESC LIMIT 1),
   'traces chiffrées purge.reseau_reponses et purge.reseau_membres');
 SELECT is((SELECT count(*)::int || '/' || count(*) FILTER (WHERE l.acteur IS NOT NULL OR l.ressource_id IS NOT NULL OR l.organization_id IS NOT NULL)
-             FROM private.audit_log l WHERE l.action IN ('purge.reseau_reponses', 'purge.reseau_membres') AND l.id > current_setting('zz.repere')::bigint),
+             FROM pg_temp.journal_test l WHERE l.action IN ('purge.reseau_reponses', 'purge.reseau_membres') AND l.id > current_setting('zz.repere')::bigint),
   '4/0', 'deux passes, quatre traces, aucune avec acteur, ressource ni organisation');
 
 -- ===== Effacement en cascade =====

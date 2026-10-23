@@ -22,6 +22,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(57);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -70,7 +81,7 @@ $$;
 
 -- Organisations (aucune ligne app.organizations n'est requise : la fonction ne
 -- lit que la clé) et état initial du journal.
-SELECT set_config('t38.audit', (SELECT count(*) FROM private.audit_log)::text, true);
+SELECT set_config('t38.audit', (SELECT count(*) FROM pg_temp.journal_test audit_log)::text, true);
 
 -- ===== Structure =====
 SELECT has_table('private', 'plafonds_invitations', 'private.plafonds_invitations existe');
@@ -223,7 +234,7 @@ SELECT matches(pg_temp.comme('anon', 'select count(*)::text from private.plafond
   'anon ne lit pas la table (42501)');
 
 -- ===== Aucune ligne de journal =====
-SELECT is((SELECT count(*)::text FROM private.audit_log), current_setting('t38.audit'),
+SELECT is((SELECT count(*)::text FROM pg_temp.journal_test audit_log), current_setting('t38.audit'),
   'aucun appel (accepté, refusé, invalide) n''écrit dans le journal');
 
 SELECT * FROM finish();

@@ -6,6 +6,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(64);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -119,7 +130,7 @@ SELECT is((current_setting('zz.export')::jsonb) -> 'compte' ->> 'administrateur_
 SELECT is(jsonb_array_length((current_setting('zz.export')::jsonb) -> 'journal'), 1, 'l''export contient les actions journalisées au nom de la personne');
 SELECT is(position('pb@example.test' IN current_setting('zz.export')) + position('d0000000-0000-4000-8000-000000000002' IN current_setting('zz.export')) + position('"O": 31' IN current_setting('zz.export')), 0,
   'l''export ne contient rien d''une autre personne');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'compte.exporter' AND acteur = 'a0000000-0000-4000-8000-000000000001'), 1, 'l''export est journalisé');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'compte.exporter' AND acteur = 'a0000000-0000-4000-8000-000000000001'), 1, 'l''export est journalisé');
 SELECT is(jsonb_array_length((pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', 'select app.exporter_mes_donnees()::text')::jsonb) -> 'resultats'), 0, 'l''export du responsable ne contient aucun résultat');
 SELECT is((pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', 'select app.exporter_mes_donnees()::text')::jsonb) -> 'compte' ->> 'administrateur_tenga', 'true', 'l''export de l''administrateur le dit');
 
@@ -142,10 +153,10 @@ SELECT is(
 SELECT is((SELECT count(*)::int FROM app.results WHERE user_id = 'a0000000-0000-4000-8000-000000000002'), 1, 'le résultat de l''autre participant est intact');
 SELECT is((SELECT count(*)::int FROM app.participations WHERE user_id = 'a0000000-0000-4000-8000-000000000002'), 1, 'la participation de l''autre participant est intacte');
 SELECT is((SELECT count(*)::int FROM app.invitations WHERE email = 'attente@example.test'), 1, 'l''invitation en attente d''un tiers est intacte');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'compte.supprimer' AND acteur = 'a0000000-0000-4000-8000-000000000001' AND ressource_id = 'a0000000-0000-4000-8000-000000000001'), 1,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'compte.supprimer' AND acteur = 'a0000000-0000-4000-8000-000000000001' AND ressource_id = 'a0000000-0000-4000-8000-000000000001'), 1,
   'la suppression est journalisée avec l''identifiant devenu pseudonyme');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE acteur = 'a0000000-0000-4000-8000-000000000001'), 3, 'le journal garde les lignes antérieures de la personne (identifiant seul), plus la suppression');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal, suppression comprise');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE acteur = 'a0000000-0000-4000-8000-000000000001'), 3, 'le journal garde les lignes antérieures de la personne (identifiant seul), plus la suppression');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal, suppression comprise');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated', 'select count(*) from app.mes_resultats()'), '0', 'après suppression, plus rien ne se lit au nom de cette identité');
 
 -- Un responsable supprime son compte : ses invitations disparaissent, ses campagnes restent
@@ -160,6 +171,6 @@ SELECT is(pg_temp.comme(NULL, 'anon', $q$select app.effacer_compte('a0000000-000
 SELECT is(pg_temp.comme(NULL, 'service_role', $q$select app.effacer_compte('a0000000-0000-4000-8000-000000000002')::text$q$), 'true', 'effacer_compte, serveur : efface le compte et renvoie vrai');
 SELECT is(pg_temp.comme(NULL, 'service_role', $q$select app.effacer_compte('a0000000-0000-4000-8000-000000000002')::text$q$), 'false', 'effacer_compte, rejeu : le compte n''existe plus, faux, sans erreur');
 SELECT is((SELECT count(*)::int FROM app.results), 0, 'plus aucun résultat après les deux effacements');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'compte.supprimer'), 3, 'une ligne de journal par effacement réel, aucune pour le rejeu');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'compte.supprimer'), 3, 'une ligne de journal par effacement réel, aucune pour le rejeu');
 
 SELECT * FROM finish();

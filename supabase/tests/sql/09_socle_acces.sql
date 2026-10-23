@@ -5,6 +5,15 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(59);
 
+-- Base vivante : lignes réelles présentes avant les fixtures, retranchées des comptes
+-- totaux (l'administrateur voit toujours TOUTES les lignes : réelles + fixtures).
+SELECT set_config('zz.reel_organizations', (SELECT count(*) FROM app.organizations)::text, true) IS NOT NULL AS base_vivante,
+       set_config('zz.reel_memberships', (SELECT count(*) FROM app.memberships)::text, true) IS NOT NULL AS base_vivante2;
+CREATE FUNCTION pg_temp.hors_reel(p_compte text, p_reel text) RETURNS text
+LANGUAGE sql AS $f$
+  SELECT CASE WHEN p_compte ~ '^-?[0-9]+$' THEN (p_compte::bigint - current_setting(p_reel)::bigint)::text ELSE p_compte END
+$f$;
+
 -- Aide : exécute une requête sous le rôle réel et l'identité donnés ; renvoie le
 -- résultat (requête SELECT, première colonne en texte) ou « ok » (autre ordre),
 -- ou « ERR:<SQLSTATE>:<message> ». Les rôles de l'API n'ont pas accès à pgTAP,
@@ -65,7 +74,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000004', 'authenticated',
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000005', 'authenticated', 'select count(*) from app.memberships where organization_id = ''a1000000-0000-4000-8000-00000000000a'''), '0', 'memberships, consultant d''une autre organisation : rien de l''organisation A');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000006', 'authenticated', 'select count(*) from app.memberships where organization_id = ''a1000000-0000-4000-8000-00000000000a'''), '0', 'memberships, responsable B : rien de l''organisation A');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000007', 'authenticated', 'select count(*) from app.memberships'), '2', 'memberships, membre de A et B : ses deux lignes');
-SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', 'select count(*) from app.memberships'), '8', 'memberships, administrateur Tenga : toutes les lignes');
+SELECT is(pg_temp.hors_reel(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', 'select count(*) from app.memberships'), 'zz.reel_memberships'), '8', 'memberships, administrateur Tenga : toutes les lignes');
 
 -- ===== Lecture : app.organizations (organisations dont on est membre ; l'administrateur voit tout) ====
 SELECT is(pg_temp.comme(NULL, 'anon', 'select count(*) from app.organizations'), 'ERR:42501:permission denied for schema app', 'organizations, anonyme : refusé');
@@ -73,7 +82,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated',
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000005', 'authenticated', 'select slug from app.organizations'), 'org-b', 'organizations, consultant d''une autre organisation : B seulement');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000006', 'authenticated', 'select count(*) from app.organizations where id = ''a1000000-0000-4000-8000-00000000000a'''), '0', 'organizations, responsable B : A invisible même avec son identifiant');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000007', 'authenticated', 'select count(*) from app.organizations'), '2', 'organizations, membre de A et B : les deux');
-SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', 'select count(*) from app.organizations'), '2', 'organizations, administrateur Tenga : toutes');
+SELECT is(pg_temp.hors_reel(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', 'select count(*) from app.organizations'), 'zz.reel_organizations'), '2', 'organizations, administrateur Tenga : toutes');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-0000000000ee', 'authenticated', 'select count(*) from app.organizations'), '0', 'organizations, identité sans appartenance : rien');
 SELECT is(pg_temp.comme(NULL, 'authenticated', 'select count(*) from app.organizations'), '0', 'organizations, rôle connecté sans identité : rien');
 
@@ -120,7 +129,7 @@ SELECT is(pg_temp.comme(NULL, 'service_role', 'select app.attribuer_role(''a0000
   'ERR:42501:permission denied for function attribuer_role', 'attribuer_role, service_role : refusé (aucun droit d''exécution)');
 SELECT is(pg_temp.comme(NULL, 'anon', 'select app.attribuer_role(''a0000000-0000-4000-8000-000000000001'', ''a1000000-0000-4000-8000-00000000000b'', ''responsable'')::text'),
   'ERR:42501:permission denied for schema app', 'attribuer_role, anonyme : refusé (pas d''accès au schéma)');
-SELECT is((SELECT count(*)::int FROM app.memberships), 8, 'aucune de ces tentatives n''a modifié les appartenances');
+SELECT is((SELECT count(*)::int FROM app.memberships) - current_setting('zz.reel_memberships')::int, 8, 'aucune de ces tentatives n''a modifié les appartenances');
 
 -- ===== Les quatre verrous, éprouvés un à un (plan § 3.3) =====
 -- Verrou 1 : sans droit d'écriture. Les tentatives ci-dessus échouent en « permission denied ».
@@ -147,7 +156,7 @@ SELECT is(pg_temp.comme(NULL, 'service_role', $q$delete from app.memberships$q$)
   'ERR:42501:Écriture refusée sur memberships : seules les fonctions contrôlées modifient cette table', 'verrou 3 seul : le déclencheur refuse le DELETE de service_role (BYPASSRLS)');
 SELECT is(pg_temp.comme(NULL, 'service_role', $q$insert into app.memberships (user_id, organization_id, role) values ('a0000000-0000-4000-8000-000000000002', 'a1000000-0000-4000-8000-00000000000b', 'responsable')$q$),
   'ERR:42501:Écriture refusée sur memberships : seules les fonctions contrôlées modifient cette table', 'verrou 3 seul : le déclencheur refuse l''INSERT de service_role');
-SELECT is((SELECT count(*)::int FROM app.memberships), 8, 'verrou 3 : appartenances intactes malgré droit et règle ouverts');
+SELECT is((SELECT count(*)::int FROM app.memberships) - current_setting('zz.reel_memberships')::int, 8, 'verrou 3 : appartenances intactes malgré droit et règle ouverts');
 
 -- Verrou 4 : seule la fonction d'attribution, réservée aux administrateurs, crée un rôle.
 DROP POLICY zz_ouvert ON app.memberships;

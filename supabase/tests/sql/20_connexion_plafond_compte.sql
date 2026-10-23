@@ -7,6 +7,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(41);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -133,18 +144,18 @@ SELECT is((SELECT count(*)::int FROM private.demandes_lien WHERE user_id = 'b000
   'une demande refusée n''est pas comptée : trois demandes effectives');
 
 -- ===== F8 : journal des échecs et des plafonds =====
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'connexion.echec' AND ressource_id = 'b0000000-0000-4000-8000-000000000001'), 5,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'connexion.echec' AND ressource_id = 'b0000000-0000-4000-8000-000000000001'), 5,
   'cinq échecs de code journalisés pour le compte un');
-SELECT is((SELECT string_agg(quantite::text, ',' ORDER BY id) FROM private.audit_log WHERE action = 'connexion.echec' AND ressource_id = 'b0000000-0000-4000-8000-000000000001'),
+SELECT is((SELECT string_agg(quantite::text, ',' ORDER BY id) FROM pg_temp.journal_test audit_log WHERE action = 'connexion.echec' AND ressource_id = 'b0000000-0000-4000-8000-000000000001'),
   '1,2,3,4,5', 'la quantité journalisée est le rang de l''échec dans la série');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'connexion.plafond' AND ressource_id = 'b0000000-0000-4000-8000-000000000001'), 1,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'connexion.plafond' AND ressource_id = 'b0000000-0000-4000-8000-000000000001'), 1,
   'le plafond de 5 échecs est journalisé une fois (les refus suivants n''inondent pas le journal)');
 SELECT is(pg_temp.demander('six@example.test'), 'false - - -', 'demandes : la cinquième est refusée aussi');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'connexion.plafond' AND ressource_id = 'b0000000-0000-4000-8000-000000000006'), 1,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'connexion.plafond' AND ressource_id = 'b0000000-0000-4000-8000-000000000006'), 1,
   'le plafond de demandes est journalisé une fois pour le compte six, pas à chaque refus');
-SELECT is((SELECT count(*)::int FROM private.audit_log
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log
             WHERE action IN ('connexion.echec', 'connexion.plafond') AND (acteur IS NOT NULL OR ressource_type <> 'utilisateur' OR ressource_id IS NULL)), 0,
   'ces lignes n''ont pas d''acteur et portent l''identifiant du compte');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l::text LIKE '%@%'), 0, 'le journal de connexion ne contient aucune adresse e-mail');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l::text LIKE '%@%'), 0, 'le journal de connexion ne contient aucune adresse e-mail');
 
 SELECT * FROM finish();

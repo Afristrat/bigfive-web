@@ -6,6 +6,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(68);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -158,7 +169,7 @@ SELECT is((SELECT organization_id::text || '|' || user_id::text || '|' || scores
   'a1000000-0000-4000-8000-00000000000a|a0000000-0000-4000-8000-000000000001|' || pg_temp.sc_ok()::jsonb::text || '|v2|c7', 'le résultat porte l''organisation de la campagne, la personne, les scores et les deux versions');
 SELECT is((SELECT count(*)::int FROM app.attempts WHERE participation_id = 'd0000000-0000-4000-8000-000000000001'), 0, 'la tentative est effacée à la soumission');
 SELECT is((SELECT statut || '|' || (terminee_le IS NOT NULL)::text FROM app.participations WHERE id = 'd0000000-0000-4000-8000-000000000001'), 'terminee|true', 'la participation est terminée');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.soumettre' AND acteur = 'a0000000-0000-4000-8000-000000000001' AND ressource_id = 'd0000000-0000-4000-8000-000000000001'), 1, 'la soumission est journalisée une fois');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.soumettre' AND acteur = 'a0000000-0000-4000-8000-000000000001' AND ressource_id = 'd0000000-0000-4000-8000-000000000001'), 1, 'la soumission est journalisée une fois');
 SELECT is(pg_temp.soumettre('a0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', '{"1": 1}', '{"O": 1}'), 'ERR:23505:Résultat déjà soumis', 'une seule soumission par participation');
 SELECT is(pg_temp.sauver('a0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', 0, '{"1": 1}'), 'ERR:23505:Résultat déjà soumis', 'plus de sauvegarde après la soumission');
 SELECT is((SELECT scores::text FROM app.results), pg_temp.sc_ok()::jsonb::text, 'le résultat soumis est resté intact');
@@ -182,21 +193,21 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated',
   'ERR:42501:Réservé au consultant affecté ou à un administrateur Tenga', 'lire_resultat_individuel, le titulaire lui-même : refusé (il lit son résultat dans la table)');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000004', 'authenticated', $q$select count(*) from app.lire_resultat_individuel('d0000000-0000-4000-8000-0000000000ff')$q$),
   'ERR:42501:Réservé au consultant affecté ou à un administrateur Tenga', 'lire_resultat_individuel, résultat inexistant : même refus (aucune fuite d''existence)');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lire'), 0, 'aucun refus ne laisse de ligne de lecture dans le journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.lire'), 0, 'aucun refus ne laisse de ligne de lecture dans le journal');
 
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000004', 'authenticated',
   $q$select concat_ws('|', participation_id, organization_id, reponses, scores, questionnaire_version, calcul_version) from app.lire_resultat_individuel('d0000000-0000-4000-8000-000000000001')$q$),
   'd0000000-0000-4000-8000-000000000001|a1000000-0000-4000-8000-00000000000a|' || pg_temp.rep_ok()::jsonb::text || '|' || pg_temp.sc_ok()::jsonb::text || '|v2|c7',
   'lire_resultat_individuel, consultant affecté : reçoit réponses, scores et versions');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000004'
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000004'
             AND ressource_type = 'participation' AND ressource_id = 'd0000000-0000-4000-8000-000000000001' AND organization_id = 'a1000000-0000-4000-8000-00000000000a'), 1,
   'la lecture est journalisée : lecteur, participation et organisation');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', $q$select scores::text from app.lire_resultat_individuel('d0000000-0000-4000-8000-000000000001')$q$),
   pg_temp.sc_ok()::jsonb::text, 'lire_resultat_individuel, administrateur Tenga : lit');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000008'), 1, 'la lecture de l''administrateur est journalisée aussi');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000008'), 1, 'la lecture de l''administrateur est journalisée aussi');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000004', 'authenticated', $q$select scores::text from app.lire_resultat_individuel('d0000000-0000-4000-8000-000000000001')$q$),
   pg_temp.sc_ok()::jsonb::text, 'lire_resultat_individuel : une seconde lecture fonctionne');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000004'), 2, 'chaque lecture écrit sa propre ligne de journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000004'), 2, 'chaque lecture écrit sa propre ligne de journal');
 SELECT ok(
   (SELECT position('private.journaliser' IN p.prosrc) > 0 AND position('private.journaliser' IN p.prosrc) < position('RETURN QUERY' IN p.prosrc)
      FROM pg_proc p WHERE p.oid = 'app.lire_resultat_individuel(uuid)'::regprocedure),
@@ -206,6 +217,6 @@ SELECT is(
     WHERE p.oid = 'app.lire_resultat_individuel(uuid)'::regprocedure),
   'p_participation,participation_id,campaign_id,organization_id,reponses,scores,questionnaire_version,calcul_version,soumis_le',
   'la lecture individuelle ne renvoie aucune identité de personne (ni compte, ni adresse, ni nom)');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal');
 
 SELECT * FROM finish();

@@ -6,6 +6,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(17);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 -- Tâche planifiée
 SELECT is(
   (SELECT schedule || '|' || command || '|' || active::text FROM cron.job WHERE jobname = 'tenga-purge-quotidienne'),
@@ -37,7 +48,7 @@ DROP POLICY audit_suppression_owner ON private.audit_log;
 SELECT private.purger_quotidien();
 SELECT is((SELECT count(*)::int FROM private.liens_connexion WHERE user_id = 'a0000000-0000-4000-8000-000000000001'), 3,
   'sans règle de suppression, la purge n''efface aucun lien (la RLS la contraint)');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE id IN (-2, -3, -4)), 3,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE id IN (-2, -3, -4)), 3,
   'sans règle de suppression, la purge n''efface aucune ligne de journal');
 CREATE POLICY liens_suppression_owner ON private.liens_connexion FOR DELETE TO tenga_owner USING (true);
 CREATE POLICY audit_suppression_owner ON private.audit_log FOR DELETE TO tenga_owner USING (true);
@@ -48,13 +59,13 @@ SELECT is((SELECT count(*)::int FROM private.liens_connexion WHERE user_id = 'a0
   'la purge efface le lien échu depuis plus d''un jour, garde les deux autres');
 SELECT is((SELECT count(*)::int FROM private.liens_connexion WHERE user_id = 'a0000000-0000-4000-8000-000000000001' AND consomme_le IS NULL AND expire_le > now()), 1,
   'le lien actif est intact');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE id IN (-2, -3)), 0, 'la purge efface les lignes de journal échues');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE id = -4), 1, 'la purge garde la ligne de journal récente');
-SELECT ok((SELECT quantite >= 1 FROM private.audit_log WHERE action = 'purge.liens_connexion' ORDER BY id DESC LIMIT 1),
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE id IN (-2, -3)), 0, 'la purge efface les lignes de journal échues');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE id = -4), 1, 'la purge garde la ligne de journal récente');
+SELECT ok((SELECT quantite >= 1 FROM pg_temp.journal_test audit_log WHERE action = 'purge.liens_connexion' ORDER BY id DESC LIMIT 1),
   'trace chiffrée des liens effacés dans le journal');
-SELECT ok((SELECT quantite >= 2 FROM private.audit_log WHERE action = 'purge.journal' ORDER BY id DESC LIMIT 1),
+SELECT ok((SELECT quantite >= 2 FROM pg_temp.journal_test audit_log WHERE action = 'purge.journal' ORDER BY id DESC LIMIT 1),
   'trace chiffrée des lignes de journal effacées dans le journal');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l.action LIKE 'purge.%' AND l.acteur IS NOT NULL), 0, 'les traces de purge n''ont pas d''acteur');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l.action LIKE 'purge.%' AND l.acteur IS NOT NULL), 0, 'les traces de purge n''ont pas d''acteur');
 
 -- Point de santé
 SET LOCAL ROLE service_role;

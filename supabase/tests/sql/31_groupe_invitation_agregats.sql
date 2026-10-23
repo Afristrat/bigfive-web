@@ -9,6 +9,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(19);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -135,7 +146,7 @@ SELECT is((SELECT count(*)::int FROM app.group_aggregates WHERE campaign_id IN (
 -- ===== S1 : quatre dans le groupe, rien ne se publie =====
 SELECT is(pg_temp.clore(1), '', 'S1 : la clôture réussit');
 SELECT is(pg_temp.bilan(1), '0/0/1', 'S1 : quatre personnes dans un groupe composé par invitation : aucune ligne publiée, marqueur de pose présent');
-SELECT is((SELECT quantite FROM private.audit_log WHERE action = 'agregats.poser' AND ressource_id = pg_temp.c(1)), 0, 'S1 : la pose journalise zéro ligne');
+SELECT is((SELECT quantite FROM pg_temp.journal_test audit_log WHERE action = 'agregats.poser' AND ressource_id = pg_temp.c(1)), 0, 'S1 : la pose journalise zéro ligne');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', 'select count(*) from app.group_aggregates'), '0', 'S1 : le responsable ne voit aucun agrégat');
 
 -- ===== S2 : cinq dans le groupe, deux hors groupe =====

@@ -14,6 +14,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(38);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -159,9 +170,9 @@ SELECT is(pg_temp.role_de('d0000000-0000-4000-8000-000000000008', 'd1000000-0000
   'les six refus n''ont laissé aucune appartenance dans A');
 
 -- ===== Journal : seuls les gestes réussis laissent une trace =====
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'role.attribuer.consultant' AND acteur = 'd0000000-0000-4000-8000-000000000002'), 0,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'role.attribuer.consultant' AND acteur = 'd0000000-0000-4000-8000-000000000002'), 0,
   'aucune nomination de consultant n''est journalisée au nom du responsable');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'role.attribuer.consultant' AND acteur = 'd0000000-0000-4000-8000-000000000004'), 2,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'role.attribuer.consultant' AND acteur = 'd0000000-0000-4000-8000-000000000004'), 2,
   'les deux nominations de consultant de l''administrateur sont journalisées avec leur acteur');
 
 -- ===== Structure : la règle tient dans private.peut_attribuer, seul point de décision =====

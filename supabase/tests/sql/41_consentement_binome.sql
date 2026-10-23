@@ -16,6 +16,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(158);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -173,7 +184,7 @@ INSERT INTO app.results (participation_id, organization_id, user_id, reponses, s
 -- ===== Garde : les données de ce fichier ont le sens attendu =====
 SELECT is((SELECT count(*)::int FROM app.results), 5, 'fixture : cinq résultats (d1 à d5), d6 est en cours');
 SELECT is((SELECT count(*)::int FROM app.binomes), 0, 'avant tout appel, aucune proposition de binôme');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action ~ '^binome\.'), 0, 'avant tout appel, aucune ligne de journal de binôme');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action ~ '^binome\.'), 0, 'avant tout appel, aucune ligne de journal de binôme');
 
 -- ===== Table : protection =====
 SELECT ok((SELECT c.relrowsecurity AND c.relforcerowsecurity AND c.relowner = 'tenga_owner'::regrole AND c.relkind = 'r'
@@ -299,10 +310,10 @@ SELECT is(pg_temp.prop(NULL, pg_temp.d1(), pg_temp.d2()), 'ERR:42501:Connexion r
 SELECT is((SELECT count(*)::int FROM app.binomes), 3, 'aucun refus n''a écrit de proposition');
 
 -- ===== Proposer : journal =====
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'binome.proposer'), 3, 'trois propositions, trois lignes de journal, aucune pour un refus');
-SELECT is((SELECT string_agg(DISTINCT ressource_type || '|' || organization_id::text, ',') FROM private.audit_log WHERE action = 'binome.proposer'),
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'binome.proposer'), 3, 'trois propositions, trois lignes de journal, aucune pour un refus');
+SELECT is((SELECT string_agg(DISTINCT ressource_type || '|' || organization_id::text, ',') FROM pg_temp.journal_test audit_log WHERE action = 'binome.proposer'),
   'binome|a1000000-0000-4000-8000-00000000000a', 'la ligne de journal porte le type binome et l''organisation du binôme');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'binome.proposer' AND acteur = pg_temp.u_ad()
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'binome.proposer' AND acteur = pg_temp.u_ad()
              AND ressource_id = pg_temp.bid(pg_temp.d2(), pg_temp.d3())),
   1, 'la proposition de l''administrateur Tenga est inscrite sous son identité');
 
@@ -341,7 +352,7 @@ SELECT is((SELECT count(*)::int FROM app.binomes WHERE accord_a_le IS NOT NULL O
 -- ===== Un seul accord : aucune lecture =====
 SELECT is(pg_temp.rep(pg_temp.u_pa(), pg_temp.bid(pg_temp.d1(), pg_temp.d2()), true), 'en_attente', 'pa accepte : la proposition reste en attente de pb');
 SELECT is(pg_temp.rep(pg_temp.u_pa(), pg_temp.bid(pg_temp.d1(), pg_temp.d2()), true), 'en_attente', 'pa accepte une seconde fois : sans effet');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'binome.accepter' AND acteur = pg_temp.u_pa()
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'binome.accepter' AND acteur = pg_temp.u_pa()
              AND ressource_id = pg_temp.bid(pg_temp.d1(), pg_temp.d2())),
   1, 'un accord rejoué n''inscrit qu''une ligne de journal');
 SELECT is(pg_temp.col(pg_temp.u_pa(), pg_temp.bid(pg_temp.d1(), pg_temp.d2()), 'statut'), 'en_attente', 'pa lit le statut « en_attente »');
@@ -352,7 +363,7 @@ SELECT is(pg_temp.col(pg_temp.u_pb(), pg_temp.bid(pg_temp.d1(), pg_temp.d2()), '
 SELECT is((SELECT string_agg(DISTINCT pg_temp.lire(u, pg_temp.bid(pg_temp.d1(), pg_temp.d2())), '|')
              FROM unnest(ARRAY[pg_temp.u_pa(), pg_temp.u_pb(), pg_temp.u_ca(), pg_temp.u_ad()]) u),
   pg_temp.sans_accord(), 'un seul accord : aucune lecture, ni pour la personne qui a accepté, ni pour l''autre, ni pour le consultant, ni pour l''administrateur');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'binome.lire'), 0, 'un refus de lecture n''inscrit rien au journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'binome.lire'), 0, 'un refus de lecture n''inscrit rien au journal');
 
 -- ===== Deux accords : lecture par A, B, le consultant et l'administrateur =====
 SELECT is(pg_temp.rep(pg_temp.u_pb(), pg_temp.bid(pg_temp.d1(), pg_temp.d2()), true), 'actif', 'pb accepte à son tour : le binôme est actif');
@@ -396,20 +407,20 @@ SELECT is(pg_temp.lire(pg_temp.u_pa(), pg_temp.bid(pg_temp.d1(), pg_temp.d2()), 
 SELECT is(pg_temp.lire(NULL, pg_temp.bid(pg_temp.d1(), pg_temp.d2())), 'ERR:42501:Connexion requise', 'lire_binome sans identité : refusé');
 
 -- ===== Lecture : journal =====
-SELECT is((SELECT string_agg(DISTINCT acteur::text, ',' ORDER BY acteur::text) FROM private.audit_log WHERE action = 'binome.lire'),
+SELECT is((SELECT string_agg(DISTINCT acteur::text, ',' ORDER BY acteur::text) FROM pg_temp.journal_test audit_log WHERE action = 'binome.lire'),
   'a0000000-0000-4000-8000-000000000001,a0000000-0000-4000-8000-000000000002,a0000000-0000-4000-8000-000000000004,a0000000-0000-4000-8000-000000000008',
   'seules les lectures autorisées (pa, pb, consultant, administrateur) sont journalisées, jamais un refus');
 SELECT is((SELECT string_agg(DISTINCT ressource_type || '|' || organization_id::text || '|' || ressource_id::text || '|' || quantite::text, ',')
-             FROM private.audit_log WHERE action = 'binome.lire'),
+             FROM pg_temp.journal_test audit_log WHERE action = 'binome.lire'),
   'binome|a1000000-0000-4000-8000-00000000000a|' || pg_temp.bid(pg_temp.d1(), pg_temp.d2())::text || '|2',
   'la ligne de journal porte le type binome, l''organisation, le binôme et la quantité 2');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l.action ~ '^binome\.' AND to_jsonb(l)::text ~ '@'), 0, 'aucune ligne de journal de binôme ne contient d''adresse');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'binome.accepter'), 2, 'deux accords, deux lignes de journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l.action ~ '^binome\.' AND to_jsonb(l)::text ~ '@'), 0, 'aucune ligne de journal de binôme ne contient d''adresse');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'binome.accepter'), 2, 'deux accords, deux lignes de journal');
 
 -- ===== Refus d'une personne =====
 SELECT is(pg_temp.rep(pg_temp.u_pc(), pg_temp.bid(pg_temp.d1(), pg_temp.d3()), false), 'retire', 'pc refuse la proposition d1-d3');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'binome.refuser' AND acteur = pg_temp.u_pc()), 1, 'le refus est inscrit au journal (binome.refuser)');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'binome.retirer'), 0, 'un refus n''est pas un retrait : aucune ligne binome.retirer');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'binome.refuser' AND acteur = pg_temp.u_pc()), 1, 'le refus est inscrit au journal (binome.refuser)');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'binome.retirer'), 0, 'un refus n''est pas un retrait : aucune ligne binome.retirer');
 SELECT is(pg_temp.col(pg_temp.u_pa(), pg_temp.bidr(pg_temp.d1(), pg_temp.d3()), 'statut'), 'retire', 'pa voit la proposition refusée comme retirée');
 SELECT is(pg_temp.col(pg_temp.u_pa(), pg_temp.bidr(pg_temp.d1(), pg_temp.d3()), 'autre_nom'), NULL::text, 'le nom de l''autre personne n''est plus montré une fois la proposition retirée');
 SELECT is((SELECT string_agg(DISTINCT pg_temp.rep(u, pg_temp.bidr(pg_temp.d1(), pg_temp.d3()), true), '|')
@@ -433,7 +444,7 @@ SELECT is(pg_temp.rep(pg_temp.u_pb(), pg_temp.bid(pg_temp.d2(), pg_temp.d3()), t
 SELECT is(pg_temp.rep(pg_temp.u_pc(), pg_temp.bid(pg_temp.d2(), pg_temp.d3()), true), 'actif', 'pc accepte à son tour : binôme d2-d3 actif');
 SELECT is(pg_temp.lire(pg_temp.u_ca(), pg_temp.bid(pg_temp.d2(), pg_temp.d3())), '2', 'le consultant lit le binôme d2-d3 tant qu''il est actif');
 SELECT is(pg_temp.rep(pg_temp.u_pb(), pg_temp.bid(pg_temp.d2(), pg_temp.d3()), false), 'retire', 'pb retire son accord : la proposition est retirée');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'binome.retirer' AND acteur = pg_temp.u_pb()), 1, 'le retrait est inscrit au journal (binome.retirer)');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'binome.retirer' AND acteur = pg_temp.u_pb()), 1, 'le retrait est inscrit au journal (binome.retirer)');
 SELECT is((SELECT string_agg(DISTINCT pg_temp.lire(u, pg_temp.bidr(pg_temp.d2(), pg_temp.d3())), '|')
              FROM unnest(ARRAY[pg_temp.u_pb(), pg_temp.u_pc(), pg_temp.u_ca(), pg_temp.u_ad()]) u),
   pg_temp.sans_accord(), 'après le retrait de pb : plus de lecture, ni pour pb, ni pour pc, ni pour le consultant, ni pour l''administrateur');
@@ -509,7 +520,7 @@ DELETE FROM auth.users WHERE id = 'a0000000-0000-4000-8000-000000000007';
 SELECT is((SELECT count(*)::int FROM app.binomes), 1, 'effacer le compte de pc efface en cascade toutes les propositions où figure sa participation (il ne reste que d1-d2)');
 DELETE FROM auth.users WHERE id = 'a0000000-0000-4000-8000-000000000001';
 SELECT is((SELECT count(*)::int FROM app.binomes), 0, 'effacer le compte de pa efface en cascade la dernière proposition');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'binome.proposer'), 4,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'binome.proposer'), 4,
   'le journal garde ses lignes de binôme après les effacements (quatre propositions : trois, puis la nouvelle après le refus)');
 
 SELECT * FROM finish();

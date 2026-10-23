@@ -9,6 +9,20 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(45);
 
+-- Base vivante : administrateurs Tenga réels présents avant les fixtures.
+CREATE TEMP TABLE admins_avant AS SELECT user_id FROM private.tenga_admins;
+
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -49,6 +63,11 @@ INSERT INTO app.memberships (user_id, organization_id, role) VALUES
   ('c0000000-0000-4000-8000-000000000003', 'c1000000-0000-4000-8000-00000000000a', 'responsable');
 INSERT INTO private.tenga_admins (user_id) VALUES ('c0000000-0000-4000-8000-000000000001');
 
+-- Base vivante : les administrateurs Tenga réels sont mis hors jeu DANS cette transaction
+-- annulée (rien n'est écrit durablement), une fois les administrateurs des fixtures posés,
+-- pour que les comptes et le garde du dernier administrateur portent sur les seules fixtures.
+DELETE FROM private.tenga_admins WHERE user_id IN (SELECT user_id FROM pg_temp.admins_avant);
+
 -- ===== Ajout =====
 SELECT is((SELECT xmax::text FROM private.tenga_admins WHERE user_id = 'c0000000-0000-4000-8000-000000000001'),
   '0', 'avant tout appel, la ligne de l''appelant n''est verrouillée par personne');
@@ -59,14 +78,14 @@ SELECT is((SELECT count(*)::int FROM private.tenga_admins WHERE user_id = 'c0000
   1, 'la personne ajoutée figure dans private.tenga_admins');
 SELECT isnt((SELECT xmax::text FROM private.tenga_admins WHERE user_id = 'c0000000-0000-4000-8000-000000000001'),
   '0', 'ajouter pose un verrou partagé sur la ligne de l''appelant (M2)');
-SELECT is((SELECT count(*)::int FROM private.audit_log
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log
             WHERE action = 'admin.ajouter' AND acteur = 'c0000000-0000-4000-8000-000000000001'
               AND ressource_id = 'c0000000-0000-4000-8000-000000000002'),
   1, 'l''ajout est inscrit au journal');
 SELECT is(pg_temp.comme('c0000000-0000-4000-8000-000000000001', 'authenticated',
   $q$select app.ajouter_admin_tenga('c0000000-0000-4000-8000-000000000002')::text$q$),
   'false', 'un second ajout de la même personne ne fait rien et ne journalise pas');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'admin.ajouter' AND acteur = 'c0000000-0000-4000-8000-000000000001'),
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'admin.ajouter' AND acteur = 'c0000000-0000-4000-8000-000000000001'),
   1, 'toujours une seule ligne de journal pour l''ajout');
 SELECT is(pg_temp.comme('c0000000-0000-4000-8000-000000000003', 'authenticated',
   $q$select app.ajouter_admin_tenga('c0000000-0000-4000-8000-000000000004')::text$q$),
@@ -93,7 +112,7 @@ SELECT is(pg_temp.comme('c0000000-0000-4000-8000-000000000001', 'authenticated',
   'true', 'super administrateur : en retire un autre');
 SELECT is((SELECT count(*)::int FROM private.tenga_admins WHERE user_id = 'c0000000-0000-4000-8000-000000000002'),
   0, 'la personne retirée ne figure plus dans private.tenga_admins');
-SELECT is((SELECT count(*)::int FROM private.audit_log
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log
             WHERE action = 'admin.retirer' AND acteur = 'c0000000-0000-4000-8000-000000000001'
               AND ressource_id = 'c0000000-0000-4000-8000-000000000002'),
   1, 'le retrait est inscrit au journal');

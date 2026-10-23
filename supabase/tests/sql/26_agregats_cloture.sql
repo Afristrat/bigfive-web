@@ -11,6 +11,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(56);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -104,7 +115,7 @@ $$;
 -- Bilan d'une campagne : lignes « groupe » / lignes « complément » / quantité du journal « agregats.poser ».
 CREATE FUNCTION pg_temp.bilan(p_s int) RETURNS text LANGUAGE sql AS $$
   SELECT (count(*) FILTER (WHERE a.portee = 'groupe'))::text || '/' || (count(*) FILTER (WHERE a.portee = 'complement'))::text || '/'
-         || COALESCE((SELECT l.quantite::text FROM private.audit_log l WHERE l.action = 'agregats.poser' AND l.ressource_id = pg_temp.c(p_s)), 'aucune')
+         || COALESCE((SELECT l.quantite::text FROM pg_temp.journal_test l WHERE l.action = 'agregats.poser' AND l.ressource_id = pg_temp.c(p_s)), 'aucune')
   FROM app.group_aggregates a WHERE a.campaign_id = pg_temp.c(p_s)
 $$;
 
@@ -186,7 +197,7 @@ SELECT is(
   E'A|5|80.00|7.07\nC|5|30.00|14.14\nE|5|44.00|15.56\nN|5|35.00|14.14\nO|5|80.00|14.14',
   'complément de 5 (les personnes hors du groupe, sans celle qui n''a pas de résultat) : valeurs exactes');
 SELECT is(
-  (SELECT l.acteur::text || '|' || l.ressource_type || '|' || l.organization_id::text FROM private.audit_log l
+  (SELECT l.acteur::text || '|' || l.ressource_type || '|' || l.organization_id::text FROM pg_temp.journal_test l
     WHERE l.action = 'agregats.poser' AND l.ressource_id = pg_temp.c(1)),
   'a0000000-0000-4000-8000-000000000003|campagne|a1000000-0000-4000-8000-00000000000a', 'la pose est journalisée : acteur, campagne, organisation');
 SELECT throws_ok(format($$SELECT private.poser_agregats(%L)$$, pg_temp.c(1)),
@@ -230,14 +241,14 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated',
   'ERR:42501:Réservé au consultant affecté ou à un administrateur Tenga', 'responsable de l''organisation : refusé');
 SELECT is(pg_temp.comme(pg_temp.u(1003), 'authenticated', format($q$select count(*) from app.lire_resultat_individuel(%L)$q$, pg_temp.p(1002))),
   'ERR:42501:Réservé au consultant affecté ou à un administrateur Tenga', 'un autre participant : refusé');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lire'), 0, 'aucun refus ne laisse de ligne de lecture dans le journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.lire'), 0, 'aucun refus ne laisse de ligne de lecture dans le journal');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000004', 'authenticated', format($q$select scores ->> 'O' from app.lire_resultat_individuel(%L)$q$, pg_temp.p(1002))),
   '18', 'consultant affecté à l''organisation : reçoit le résultat individuel, après la clôture comme avant');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000004'
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.lire' AND acteur = 'a0000000-0000-4000-8000-000000000004'
             AND ressource_id = pg_temp.p(1002) AND organization_id = 'a1000000-0000-4000-8000-00000000000a'), 1, 'cette lecture est journalisée : lecteur, participation, organisation');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', format($q$select scores ->> 'O' from app.lire_resultat_individuel(%L)$q$, pg_temp.p(1002))),
   '18', 'administrateur Tenga : lit aussi');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.lire'), 2, 'chaque lecture écrit sa ligne de journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.lire'), 2, 'chaque lecture écrit sa ligne de journal');
 
 -- ===== Seuil d'anonymat et complément, scénario par scénario =====
 SELECT pg_temp.clore(s, 'a0000000-0000-4000-8000-000000000003') FROM generate_series(2, 10) AS s;
@@ -277,7 +288,7 @@ SELECT is(pg_temp.clore(13, 'a0000000-0000-4000-8000-000000000003'), 'ERR:42501:
 -- Atomicité : si la pose échoue, la campagne reste ouverte.
 SELECT is(pg_temp.clore(14, 'a0000000-0000-4000-8000-000000000003'), 'ERR:55000:Agrégats déjà posés pour cette campagne : une seule photographie', 'une pose impossible fait échouer toute la clôture');
 SELECT is((SELECT statut || '|' || (cloture_le IS NULL)::text FROM app.campaigns WHERE id = pg_temp.c(14)), 'ouverte|true', 'la campagne est restée ouverte, sans date de clôture');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE ressource_id = pg_temp.c(14) AND action = 'campagne.clore'), 0, 'et rien n''a été journalisé');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE ressource_id = pg_temp.c(14) AND action = 'campagne.clore'), 0, 'et rien n''a été journalisé');
 
 -- La photographie ne se pose pas sur une campagne ouverte.
 SELECT throws_ok(format($$SELECT private.poser_agregats(%L)$$, pg_temp.c(16)),

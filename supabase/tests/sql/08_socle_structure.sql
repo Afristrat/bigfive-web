@@ -6,6 +6,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(28);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 -- Règles figées (plan § 7 : « la liste des règles est figée »)
 SELECT is(
   (SELECT string_agg(schemaname || '.' || tablename || '|' || policyname || '|' || cmd || '|' || array_to_string(roles, ','),
@@ -317,7 +328,7 @@ SELECT is(
         + (SELECT count(*) FROM private.liens_connexion WHERE user_id = 'a0000000-0000-4000-8000-000000000001'))::int,
   0, 'supprimer un compte efface profil, appartenances, administration et liens en cascade');
 SELECT is(
-  (SELECT count(*)::int FROM private.audit_log WHERE acteur = 'a0000000-0000-4000-8000-000000000001' AND action = 'test.cascade'),
+  (SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE acteur = 'a0000000-0000-4000-8000-000000000001' AND action = 'test.cascade'),
   1, 'le journal garde la ligne, avec un identifiant devenu pseudonyme');
 
 -- Déclencheur contre l'écriture par l'API (verrou 3) : présent et actif sur les quatre tables

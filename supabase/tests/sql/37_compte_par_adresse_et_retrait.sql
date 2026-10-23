@@ -11,6 +11,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(40);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -110,7 +121,7 @@ SELECT is(pg_temp.cherche('service_role', '''" OR ''1''=''1'), NULL, 'recherche 
 SELECT is(pg_temp.cherche('service_role', 'libre@example.test%'), NULL, 'recherche : aucun motif (joker %) interprété');
 SELECT matches(pg_temp.cherche('anon', 'libre@example.test'), '^ERR:42501:', 'recherche : anon refusé (42501)');
 SELECT matches(pg_temp.cherche('authenticated', 'libre@example.test'), '^ERR:42501:', 'recherche : authenticated refusé (42501)');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action LIKE 'compte.%'), 0,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action LIKE 'compte.%'), 0,
   'la recherche ne journalise rien');
 
 -- ===== Retrait d'un compte sans appartenance =====
@@ -121,11 +132,11 @@ SELECT is((SELECT count(*)::int FROM app.profiles WHERE user_id = 'e3000000-0000
   'retrait : son profil est parti en cascade');
 SELECT is(pg_temp.cherche('service_role', 'libre@example.test'), NULL, 'retrait : l''adresse n''est plus retrouvée');
 SELECT is(
-  (SELECT count(*)::int FROM private.audit_log
+  (SELECT count(*)::int FROM pg_temp.journal_test audit_log
     WHERE action = 'compte.retirer_orphelin' AND ressource_type = 'utilisateur'
       AND ressource_id = 'e3000000-0000-4000-8000-000000000001' AND acteur = 'e3000000-0000-4000-8000-000000000001'),
   1, 'retrait : une ligne de journal au nom de l''identifiant du compte');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE to_jsonb(audit_log)::text ~* 'example\.test'), 0,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE to_jsonb(audit_log)::text ~* 'example\.test'), 0,
   'retrait : aucune adresse dans le journal');
 SELECT is(pg_temp.retire('service_role', 'e3000000-0000-4000-8000-000000000001'), 'false', 'retrait rejoué : faux');
 SELECT is(pg_temp.retire('service_role', 'e3000000-0000-4000-8000-0000000000ff'), 'false', 'retrait d''un identifiant inconnu : faux');
@@ -147,7 +158,7 @@ SELECT is(pg_temp.existe('e3000000-0000-4000-8000-000000000006'), 1, 'créateur 
 SELECT matches(pg_temp.retire('anon', 'e3000000-0000-4000-8000-000000000008'), '^ERR:42501:', 'retrait : anon refusé (42501)');
 SELECT matches(pg_temp.retire('authenticated', 'e3000000-0000-4000-8000-000000000008'), '^ERR:42501:', 'retrait : authenticated refusé (42501)');
 SELECT is(pg_temp.existe('e3000000-0000-4000-8000-000000000008'), 1, 'les refus n''ont retiré aucun compte');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'compte.retirer_orphelin'), 1,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'compte.retirer_orphelin'), 1,
   'seul le retrait réussi est journalisé (aucune trace des refus ni des conservations)');
 
 SELECT * FROM finish();

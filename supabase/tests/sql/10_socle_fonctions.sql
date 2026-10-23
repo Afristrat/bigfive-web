@@ -4,6 +4,20 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(37);
 
+-- Base vivante : organisations réelles présentes avant les fixtures, retranchées du compte.
+SELECT set_config('zz.reel_organizations', (SELECT count(*) FROM app.organizations)::text, true) IS NOT NULL AS base_vivante;
+
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -36,7 +50,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000002', 'authenticated',
   'ERR:42501:Réservé aux administrateurs Tenga', 'creer_organisation, non administrateur : refusé');
 SELECT is(pg_temp.comme(NULL, 'authenticated', $q$select app.creer_organisation('org-pirate', 'Pirate')::text$q$),
   'ERR:42501:Réservé aux administrateurs Tenga', 'creer_organisation, rôle connecté sans identité : refusé');
-SELECT is((SELECT count(*)::int FROM app.organizations), 0, 'aucune organisation créée par ces refus');
+SELECT is((SELECT count(*)::int FROM app.organizations) - current_setting('zz.reel_organizations')::int, 0, 'aucune organisation créée par ces refus');
 
 SELECT matches(
   set_config('zz.org', pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', $q$select app.creer_organisation('org-test', '  Organisation Test  ')::text$q$), true),
@@ -46,7 +60,7 @@ SELECT matches(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authentica
   '^ERR:23514:', 'creer_organisation : identifiant d''URL invalide refusé par la base');
 SELECT matches(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', $q$select app.creer_organisation('org-test', 'Doublon')::text$q$),
   '^ERR:23505:', 'creer_organisation : identifiant d''URL déjà pris refusé');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'organisation.creer' AND acteur = 'a0000000-0000-4000-8000-000000000008'), 1,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'organisation.creer' AND acteur = 'a0000000-0000-4000-8000-000000000008'), 1,
   'la création d''organisation est journalisée, une fois (les refus ne laissent pas de trace)');
 
 -- ===== Attribution et retrait de rôle =====
@@ -67,7 +81,7 @@ SELECT matches(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authentica
 SELECT matches(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated',
   $q$select app.attribuer_role('a0000000-0000-4000-8000-000000000001', 'a1000000-0000-4000-8000-0000000000ff', 'participant')::text$q$),
   '^ERR:23503:', 'attribuer_role : organisation inexistante refusée');
-SELECT is((SELECT string_agg(action, ',' ORDER BY id) FROM private.audit_log WHERE action LIKE 'role.attribuer.%'),
+SELECT is((SELECT string_agg(action, ',' ORDER BY id) FROM pg_temp.journal_test audit_log WHERE action LIKE 'role.attribuer.%'),
   'role.attribuer.participant,role.attribuer.consultant', 'les attributions sont journalisées avec le rôle posé, les refus non');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000002', 'authenticated',
   format($q$select app.retirer_role('a0000000-0000-4000-8000-000000000001', %L)::text$q$, current_setting('zz.org'))),
@@ -78,7 +92,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated',
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated',
   format($q$select app.retirer_role('a0000000-0000-4000-8000-000000000001', %L)::text$q$, current_setting('zz.org'))),
   'false', 'retirer_role : rien à retirer renvoie faux');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'role.retirer'), 1, 'un seul retrait journalisé');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'role.retirer'), 1, 'un seul retrait journalisé');
 
 -- ===== Journal : lecture par l'administrateur seul =====
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000002', 'authenticated', 'select count(*) from app.lire_journal(10)'),
@@ -89,7 +103,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated',
   '2', 'lire_journal : la limite est respectée');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated', 'select action from app.lire_journal(1)'),
   'role.retirer', 'lire_journal : le plus récent d''abord');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l::text LIKE '%@%'), 0,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l::text LIKE '%@%'), 0,
   'aucune ligne du journal ne contient d''arobase (pas d''adresse e-mail)');
 
 -- ===== Journal en ajout seul =====
@@ -99,7 +113,7 @@ SELECT throws_ok($$UPDATE private.audit_log SET action = 'test.pirate' WHERE id 
 SELECT throws_ok($$TRUNCATE private.audit_log$$, '23001', 'Journal en ajout seul : TRUNCATE refusé', 'journal : TRUNCATE refusé même pour le superutilisateur');
 SELECT throws_ok($$DELETE FROM private.audit_log WHERE action = 'organisation.creer'$$, '23001', 'Journal en ajout seul : DELETE refusé', 'journal : une ligne récente ne se supprime pas');
 SELECT lives_ok($$DELETE FROM private.audit_log WHERE id = -1$$, 'journal : une ligne plus ancienne que la conservation (36 mois ici, 12 par défaut) se supprime');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE id = -1), 0, 'la ligne échue est bien partie');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE id = -1), 0, 'la ligne échue est bien partie');
 
 -- ===== Profil =====
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated', $q$select app.mettre_a_jour_profil('  Amal  ', 'ar')::text$q$), '', 'mettre_a_jour_profil : le titulaire met à jour nom et langue');

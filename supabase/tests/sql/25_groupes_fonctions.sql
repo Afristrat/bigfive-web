@@ -8,6 +8,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(57);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -81,7 +92,7 @@ SELECT is((SELECT nom || '|' || ordre FROM app.groups WHERE id = current_setting
 SELECT set_config('zz.g3', pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated',
   $q$select app.creer_groupe('c0000000-0000-4000-8000-00000000000d', 'Support', 7)::text$q$), true);
 SELECT is((SELECT ordre FROM app.groups WHERE id = current_setting('zz.g3')::uuid), 7, 'creer_groupe : l''ordre demandé est respecté');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'groupe.creer' AND ressource_type = 'groupe'
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'groupe.creer' AND ressource_type = 'groupe'
             AND organization_id = 'a1000000-0000-4000-8000-00000000000a'), 3, 'les trois créations sont journalisées (groupe, organisation)');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', $q$select app.creer_groupe('c0000000-0000-4000-8000-00000000000d', 'Direction')::text$q$),
   'ERR:23505:duplicate key value violates unique constraint "groups_campaign_id_nom_key"', 'creer_groupe : un nom déjà pris dans la campagne est refusé');
@@ -103,7 +114,7 @@ SELECT is(pg_temp.comme(NULL, 'anon', $q$select app.creer_groupe('c0000000-0000-
   'ERR:42501:permission denied for schema app', 'creer_groupe, anonyme : refusé');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', $q$select app.creer_groupe('c0000000-0000-4000-8000-00000000000a', 'Tardif')::text$q$),
   'ERR:55000:Groupes modifiables en brouillon seulement : composition gelée dès l''ouverture', 'creer_groupe : une campagne ouverte n''accepte plus de groupe');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'groupe.creer'), 3, 'aucun refus ne laisse de ligne de journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'groupe.creer'), 3, 'aucun refus ne laisse de ligne de journal');
 
 -- ===== renommer_groupe =====
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', format($q$select app.renommer_groupe(%L, 'Fabrication', 3)::text$q$, current_setting('zz.g2'))),
@@ -112,7 +123,7 @@ SELECT is((SELECT nom || '|' || ordre FROM app.groups WHERE id = current_setting
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', format($q$select app.renommer_groupe(%L, 'Fabrication')::text$q$, current_setting('zz.g2'))),
   '', 'renommer_groupe : sans ordre, l''ordre est conservé');
 SELECT is((SELECT ordre FROM app.groups WHERE id = current_setting('zz.g2')::uuid), 3, 'l''ordre n''a pas bougé');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'groupe.renommer' AND ressource_id = current_setting('zz.g2')::uuid), 2, 'chaque renommage est journalisé');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'groupe.renommer' AND ressource_id = current_setting('zz.g2')::uuid), 2, 'chaque renommage est journalisé');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000004', 'authenticated', format($q$select app.renommer_groupe(%L, 'Pirate')::text$q$, current_setting('zz.g2'))),
   'ERR:42501:Réservé au responsable de l''organisation ou à un administrateur Tenga', 'renommer_groupe, consultant : refusé');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000006', 'authenticated', format($q$select app.renommer_groupe(%L, 'Pirate')::text$q$, current_setting('zz.g2'))),
@@ -126,7 +137,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated',
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', format($q$select app.affecter_membre(%L, 'd0000000-0000-4000-8000-000000000001')::text$q$, current_setting('zz.g1'))),
   '', 'affecter_membre, responsable : affecte une personne à un groupe');
 SELECT is((SELECT group_id::text FROM app.group_members WHERE participation_id = 'd0000000-0000-4000-8000-000000000001'), current_setting('zz.g1'), 'la personne est dans le groupe demandé');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'groupe.affecter' AND ressource_type = 'participation'
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'groupe.affecter' AND ressource_type = 'participation'
             AND ressource_id = 'd0000000-0000-4000-8000-000000000001' AND organization_id = 'a1000000-0000-4000-8000-00000000000a'), 1, 'l''affectation est journalisée');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', format($q$select app.affecter_membre(%L, 'd0000000-0000-4000-8000-000000000001')::text$q$, current_setting('zz.g2'))),
   'ERR:23505:Cette personne est déjà dans un groupe de la campagne : la retirer d''abord', 'affecter_membre : une personne ne peut être dans deux groupes de la campagne');
@@ -158,7 +169,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated',
   'true', 'retirer_membre, responsable : retire et renvoie vrai');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', $q$select app.retirer_membre('d0000000-0000-4000-8000-000000000001')::text$q$),
   'false', 'retirer_membre : une personne déjà hors groupe renvoie faux');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'groupe.retirer' AND ressource_id = 'd0000000-0000-4000-8000-000000000001'), 1, 'seul le retrait effectif est journalisé');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'groupe.retirer' AND ressource_id = 'd0000000-0000-4000-8000-000000000001'), 1, 'seul le retrait effectif est journalisé');
 
 -- ===== supprimer_groupe (les membres partent avec le groupe) =====
 SELECT pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', format($q$select app.affecter_membre(%L, 'd0000000-0000-4000-8000-000000000003')::text$q$, current_setting('zz.g3')));
@@ -171,7 +182,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated',
 SELECT is((SELECT (SELECT count(*) FROM app.groups WHERE id = current_setting('zz.g3')::uuid)
               + (SELECT count(*) FROM app.group_members WHERE participation_id = 'd0000000-0000-4000-8000-000000000003'))::int,
   0, 'le groupe et son membre ont disparu');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'groupe.supprimer' AND ressource_id = current_setting('zz.g3')::uuid), 1, 'la suppression est journalisée');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'groupe.supprimer' AND ressource_id = current_setting('zz.g3')::uuid), 1, 'la suppression est journalisée');
 
 -- ===== Gel après l'ouverture, par les fonctions =====
 SELECT set_config('zz.gf', pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated',
@@ -195,6 +206,6 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated',
 SELECT is((SELECT count(*)::int FROM app.group_members WHERE participation_id = 'd0000000-0000-4000-8000-000000000006'), 0, 'sa ligne de composition a disparu avec lui');
 SELECT is((SELECT count(*)::int FROM app.groups WHERE id = current_setting('zz.gf')::uuid), 1, 'le groupe, lui, reste');
 
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal');
 
 SELECT * FROM finish();

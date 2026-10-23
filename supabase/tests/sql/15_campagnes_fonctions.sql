@@ -5,6 +5,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(63);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -73,8 +84,8 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated',
   'ERR:22023:Langue inconnue : fr, ar ou en', 'creer_campagne : langue inconnue refusée');
 SELECT matches(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', $q$select app.creer_campagne('a1000000-0000-4000-8000-00000000000a', '   ')::text$q$),
   '^ERR:23514:', 'creer_campagne : titre vide refusé par la base');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'campagne.creer'), 2, 'deux créations journalisées, aucun refus');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'campagne.creer' AND ressource_type = 'campagne' AND ressource_id = current_setting('zz.ca')::uuid
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'campagne.creer'), 2, 'deux créations journalisées, aucun refus');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'campagne.creer' AND ressource_type = 'campagne' AND ressource_id = current_setting('zz.ca')::uuid
             AND organization_id = 'a1000000-0000-4000-8000-00000000000a' AND acteur = 'a0000000-0000-4000-8000-000000000003'), 1, 'la ligne de journal porte acteur, campagne et organisation');
 
 -- ===== Inviter avant l'ouverture =====
@@ -95,7 +106,7 @@ SELECT is((SELECT statut || '|' || (ouverte_le IS NOT NULL)::text || '|' || (clo
   'ouverte|true|true', 'statut ouverte, date d''ouverture posée, pas de clôture');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', format($q$select app.ouvrir_campagne(%L)::text$q$, current_setting('zz.ca'))),
   'ERR:55000:Seule une campagne en brouillon s''ouvre', 'ouvrir_campagne : déjà ouverte, refusé');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'campagne.ouvrir' AND ressource_id = current_setting('zz.ca')::uuid), 1, 'une seule ouverture journalisée');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'campagne.ouvrir' AND ressource_id = current_setting('zz.ca')::uuid), 1, 'une seule ouverture journalisée');
 
 -- ===== Inviter =====
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated', format($q$select app.inviter(%L, 'nour@example.test')::text$q$, current_setting('zz.ca'))),
@@ -118,8 +129,8 @@ SELECT is((SELECT count(*)::int FROM app.invitations WHERE jeton_hash = sha256(c
 SELECT is((SELECT count(*)::int FROM app.invitations i WHERE i::text LIKE '%' || split_part(current_setting('zz.i1'), ' ', 2) || '%'), 0,
   'le jeton ne figure pas en clair dans la table');
 SELECT is((SELECT expire_le - cree_le FROM app.invitations), interval '14 days', 'l''invitation expire 14 jours après sa création');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'invitation.creer' AND acteur = 'a0000000-0000-4000-8000-000000000003'), 1, 'la création est journalisée');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'invitation.creer' AND acteur = 'a0000000-0000-4000-8000-000000000003'), 1, 'la création est journalisée');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal');
 
 -- Réinviter la même adresse renouvelle le jeton (une seule invitation en attente)
 SELECT matches(set_config('zz.i2', pg_temp.comme('a0000000-0000-4000-8000-000000000008', 'authenticated',
@@ -138,7 +149,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated',
 SELECT matches(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', format($q$select invitation::text from app.inviter(%L, 'x@example.test', NULL, %L)$q$, current_setting('zz.ca'), repeat('m', 1001))),
   '^ERR:23514:', 'inviter : message de plus de 1000 caractères refusé');
 SELECT is((SELECT count(*)::int FROM app.invitations), 1, 'les refus n''ont créé aucune invitation');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'invitation.creer'), 2, 'création et réinvitation journalisées, aucun refus');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'invitation.creer'), 2, 'création et réinvitation journalisées, aucun refus');
 
 -- ===== Clore =====
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000001', 'authenticated', format($q$select app.clore_campagne(%L)::text$q$, current_setting('zz.ca'))),
@@ -155,7 +166,7 @@ SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated',
   '', 'clore_campagne, responsable : clôt');
 SELECT is((SELECT statut || '|' || (cloture_le IS NOT NULL)::text FROM app.campaigns WHERE id = current_setting('zz.ca')::uuid), 'close|true', 'statut close, date de clôture posée');
 SELECT is((SELECT count(*)::int FROM app.invitations WHERE campaign_id = current_setting('zz.ca')::uuid), 0, 'la clôture efface les invitations restées sans réponse (adresses comprises)');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'campagne.clore' AND ressource_id = current_setting('zz.ca')::uuid AND quantite = 0), 1, 'la clôture est journalisée avec le nombre de participations terminées');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'campagne.clore' AND ressource_id = current_setting('zz.ca')::uuid AND quantite = 0), 1, 'la clôture est journalisée avec le nombre de participations terminées');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', format($q$select app.clore_campagne(%L)::text$q$, current_setting('zz.ca'))),
   'ERR:55000:Seule une campagne ouverte se clôt', 'clore_campagne : déjà close, refusé');
 SELECT is(pg_temp.comme('a0000000-0000-4000-8000-000000000003', 'authenticated', format($q$select app.ouvrir_campagne(%L)::text$q$, current_setting('zz.ca'))),

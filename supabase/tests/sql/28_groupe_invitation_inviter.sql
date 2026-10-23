@@ -8,6 +8,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(37);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -148,11 +159,11 @@ SELECT is(pg_temp.groupe_de('un@example.test', 'c0000000-0000-4000-8000-00000000
   current_setting('zz.g1') || '|aucune', 'ces refus n''ont changé aucun groupe');
 
 -- ===== Journal : ni adresse, ni groupe =====
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'invitation.creer' AND organization_id = 'a1000000-0000-4000-8000-00000000000a'), 7,
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'invitation.creer' AND organization_id = 'a1000000-0000-4000-8000-00000000000a'), 7,
   'sept invitations ou renouvellements journalisés pour A (aucun refus)');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l.organization_id = 'a1000000-0000-4000-8000-00000000000a'
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l.organization_id = 'a1000000-0000-4000-8000-00000000000a'
              AND (l::text LIKE '%' || current_setting('zz.g1') || '%' OR l::text LIKE '%' || current_setting('zz.g2') || '%')
              AND l.action LIKE 'invitation.%'), 0, 'le journal des invitations ne contient jamais l''identifiant d''un groupe');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l::text LIKE '%@%' AND (l.organization_id IN ('a1000000-0000-4000-8000-00000000000a', 'a1000000-0000-4000-8000-00000000000b') OR l.acteur::text LIKE 'a0000000-%')), 0, 'aucune adresse e-mail dans le journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l::text LIKE '%@%' AND (l.organization_id IN ('a1000000-0000-4000-8000-00000000000a', 'a1000000-0000-4000-8000-00000000000b') OR l.acteur::text LIKE 'a0000000-%')), 0, 'aucune adresse e-mail dans le journal');
 
 SELECT * FROM finish();

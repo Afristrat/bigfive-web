@@ -7,6 +7,24 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(35);
 
+-- Base vivante : la purge compte TOUTES les demandes et séries d'échecs échues ; comme
+-- pour les leurres plus bas, l'état de départ réel des compteurs est vidé dans cette
+-- transaction annulée (rien n'est effacé durablement).
+DELETE FROM private.demandes_lien;
+DELETE FROM private.echecs_code;
+DELETE FROM private.echecs_mdp;
+
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -129,8 +147,8 @@ CREATE POLICY leurre_suppression_owner ON private.leurre_connexion FOR DELETE TO
 
 SELECT private.purger_quotidien();
 SELECT is((SELECT count(*)::int FROM private.leurre_connexion), 2, 'la purge efface les leurres de plus d''un jour et garde les récents');
-SELECT is((SELECT quantite FROM private.audit_log WHERE action = 'purge.leurre_connexion' ORDER BY id DESC LIMIT 1), 3, 'trace chiffrée : 3 leurres effacés');
-SELECT is((SELECT max(quantite) FROM private.audit_log WHERE action = 'purge.compteurs_connexion'), 2,
+SELECT is((SELECT quantite FROM pg_temp.journal_test audit_log WHERE action = 'purge.leurre_connexion' ORDER BY id DESC LIMIT 1), 3, 'trace chiffrée : 3 leurres effacés');
+SELECT is((SELECT max(quantite) FROM pg_temp.journal_test audit_log WHERE action = 'purge.compteurs_connexion'), 2,
   'trace chiffrée : 2 compteurs effacés (une demande échue, une série d''échecs échue), dès la première passe');
 
 SELECT * FROM finish();

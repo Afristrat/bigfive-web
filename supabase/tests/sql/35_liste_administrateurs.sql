@@ -7,6 +7,20 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(22);
 
+-- Base vivante : administrateurs Tenga réels présents avant les fixtures.
+CREATE TEMP TABLE admins_avant AS SELECT user_id FROM private.tenga_admins;
+
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -46,18 +60,23 @@ INSERT INTO private.tenga_admins (user_id, ajoute_le) VALUES
   ('d0000000-0000-4000-8000-000000000001', '2026-02-01 10:00:00+00'),
   ('d0000000-0000-4000-8000-000000000002', '2026-03-01 10:00:00+00');
 
+-- Base vivante : les administrateurs Tenga réels sont mis hors jeu DANS cette transaction
+-- annulée (rien n'est écrit durablement), une fois les administrateurs des fixtures posés,
+-- pour que les comptes et le garde du dernier administrateur portent sur les seules fixtures.
+DELETE FROM private.tenga_admins WHERE user_id IN (SELECT user_id FROM pg_temp.admins_avant);
+
 -- ===== Journal : une consultation, une ligne, sans adresse =====
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'admin.lister'),
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'admin.lister'),
   0, 'avant tout appel, aucune consultation au journal');
 SELECT is(pg_temp.comme('d0000000-0000-4000-8000-000000000001', 'authenticated',
   'select count(*) from app.lister_administrateurs_tenga()'),
   '3', 'super administrateur : voit les trois lignes');
-SELECT is((SELECT count(*)::int FROM private.audit_log
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log
             WHERE action = 'admin.lister' AND acteur = 'd0000000-0000-4000-8000-000000000001'),
   1, 'la consultation est inscrite au journal, une ligne');
-SELECT is((SELECT quantite FROM private.audit_log WHERE action = 'admin.lister'),
+SELECT is((SELECT quantite FROM pg_temp.journal_test audit_log WHERE action = 'admin.lister'),
   3, 'la ligne de journal porte le nombre de lignes rendues');
-SELECT is((SELECT count(*)::int FROM private.audit_log l
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l
             WHERE l.action = 'admin.lister' AND to_jsonb(l)::text ~ '@'),
   0, 'la ligne de journal ne contient aucune adresse');
 
@@ -81,7 +100,7 @@ SELECT is(pg_temp.comme('d0000000-0000-4000-8000-000000000001', 'authenticated',
 SELECT is(pg_temp.comme('d0000000-0000-4000-8000-000000000002', 'authenticated',
   $q$select string_agg(x.user_id::text, ',') from app.lister_administrateurs_tenga() x where x.est_moi$q$),
   'd0000000-0000-4000-8000-000000000002', 'pour un autre appelant (cb), est_moi suit l''appelant');
-SELECT is((SELECT count(*)::int FROM private.audit_log
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log
             WHERE action = 'admin.lister' AND acteur = 'd0000000-0000-4000-8000-000000000002'),
   1, 'le journal retient l''appelant réel comme acteur');
 
@@ -101,7 +120,7 @@ SELECT is(pg_temp.comme('d0000000-0000-4000-8000-000000000001', 'service_role',
 SELECT is(pg_temp.comme(NULL, 'authenticated',
   'select count(*) from app.lister_administrateurs_tenga()'),
   'ERR:42501:Connexion requise', 'sans identité : refusé');
-SELECT is((SELECT count(*)::int FROM private.audit_log
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log
             WHERE action = 'admin.lister'
               AND (acteur IN ('d0000000-0000-4000-8000-000000000004', 'd0000000-0000-4000-8000-000000000005') OR acteur IS NULL)),
   0, 'un refus n''inscrit aucune consultation au journal');

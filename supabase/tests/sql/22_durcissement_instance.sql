@@ -7,6 +7,10 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(33);
 
+-- Base vivante : lignes réelles présentes avant les fixtures, retranchées des comptes totaux.
+SELECT set_config('zz.reel_organizations', (SELECT count(*) FROM app.organizations)::text, true) IS NOT NULL AS base_vivante,
+       set_config('zz.reel_memberships', (SELECT count(*) FROM app.memberships)::text, true) IS NOT NULL AS base_vivante2;
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -150,9 +154,9 @@ INSERT INTO app.organizations (id, slug, nom) VALUES
 INSERT INTO app.memberships (user_id, organization_id, role) VALUES
   ('d0000000-0000-4000-8000-000000000002', 'd1000000-0000-4000-8000-00000000000a', 'participant');
 INSERT INTO private.tenga_admins (user_id) VALUES ('d0000000-0000-4000-8000-000000000001');
-SELECT is(pg_temp.comme('d0000000-0000-4000-8000-000000000001', 'authenticated', 'select count(*) from app.organizations')::int, 2, 'l''administrateur Tenga voit toutes les organisations (sens inchangé)');
+SELECT is(pg_temp.comme('d0000000-0000-4000-8000-000000000001', 'authenticated', 'select count(*) from app.organizations')::int - current_setting('zz.reel_organizations')::int, 2, 'l''administrateur Tenga voit toutes les organisations (sens inchangé)');
 SELECT is(pg_temp.comme('d0000000-0000-4000-8000-000000000002', 'authenticated', 'select count(*) from app.organizations')::int, 1, 'un membre ne voit que son organisation');
-SELECT is(pg_temp.comme('d0000000-0000-4000-8000-000000000001', 'authenticated', 'select count(*) from app.memberships')::int, 1, 'l''administrateur Tenga voit toutes les appartenances');
+SELECT is(pg_temp.comme('d0000000-0000-4000-8000-000000000001', 'authenticated', 'select count(*) from app.memberships')::int - current_setting('zz.reel_memberships')::int, 1, 'l''administrateur Tenga voit toutes les appartenances');
 SELECT is(pg_temp.comme('d0000000-0000-4000-8000-000000000002', 'authenticated', 'select count(*) from app.memberships')::int, 1, 'un membre voit ses appartenances');
 SELECT is(pg_temp.comme(NULL, 'authenticated', 'select count(*) from app.organizations')::int, 0, 'sans identité, aucune organisation');
 

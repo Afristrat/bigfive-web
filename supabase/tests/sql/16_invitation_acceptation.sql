@@ -7,6 +7,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(55);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -100,9 +111,9 @@ SELECT is((SELECT (email IS NULL)::text || '|' || (prenom IS NULL)::text || '|' 
   'true|true|true|a0000000-0000-4000-8000-000000000011', 'l''adresse et le prénom de l''invitation sont effacés, l''acceptation est datée');
 SELECT is((SELECT count(*)::int FROM app.invitations i WHERE i::text ~* 'nour|example\.test|Prénom'), 0, 'plus aucune trace de l''adresse ni du prénom dans la ligne d''invitation');
 SELECT ok((SELECT derniere_connexion_le IS NOT NULL FROM app.profiles WHERE user_id = 'a0000000-0000-4000-8000-000000000011'), 'la première connexion est posée sur le profil');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'invitation.accepter' AND acteur = 'a0000000-0000-4000-8000-000000000011'
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'invitation.accepter' AND acteur = 'a0000000-0000-4000-8000-000000000011'
             AND ressource_id = current_setting('zz.p1')::uuid AND organization_id = 'a1000000-0000-4000-8000-00000000000a'), 1, 'l''acceptation est journalisée une fois');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal');
 SELECT is(pg_temp.accepter(current_setting('zz.j1'), 'a0000000-0000-4000-8000-000000000011'), 'ERR:P0002:Invitation invalide, expirée ou déjà utilisée', 'accepter : usage unique, le même jeton ne sert qu''une fois');
 SELECT is(pg_temp.comme(NULL, 'service_role', format($q$select count(*) from app.consulter_invitation(%L)$q$, current_setting('zz.j1'))), '0', 'consulter : une invitation acceptée ne se consulte plus');
 SELECT is((SELECT count(*)::int FROM app.participations), 1, 'une seule participation après la double tentative');

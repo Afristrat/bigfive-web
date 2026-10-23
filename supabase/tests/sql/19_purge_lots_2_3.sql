@@ -8,6 +8,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(29);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 -- Comptes : u1 inactif depuis 13 mois, u2 jamais connecté et créé il y a 14 mois (tous deux sans résultat),
 -- u3 inactif mais avec un résultat récent, u4 responsable inactif, u5 consultant inactif, u6 administrateur inactif,
 -- u7 inactif depuis 11 mois, u8 connecté hier, u9 connecté hier avec un résultat de 40 mois,
@@ -77,7 +88,7 @@ SELECT is((SELECT count(*)::int FROM app.invitations), 3, 'sans règle de suppre
 SELECT is((SELECT count(*)::int FROM app.attempts), 2, 'sans règle de suppression, la purge n''efface aucune tentative');
 SELECT is((SELECT count(*)::int FROM app.results), 3, 'sans règle de suppression, la purge n''efface aucun résultat');
 SELECT is((SELECT count(*)::int FROM auth.users WHERE email LIKE '%@example.test'), 11, 'sans règle de suppression sur auth.users, la purge n''efface aucun compte');
-SELECT is((SELECT quantite FROM private.audit_log WHERE action = 'purge.comptes' ORDER BY id DESC LIMIT 1), 0, 'la trace chiffrée dit alors 0 compte effacé');
+SELECT is((SELECT quantite FROM pg_temp.journal_test audit_log WHERE action = 'purge.comptes' ORDER BY id DESC LIMIT 1), 0, 'la trace chiffrée dit alors 0 compte effacé');
 CREATE POLICY invitations_suppression_owner ON app.invitations FOR DELETE TO tenga_owner USING (true);
 CREATE POLICY attempts_suppression_owner ON app.attempts FOR DELETE TO tenga_owner USING (true);
 CREATE POLICY results_suppression_owner ON app.results FOR DELETE TO tenga_owner USING (true);
@@ -99,28 +110,28 @@ SELECT is((SELECT string_agg(email, ',' ORDER BY email) FROM auth.users WHERE em
 SELECT is((SELECT count(*)::int FROM app.profiles WHERE user_id IN ('a0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000002'))
         + (SELECT count(*)::int FROM app.memberships WHERE user_id = 'a0000000-0000-4000-8000-000000000001')
         + (SELECT count(*)::int FROM app.participations WHERE user_id = 'a0000000-0000-4000-8000-000000000001'), 0, 'les comptes purgés disparaissent avec profil, appartenances et participations (cascade)');
-SELECT is((SELECT quantite FROM private.audit_log WHERE action = 'purge.invitations' ORDER BY id DESC LIMIT 1), 2, 'trace chiffrée : 2 invitations');
-SELECT is((SELECT quantite FROM private.audit_log WHERE action = 'purge.tentatives' ORDER BY id DESC LIMIT 1), 1, 'trace chiffrée : 1 tentative');
-SELECT is((SELECT quantite FROM private.audit_log WHERE action = 'purge.resultats' ORDER BY id DESC LIMIT 1), 1, 'trace chiffrée : 1 résultat');
-SELECT is((SELECT quantite FROM private.audit_log WHERE action = 'purge.comptes' ORDER BY id DESC LIMIT 1), 2, 'trace chiffrée : 2 comptes');
-SELECT is((SELECT string_agg(acteur::text, ',' ORDER BY acteur) FROM private.audit_log WHERE action = 'compte.supprimer'),
+SELECT is((SELECT quantite FROM pg_temp.journal_test audit_log WHERE action = 'purge.invitations' ORDER BY id DESC LIMIT 1), 2, 'trace chiffrée : 2 invitations');
+SELECT is((SELECT quantite FROM pg_temp.journal_test audit_log WHERE action = 'purge.tentatives' ORDER BY id DESC LIMIT 1), 1, 'trace chiffrée : 1 tentative');
+SELECT is((SELECT quantite FROM pg_temp.journal_test audit_log WHERE action = 'purge.resultats' ORDER BY id DESC LIMIT 1), 1, 'trace chiffrée : 1 résultat');
+SELECT is((SELECT quantite FROM pg_temp.journal_test audit_log WHERE action = 'purge.comptes' ORDER BY id DESC LIMIT 1), 2, 'trace chiffrée : 2 comptes');
+SELECT is((SELECT string_agg(acteur::text, ',' ORDER BY acteur) FROM pg_temp.journal_test audit_log WHERE action = 'compte.supprimer'),
   'a0000000-0000-4000-8000-000000000001,a0000000-0000-4000-8000-000000000002', 'un effacement de compte est journalisé par identifiant seul');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l.action LIKE 'purge.%' AND l.acteur IS NOT NULL), 0, 'les traces de purge n''ont pas d''acteur');
-SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l.action LIKE 'purge.%' AND l.acteur IS NOT NULL), 0, 'les traces de purge n''ont pas d''acteur');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test l WHERE l::text LIKE '%@%'), 0, 'aucune adresse e-mail dans le journal');
 
 -- ===== Seconde passe immédiate : rien de plus à effacer =====
 SELECT private.purger_quotidien();
-SELECT is((SELECT quantite || ',' FROM private.audit_log WHERE action = 'purge.invitations' ORDER BY id DESC LIMIT 1)
-       || (SELECT quantite || ',' FROM private.audit_log WHERE action = 'purge.tentatives' ORDER BY id DESC LIMIT 1)
-       || (SELECT quantite || ',' FROM private.audit_log WHERE action = 'purge.resultats' ORDER BY id DESC LIMIT 1)
-       || (SELECT quantite::text FROM private.audit_log WHERE action = 'purge.comptes' ORDER BY id DESC LIMIT 1), '0,0,0,0', 'une seconde passe n''efface plus rien et le dit (traces à 0)');
+SELECT is((SELECT quantite || ',' FROM pg_temp.journal_test audit_log WHERE action = 'purge.invitations' ORDER BY id DESC LIMIT 1)
+       || (SELECT quantite || ',' FROM pg_temp.journal_test audit_log WHERE action = 'purge.tentatives' ORDER BY id DESC LIMIT 1)
+       || (SELECT quantite || ',' FROM pg_temp.journal_test audit_log WHERE action = 'purge.resultats' ORDER BY id DESC LIMIT 1)
+       || (SELECT quantite::text FROM pg_temp.journal_test audit_log WHERE action = 'purge.comptes' ORDER BY id DESC LIMIT 1), '0,0,0,0', 'une seconde passe n''efface plus rien et le dit (traces à 0)');
 SELECT is((SELECT count(*)::int FROM auth.users WHERE email LIKE '%@example.test'), 9, 'la seconde passe garde les neuf comptes');
 
 -- ===== Les durées viennent de private.settings =====
 UPDATE private.settings SET conservation_resultats_mois = 12, conservation_comptes_vides_mois = 6;
 SELECT private.purger_quotidien();
 SELECT is((SELECT string_agg(participation_id::text, ',') FROM app.results), 'd0000000-0000-4000-8000-000000000003', 'avec 12 mois de conservation, le résultat de 14 mois est effacé, celui de 1 mois reste');
-SELECT is((SELECT quantite FROM private.audit_log WHERE action = 'purge.resultats' ORDER BY id DESC LIMIT 1), 1, 'trace chiffrée : 1 résultat');
+SELECT is((SELECT quantite FROM pg_temp.journal_test audit_log WHERE action = 'purge.resultats' ORDER BY id DESC LIMIT 1), 1, 'trace chiffrée : 1 résultat');
 SELECT is((SELECT count(*)::int FROM auth.users WHERE email = 'u7@example.test'), 0, 'avec 6 mois d''inactivité, le compte inactif depuis 11 mois est effacé');
 SELECT is((SELECT count(*)::int FROM auth.users WHERE email IN ('u3@example.test', 'u4@example.test', 'u5@example.test', 'u6@example.test', 'u8@example.test', 'u9@example.test', 'u10@example.test', 'u11@example.test')), 8,
   'les comptes protégés (résultat, responsable, consultant, administrateur) ou récents restent');

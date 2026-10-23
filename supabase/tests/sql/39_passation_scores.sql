@@ -14,6 +14,17 @@
 SET LOCAL search_path TO tests, pg_catalog, public;
 SELECT plan(73);
 
+-- Base vivante : private.audit_log porte déjà des lignes réelles (ajout seul, jamais
+-- effacées). Les lectures du journal de ce fichier passent par pg_temp.journal_test :
+-- seules les lignes écrites pendant ce test, hors celles d'un compte présent avant lui
+-- (activité réelle concurrente). Sur une base vide, la vue rend le journal entier.
+CREATE TEMP TABLE journal_avant AS SELECT id FROM private.audit_log;
+CREATE TEMP TABLE comptes_avant AS SELECT id FROM auth.users;
+CREATE TEMP VIEW journal_test AS
+  SELECT j.* FROM private.audit_log j
+   WHERE NOT EXISTS (SELECT 1 FROM pg_temp.journal_avant a WHERE a.id = j.id)
+     AND (j.acteur IS NULL OR NOT EXISTS (SELECT 1 FROM pg_temp.comptes_avant c WHERE c.id = j.acteur));
+
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -191,7 +202,7 @@ SELECT is(pg_temp.soum('a0000000-0000-4000-8000-000000000001', 'd0000000-0000-40
 SELECT is((SELECT count(*)::int FROM app.results), 0, 'aucun résultat enregistré par ces refus');
 SELECT is((SELECT statut FROM app.participations WHERE id = 'd0000000-0000-4000-8000-000000000001'), 'ouverte',
   'la participation reste ouverte (statut inchangé) après les refus');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.soumettre'), 0, 'aucun refus ne laisse de ligne de journal');
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.soumettre'), 0, 'aucun refus ne laisse de ligne de journal');
 
 -- ===== Ordre des refus : ceux de 0003 passent avant la forme, message inchangé =====
 SELECT is(pg_temp.soum('a0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000004', '{}'::jsonb, '{}'::jsonb),
@@ -216,7 +227,7 @@ SELECT is((SELECT reponses = pg_temp.rep() AND scores = pg_temp.sc() AND questio
   true, 'le résultat porte exactement les réponses, les scores et les versions soumis');
 SELECT is((SELECT statut || '|' || (terminee_le IS NOT NULL)::text FROM app.participations WHERE id = 'd0000000-0000-4000-8000-000000000001'),
   'terminee|true', 'la participation est terminée');
-SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action = 'resultat.soumettre' AND ressource_id = 'd0000000-0000-4000-8000-000000000001'),
+SELECT is((SELECT count(*)::int FROM pg_temp.journal_test audit_log WHERE action = 'resultat.soumettre' AND ressource_id = 'd0000000-0000-4000-8000-000000000001'),
   1, 'la soumission valide est journalisée une fois');
 SELECT is(pg_temp.soum('a0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001', pg_temp.rep(), pg_temp.sc()),
   'ERR:23505:Résultat déjà soumis', 'une seule soumission : le rejeu garde son refus');
