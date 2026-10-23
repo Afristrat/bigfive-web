@@ -17,6 +17,9 @@ export default defineConfig({
     jsx: { runtime: 'automatic' }
   },
   test: {
-    include: ['tests/unit/**/*.test.ts']
+    include: ['tests/unit/**/*.test.ts'],
+    // next-intl 4 importe `next/navigation` sans extension ; Vitest ne la
+    // résout que si le paquet passe par son propre pipeline.
+    server: { deps: { inline: ['next-intl'] } }
   }
 });

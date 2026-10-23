@@ -1,6 +1,6 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { localePrefix } from './navigation';
+import { defaultLocale, localePrefix } from './navigation';
 import { locales } from './config/site';
 import { decideRouteAccess } from './lib/route-guard';
 import { REFRESH_COOKIE } from './lib/session-cookies';
@@ -8,7 +8,7 @@ import { REFRESH_COOKIE } from './lib/session-cookies';
 const intlMiddleware = createMiddleware({
   locales,
   localePrefix,
-  defaultLocale: 'en'
+  defaultLocale
 });
 
 // Contrôle optimiste des routes privées : seule la présence du cookie de
