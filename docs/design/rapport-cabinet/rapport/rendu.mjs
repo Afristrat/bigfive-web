@@ -4,8 +4,9 @@
 //   rendreHtml({ rapport, cas, faits, profils, bib })           -> HTML complet
 //   rendreHtml({ ..., variante: 'docx' })                         -> variante sans SVG ni script (pandoc)
 // Fonction pure : aucune date, aucun hasard, aucune lecture de fichier.
-import { radarSvg, dumbbellSvg, heatmapSvg, CSS_VISUELS, SCRIPT_TETE, SCRIPT_MOUVEMENT } from '../../profils-fictifs/visuels.mjs';
+import { radarSvg, dumbbellSvg, heatmapSvg, reseauSvg, CSS_VISUELS, SCRIPT_TETE, SCRIPT_MOUVEMENT } from '../../profils-fictifs/visuels.mjs';
 import { bilanRelecture, sourceControlee, dateFr } from './outils.mjs';
+import { NATURE_LIEN } from './niveau34-equipe-organisation.mjs';
 
 const DOMAINES = ['N', 'E', 'O', 'A', 'C'];
 const NIVEAUX = [
@@ -239,6 +240,11 @@ export function rendreHtml({ rapport, cas, faits, profils, bib, variante } = {})
       return `<div class="visuels"><div class="paire">${avatar(a, 48, variante)}<span aria-hidden="true">×</span>${avatar(b, 48, variante)}</div>`
         + visuel(radarSvg([a, b], { titre: 'Radar de ' + a.nom + ' et ' + b.nom }))
         + visuel(dumbbellSvg(a, b, titres, ecart)) + '</div>';
+    }
+    if (num === 3 && idSection === 'n3-structure') {
+      const equipe = new Set((cas?.personnes ?? []).filter((p) => p.consentements?.equipe === true).map((p) => p.code));
+      const membres = ps.filter((p) => equipe.has(p.code));
+      if (membres.length >= 2) return `<div class="visuels">${visuel(reseauSvg(membres, cas?.relations ?? [], NATURE_LIEN))}</div>`;
     }
     return '';
   };

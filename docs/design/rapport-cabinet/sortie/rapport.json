@@ -4635,6 +4635,65 @@
      ]
     },
     {
+     "id": "n3-structure",
+     "titre": "Structure de l’équipe : liens déclarés et comment les développer",
+     "paragraphes": [
+      {
+       "id": "n3-structure-1",
+       "texte": "Cette section lit les liens de travail déclarés au cas (nature, sens, fréquence, interdépendance) : ils décrivent la structure prévue de l’équipe. Le réseau réel, c’est-à-dire à qui chacun demande conseil, à qui il fait confiance et par où l’information circule vraiment, n’est pas mesuré ici ; il peut s’écarter nettement de la structure prévue (réseau informel au sens de Krackhardt et Hanson, 1993).",
+       "statut": "constate"
+      },
+      {
+       "id": "n3-structure-2",
+       "texte": "6 liens déclarés sur 6 paires possibles entre les personnes ayant consenti. Chaque paire a un lien déclaré.",
+       "statut": "constate"
+      },
+      {
+       "id": "n3-structure-3",
+       "texte": "Liens déclarés par personne, et leur fréquence : AM, 3 liens (1 quotidien, 1 hebdomadaire et 1 mensuel) ; KB, 3 liens (1 quotidien et 2 hebdomadaires) ; SR, 3 liens (1 quotidien et 2 hebdomadaires) ; HT, 3 liens (1 quotidien, 1 hebdomadaire et 1 mensuel).",
+       "statut": "constate"
+      },
+      {
+       "id": "n3-structure-4",
+       "texte": "Liens de séquence orientés (le travail de la première personne alimente celui de la seconde) : AM vers KB ; KB vers SR.",
+       "statut": "constate"
+      },
+      {
+       "id": "n3-structure-5",
+       "texte": "KB se situe au milieu d’une chaîne de séquence déclarée (AM vers KB vers SR). Il se peut que les retards et les informations incomplètes de l’amont se concentrent à ce point de passage, et que ce rôle de relais n’apparaisse dans aucun organigramme ni dans aucune fiche de poste.",
+       "statut": "hypothese",
+       "confiance": "faible",
+       "verification": "Demander à KB ce qu’il reçoit de l’amont, sous quelle forme et avec quel délai, et ce qu’il doit reprendre ou compléter avant de transmettre."
+      },
+      {
+       "id": "n3-structure-6",
+       "texte": "En pondérant chaque lien par sa fréquence (quotidien 3, hebdomadaire 2, mensuel 1, convention de ce rapport), KB et SR portent la charge de liens la plus élevée de l’équipe. Il se peut que la coordination repose davantage sur ces personnes, et qu’une absence y produise un blocage que la structure prévue ne montre pas.",
+       "statut": "hypothese",
+       "confiance": "faible",
+       "verification": "Demander à l’équipe ce qui s’est passé la dernière fois que KB ou SR était absent, et qui a pris le relais."
+      },
+      {
+       "id": "n3-structure-7",
+       "texte": "Lien à fréquence mensuelle : AM-HT (mentorat). Il se peut qu’un lien aussi espacé laisse passer des questions sans réponse entre deux rencontres, et que l’échange réel passe alors par une tierce personne.",
+       "statut": "hypothese",
+       "confiance": "faible",
+       "verification": "Demander aux personnes concernées comment elles se joignent entre deux rencontres prévues, et par qui passe l’information dans l’intervalle."
+      },
+      {
+       "id": "n3-structure-8",
+       "texte": "Leviers pour développer cette structure, à choisir avec l’équipe et non à imposer : rendre visible et partager la charge de relais de KB (un point de passage écrit, une personne de suppléance désignée) ; organiser une suppléance pour KB et SR, afin qu’aucune décision ne dépende d’une seule présence ; installer un canal d’échange entre deux rencontres sur le lien AM-HT. Le réseau informel se développe par des occasions de travail réelles, non par un organigramme ; Cross et Parker (2004) décrivent ce travail à partir des personnes centrales, des intermédiaires et des personnes en périphérie.",
+       "statut": "hypothese",
+       "confiance": "faible",
+       "verification": "Soumettre ces leviers à l’équipe et lui demander lesquels répondent à une difficulté qu’elle a déjà rencontrée, et lesquels seraient une charge de plus."
+      },
+      {
+       "id": "n3-structure-9",
+       "texte": "Étape suivante proposée, non réalisée dans ce rapport : relever le réseau réel par quatre ou cinq questions posées à chaque membre (à qui il demande conseil, d’où lui vient l’information utile, à qui il fait confiance, qui le bloque), avec un consentement spécifique, puisque chaque réponse porte sur des collègues, et un cadrage au titre de la loi 09-08. La comparaison entre la structure prévue et le réseau réel est la seule lecture directe de la structure invisible de l’équipe.",
+       "statut": "constate"
+      }
+     ]
+    },
+    {
      "id": "n3-securite-psychologique",
      "titre": "Sécurité psychologique à instruire",
      "paragraphes": [
@@ -6239,6 +6298,16 @@
   {
    "id": "hall-1976",
    "citation": "Hall, 1976, Beyond Culture",
+   "statut": "source à contrôler"
+  },
+  {
+   "id": "krackhardt-hanson-1993",
+   "citation": "Krackhardt et Hanson, 1993, Harvard Business Review (« Informal Networks: The Company Behind the Chart »)",
+   "statut": "source à contrôler"
+  },
+  {
+   "id": "cross-parker-2004",
+   "citation": "Cross et Parker, 2004, The Hidden Power of Social Networks, Harvard Business School Press",
    "statut": "source à contrôler"
   }
  ],

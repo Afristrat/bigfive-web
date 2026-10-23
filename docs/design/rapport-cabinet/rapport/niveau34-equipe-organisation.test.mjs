@@ -470,3 +470,43 @@ test('mineur : apostrophes courbes dans tous les textes, sauf la dérogation rep
   const roles = new Set(ctx.cas.personnes.map((p) => p.role_equipe));
   for (const x of r.recommandations) assert.ok(roles.has(x.responsable), x.responsable);
 });
+
+test('structure de l’équipe : section placée après la décision, relais, charge, lien rare, références', () => {
+  const ctx = base();
+  const r = construire(ctx);
+  const ids = r.niveaux[0].sections.map((s) => s.id);
+  assert.equal(ids.indexOf('n3-structure'), ids.indexOf('n3-decision') + 1);
+  const t = textesSection(r.niveaux[0], 'n3-structure');
+  assert.match(t, /6 liens déclarés sur 6 paires possibles/);
+  assert.match(t, /KB se situe au milieu d'une chaîne de séquence déclarée \(AM vers KB vers SR\)/);
+  assert.match(t, /KB et SR portent la charge de liens la plus élevée/);
+  const verifs = r.niveaux[0].sections.find((s) => s.id === 'n3-structure').paragraphes.map((p) => norm(p.verification ?? '')).join(' | ');
+  assert.match(verifs, /la dernière fois que KB ou SR était absent/);
+  assert.match(t, /Lien à fréquence mensuelle : AM-HT \(mentorat\)/);
+  assert.match(t, /n'est pas mesuré ici/);
+  for (const id of ['krackhardt-hanson-1993', 'cross-parker-2004']) assert.ok(r.reference_ids.includes(id), id);
+  const hyp = r.niveaux[0].sections.find((s) => s.id === 'n3-structure').paragraphes.filter((p) => p.statut === 'hypothese');
+  assert.ok(hyp.length >= 4 && hyp.every((p) => p.confiance === 'faible' && p.verification));
+  assert.deepEqual(auditContenu(ctx, r), []);
+});
+
+test('structure de l’équipe : paire sans lien, sens inversé et aucun point de fragilité', () => {
+  const ctx = base();
+  ctx.cas.relations = ctx.cas.relations.filter((x) => x.id !== 'AM-HT');
+  let t = textesSection(construire(ctx).niveaux[0], 'n3-structure');
+  assert.match(t, /5 liens déclarés sur 6 paires possibles entre les personnes ayant consenti\. Paires sans lien déclaré : AM et HT\./);
+  assert.match(t, /créer un lien direct/);
+  assert.ok(!/fréquence mensuelle/.test(t));
+
+  const inverse = copie(base());
+  for (const x of inverse.cas.relations) if (x.id === 'AM-KB') { x.sens = 'b->a'; }
+  t = textesSection(construire(inverse).niveaux[0], 'n3-structure');
+  assert.match(t, /KB vers AM ; KB vers SR/);
+  assert.ok(!/au milieu d'une chaîne/.test(t), 'plus de relais quand KB alimente les deux');
+
+  const plat = copie(base());
+  for (const x of plat.cas.relations) { x.frequence = 'hebdomadaire'; x.interdependance = 'reciproque'; x.sens = 'reciproque'; }
+  t = textesSection(construire(plat).niveaux[0], 'n3-structure');
+  assert.ok(!/charge de liens la plus élevée|au milieu d'une chaîne|fréquence mensuelle/.test(t));
+  assert.match(t, /confronter la structure prévue au réseau réel/);
+});

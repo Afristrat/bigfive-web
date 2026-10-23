@@ -4,7 +4,7 @@ CAS FICTIF DE DÉMONSTRATION
 
 Version du rapport rapport-cabinet-1.0 · empreinte des entrées f735212733a9da211a5404493fa2de8ef5caa851797047dbec508cdb26cecf4d
 
-**Version de travail, à relire avant remise.** 85 textes types en attente de relecture, 12 références à contrôler. Relecture et signature : à faire.
+**Version de travail, à relire avant remise.** 85 textes types en attente de relecture, 14 références à contrôler. Relecture et signature : à faire.
 
 **À lire avant tout.**
 
@@ -5805,6 +5805,68 @@ faible
 Vérification  
 Faire retracer par l’équipe le parcours de la dernière décision importante : qui a été consulté, qui a validé, en combien de temps.
 
+### Structure de l’équipe : liens déclarés et comment les développer
+
+Constaté
+
+Cette section lit les liens de travail déclarés au cas (nature, sens, fréquence, interdépendance) : ils décrivent la structure prévue de l’équipe. Le réseau réel, c’est-à-dire à qui chacun demande conseil, à qui il fait confiance et par où l’information circule vraiment, n’est pas mesuré ici ; il peut s’écarter nettement de la structure prévue (réseau informel au sens de Krackhardt et Hanson, 1993).
+
+Constaté
+
+6 liens déclarés sur 6 paires possibles entre les personnes ayant consenti. Chaque paire a un lien déclaré.
+
+Constaté
+
+Liens déclarés par personne, et leur fréquence : AM, 3 liens (1 quotidien, 1 hebdomadaire et 1 mensuel) ; KB, 3 liens (1 quotidien et 2 hebdomadaires) ; SR, 3 liens (1 quotidien et 2 hebdomadaires) ; HT, 3 liens (1 quotidien, 1 hebdomadaire et 1 mensuel).
+
+Constaté
+
+Liens de séquence orientés (le travail de la première personne alimente celui de la seconde) : AM vers KB ; KB vers SR.
+
+Hypothèse
+
+KB se situe au milieu d’une chaîne de séquence déclarée (AM vers KB vers SR). Il se peut que les retards et les informations incomplètes de l’amont se concentrent à ce point de passage, et que ce rôle de relais n’apparaisse dans aucun organigramme ni dans aucune fiche de poste.
+
+Confiance  
+faible
+
+Vérification  
+Demander à KB ce qu’il reçoit de l’amont, sous quelle forme et avec quel délai, et ce qu’il doit reprendre ou compléter avant de transmettre.
+
+Hypothèse
+
+En pondérant chaque lien par sa fréquence (quotidien 3, hebdomadaire 2, mensuel 1, convention de ce rapport), KB et SR portent la charge de liens la plus élevée de l’équipe. Il se peut que la coordination repose davantage sur ces personnes, et qu’une absence y produise un blocage que la structure prévue ne montre pas.
+
+Confiance  
+faible
+
+Vérification  
+Demander à l’équipe ce qui s’est passé la dernière fois que KB ou SR était absent, et qui a pris le relais.
+
+Hypothèse
+
+Lien à fréquence mensuelle : AM-HT (mentorat). Il se peut qu’un lien aussi espacé laisse passer des questions sans réponse entre deux rencontres, et que l’échange réel passe alors par une tierce personne.
+
+Confiance  
+faible
+
+Vérification  
+Demander aux personnes concernées comment elles se joignent entre deux rencontres prévues, et par qui passe l’information dans l’intervalle.
+
+Hypothèse
+
+Leviers pour développer cette structure, à choisir avec l’équipe et non à imposer : rendre visible et partager la charge de relais de KB (un point de passage écrit, une personne de suppléance désignée) ; organiser une suppléance pour KB et SR, afin qu’aucune décision ne dépende d’une seule présence ; installer un canal d’échange entre deux rencontres sur le lien AM-HT. Le réseau informel se développe par des occasions de travail réelles, non par un organigramme ; Cross et Parker (2004) décrivent ce travail à partir des personnes centrales, des intermédiaires et des personnes en périphérie.
+
+Confiance  
+faible
+
+Vérification  
+Soumettre ces leviers à l’équipe et lui demander lesquels répondent à une difficulté qu’elle a déjà rencontrée, et lesquels seraient une charge de plus.
+
+Constaté
+
+Étape suivante proposée, non réalisée dans ce rapport : relever le réseau réel par quatre ou cinq questions posées à chaque membre (à qui il demande conseil, d’où lui vient l’information utile, à qui il fait confiance, qui le bloque), avec un consentement spécifique, puisque chaque réponse porte sur des collègues, et un cadrage au titre de la loi 09-08. La comparaison entre la structure prévue et le réseau réel est la seule lecture directe de la structure invisible de l’équipe.
+
 ### Sécurité psychologique à instruire
 
 Constaté
@@ -7056,20 +7118,22 @@ Nombre de retraits de consentement et réponses aux trois questions ouvertes, re
 
 ## Références
 
-| Référence                                         | Source contrôlée |
-|---------------------------------------------------|------------------|
-| Bell, 2007, Journal of Applied Psychology         | Non              |
-| Edmondson, 1999, Administrative Science Quarterly | Non              |
-| Mintzberg, 1979                                   | Non              |
-| Cameron et Quinn, 1999                            | Non              |
-| Nadler et Tushman, 1980                           | Non              |
-| Thompson, 1967                                    | Non              |
-| March, 1991                                       | Non              |
-| Kirkpatrick (évaluation des formations)           | Non              |
-| Hofstede (dimensions culturelles nationales)      | Non              |
-| House et al., 2004 (étude GLOBE)                  | Non              |
-| Meyer, 2014, The Culture Map                      | Non              |
-| Hall, 1976, Beyond Culture                        | Non              |
+| Référence | Source contrôlée |
+|----|----|
+| Bell, 2007, Journal of Applied Psychology | Non |
+| Edmondson, 1999, Administrative Science Quarterly | Non |
+| Mintzberg, 1979 | Non |
+| Cameron et Quinn, 1999 | Non |
+| Nadler et Tushman, 1980 | Non |
+| Thompson, 1967 | Non |
+| March, 1991 | Non |
+| Kirkpatrick (évaluation des formations) | Non |
+| Hofstede (dimensions culturelles nationales) | Non |
+| House et al., 2004 (étude GLOBE) | Non |
+| Meyer, 2014, The Culture Map | Non |
+| Hall, 1976, Beyond Culture | Non |
+| Krackhardt et Hanson, 1993, Harvard Business Review (« Informal Networks: The Company Behind the Chart ») | Non |
+| Cross et Parker, 2004, The Hidden Power of Social Networks, Harvard Business School Press | Non |
 
 « Non » : la référence est citée de mémoire et sa source n'a pas été contrôlée. À contrôler avant toute citation externe.
 
