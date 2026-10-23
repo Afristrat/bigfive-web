@@ -44,9 +44,8 @@ const icelandic = {
       subtop: 'The',
       subtop2:
         ' er vísindalega staðfestasta og áreiðanlegasta sálfræðilíkanið til að mæla persónuleika.',
-      reference: `Próf og mat fyrir þessa síðu er safnað saman frá
-        <a href="http://ipip.ori.org" rel="noopener" target="_blank"> ipip.ori.org </a>,
-        birgðir eru frá <i> Johnson (2014) 120 hlutum IPIP NEO-PI-R </i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Eftirfarandi próf inniheldur 120 spurningar sem áætlað er að taki þig um það bil 10 mínútur.',
       result:
         'Eftir að prófinu lýkur færðu nákvæma persónuleikaskýrslu á eftirfarandi sviðum:',

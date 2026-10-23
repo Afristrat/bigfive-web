@@ -45,9 +45,8 @@ const indonesian = {
       subtop: 'Itu',
       subtop2:
         ' adalah model psikologis yang paling tervalidasi secara ilmiah dan dapat diandalkan untuk mengukur kepribadian.',
-      reference: `Tes dan evaluasi untuk situs ini dikumpulkan dari
-  <a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-  inventaris berasal<i>Johnson (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Tes berikut berisi 120 soal yang diperkirakan membutuhkan waktu sekitar 10 menit untuk diselesaikan.',
       result:
         'Setelah Anda menyelesaikan tes, Anda akan menerima laporan kepribadian terperinci di domain berikut: ',

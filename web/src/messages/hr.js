@@ -44,9 +44,8 @@ const croatian = {
       subtop: 'Ovo je',
       subtop2:
         'najznanstveno potvrđen i pouzdan psihološki model za mjerenje osobnosti.',
-      reference: `Testovi i procjene za ovu stranicu prikupljeni su od
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventar je iz <i>Johnsonovih (2014) 120 stavki IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Sljedeći test sadrži 120 pitanja za koje se procjenjuje da će vam trebati oko 10 minuta da ih dovršite.',
       result:
         'Nakon što dovršite test, dobit ćete detaljno izvješće o osobnosti u sljedećim domenama:',

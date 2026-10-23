@@ -44,9 +44,8 @@ const dutch = {
       subtop: 'De',
       subtop2:
         ' is het meest wetenschappelijk gevalideerde en betrouwbare psychologische model om persoonlijkheid te meten.',
-      reference: `Tests en evaluatie voor deze site zijn verzameld van
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-de inventaris is van <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'De volgende test bevat 120 vragen waarvan wordt geschat dat het ongeveer 10 minuten duurt om deze te voltooien.',
       result:
         'Nadat je de test hebt voltooid, ontvang je een gedetailleerd persoonlijkheidsrapport in de volgende domeinen:',

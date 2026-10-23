@@ -44,9 +44,8 @@ const serbian = {
       subtop: 'The',
       subtop2:
         ' je naučno najvalidiraniji i najpouzdaniji psihološki model za merenje ličnosti.',
-      reference: `Testovi i evaluacija za ovaj sajt su prikupljeni sa
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventar je iz <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Sledeći test sadrži 120 pitanja za koje je procenjeno da će vam trebati oko 10 minuta da ih završite.',
       result:
         'Nakon što završite test, dobićete detaljan izveštaj o svojoj ličnosti u sledećim domenima:',

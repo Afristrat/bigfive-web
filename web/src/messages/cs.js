@@ -44,9 +44,8 @@ const czech = {
       subtop: ' ',
       subtop2:
         ' je nejlépe vědecky potvrzený a spolehlivý psychologický model pro měření osobnosti.',
-      reference: `Testy a evaluace pro tuto stránku jsou získané z
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Následující test obsahuje 120 otázek, jejichž zodpovězení by nemělo trvat déle než 10 minut..',
       result:
         'Po dokončení testu získáte detailní osobnostní zprávu v následujících doménách:',

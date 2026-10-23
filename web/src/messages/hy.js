@@ -45,8 +45,8 @@ const armenian = {
       subtop: 'Դա',
       subtop2:
         'հոգեբանական ամենագիտականորեն հաստատված և վստահելի մոդելն է՝ անձնավորությունը չափելու համար։',
-      reference: `Այս կայքի թեստերն ու գնահատումները հավաքված են <a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>-ից,
-գույքագրվել է <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>-ից։`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Հաջորդ թեստը պարունակում է 120 հարց, որոնց պատասխանելը մոտավորապես 10 րոպե կպահանջի։',
       result:
         'Թեստն ավարտելուց հետո դուք կստանաք մանրամասն անձնավորության զեկույց հետևյալ դաշտերում․',

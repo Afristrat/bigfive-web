@@ -44,9 +44,8 @@ const spanish = {
       subtop: 'el',
       subtop2:
         ' es el modelo psicológico más confiable y científicamente validado para medir la personalidad.',
-      reference: `Las pruebas y la evaluación de este sitio se obtienen de
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-el inventario es de<i>Johnson's (2014) IPIP NEO-PI-R de 120 elementos</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'La siguiente prueba contiene 120 preguntas que estimamos le tomará unos 10 minutos completar.',
       result:
         'Una vez que haya completado la prueba, recibirá un informe de personalidad detallado en los siguientes dominios:',

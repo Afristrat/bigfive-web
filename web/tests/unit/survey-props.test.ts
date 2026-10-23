@@ -37,6 +37,13 @@ vi.mock('next-intl/server', () => {
   };
 });
 
+// `connection()` exige une requête : en test, un espion qui prouve que la page
+// se déclare dynamique (sinon elle partirait statique avec une liste vide).
+const { connection } = vi.hoisted(() => ({
+  connection: vi.fn(async () => undefined)
+}));
+vi.mock('next/server', () => ({ connection }));
+
 vi.mock('next/navigation', () => ({
   notFound: () => {
     throw new Error('NOT_FOUND');
@@ -296,6 +303,12 @@ beforeEach(() => {
 describe('page /test (parcours public)', () => {
   const rendre = async () =>
     TestPage({ params: Promise.resolve({ locale: 'fr' }) });
+
+  it('se déclare dynamique : connection() est appelée avant toute lecture', async () => {
+    connection.mockClear();
+    await rendre();
+    expect(connection).toHaveBeenCalledTimes(1);
+  });
 
   it('reste publique : savePublicTest et la clé b5, aucun encart', async () => {
     const page = await rendre();

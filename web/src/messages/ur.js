@@ -44,9 +44,8 @@ const urdu = {
       subtop: '',
       subtop2:
         ' سب سے زیادہ سائنسی طور پر تصدیق شدہ اور قابل اعتماد نفسیاتی ماڈل ہے۔',
-      reference: `اس سائٹ کے لئے ٹیسٹ اور جائزہ 
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a> سے لیا گیا ہے، 
-انونٹری <i>جانسن کا (2014) 120-آئٹم IPIP NEO-PI-R</i> سے ہے۔`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'درج ذیل ٹیسٹ میں 120 سوالات ہیں جو مکمل کرنے میں تقریباً 10 منٹ لگتے ہیں۔',
       result:
         'ٹیسٹ مکمل کرنے کے بعد آپ کو مندرجہ ذیل دائروں میں تفصیلی پرسنالٹی رپورٹ ملے گی:',

@@ -44,9 +44,8 @@ const svenska = {
       subtop: '',
       subtop2:
         ' är en vetenskaplig och trovärdig psykologisk modell för att mäta personlighet.',
-      reference: `Tester och utvärderingar på den här webbplatsen är hämtade från
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-innehållet är från <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Testet som följer har 120 frågor och beräknad tid är 10 minuter.',
       result:
         'När du har slutfört testet får du en detaljerad personlighetsrapport inom följande domäner:',

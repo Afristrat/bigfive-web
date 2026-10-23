@@ -44,9 +44,8 @@ const slovenian = {
       subtop: '',
       subtop2:
         ' je najbolj znanstveno potrjen in zanesljiv psihološki model za merjenje osebnosti.',
-      reference: `Testi in ocene za to stran so zbrani iz
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-inventar je iz <i>Johnsonovega (2014) 120-členskega IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Naslednji test vsebuje 120 vprašanj, za katere je ocenjena poraba približno 10 minut.',
       result:
         'Po zaključku testa boste prejeli podrobno poročilo o osebnosti v naslednjih domenah:',

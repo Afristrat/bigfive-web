@@ -42,9 +42,8 @@ const chinese = {
       top: '通过免费的开源个性测试，学会更好地了解自己。',
       subtop: '的',
       subtop2: ' 是衡量人格最科学、最可靠的心理模型。',
-      reference: `此站点的测试和评估来自
-  <a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-  inventory is from <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: '以下测试包含 120 个问题，估计需要大约 10 分钟才能完成。',
       result: '完成测试后，您将取得与详尽地人格报告。该报告将记载以下领域：',
       tests_taken: '目前为止完成的测验'

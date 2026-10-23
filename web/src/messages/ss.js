@@ -45,9 +45,8 @@ const siswati = {
       subtop: 'I-',
       subtop2:
         ' yinhlelo yesayensi levikelekile nemalulwane ekuhlolwa kubuntu.',
-      reference: `Imininingwane yalomlingo itfolwe ku
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-lokuhlelwa kuvela ku <i>Johnson's (2014) 120-item IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Lomlingo unemibuzo lengema-120 futsi utsatfwa imizuzu leli-10 kuwuqeda.',
       result:
         'Ngemuva kwekuwuqeda umlingo utawutfola imibiko ngelulwane lakho kulamaluphawu lalandelayo:',

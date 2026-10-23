@@ -10,6 +10,7 @@ import {
 } from '@/lib/passation-data';
 import { currentViewer } from '@/lib/session';
 import { Link } from '@/navigation';
+import { connection } from 'next/server';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -32,6 +33,10 @@ async function participationsAPasser(): Promise<ParticipationPassation[]> {
 }
 
 export default async function TestPage({ params }: Props) {
+  // La page dépend de la session (encart de passation) : jamais prérendue.
+  // Sans cela, le `catch` ci-dessus avale l'erreur de rendu dynamique et la
+  // page part statique avec une liste vide.
+  await connection();
   const { locale } = await params;
   setRequestLocale(locale);
   const questions = getLocalizedItems(locale);

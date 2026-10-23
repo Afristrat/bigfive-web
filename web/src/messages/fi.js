@@ -44,9 +44,8 @@ const finnish = {
       subtop: 'The',
       subtop2:
         ' on tieteellisesti validoitu ja luotettava psykologinen malli persoonallisuuden mittaamiseksi.',
-      reference: `Tämän sivuston testit ja arvioinnit on kerätty osoitteesta
-  <a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>,
-  varasto on peräisin <i>Johnsonin (2014) 120 nimikkeen IPIP NEO-PI-R</i>.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: 'Seuraava testi sisältää 120 kysymystä, joiden suorittamisen arvioidaan vievän noin 10 minuuttia.',
       result:
         'Testin suorittamisen jälkeen saat yksityiskohtaisen persoonallisuusraportin seuraavista verkkotunnuksista:',

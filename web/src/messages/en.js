@@ -323,7 +323,7 @@ const english = {
     honeypot: 'Do not fill in this field',
     success: {
       title: 'Your request has been received',
-      text: 'Thank you. Tenga Conseil has recorded your request for a presentation. An acknowledgement is sent to the address you gave; please check your spam folder.',
+      text: 'Thank you. Tenga Conseil has recorded your request for a presentation. An acknowledgement should reach the address you gave; your request is recorded either way. Please check your spam folder.',
       nextTitle: 'What happens next',
       step1: 'A Tenga Conseil consultant reads your request.',
       step2:

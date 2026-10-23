@@ -44,9 +44,8 @@ const korean = {
       subtop: '',
       subtop2:
         '는 성격을 측정하는 가장 과학적으로 검증되고 신뢰할 수 있는 심리 모델입니다.',
-      reference: `이 사이트의 테스트와 평가 자료는
-<a href="http://ipip.ori.org" rel="noopener" target="_blank">ipip.ori.org</a>에서 가져왔으며,
-평가 도구는 <i>Johnson의 (2014) 120개 항목 IPIP NEO-PI-R</i>입니다.`,
+      reference:
+        'Questions and scoring: International Personality Item Pool (<ipip>ipip.ori.org</ipip>), IPIP-NEO-120 questionnaire by John A. Johnson (2014), in the public domain.',
       info: '다음 테스트는 120개의 질문으로 구성되어 있으며, 약 10분 정도 소요될 것으로 예상됩니다.',
       result:
         '테스트를 완료한 후 다음 영역에서 자세한 성격 보고서를 받게 됩니다:',
