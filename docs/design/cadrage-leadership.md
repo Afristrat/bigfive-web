@@ -64,7 +64,6 @@ La synthèse de groupe ne publie que des moyennes de domaine au-dessus du seuil 
 
 Elle ne nomme aucun style (S1 à S4, « directif », « délégatif »), n'utilise pas la marque Situational Leadership®, ne cite aucune corrélation à la personne, ne classe personne.
 
-## 7. Décisions d'Amine
+## 7. Décision d'Amine (23/10/2026)
 
-1. Option A, B ou C.
-2. Si A : relecture et validation des dix blocs par Nezha avant mise en ligne.
+Directive ANNULÉE : « Je dois affirmer le style de leadership donc on annule ma directive. » Le besoin était d'affirmer un style ; ni le questionnaire Tenga (§ 1), ni la licence (§ 2), ni la voix de marque (§ 4) ne le permettent. Aucune des options A, B, C n'est retenue ; ne rien coder sur ce sujet sans nouvelle demande.
