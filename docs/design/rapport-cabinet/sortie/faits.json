@@ -5,7 +5,7 @@
     "empreinte": "d227dd65f8afab0e7a55ef81457a6967e60c2a28ee6249b8d7d438116390227c",
     "source": "facettes.json"
   },
-  "empreinte_entrees": "f735212733a9da211a5404493fa2de8ef5caa851797047dbec508cdb26cecf4d",
+  "empreinte_entrees": "588806a651c7382b4e58b0f536b856cda8e86c41268b6a1eacffe4a8a7795ff1",
   "conventions": {
     "niveaux": {
       "bas": {
@@ -2325,5 +2325,242 @@
   },
   "consentements": {
     "bloquants": []
+  },
+  "reseau_reel": {
+    "releve": true,
+    "statut": "fictif",
+    "seuils": {
+      "repondants_min": 4,
+      "taux_reponse_min_pct": 80,
+      "valeur_significative": 2,
+      "valeur_hebdomadaire": 3
+    },
+    "perimetre": [
+      "AM",
+      "KB",
+      "SR",
+      "HT"
+    ],
+    "representes": [
+      "AM",
+      "KB",
+      "SR",
+      "HT"
+    ],
+    "non_representes": [],
+    "repondants": [
+      "AM",
+      "KB",
+      "SR",
+      "HT"
+    ],
+    "n_representes": 4,
+    "n_repondants": 4,
+    "taux_reponse_pct": 100,
+    "suffisant": true,
+    "carte_nominative": true,
+    "paires_possibles": 6,
+    "liens": {
+      "conseil": [
+        {
+          "a": "AM",
+          "b": "KB",
+          "a_vers_b": 3,
+          "b_vers_a": 2,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "KB",
+          "b": "HT",
+          "a_vers_b": 3,
+          "b_vers_a": 1,
+          "reciproque": false,
+          "declare_par": "KB"
+        },
+        {
+          "a": "SR",
+          "b": "HT",
+          "a_vers_b": 3,
+          "b_vers_a": 2,
+          "reciproque": true,
+          "declare_par": null
+        }
+      ],
+      "information": [
+        {
+          "a": "AM",
+          "b": "KB",
+          "a_vers_b": 4,
+          "b_vers_a": 4,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "AM",
+          "b": "SR",
+          "a_vers_b": 3,
+          "b_vers_a": 1,
+          "reciproque": false,
+          "declare_par": "AM"
+        },
+        {
+          "a": "KB",
+          "b": "SR",
+          "a_vers_b": 3,
+          "b_vers_a": 3,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "KB",
+          "b": "HT",
+          "a_vers_b": 2,
+          "b_vers_a": 2,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "SR",
+          "b": "HT",
+          "a_vers_b": 4,
+          "b_vers_a": 4,
+          "reciproque": true,
+          "declare_par": null
+        }
+      ],
+      "confiance": [
+        {
+          "a": "AM",
+          "b": "KB",
+          "a_vers_b": 3,
+          "b_vers_a": 2,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "AM",
+          "b": "SR",
+          "a_vers_b": 2,
+          "b_vers_a": 2,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "KB",
+          "b": "SR",
+          "a_vers_b": 2,
+          "b_vers_a": 2,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "KB",
+          "b": "HT",
+          "a_vers_b": 3,
+          "b_vers_a": 3,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "SR",
+          "b": "HT",
+          "a_vers_b": 3,
+          "b_vers_a": 3,
+          "reciproque": true,
+          "declare_par": null
+        }
+      ],
+      "dependance": [
+        {
+          "a": "AM",
+          "b": "KB",
+          "a_vers_b": 4,
+          "b_vers_a": 3,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "AM",
+          "b": "SR",
+          "a_vers_b": 2,
+          "b_vers_a": 3,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "KB",
+          "b": "SR",
+          "a_vers_b": 2,
+          "b_vers_a": 4,
+          "reciproque": true,
+          "declare_par": null
+        },
+        {
+          "a": "SR",
+          "b": "HT",
+          "a_vers_b": 3,
+          "b_vers_a": 3,
+          "reciproque": true,
+          "declare_par": null
+        }
+      ]
+    },
+    "indicateurs": {
+      "conseil": {
+        "paires_reliees": 3,
+        "reciproques": 2,
+        "un_seul_cote": 1
+      },
+      "information": {
+        "paires_reliees": 5,
+        "reciproques": 4,
+        "un_seul_cote": 1
+      },
+      "confiance": {
+        "paires_reliees": 5,
+        "reciproques": 5,
+        "un_seul_cote": 0
+      },
+      "dependance": {
+        "paires_reliees": 4,
+        "reciproques": 4,
+        "un_seul_cote": 0
+      }
+    },
+    "liens_reciproques_total": 15,
+    "ecarts": {
+      "prevus_sans_lien_reel": [
+        {
+          "id": "AM-HT",
+          "a": "AM",
+          "b": "HT",
+          "nature": "mentorat",
+          "frequence": "mensuelle"
+        }
+      ],
+      "prevus_non_lisibles": [],
+      "structure_prevue_complete": true,
+      "reels_hors_prevu": [],
+      "relais_reels": [
+        {
+          "code": "HT",
+          "demandeurs": [
+            "KB",
+            "SR"
+          ]
+        }
+      ],
+      "relais_prevus": [
+        "KB"
+      ],
+      "relais_reels_non_prevus": [
+        "HT"
+      ],
+      "relais_prevus_non_reels": [
+        "KB"
+      ],
+      "n_ecarts": 3
+    }
   }
 }

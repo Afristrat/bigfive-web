@@ -18,7 +18,8 @@
   { "id": "meyer-2014", "auteurs": ["Meyer"], "annee": 2014, "citation": "Meyer, 2014, The Culture Map", "sujet": "carte culturelle", "statut": "source à contrôler" },
   { "id": "hall-1976", "auteurs": ["Hall"], "annee": 1976, "citation": "Hall, 1976, Beyond Culture", "sujet": "contexte élevé ou faible", "statut": "source à contrôler" },
   { "id": "krackhardt-hanson-1993", "auteurs": ["Krackhardt", "Hanson"], "annee": 1993, "citation": "Krackhardt et Hanson, 1993, Harvard Business Review (« Informal Networks: The Company Behind the Chart »)", "sujet": "réseaux informels : conseil, confiance, communication", "statut": "source à contrôler" },
-  { "id": "cross-parker-2004", "auteurs": ["Cross", "Parker"], "annee": 2004, "citation": "Cross et Parker, 2004, The Hidden Power of Social Networks, Harvard Business School Press", "sujet": "analyse des réseaux dans les organisations", "statut": "source à contrôler" }
+  { "id": "cross-parker-2004", "auteurs": ["Cross", "Parker"], "annee": 2004, "citation": "Cross et Parker, 2004, The Hidden Power of Social Networks, Harvard Business School Press", "sujet": "analyse des réseaux dans les organisations", "statut": "source à contrôler" },
+  { "id": "borgatti-molina-2003", "auteurs": ["Borgatti", "Molina"], "annee": 2003, "citation": "Borgatti et Molina, 2003, The Journal of Applied Behavioral Science (« Ethical and Strategic Issues in Organizational Social Network Analysis »)", "doi": "10.1177/0021886303258111", "sujet": "éthique de l'analyse de réseau en organisation", "statut": "source à contrôler" }
  ],
  "normes_citables_sans_annee": ["ISO 10667", "loi 09-08", "loi 65-99", "CNDP", "RGPD", "règlement 2024/1689"]
 }

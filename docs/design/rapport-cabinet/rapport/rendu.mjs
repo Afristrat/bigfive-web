@@ -7,6 +7,7 @@
 import { radarSvg, dumbbellSvg, heatmapSvg, reseauSvg, CSS_VISUELS, SCRIPT_TETE, SCRIPT_MOUVEMENT } from '../../profils-fictifs/visuels.mjs';
 import { bilanRelecture, sourceControlee, dateFr } from './outils.mjs';
 import { NATURE_LIEN } from './niveau34-equipe-organisation.mjs';
+import { LIENS as LIENS_RESEAU, perimetreAJour, nominatifAutorise } from '../moteur/reseau.mjs';
 
 const DOMAINES = ['N', 'E', 'O', 'A', 'C'];
 const NIVEAUX = [
@@ -83,7 +84,7 @@ table.refs td[data-controle]{white-space:nowrap}
 .absent{color:var(--mut);font-style:italic}
 footer{margin-top:32px}
 @media (max-width:760px){main{padding:16px}h1{font-size:1.5rem}section.niveau{padding:12px}}
-@media print{:root,:root[data-theme=dark]{${CLAIR}}.toc{display:none}body{background:#fff;color:#1d1f21}section.niveau{break-before:page}.para,.reco{break-inside:avoid}section.niveau{border:0;padding:0}.recos{grid-template-columns:1fr}.reco dl{display:grid;grid-template-columns:9em 1fr;gap:.15em 1em;align-items:baseline}.reco dt{margin-top:0}#n2-relations .radar svg{width:min(100%,170px)}#n2-relations .halteres{max-width:none}#n2-relations .halteres svg{display:block;width:72%;margin:0 auto}#n2-relations .sec+.sec:has(.visuels){break-before:page}#n2-relations .sec h3{break-after:avoid}#n2-relations .visuels,#n3-equipe .visuels{display:flex;flex-direction:column}#n2-relations .halteres,#n3-equipe .chaleur{order:-1}#n2-relations .paire{order:-2}}
+@media print{:root,:root[data-theme=dark]{${CLAIR}}.toc{display:none}body{background:#fff;color:#1d1f21}section.niveau{break-before:page}.para,.reco{break-inside:avoid}section.niveau{border:0;padding:0}.recos{grid-template-columns:1fr}.reco dl{display:grid;grid-template-columns:9em 1fr;gap:.15em 1em;align-items:baseline}.reco dt{margin-top:0}#n2-relations .radar svg{width:min(100%,170px)}#n2-relations .halteres{max-width:none}#n2-relations .halteres svg{display:block;width:72%;margin:0 auto}#n2-relations .sec+.sec:has(.visuels){break-before:page}#n2-relations .sec h3{break-after:avoid}#n2-relations .visuels,#n3-equipe .visuels{display:flex;flex-direction:column}#n3-equipe .visuels.cartes-reseau{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 12px}#n3-equipe .cartes-reseau .reseau{margin:0}#n3-equipe .cartes-reseau .reseau svg{width:100%}h3#n3-reseau-reel{break-after:avoid}#n2-relations .halteres,#n3-equipe .chaleur{order:-1}#n2-relations .paire{order:-2}}
 ${CSS_SANS_AVATAR}`;
 
 // Couleurs de profil en variables : une valeur claire, une valeur sombre, claire à l'impression.
@@ -178,7 +179,7 @@ function carteReco(r, refsParId) {
 }
 
 export function rendreHtml({ rapport, cas, faits, profils, bib, variante } = {}) {
-  void faits; // les nombres viennent déjà du rapport ; faits reste dans la signature du contrat
+  // Les nombres viennent déjà du rapport ; faits ne sert qu'à tracer la carte du réseau réel (faits.reseau_reel).
   const docx = variante === 'docx';
   const r = rapport ?? {};
   const ps = preparerProfils(profils, cas);
@@ -245,6 +246,16 @@ export function rendreHtml({ rapport, cas, faits, profils, bib, variante } = {})
       const equipe = new Set((cas?.personnes ?? []).filter((p) => p.consentements?.equipe === true).map((p) => p.code));
       const membres = ps.filter((p) => equipe.has(p.code));
       if (membres.length >= 2) return `<div class="visuels">${visuel(reseauSvg(membres, cas?.relations ?? [], NATURE_LIEN))}</div>`;
+    }
+    if (num === 3 && idSection === 'n3-reseau-reel') {
+      // Carte nominative seulement si le relevé est à jour du périmètre actuel, suffisant, ET que chaque membre du périmètre est
+      // représenté et l'a acceptée (mêmes gardes que le texte) ; sinon aucune carte. Seules les personnes représentées sont dessinées.
+      const rr = faits?.reseau_reel;
+      if (rr?.suffisant === true && nominatifAutorise(rr) && rr.liens && perimetreAJour(rr, cas)) {
+        const representes = new Set(rr.representes ?? []);
+        const membres = ps.filter((p) => representes.has(p.code));
+        if (membres.length >= 2) return `<div class="visuels cartes-reseau">${LIENS_RESEAU.map((l) => visuel(reseauSvg(membres, rr.liens[l] ?? [], {}, { lien: l, marqueur: `reseau-fleche-${l}` }))).join('')}</div>`;
+      }
     }
     return '';
   };

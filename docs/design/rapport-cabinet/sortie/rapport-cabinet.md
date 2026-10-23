@@ -2,9 +2,9 @@
 
 CAS FICTIF DE DÉMONSTRATION
 
-Version du rapport rapport-cabinet-1.0 · empreinte des entrées f735212733a9da211a5404493fa2de8ef5caa851797047dbec508cdb26cecf4d
+Version du rapport rapport-cabinet-1.0 · empreinte des entrées 588806a651c7382b4e58b0f536b856cda8e86c41268b6a1eacffe4a8a7795ff1
 
-**Version de travail, à relire avant remise.** 85 textes types en attente de relecture, 14 références à contrôler. Relecture et signature : à faire.
+**Version de travail, à relire avant remise.** 85 textes types en attente de relecture, 15 références à contrôler. Relecture et signature : à faire.
 
 **À lire avant tout.**
 
@@ -5809,7 +5809,7 @@ Faire retracer par l’équipe le parcours de la dernière décision importante 
 
 Constaté
 
-Cette section lit les liens de travail déclarés au cas (nature, sens, fréquence, interdépendance) : ils décrivent la structure prévue de l’équipe. Le réseau réel, c’est-à-dire à qui chacun demande conseil, à qui il fait confiance et par où l’information circule vraiment, n’est pas mesuré ici ; il peut s’écarter nettement de la structure prévue (réseau informel au sens de Krackhardt et Hanson, 1993).
+Cette section lit les liens de travail déclarés au cas (nature, sens, fréquence, interdépendance) : ils décrivent la structure prévue de l’équipe. Le réseau réel, c’est-à-dire à qui chacun demande conseil, à qui il fait confiance et par où l’information circule vraiment, fait l’objet d’un relevé distinct, présenté à la section suivante ; il peut s’écarter nettement de la structure prévue (réseau informel au sens de Krackhardt et Hanson, 1993).
 
 Constaté
 
@@ -5865,7 +5865,137 @@ Soumettre ces leviers à l’équipe et lui demander lesquels répondent à une 
 
 Constaté
 
-Étape suivante proposée, non réalisée dans ce rapport : relever le réseau réel par quatre questions posées à chaque membre (à qui il demande conseil, d’où lui vient l’information utile, à qui il se fie pour signaler une erreur, de qui il dépend pour avancer), avec un consentement spécifique, puisque chaque réponse porte sur des collègues, et un cadrage au titre de la loi 09-08. La comparaison entre la structure prévue et le réseau réel est la seule lecture directe de la structure invisible de l’équipe.
+La section suivante compare la structure prévue au réseau réel, relevé auprès des membres de l’équipe par quatre questions (à qui chacun demande conseil, de qui il reçoit une information utile, à qui il pourrait signaler une erreur sans crainte, de qui il attend le travail pour avancer), avec un consentement spécifique, puisque chaque réponse porte sur des collègues. Cette comparaison est la seule lecture directe de la structure invisible de l’équipe.
+
+### Réseau réel et écarts avec la structure prévue
+
+Constaté
+
+Relevé de démonstration fictif : les réponses de cette section sont toutes inventées pour illustrer la lecture ; personne n’a répondu au relevé du réseau réel.
+
+Constaté
+
+Le relevé pose à chaque membre de l’équipe, sur la liste fermée des autres membres, quatre questions : à qui il demande conseil, de qui il reçoit une information utile, à qui il pourrait signaler une erreur sans crainte, de qui il attend le travail pour avancer. Un lien réel est retenu à partir de « chaque mois » pour le conseil, l’information et la dépendance, et de « plutôt oui » pour la confiance (conventions de ce rapport). Un lien n’est dit réciproque que si les deux personnes l’ont déclaré ; un lien déclaré d’un seul côté est présenté tel quel, jamais corrigé.
+
+Constaté
+
+Seuils de lecture, conventions de ce rapport : au moins 4 répondants et au moins 80 pour cent de réponses parmi les personnes représentées. Ici, 4 répondants sur 4 personnes représentées : le relevé est lu.
+
+Constaté
+
+Garantie du relevé : aucun usage pour une décision d’emploi ou une évaluation des personnes. Il sert à décrire avec l’équipe, en atelier de restitution, sa façon réelle de travailler ; les questions d’éthique propres à l’analyse de réseau en organisation sont traitées par Borgatti et Molina (2003).
+
+Constaté
+
+Chaque membre de l’équipe a accepté que la carte nominative de l’équipe soit montrée aux membres en atelier : la carte du réseau réel, par type de lien, nomme les personnes.
+
+Constaté
+
+Conseil, à qui chacun demande conseil pour résoudre un problème de travail (au moins chaque mois) : 3 paires reliées sur 6 possibles. Liens réciproques : AM et KB ; SR et HT. Lien déclaré d’un seul côté : KB demande conseil à HT (déclaré par KB seulement).
+
+Constaté
+
+Information, de qui chacun reçoit une information utile à son travail (au moins chaque mois) : 5 paires reliées sur 6 possibles. Liens réciproques : AM et KB ; KB et SR ; KB et HT ; SR et HT. Lien déclaré d’un seul côté : AM reçoit une information utile de SR (déclaré par AM seulement).
+
+Constaté
+
+Confiance, à qui chacun pourrait signaler une erreur ou une difficulté sans crainte (au moins « plutôt oui ») : 5 paires reliées sur 6 possibles. Liens réciproques : AM et KB ; AM et SR ; KB et SR ; KB et HT ; SR et HT.
+
+Constaté
+
+Dépendance, de qui chacun attend le travail pour avancer (au moins chaque mois) : 4 paires reliées sur 6 possibles. Liens réciproques : AM et KB ; AM et SR ; KB et SR ; SR et HT.
+
+Constaté
+
+Au total, 15 liens réciproques sur les quatre types de lien.
+
+Constaté
+
+Écarts entre la structure prévue (liens déclarés au cas, section précédente) et le réseau réel : 3 écarts relevés. Chaque écart est une hypothèse à vérifier en entretien, non un constat sur les personnes.
+
+Hypothèse
+
+Lien prévu sans lien réel retenu : AM-HT (mentorat, mensuel). Aucune réponse ne relève, entre AM et HT, de conseil, d’information ou de dépendance au moins chaque mois, ni de confiance au moins « plutôt oui ». Il se peut que ce lien existe surtout sur le papier, ou que ce qu’il devait porter passe par une tierce personne.
+
+Confiance  
+faible
+
+Vérification  
+Demander à AM et à HT quand ce lien a servi pour la dernière fois, et par qui passe aujourd’hui ce qu’il devait porter.
+
+Constaté
+
+La structure prévue relie chaque paire de personnes représentées : aucun lien réel ne peut apparaître hors de la structure prévue dans cette équipe.
+
+Hypothèse
+
+Relais réel de conseil : HT reçoit des demandes de conseil de KB et SR, deux personnes qui ne se demandent pas conseil entre elles. Ce rôle n’apparaît pas dans la structure prévue. Il se peut que HT porte une charge de mise en relation que personne ne voit.
+
+Confiance  
+faible
+
+Vérification  
+Demander à HT quelles questions lui sont adressées et ce qu’elles lui demandent de temps, puis demander à KB et SR ce qu’ils pourraient se demander directement.
+
+Hypothèse
+
+KB, relais prévu au milieu d’une chaîne de séquence (section précédente), ne reçoit pas de demandes de conseil de deux personnes qui ne se consultent pas entre elles. Il se peut que la chaîne prévue fonctionne par la transmission du travail plutôt que par le conseil, ou que des questions la contournent.
+
+Confiance  
+faible
+
+Vérification  
+Demander à KB ce qu’il reçoit de l’amont et ce qu’il transmet, puis demander aux autres membres à qui ils s’adressent quand une question bloque la chaîne.
+
+Hypothèse
+
+Levier, lien prévu sans lien réel (AM-HT) : lui redonner une occasion de travail réelle, ou le retirer de la structure prévue s’il ne répond plus à un besoin, plutôt que de le maintenir sur le papier.
+
+Confiance  
+faible
+
+Vérification  
+Demander à AM et à HT ce que ce lien devait apporter, et si ce besoin existe encore.
+
+Hypothèse
+
+Levier, relais réel non prévu (HT) : reconnaître cette charge de mise en relation (temps dédié, mention dans la répartition des rôles), ou ouvrir un échange direct entre KB et SR pour les questions qui n’ont pas besoin d’intermédiaire.
+
+Confiance  
+faible
+
+Vérification  
+Demander séparément à KB et SR ce qu’ils demandent à HT, et à HT ce que cette charge lui coûte.
+
+Hypothèse
+
+Levier, relais prévu sans relais réel de conseil (KB) : vérifier ce qui passe réellement par la chaîne de séquence prévue avant de lui attribuer, ou de lui retirer, une charge de relais.
+
+Confiance  
+faible
+
+Vérification  
+Demander à KB et aux personnes de part et d’autre de la chaîne ce qui passe par KB, et ce qui le contourne.
+
+Hypothèse
+
+Levier, liens déclarés d’un seul côté : les présenter en atelier comme des attentes à éclaircir, non comme des erreurs du relevé, sans demander à quiconque de justifier sa réponse.
+
+Confiance  
+faible
+
+Vérification  
+Demander à l’équipe, collectivement, ce qu’un lien déclaré d’un seul côté peut signifier dans son travail (une attente, un rythme différent, une question restée sans réponse).
+
+Hypothèse
+
+Levier, suivi : refaire le relevé après un délai convenu avec l’équipe, dans la limite de la durée de conservation du relevé, pour voir ce qui a bougé ; les leviers sont à choisir avec l’équipe, non à imposer.
+
+Confiance  
+faible
+
+Vérification  
+Convenir avec l’équipe du moment du prochain relevé et des changements qu’elle souhaite y voir apparaître.
 
 ### Sécurité psychologique à instruire
 
@@ -7134,6 +7264,7 @@ Nombre de retraits de consentement et réponses aux trois questions ouvertes, re
 | Hall, 1976, Beyond Culture | Non |
 | Krackhardt et Hanson, 1993, Harvard Business Review (« Informal Networks: The Company Behind the Chart ») | Non |
 | Cross et Parker, 2004, The Hidden Power of Social Networks, Harvard Business School Press | Non |
+| Borgatti et Molina, 2003, The Journal of Applied Behavioral Science (« Ethical and Strategic Issues in Organizational Social Network Analysis ») | Non |
 
 « Non » : la référence est citée de mémoire et sa source n'a pas été contrôlée. À contrôler avant toute citation externe.
 

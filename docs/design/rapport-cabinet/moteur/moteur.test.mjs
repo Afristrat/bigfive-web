@@ -8,6 +8,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import * as moteurReel from './moteur.mjs';
+import { ajouterReseau } from './reseau.mjs';
 
 const ici = path.dirname(fileURLToPath(import.meta.url));
 const lire = (...p) => fs.readFileSync(path.join(ici, ...p), 'utf-8');
@@ -440,6 +441,7 @@ for (const [de, vers] of MUTATIONS_REGLES) {
 
 test('le fichier de sortie committé correspond au calcul actuel', { skip: !fs.existsSync(path.join(ici, '..', 'sortie', 'faits.json')) }, () => {
   const f = JSON.parse(lire('..', 'sortie', 'faits.json'));
-  const recalcul = moteurReel.calculer(CAS, PROFILS, REGLES, { bibliotheque: f.bibliotheque });
+  // calculer.mjs ajoute le réseau réel (moteur/reseau.mjs) ; moteur.mjs reste sans import, pour ses mutants copiés seuls.
+  const recalcul = ajouterReseau(moteurReel.calculer(CAS, PROFILS, REGLES, { bibliotheque: f.bibliotheque }), CAS);
   assert.equal(JSON.stringify(f, null, 2), JSON.stringify(recalcul, null, 2));
 });

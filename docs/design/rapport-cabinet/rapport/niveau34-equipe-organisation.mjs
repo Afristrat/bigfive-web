@@ -2,6 +2,7 @@
 // Fonction pure : aucun aléa, aucun calcul de score. Tout nombre cité vient de faits.json, du cas ou de leurs listes.
 // construire(ctx) -> { niveaux: [n3, n4], recommandations, reference_ids }
 import { paragraphe, recommandation, section, liste, fmt, DOMAINES } from './outils.mjs';
+import { relaisPrevus, perimetreAJour, nominatifAutorise, LIENS } from '../moteur/reseau.mjs';
 
 const NB = ' ';
 const gui = (s) => `«${NB}${s}${NB}»`;
@@ -298,7 +299,10 @@ export function construire(ctx) {
   const poidsMin = Math.min(...charge.map((x) => x.poids));
   const carrefours = poidsMax > poidsMin ? charge.filter((x) => x.poids === poidsMax).map((x) => x.code) : [];
   const sequences = relationsP.filter((r) => r.interdependance === 'sequentielle' && r.sens !== 'reciproque');
-  const relais = participants.map((p) => p.code).filter((code) => sequences.some((r) => aval(r) === code) && sequences.some((r) => amont(r) === code));
+  const relais = relaisPrevus(relationsP, participants.map((p) => p.code));
+  // Relevé du réseau réel (étape 2) : lu seulement s'il a été calculé sur le périmètre actuel de l'analyse d'équipe.
+  const rr = faits.reseau_reel;
+  const releve = rr?.releve === true;
   const chaine = (code) => {
     const entrees = sequences.filter((r) => aval(r) === code).map(amont);
     const sorties = sequences.filter((r) => amont(r) === code).map(aval);
@@ -311,7 +315,7 @@ export function construire(ctx) {
     .map(([f, n]) => `${n} ${FREQ_ADJ[f]}${n > 1 ? 's' : ''}`));
 
   const specStruct = [
-    c(`Cette section lit les liens de travail déclarés au cas (nature, sens, fréquence, interdépendance) : ils décrivent la structure prévue de l'équipe. Le réseau réel, c'est-à-dire à qui chacun demande conseil, à qui il fait confiance et par où l'information circule vraiment, n'est pas mesuré ici ; il peut s'écarter nettement de la structure prévue (réseau informel au sens de ${nom('krackhardt-hanson-1993')}, 1993).`),
+    c(`Cette section lit les liens de travail déclarés au cas (nature, sens, fréquence, interdépendance) : ils décrivent la structure prévue de l'équipe. Le réseau réel, c'est-à-dire à qui chacun demande conseil, à qui il fait confiance et par où l'information circule vraiment, ${releve ? "fait l'objet d'un relevé distinct, présenté à la section suivante" : "n'est pas mesuré ici"} ; il peut s'écarter nettement de la structure prévue (réseau informel au sens de ${nom('krackhardt-hanson-1993')}, 1993).`),
     c(`${relationsP.length} lien${relationsP.length > 1 ? 's' : ''} déclaré${relationsP.length > 1 ? 's' : ''} sur ${paires.length} paire${paires.length > 1 ? 's' : ''} possible${paires.length > 1 ? 's' : ''} entre les personnes ayant consenti. ${sansLien.length ? `Paires sans lien déclaré : ${sansLien.map(([x, y]) => `${x} et ${y}`).join(' ; ')}.` : 'Chaque paire a un lien déclaré.'}`),
     c(`Liens déclarés par personne, et leur fréquence : ${charge.map((x) => `${x.code}, ${x.liens.length} lien${x.liens.length > 1 ? 's' : ''} (${detailFreq(x.liens)})`).join(' ; ')}.`)
   ];
@@ -357,8 +361,196 @@ export function construire(ctx) {
     'faible',
     "Soumettre ces leviers à l'équipe et lui demander lesquels répondent à une difficulté qu'elle a déjà rencontrée, et lesquels seraient une charge de plus."
   ));
-  specStruct.push(c("Étape suivante proposée, non réalisée dans ce rapport : relever le réseau réel par quatre questions posées à chaque membre (à qui il demande conseil, d'où lui vient l'information utile, à qui il se fie pour signaler une erreur, de qui il dépend pour avancer), avec un consentement spécifique, puisque chaque réponse porte sur des collègues, et un cadrage au titre de la loi 09-08. La comparaison entre la structure prévue et le réseau réel est la seule lecture directe de la structure invisible de l'équipe."));
+  specStruct.push(c(releve
+    ? "La section suivante compare la structure prévue au réseau réel, relevé auprès des membres de l'équipe par quatre questions (à qui chacun demande conseil, de qui il reçoit une information utile, à qui il pourrait signaler une erreur sans crainte, de qui il attend le travail pour avancer), avec un consentement spécifique, puisque chaque réponse porte sur des collègues. Cette comparaison est la seule lecture directe de la structure invisible de l'équipe."
+    : "Étape suivante proposée, non réalisée dans ce rapport : relever le réseau réel par quatre questions posées à chaque membre (à qui il demande conseil, d'où lui vient l'information utile, à qui il se fie pour signaler une erreur, de qui il dépend pour avancer), avec un consentement spécifique, puisque chaque réponse porte sur des collègues, et un cadrage au titre de la loi 09-08. La comparaison entre la structure prévue et le réseau réel est la seule lecture directe de la structure invisible de l'équipe."));
   const secStruct = sec(3, 'structure', "Structure de l'équipe : liens déclarés et comment les développer", specStruct);
+
+  // Réseau réel et écarts avec la structure prévue (étape 2). Jamais un classement de personnes : des positions et des
+  // décomptes, toute lecture en hypothèse à vérifier en entretien. Sans accord de chaque personne représentée, aucun nom.
+  // Une personne non représentée (opposée ou non informée) n'est jamais nommée : son opposition ne doit pas être visible de l'équipe.
+  let secReseau = null;
+  if (releve) {
+    const aJour = perimetreAJour(rr, cas);
+    const fictifR = rr.statut === 'fictif';
+    const pluriel = (n, s, p = `${s}s`) => (n > 1 ? p : s);
+    const specR = [];
+    if (!aJour) {
+      specR.push(c("Le relevé du réseau réel n'est pas repris ici : le moteur l'a lu avant un changement de consentement à l'analyse d'équipe, et il doit être recalculé sur le périmètre actuel avant toute lecture."));
+    } else if (!rr.suffisant) {
+      specR.push(c(`Relevé insuffisant : ${rr.n_repondants} ${pluriel(rr.n_repondants, 'répondant')} sur ${rr.n_representes} ${pluriel(rr.n_representes, 'personne représentée', 'personnes représentées')}, quand la lecture exige au moins ${rr.seuils.repondants_min} répondants et au moins ${rr.seuils.taux_reponse_min_pct} pour cent de réponses. Aucune lecture du réseau réel n'est produite : un lien que ne déclare pas une personne qui n'a pas répondu n'est pas un lien inexistant.${fictifR ? ' Relevé de démonstration fictif.' : ''}`));
+    } else {
+      const nominatif = nominatifAutorise(rr);
+      const SEUIL_TXT = { conseil: 'au moins chaque mois', information: 'au moins chaque mois', confiance: `au moins ${gui('plutôt oui')}`, dependance: 'au moins chaque mois' };
+      const LIEN_FR = {
+        conseil: { titre: 'Conseil', question: 'à qui chacun demande conseil pour résoudre un problème de travail', verbe: 'demande conseil à' },
+        information: { titre: 'Information', question: 'de qui chacun reçoit une information utile à son travail', verbe: 'reçoit une information utile de' },
+        confiance: { titre: 'Confiance', question: 'à qui chacun pourrait signaler une erreur ou une difficulté sans crainte', verbe: 'pourrait signaler une erreur sans crainte à' },
+        dependance: { titre: 'Dépendance', question: 'de qui chacun attend le travail pour avancer', verbe: 'attend le travail de' }
+      };
+      const FREQ_TXT = { 2: 'chaque mois', 3: 'chaque semaine', 4: 'chaque jour' };
+      const e = rr.ecarts;
+      const nP = rr.paires_possibles;
+      const nNonRep = rr.non_representes.length;
+
+      if (fictifR) specR.push(c("Relevé de démonstration fictif : les réponses de cette section sont toutes inventées pour illustrer la lecture ; personne n'a répondu au relevé du réseau réel."));
+      specR.push(c(`Le relevé pose à chaque membre de l'équipe, sur la liste fermée des autres membres, quatre questions : à qui il demande conseil, de qui il reçoit une information utile, à qui il pourrait signaler une erreur sans crainte, de qui il attend le travail pour avancer. Un lien réel est retenu à partir de ${gui('chaque mois')} pour le conseil, l'information et la dépendance, et de ${gui('plutôt oui')} pour la confiance (conventions de ce rapport). Un lien n'est dit réciproque que si les deux personnes l'ont déclaré ; un lien déclaré d'un seul côté est présenté tel quel, jamais corrigé.`));
+      specR.push(c(`Seuils de lecture, conventions de ce rapport : au moins ${rr.seuils.repondants_min} répondants et au moins ${rr.seuils.taux_reponse_min_pct} pour cent de réponses parmi les personnes représentées. Ici, ${rr.n_repondants} répondants sur ${rr.n_representes} personnes représentées : le relevé est lu.`));
+      if (nNonRep) {
+        specR.push(c(nNonRep > 1
+          ? `${nNonRep} personnes non représentées dans ce relevé : leurs liens, dans les deux sens, sont retirés de la lecture, et rien n'est dit de leur place dans l'équipe.`
+          : "1 personne non représentée dans ce relevé : ses liens, dans les deux sens, sont retirés de la lecture, et rien n'est dit de sa place dans l'équipe."));
+      }
+      specR.push(c(`Garantie du relevé : aucun usage pour une décision d'emploi ou une évaluation des personnes. Il sert à décrire avec l'équipe, en atelier de restitution, sa façon réelle de travailler ; les questions d'éthique propres à l'analyse de réseau en organisation sont traitées par ${nom('borgatti-molina-2003')} (2003).`));
+      specR.push(c(nominatif
+        ? "Chaque membre de l'équipe a accepté que la carte nominative de l'équipe soit montrée aux membres en atelier : la carte du réseau réel, par type de lien, nomme les personnes."
+        : "Au moins un membre de l'équipe n'a pas accepté la carte nominative, ou n'est pas représenté dans ce relevé : aucune carte n'est montrée, et cette section ne donne que des indicateurs sans noms."));
+
+      // Carte : indicateurs par type de lien, nominatifs seulement sur accord de chacun.
+      const declares = [];
+      for (const l of LIENS) {
+        const L = LIEN_FR[l];
+        const ind = rr.indicateurs[l];
+        const tete = `${L.titre}, ${L.question} (${SEUIL_TXT[l]})`;
+        const relies = ind.paires_reliees ? `${ind.paires_reliees} ${pluriel(ind.paires_reliees, 'paire reliée', 'paires reliées')} sur ${nP} possibles` : `aucune paire reliée sur ${nP} possibles`;
+        if (nominatif) {
+          const rec = rr.liens[l].filter((x) => x.reciproque);
+          const un = rr.liens[l].filter((x) => !x.reciproque);
+          const phrases = [`${tete} : ${relies}.`];
+          if (rec.length) phrases.push(`${rec.length > 1 ? 'Liens réciproques' : 'Lien réciproque'} : ${rec.map((x) => `${x.a} et ${x.b}`).join(' ; ')}.`);
+          if (un.length) {
+            const cible = (x) => (x.declare_par === x.a ? x.b : x.a);
+            phrases.push(`${un.length > 1 ? "Liens déclarés d'un seul côté" : "Lien déclaré d'un seul côté"} : ${un.map((x) => `${x.declare_par} ${L.verbe} ${cible(x)} (déclaré par ${x.declare_par} seulement)`).join(' ; ')}.`);
+            declares.push(...un.map((x) => `${x.declare_par} vers ${cible(x)} (${L.titre.toLowerCase()})`));
+          }
+          specR.push(c(phrases.join(' ')));
+        } else {
+          const dont = ind.paires_reliees
+            ? `, dont ${ind.reciproques ? `${ind.reciproques} par un lien réciproque` : 'aucune par un lien réciproque'} et ${ind.un_seul_cote ? `${ind.un_seul_cote} par un lien déclaré d'un seul côté` : "aucune par un lien déclaré d'un seul côté"}`
+            : '';
+          specR.push(c(`${tete} : ${relies}${dont}.`));
+          if (ind.un_seul_cote) declares.push(l);
+        }
+      }
+      specR.push(c(rr.liens_reciproques_total
+        ? `Au total, ${rr.liens_reciproques_total} ${pluriel(rr.liens_reciproques_total, 'lien réciproque', 'liens réciproques')} sur les quatre types de lien.`
+        : 'Aucun lien réciproque sur les quatre types de lien.'));
+
+      // Écarts entre la structure prévue et le réseau réel.
+      const nE = e.n_ecarts;
+      specR.push(c(`Écarts entre la structure prévue (liens déclarés au cas, section précédente) et le réseau réel : ${nE ? `${nE} ${pluriel(nE, 'écart relevé', 'écarts relevés')}` : 'aucun écart relevé'}. Chaque écart est une hypothèse à vérifier en entretien, non un constat sur les personnes.`));
+      const decrireHors = (x) => x.liens.map((k) => `${k.de} ${LIEN_FR[k.lien].verbe} ${k.de === x.a ? x.b : x.a} ${FREQ_TXT[k.valeur]}`).join(' ; ');
+      const leviersR = [];
+      if (nominatif) {
+        for (const x of e.prevus_sans_lien_reel) {
+          specR.push(h(
+            `Lien prévu sans lien réel retenu : ${x.id} (${NATURE_LIEN[x.nature] ?? x.nature}, ${FREQ_ADJ[x.frequence] ?? x.frequence}). Aucune réponse ne relève, entre ${x.a} et ${x.b}, de conseil, d'information ou de dépendance au moins chaque mois, ni de confiance au moins ${gui('plutôt oui')}. Il se peut que ce lien existe surtout sur le papier, ou que ce qu'il devait porter passe par une tierce personne.`,
+            'faible',
+            `Demander à ${x.a} et à ${x.b} quand ce lien a servi pour la dernière fois, et par qui passe aujourd'hui ce qu'il devait porter.`
+          ));
+          leviersR.push(h(
+            `Levier, lien prévu sans lien réel (${x.id}) : lui redonner une occasion de travail réelle, ou le retirer de la structure prévue s'il ne répond plus à un besoin, plutôt que de le maintenir sur le papier.`,
+            'faible',
+            `Demander à ${x.a} et à ${x.b} ce que ce lien devait apporter, et si ce besoin existe encore.`
+          ));
+        }
+        if (e.prevus_non_lisibles.length) {
+          specR.push(c(`${e.prevus_non_lisibles.length > 1 ? 'Liens prévus non lisibles' : 'Lien prévu non lisible'}, aucune des deux personnes n'ayant répondu : ${e.prevus_non_lisibles.join(' ; ')}.`));
+        }
+        if (e.structure_prevue_complete) {
+          specR.push(c("La structure prévue relie chaque paire de personnes représentées : aucun lien réel ne peut apparaître hors de la structure prévue dans cette équipe."));
+        } else if (!e.reels_hors_prevu.length) {
+          specR.push(c("Aucun lien réel de conseil, d'information ou de dépendance, au moins chaque semaine, ne relie une paire que la structure prévue ne relie pas."));
+        }
+        for (const x of e.reels_hors_prevu) {
+          specR.push(h(
+            `Lien réel hors de la structure prévue : ${x.a} et ${x.b} (${decrireHors(x)}). Il se peut que ce lien porte une coordination qu'aucun organigramme ne prévoit, et qu'il disparaisse sans bruit si l'une des deux personnes change de poste.`,
+            'faible',
+            `Demander à ${x.a} et à ${x.b} ce qui passe par ce lien, et ce qui se passerait sans lui.`
+          ));
+          leviersR.push(h(
+            `Levier, lien réel hors de la structure prévue (${x.a} et ${x.b}) : le reconnaître dans la structure prévue s'il porte une coordination nécessaire, afin qu'il ne repose pas sur la seule initiative des deux personnes.`,
+            'faible',
+            `Demander à ${x.a} et à ${x.b} si ce lien doit être reconnu, et sous quelle forme (point régulier, mention dans la répartition des rôles).`
+          ));
+        }
+        for (const x of e.relais_reels) {
+          const qui = x.demandeurs.length === 2
+            ? `${liste(x.demandeurs)}, deux personnes qui ne se demandent pas conseil entre elles`
+            : `${liste(x.demandeurs)}, dont au moins deux ne se demandent pas conseil entre elles`;
+          if (e.relais_reels_non_prevus.includes(x.code)) {
+            specR.push(h(
+              `Relais réel de conseil : ${x.code} reçoit des demandes de conseil de ${qui}. Ce rôle n'apparaît pas dans la structure prévue. Il se peut que ${x.code} porte une charge de mise en relation que personne ne voit.`,
+              'faible',
+              `Demander à ${x.code} quelles questions lui sont adressées et ce qu'elles lui demandent de temps, puis demander à ${liste(x.demandeurs)} ce qu'ils pourraient se demander directement.`
+            ));
+            leviersR.push(h(
+              `Levier, relais réel non prévu (${x.code}) : reconnaître cette charge de mise en relation (temps dédié, mention dans la répartition des rôles), ou ouvrir un échange direct entre ${liste(x.demandeurs)} pour les questions qui n'ont pas besoin d'intermédiaire.`,
+              'faible',
+              `Demander séparément à ${liste(x.demandeurs)} ce qu'ils demandent à ${x.code}, et à ${x.code} ce que cette charge lui coûte.`
+            ));
+          } else {
+            specR.push(h(
+              `Relais prévu et réel : ${x.code}, au milieu d'une chaîne de séquence prévue, reçoit aussi des demandes de conseil de ${qui}. Il se peut que ce point de passage concentre à la fois le travail et les questions.`,
+              'faible',
+              `Demander à ${x.code} ce qu'il reçoit comme travail et comme questions, et qui pourrait en prendre une part.`
+            ));
+          }
+        }
+        for (const code of e.relais_prevus_non_reels) {
+          specR.push(h(
+            `${code}, relais prévu au milieu d'une chaîne de séquence (section précédente), ne reçoit pas de demandes de conseil de deux personnes qui ne se consultent pas entre elles. Il se peut que la chaîne prévue fonctionne par la transmission du travail plutôt que par le conseil, ou que des questions la contournent.`,
+            'faible',
+            `Demander à ${code} ce qu'il reçoit de l'amont et ce qu'il transmet, puis demander aux autres membres à qui ils s'adressent quand une question bloque la chaîne.`
+          ));
+          leviersR.push(h(
+            `Levier, relais prévu sans relais réel de conseil (${code}) : vérifier ce qui passe réellement par la chaîne de séquence prévue avant de lui attribuer, ou de lui retirer, une charge de relais.`,
+            'faible',
+            `Demander à ${code} et aux personnes de part et d'autre de la chaîne ce qui passe par ${code}, et ce qui le contourne.`
+          ));
+        }
+        if (!e.relais_reels.length && !e.relais_prevus_non_reels.length) {
+          specR.push(c(e.relais_prevus.length ? 'Aucun écart de relais : chaque relais prévu est aussi un relais réel de conseil.' : "Aucune personne n'apparaît comme relais réel de conseil, et la structure prévue ne prévoit aucun relais."));
+        }
+      } else {
+        const parts = [
+          `${e.prevus_sans_lien_reel.length ? `${e.prevus_sans_lien_reel.length} ${pluriel(e.prevus_sans_lien_reel.length, 'lien prévu', 'liens prévus')} sans lien réel retenu` : 'aucun lien prévu sans lien réel retenu'}`,
+          e.structure_prevue_complete
+            ? 'aucun lien réel hors de la structure prévue, qui relie chaque paire'
+            : `${e.reels_hors_prevu.length ? `${e.reels_hors_prevu.length} ${pluriel(e.reels_hors_prevu.length, 'lien réel', 'liens réels')}` : 'aucun lien réel'} au moins hebdomadaire hors de la structure prévue`,
+          `${e.relais_reels_non_prevus.length ? `${e.relais_reels_non_prevus.length} ${pluriel(e.relais_reels_non_prevus.length, 'relais réel de conseil non prévu', 'relais réels de conseil non prévus')}` : 'aucun relais réel de conseil non prévu'}`,
+          `${e.relais_prevus_non_reels.length ? `${e.relais_prevus_non_reels.length} ${pluriel(e.relais_prevus_non_reels.length, "relais prévu qui n'apparaît pas", "relais prévus qui n'apparaissent pas")} comme relais réel` : "aucun relais prévu qui n'apparaisse pas comme relais réel"}`
+        ];
+        specR.push(c(`Écarts, sans noms : ${parts.join(' ; ')}.`));
+        if (nE) {
+          specR.push(h(
+            "Il se peut que la coordination réelle de l'équipe emprunte d'autres chemins que ceux de la structure prévue. Ces écarts sont à instruire avec l'équipe, sans chercher à savoir qui a répondu quoi.",
+            'faible',
+            "En atelier, présenter ces décomptes à l'équipe et lui demander quels chemins réels elle reconnaît, sans demander à quiconque de dévoiler ses réponses."
+          ));
+          leviersR.push(h(
+            "Levier, écarts sans noms : laisser l'équipe désigner elle-même, en atelier, les liens prévus qui ne servent plus et les chemins réels à reconnaître, plutôt que de les déduire du relevé.",
+            'faible',
+            "Demander à l'équipe, collectivement, quels liens elle propose de reconnaître ou de retirer, et ce qui la retient de le faire."
+          ));
+        }
+      }
+      if (declares.length) {
+        leviersR.push(h(
+          "Levier, liens déclarés d'un seul côté : les présenter en atelier comme des attentes à éclaircir, non comme des erreurs du relevé, sans demander à quiconque de justifier sa réponse.",
+          'faible',
+          "Demander à l'équipe, collectivement, ce qu'un lien déclaré d'un seul côté peut signifier dans son travail (une attente, un rythme différent, une question restée sans réponse)."
+        ));
+      }
+      leviersR.push(h(
+        "Levier, suivi : refaire le relevé après un délai convenu avec l'équipe, dans la limite de la durée de conservation du relevé, pour voir ce qui a bougé ; les leviers sont à choisir avec l'équipe, non à imposer.",
+        'faible',
+        "Convenir avec l'équipe du moment du prochain relevé et des changements qu'elle souhaite y voir apparaître."
+      ));
+      specR.push(...leviersR);
+    }
+    secReseau = sec(3, 'reseau-reel', 'Réseau réel et écarts avec la structure prévue', specR);
+  }
 
   // Sécurité psychologique
   const facteurs = [];
@@ -408,7 +600,7 @@ export function construire(ctx) {
   const n3 = {
     id: 'n3-equipe',
     titre: "Analyse d'équipe",
-    sections: participants.length >= 2 ? [secPerimetre, secCarto, secDiv, secDec, secStruct, secSecu, secCoord] : [secPerimetre]
+    sections: participants.length >= 2 ? [secPerimetre, secCarto, secDiv, secDec, secStruct, secReseau, secSecu, secCoord].filter(Boolean) : [secPerimetre]
   };
 
   // ---------------------------------------------------------------- N4 : lecture organisationnelle

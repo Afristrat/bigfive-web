@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { construire } from './niveau34-equipe-organisation.mjs';
 import { auditer } from '../audit/audit.mjs';
+import { lireReseau } from '../moteur/reseau.mjs';
 
 const lire = (p) => JSON.parse(fs.readFileSync(new URL(p, import.meta.url), 'utf-8'));
 const base = () => ({
@@ -483,7 +484,9 @@ test('structure de l’équipe : section placée après la décision, relais, ch
   const verifs = r.niveaux[0].sections.find((s) => s.id === 'n3-structure').paragraphes.map((p) => norm(p.verification ?? '')).join(' | ');
   assert.match(verifs, /la dernière fois que KB ou SR était absent/);
   assert.match(t, /Lien à fréquence mensuelle : AM-HT \(mentorat\)/);
-  assert.match(t, /n'est pas mesuré ici/);
+  assert.match(t, /fait l'objet d'un relevé distinct, présenté à la section suivante/);
+  assert.ok(!/n'est pas mesuré ici|non réalisée dans ce rapport/.test(t), 'phrases de l’étape 1 devenues fausses quand un relevé existe');
+  assert.match(t, /La section suivante compare la structure prévue au réseau réel/);
   for (const id of ['krackhardt-hanson-1993', 'cross-parker-2004']) assert.ok(r.reference_ids.includes(id), id);
   const hyp = r.niveaux[0].sections.find((s) => s.id === 'n3-structure').paragraphes.filter((p) => p.statut === 'hypothese');
   assert.ok(hyp.length >= 4 && hyp.every((p) => p.confiance === 'faible' && p.verification));
@@ -509,4 +512,161 @@ test('structure de l’équipe : paire sans lien, sens inversé et aucun point d
   t = textesSection(construire(plat).niveaux[0], 'n3-structure');
   assert.ok(!/charge de liens la plus élevée|au milieu d'une chaîne|fréquence mensuelle/.test(t));
   assert.match(t, /confronter la structure prévue au réseau réel/);
+});
+
+// ------------------------------------------------------------------ réseau réel (étape 2)
+const sectionReseau = (r) => r.niveaux[0].sections.find((s) => s.id === 'n3-reseau-reel');
+const texteReseau = (r) => sectionReseau(r).paragraphes.map((p) => norm(p.texte)).join('\n');
+const verifsReseau = (r) => sectionReseau(r).paragraphes.map((p) => norm(p.verification ?? '')).join('\n');
+// Recalcule faits.reseau_reel après une mutation du cas, comme le ferait moteur/calculer.mjs.
+const relire = (ctx) => { ctx.faits.reseau_reel = lireReseau(ctx.cas); return ctx; };
+const SANS_CLASSEMENT = /la plus|le plus|la moins|le moins|central|isolé/i;
+
+test('réseau réel : section juste après la structure, relevé fictif, seuils, garantie, carte nominative', () => {
+  const ctx = base();
+  const r = construire(ctx);
+  const ids = r.niveaux[0].sections.map((s) => s.id);
+  assert.equal(ids.indexOf('n3-reseau-reel'), ids.indexOf('n3-structure') + 1);
+  const s = sectionReseau(r);
+  assert.equal(s.titre, 'Réseau réel et écarts avec la structure prévue');
+  const t = texteReseau(r);
+  assert.match(t, /^Relevé de démonstration fictif : /);
+  assert.match(t, /au moins 4 répondants et au moins 80 pour cent de réponses/);
+  assert.match(t, /4 répondants sur 4 personnes représentées/);
+  assert.match(t, /aucun usage pour une décision d'emploi ou une évaluation des personnes/);
+  assert.match(t, /Borgatti et Molina \(2003\)/);
+  assert.ok(r.reference_ids.includes('borgatti-molina-2003'));
+  assert.match(t, /Chaque membre de l'équipe a accepté que la carte nominative/);
+  assert.match(t, /Conseil, à qui chacun demande conseil[^\n]*: 3 paires reliées sur 6 possibles\. Liens réciproques : AM et KB ; SR et HT\. Lien déclaré d'un seul côté : KB demande conseil à HT \(déclaré par KB seulement\)\./);
+  assert.match(t, /Information[^\n]*: 5 paires reliées sur 6 possibles/);
+  assert.match(t, /AM reçoit une information utile de SR \(déclaré par AM seulement\)/);
+  assert.match(t, /15 liens réciproques/);
+  assert.ok(!SANS_CLASSEMENT.test(t + verifsReseau(r)), 'jamais de classement de personnes');
+});
+
+test('réseau réel : écarts (a), (b) et (c) et leviers, chacun avec sa vérification en entretien', () => {
+  const ctx = base();
+  const r = construire(ctx);
+  const t = texteReseau(r);
+  assert.match(t, /3 écarts relevés/);
+  assert.match(t, /Lien prévu sans lien réel retenu : AM-HT \(mentorat, mensuel\)/);
+  assert.match(t, /La structure prévue relie chaque paire de personnes représentées/);
+  assert.match(t, /Relais réel de conseil : HT reçoit des demandes de conseil de KB et SR, deux personnes qui ne se demandent pas conseil entre elles/);
+  assert.match(t, /KB, relais prévu au milieu d'une chaîne de séquence/);
+  const s = sectionReseau(r);
+  const leviers = s.paragraphes.filter((p) => /^Levier/.test(norm(p.texte)));
+  assert.ok(leviers.length >= 4, `leviers : ${leviers.length}`);
+  for (const p of leviers) {
+    assert.equal(p.statut, 'hypothese', p.id);
+    assert.ok(p.verification && p.verification.length > 20, p.id);
+    assert.equal(p.confiance, 'faible');
+  }
+  for (const p of s.paragraphes.filter((x) => /^(Lien prévu sans|Relais réel|KB, relais prévu)/.test(norm(x.texte)))) assert.equal(p.statut, 'hypothese', p.id);
+  assert.deepEqual(auditContenu(ctx, r), []);
+});
+
+test('réseau réel : écart (b) lu quand la structure prévue laisse une paire sans lien', () => {
+  const ctx = base();
+  ctx.cas.relations = ctx.cas.relations.filter((x) => x.id !== 'KB-SR');
+  relire(ctx);
+  const t = texteReseau(construire(ctx));
+  assert.match(t, /Lien réel hors de la structure prévue : KB et SR \(KB reçoit une information utile de SR chaque semaine ; SR reçoit une information utile de KB chaque semaine ; SR attend le travail de KB chaque jour\)/);
+  assert.match(t, /Levier, lien réel hors de la structure prévue \(KB et SR\)/);
+});
+
+test('réseau réel : 3 répondants, relevé insuffisant et rien d’autre', () => {
+  const ctx = base();
+  Object.assign(ctx.cas.reseau_reel.membres.find((m) => m.code === 'HT'), { accord_repondre: false, a_repondu: false });
+  relire(ctx);
+  const r = construire(ctx);
+  const s = sectionReseau(r);
+  assert.equal(s.paragraphes.length, 1);
+  assert.match(norm(s.paragraphes[0].texte), /^Relevé insuffisant : 3 répondants sur 4 personnes représentées, quand la lecture exige au moins 4 répondants et au moins 80 pour cent de réponses\. Aucune lecture du réseau réel n'est produite/);
+  assert.match(norm(s.paragraphes[0].texte), /Relevé de démonstration fictif\.$/);
+  assert.deepEqual(auditContenu(ctx, r), []);
+});
+
+test('réseau réel : une opposition dans une équipe de 4, relevé insuffisant sans nommer la personne', () => {
+  const ctx = base();
+  Object.assign(ctx.cas.reseau_reel.membres.find((m) => m.code === 'SR'), { oppose: true, accord_repondre: false, accord_carte: false, a_repondu: false });
+  relire(ctx);
+  const r = construire(ctx);
+  const t = texteReseau(r);
+  assert.equal(sectionReseau(r).paragraphes.length, 1);
+  assert.match(t, /3 répondants sur 3 personnes représentées/);
+  assert.ok(!/\bSR\b/.test(t));
+  assert.deepEqual(auditContenu(ctx, r), []);
+});
+
+test('réseau réel : un refus de carte, indicateurs sans noms seulement', () => {
+  const ctx = base();
+  ctx.cas.reseau_reel.membres.find((m) => m.code === 'SR').accord_carte = false;
+  relire(ctx);
+  const r = construire(ctx);
+  const t = texteReseau(r) + '\n' + verifsReseau(r);
+  assert.ok(!/\b(AM|KB|SR|HT)\b|Amine|Karim|Salma|Hind/.test(t), 'aucun nom ni code');
+  assert.match(t, /n'a pas accepté la carte nominative/);
+  assert.match(t, /Conseil[^\n]*: 3 paires reliées sur 6 possibles, dont 2 par un lien réciproque et 1 par un lien déclaré d'un seul côté/);
+  assert.match(t, /1 lien prévu sans lien réel retenu/);
+  assert.match(t, /1 relais réel de conseil non prévu/);
+  assert.ok(sectionReseau(r).paragraphes.some((p) => p.statut === 'hypothese' && /^Levier/.test(norm(p.texte))));
+  assert.deepEqual(auditContenu(ctx, r), []);
+});
+
+test('réseau réel : aucun relevé, pas de section et phrases de l’étape 1 d’origine', () => {
+  const ctx = base();
+  delete ctx.cas.reseau_reel;
+  relire(ctx);
+  const r = construire(ctx);
+  assert.equal(sectionReseau(r), undefined);
+  const t = textesSection(r.niveaux[0], 'n3-structure');
+  assert.match(t, /n'est pas mesuré ici/);
+  assert.match(t, /Étape suivante proposée, non réalisée dans ce rapport/);
+  assert.ok(!r.reference_ids.includes('borgatti-molina-2003'));
+});
+
+test('réseau réel : consentement à l’équipe retiré après le calcul, le relevé n’est pas repris', () => {
+  const ctx = base();
+  ctx.cas.personnes.find((p) => p.code === 'KB').consentements.equipe = false;
+  const r = construire(ctx);
+  const t = texteReseau(r);
+  assert.equal(sectionReseau(r).paragraphes.length, 1);
+  assert.match(t, /doit être recalculé/);
+  assert.ok(!/\bKB\b/.test(t));
+});
+
+// Équipe de cinq : NR, opposée au relevé, reste dans l'analyse d'équipe ; les quatre autres répondent et acceptent la carte nominative.
+const avecOpposition = () => {
+  const ctx = base();
+  const clone = (x) => ({ ...copie(x), code: 'NR', nom: 'Nadia R.' });
+  ctx.cas.personnes.push(clone(ctx.cas.personnes.find((p) => p.code === 'HT')));
+  ctx.profils.push(clone(ctx.profils.find((p) => p.code === 'HT')));
+  ctx.cas.reseau_reel.membres.push({ code: 'NR', informe: true, oppose: true, accord_repondre: false, accord_carte: false, a_repondu: false });
+  return relire(ctx);
+};
+
+test('réseau réel : une opposition, les quatre autres d’accord, toute la section sans noms, décompte présent', () => {
+  const ctx = avecOpposition();
+  const rr = ctx.faits.reseau_reel;
+  assert.deepEqual([rr.non_representes, rr.suffisant, rr.carte_nominative], [['NR'], true, false]);
+  const r = construire(ctx);
+  const t = texteReseau(r) + '\n' + verifsReseau(r);
+  assert.ok(!/\b(AM|KB|SR|HT|NR)\b|Amine|Karim|Salma|Hind|Nadia/.test(t), 'aucun nom ni code');
+  assert.match(t, /1 personne non représentée dans ce relevé : ses liens, dans les deux sens, sont retirés de la lecture, et rien n'est dit de sa place dans l'équipe\./);
+  assert.match(t, /Au moins un membre de l'équipe n'a pas accepté la carte nominative, ou n'est pas représenté dans ce relevé : aucune carte n'est montrée/);
+  assert.match(t, /Conseil[^\n]*: 3 paires reliées sur 6 possibles, dont/);
+  assert.deepEqual(auditContenu(ctx, r), []);
+});
+
+test('réseau réel : deux personnes non représentées, décompte au pluriel et aucun nom', () => {
+  const ctx = avecOpposition();
+  const clone = (x) => ({ ...copie(x), code: 'OM', nom: 'Omar M.' });
+  ctx.cas.personnes.push(clone(ctx.cas.personnes.find((p) => p.code === 'NR')));
+  ctx.profils.push(clone(ctx.profils.find((p) => p.code === 'NR')));
+  ctx.cas.reseau_reel.membres.push({ code: 'OM', informe: false, oppose: false, accord_repondre: false, accord_carte: false, a_repondu: false });
+  relire(ctx);
+  assert.deepEqual(ctx.faits.reseau_reel.non_representes, ['NR', 'OM']);
+  const t = texteReseau(construire(ctx));
+  assert.ok(!/\b(NR|OM)\b|Nadia|Omar/.test(t));
+  assert.match(t, /2 personnes non représentées dans ce relevé : leurs liens, dans les deux sens, sont retirés de la lecture, et rien n'est dit de leur place dans l'équipe\./);
 });
