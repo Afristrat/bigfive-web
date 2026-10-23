@@ -89,13 +89,13 @@ Aucun usage pour une décision d'emploi, une évaluation ou une rémunération :
 >
 > ☐ Je m'oppose à être cité dans ce relevé.
 
-## 9. Décisions d'Amine, une par une
+## 9. Décisions d'Amine (23/10/2026)
 
-1. Base légale : double garde recommandée (§5), ou intérêt légitime seul.
-2. Visibilité de la carte nominative en atelier : sur accord de chaque membre (recommandé), ou indicateurs sans noms seulement.
-3. Durée de conservation après la mission.
-4. Juriste chargé de relire les textes du §8 et de confirmer l'analyse d'impact.
-5. État de la déclaration CNDP de la plateforme, à compléter de cette finalité.
+1. Base légale : **double garde** (consentement du répondant et information préalable des personnes citées, avec droit d'opposition).
+2. Carte nominative en atelier : **seulement sur accord de chaque membre** ; sinon indicateurs sans noms.
+3. Conservation : **3 ans**, puis suppression automatique.
+4. Relecture juridique des textes du §8 : **Amine**.
+5. Déclaration CNDP de cette finalité : **en cours**. Conséquence (loi 09-08, art. 12, déclaration préalable) : tout est construit et déployé, mais l'ouverture du relevé aux participants reste **fermée en production** jusqu'à ce qu'Amine confirme le dépôt ou le récépissé. Le registre public de la CNDP n'a pas pu être consulté depuis le poste le 23/10 (cndp.ma injoignable, délai dépassé).
 
 ## 10. Après validation : travaux techniques, dans l'ordre
 
