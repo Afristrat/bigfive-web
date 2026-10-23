@@ -86,9 +86,29 @@ export function dumbbellSvg(a, b, titres, ecartFn) {
   return `<figure class="halteres anim" role="region" tabindex="0" aria-label="${esc(titreFigure)}"><svg viewBox="0 0 ${L} ${y + 6}" style="min-width:${Math.round(L * 0.95)}px" role="img" aria-label="Positions de ${esc(a.nom)} et ${esc(b.nom)} sur les 30 facettes, échelle de 1 à 5, les écarts notables sont tracés en trait épais"><title>${esc(titreFigure)}</title>${grille}${legende}${corps}</svg>${table}</figure>`;
 }
 
-// ---------- Carte des liens déclarés : personnes en cercle, épaisseur selon la fréquence, flèche selon le sens ----------
-export function reseauSvg(ps, relations, natures = {}) {
-  const T = 420, H = T + 40, cx = T / 2, cy = T / 2, R = 140, r = 24;
+// ---------- Carte des liens : personnes en cercle, épaisseur selon la fréquence, flèche selon le sens ----------
+// Sans option : carte des liens déclarés au cas (structure prévue), relations de cas.relations.
+// Avec { lien } (conseil, information, confiance, dependance) : carte du réseau réel pour ce type de lien, liens de
+// faits.reseau_reel.liens[lien] ; trait sans flèche = réciproque, flèche = déclaré d'un seul côté, de la personne qui
+// déclare vers la personne citée. Chaque carte d'une même page porte son propre marqueur de flèche (option marqueur).
+const LIEN_REEL = {
+  conseil: { titre: 'conseil', verbe: 'demande conseil à', legende: 'Conseil : qui demande conseil à qui' },
+  information: { titre: 'information', verbe: 'reçoit une information utile de', legende: 'Information : qui reçoit une information utile de qui' },
+  confiance: { titre: 'confiance', verbe: 'pourrait signaler une erreur sans crainte à', legende: 'Confiance : qui pourrait signaler une erreur sans crainte à qui' },
+  dependance: { titre: 'dépendance', verbe: 'attend le travail de', legende: 'Dépendance : qui attend le travail de qui' }
+};
+const ECHELLE_REEL = {
+  frequence: { libelles: ['jamais', 'rarement', 'chaque mois', 'chaque semaine', 'chaque jour'], epais: { 2: 1.2, 3: 2.8, 4: 5 } },
+  confiance: { libelles: ['non', 'plutôt non', 'plutôt oui', 'oui'], epais: { 2: 1.2, 3: 2.8 } }
+};
+export function reseauSvg(ps, relations, natures = {}, options = {}) {
+  const reel = typeof options.lien === 'string';
+  const L = reel ? LIEN_REEL[options.lien] : null;
+  if (reel && !L) throw new Error(`reseauSvg : type de lien inconnu ${options.lien}`);
+  const echelle = reel ? ECHELLE_REEL[options.lien === 'confiance' ? 'confiance' : 'frequence'] : null;
+  const marqueur = options.marqueur ?? 'reseau-fleche';
+  const nonRepresentes = new Set(options.nonRepresentes ?? []);
+  const T = 420, H = T + (reel ? 60 : 40), cx = T / 2, cy = T / 2, R = 140, r = 24;
   const pos = Object.fromEntries(ps.map((p, i) => {
     const a = -Math.PI / 2 + (2 * Math.PI * i) / ps.length;
     return [p.code, { x: cx + R * Math.cos(a), y: cy + R * Math.sin(a), a, p }];
@@ -96,27 +116,54 @@ export function reseauSvg(ps, relations, natures = {}) {
   const epais = { quotidienne: 5, hebdomadaire: 2.8, mensuelle: 1.2 };
   const freqFr = { quotidienne: 'quotidien', hebdomadaire: 'hebdomadaire', mensuelle: 'mensuel' };
   const interFr = { sequentielle: 'séquence', reciproque: 'réciprocité', 'mise-en-commun': 'mise en commun' };
-  const rels = relations.filter((l) => pos[l.a] && pos[l.b]);
+  // Réseau réel : un lien est ramené à la forme d'une relation (sens, épaisseur) ; l'épaisseur suit la réponse la plus haute des deux.
+  const rels = (reel
+    ? relations.map((l) => ({
+      ...l,
+      sens: l.reciproque ? 'reciproque' : (l.declare_par === l.b ? 'b->a' : 'a->b'),
+      largeur: echelle.epais[Math.max(l.a_vers_b ?? 0, l.b_vers_a ?? 0)] ?? 1.2
+    }))
+    : relations).filter((l) => pos[l.a] && pos[l.b] && !nonRepresentes.has(l.a) && !nonRepresentes.has(l.b));
   const n = (v) => v.toFixed(1);
   const traits = rels.map((l, i) => {
     const [de, vers] = l.sens === 'b->a' ? [pos[l.b], pos[l.a]] : [pos[l.a], pos[l.b]];
     const dx = vers.x - de.x, dy = vers.y - de.y, d = Math.hypot(dx, dy);
     const x1 = de.x + (dx / d) * r, y1 = de.y + (dy / d) * r, x2 = vers.x - (dx / d) * (r + 10), y2 = vers.y - (dy / d) * (r + 10);
-    const fleche = l.sens === 'reciproque' ? '' : ' marker-end="url(#reseau-fleche)"';
+    const fleche = l.sens === 'reciproque' ? '' : ` marker-end="url(#${marqueur})"`;
     const tiret = l.interdependance === 'mise-en-commun' ? ' stroke-dasharray="6 5"' : '';
-    return `<line class="lien-reseau" style="--i:${i}" x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke-width="${epais[l.frequence] ?? 1.5}"${tiret}${fleche}/>`;
+    return `<line class="lien-reseau" style="--i:${i}" x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke-width="${reel ? l.largeur : epais[l.frequence] ?? 1.5}"${tiret}${fleche}/>`;
   }).join('');
-  // Étiquette vers l'extérieur du cercle, jamais sur un trait.
+  // Étiquette vers l'extérieur du cercle, jamais sur un trait. Une personne non représentée reste sur la carte, en creux, sans aucun lien.
   const noeuds = Object.values(pos).map(({ x, y, a, p }) => {
     const c = Math.cos(a), sn = Math.sin(a);
     const ancre = c > 0.3 ? 'start' : c < -0.3 ? 'end' : 'middle';
-    return `<g class="noeud">${marque(p.forme, x, y, r * 0.62, p.couleur)}<text class="ent" x="${n(x + c * (r + 4))}" y="${n(y + sn * (r + 6) + 4.5)}" text-anchor="${ancre}">${esc(p.code)}</text></g>`;
+    const absent = nonRepresentes.has(p.code);
+    const forme = absent ? marque(p.forme, x, y, r * 0.62, 'none', `stroke="${p.couleur}" stroke-width="2" stroke-dasharray="3 3"`) : marque(p.forme, x, y, r * 0.62, p.couleur);
+    return `<g class="noeud">${forme}<text class="ent" x="${n(x + c * (r + 4))}" y="${n(y + sn * (r + 6) + 4.5)}" text-anchor="${ancre}">${esc(absent ? `${p.code}, non représentée` : p.code)}</text></g>`;
   }).join('');
-  const legende = `<g transform="translate(20,${H - 30})"><line class="lien-reseau" x1="0" y1="0" x2="30" y2="0" stroke-width="5"/><text class="gn" x="36" y="4.5">quotidien</text><line class="lien-reseau" x1="112" y1="0" x2="142" y2="0" stroke-width="2.8"/><text class="gn" x="148" y="4.5">hebdomadaire</text><line class="lien-reseau" x1="250" y1="0" x2="280" y2="0" stroke-width="1.2"/><text class="gn" x="286" y="4.5">mensuel</text><text class="gn" x="0" y="24">flèche : qui oriente, décide ou fournit ; tirets : mise en commun</text></g>`;
-  const titre = 'Carte des liens déclarés au cas';
-  const lignes = rels.map((l) => [`${l.a} et ${l.b}`, natures[l.nature] ?? l.nature, l.sens === 'reciproque' ? 'sans direction dominante' : (l.sens === 'b->a' ? `${l.b} vers ${l.a}` : `${l.a} vers ${l.b}`), freqFr[l.frequence] ?? l.frequence, interFr[l.interdependance] ?? l.interdependance]);
-  const table = tableau(titre, ['Lien', 'Nature', 'Sens', 'Fréquence', 'Interdépendance'], lignes);
-  return `<figure class="reseau anim" role="region" tabindex="0" aria-label="${titre}"><svg viewBox="0 0 ${T} ${H}" role="img" aria-label="${titre} : chaque personne est un point, l'épaisseur d'un trait dit la fréquence du lien, une flèche dit qui oriente, décide ou fournit pour l'autre"><title>${titre}</title><defs><marker id="reseau-fleche" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="fleche"/></marker></defs>${traits}${noeuds}${legende}</svg>${table}</figure>`;
+  const legendeReel = () => {
+    const paliers = Object.keys(echelle.epais).map(Number).sort((u, v) => v - u);
+    const traitsLeg = paliers.map((v, k) => `<line class="lien-reseau" x1="${k * 140}" y1="0" x2="${k * 140 + 30}" y2="0" stroke-width="${echelle.epais[v]}"/><text class="gn" x="${k * 140 + 36}" y="4.5">${esc(echelle.libelles[v])}</text>`).join('');
+    return `<g transform="translate(20,${H - 50})">${traitsLeg}<text class="gn" x="0" y="24">flèche : déclaré d'un seul côté, vers la personne citée</text><text class="gn" x="0" y="44">sans flèche : déclaré des deux côtés (réciproque)</text></g>`;
+  };
+  const legende = reel
+    ? legendeReel()
+    : `<g transform="translate(20,${H - 30})"><line class="lien-reseau" x1="0" y1="0" x2="30" y2="0" stroke-width="5"/><text class="gn" x="36" y="4.5">quotidien</text><line class="lien-reseau" x1="112" y1="0" x2="142" y2="0" stroke-width="2.8"/><text class="gn" x="148" y="4.5">hebdomadaire</text><line class="lien-reseau" x1="250" y1="0" x2="280" y2="0" stroke-width="1.2"/><text class="gn" x="286" y="4.5">mensuel</text><text class="gn" x="0" y="24">flèche : qui oriente, décide ou fournit ; tirets : mise en commun</text></g>`;
+  const titre = options.titre ?? (reel ? `Carte du réseau réel : ${L.titre}` : 'Carte des liens déclarés au cas');
+  const valeurReel = (v) => (v === null || v === undefined ? 'pas de réponse' : echelle.libelles[v]);
+  const table = reel
+    ? tableau(titre, ['Paire', 'Sens', 'Réponse de la première personne', 'Réponse de la seconde personne'], rels.map((l) => [
+      `${l.a} et ${l.b}`,
+      l.reciproque ? 'réciproque' : `${l.declare_par} ${L.verbe} ${l.declare_par === l.a ? l.b : l.a} (déclaré par ${l.declare_par} seulement)`,
+      `${l.a} : ${valeurReel(l.a_vers_b)}`,
+      `${l.b} : ${valeurReel(l.b_vers_a)}`
+    ]))
+    : tableau(titre, ['Lien', 'Nature', 'Sens', 'Fréquence', 'Interdépendance'], rels.map((l) => [`${l.a} et ${l.b}`, natures[l.nature] ?? l.nature, l.sens === 'reciproque' ? 'sans direction dominante' : (l.sens === 'b->a' ? `${l.b} vers ${l.a}` : `${l.a} vers ${l.b}`), freqFr[l.frequence] ?? l.frequence, interFr[l.interdependance] ?? l.interdependance]));
+  const aria = reel
+    ? `${titre} : chaque personne est un point, l'épaisseur d'un trait dit la réponse la plus haute des deux personnes, une flèche part de la personne qui déclare un lien que l'autre ne déclare pas`
+    : `${titre} : chaque personne est un point, l'épaisseur d'un trait dit la fréquence du lien, une flèche dit qui oriente, décide ou fournit pour l'autre`;
+  const legendeVisible = reel ? `<figcaption>${esc(L.legende)}</figcaption>` : '';
+  return `<figure class="reseau anim" role="region" tabindex="0" aria-label="${esc(titre)}">${legendeVisible}<svg viewBox="0 0 ${T} ${H}" role="img" aria-label="${esc(aria)}"><title>${esc(titre)}</title><defs><marker id="${esc(marqueur)}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="fleche"/></marker></defs>${traits}${noeuds}${legende}</svg>${table}</figure>`;
 }
 
 // ---------- Carte de chaleur d'équipe : 30 facettes x personnes, plus l'étendue ----------
@@ -163,7 +210,7 @@ figure{margin:12px 0}
 .anneau{fill:none;stroke:var(--grid,var(--ln))}.axe{stroke:var(--grid,var(--ln))}.lab{font:600 14px system-ui,Segoe UI,Arial;fill:var(--mut)}
 .forme{transform-box:fill-box;transform-origin:center}
 .gr{stroke:var(--grid,var(--ln));stroke-dasharray:3 4}.gn{font:13px system-ui,Segoe UI,Arial;fill:var(--mut)}.grp{font:700 14px system-ui,Segoe UI,Arial;fill:var(--fg)}
-.lien-reseau{stroke:var(--mut);stroke-linecap:round}.fleche{fill:var(--mut)}.reseau svg{width:min(100%,420px);display:block;margin:0 auto}.fac{font:13px system-ui,Segoe UI,Arial;fill:var(--fg)}.val{font:600 13px system-ui,Segoe UI,Arial;fill:#0f2e2e}.ent{font:700 13px system-ui,Segoe UI,Arial;fill:var(--mut)}
+.lien-reseau{stroke:var(--mut);stroke-linecap:round}.fleche{fill:var(--mut)}.reseau svg{width:min(100%,420px);display:block;margin:0 auto}.cartes-reseau{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:12px}.cartes-reseau figcaption{font-weight:700;text-align:center;margin:0 0 4px}.fac{font:13px system-ui,Segoe UI,Arial;fill:var(--fg)}.val{font:600 13px system-ui,Segoe UI,Arial;fill:#0f2e2e}.ent{font:700 13px system-ui,Segoe UI,Arial;fill:var(--mut)}
 .lien{stroke:var(--mut);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0}.rang.notable .lien,.lien.notable{stroke:var(--ecart,var(--no));stroke-width:3.8}
 .rang.proche .lien{stroke-width:1.6}
 .eten{fill:var(--mut)}.eten.fort{fill:var(--ecart,var(--no))}

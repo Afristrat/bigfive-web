@@ -246,3 +246,57 @@ test('variante docx : bandeau et colonne « Source contrôlée » présents, san
   assert.ok(d.includes('id="bandeau-relecture"') && /<th scope="col">Source contrôlée<\/th>/.test(d));
   assert.ok(!/<svg|<script|<style/.test(d));
 });
+
+// ------------------------------------------------------------------ carte du réseau réel (étape 2)
+const casDemo = lire('..', 'cas', 'cas-demo.json');
+const faitsDemo = lire('..', 'sortie', 'faits.json');
+const rapportReseau = {
+  version: 'r-test', empreinte_entrees: 'test', avertissements: [], recommandations: [], references: [],
+  niveaux: [{ id: 'n3-equipe', titre: 'Analyse d\'équipe', sections: [
+    { id: 'n3-structure', titre: 'Structure', paragraphes: [{ id: 'n3-structure-1', texte: 'x', statut: 'constate' }] },
+    { id: 'n3-reseau-reel', titre: 'Réseau réel et écarts avec la structure prévue', paragraphes: [{ id: 'n3-reseau-reel-1', texte: 'y', statut: 'constate' }] }
+  ] }]
+};
+const rendreReseau = (f, variante) => rendreHtml({ rapport: rapportReseau, cas: casDemo, faits: f, profils, bib, variante });
+
+test('réseau réel : une carte par type de lien, après la carte prévue, chacune avec son propre marqueur de flèche', () => {
+  const h = rendreReseau(faitsDemo);
+  const sec = h.slice(h.indexOf('id="n3-reseau-reel"'));
+  for (const l of ['conseil', 'information', 'confiance', 'dependance']) {
+    assert.equal(h.split(`id="reseau-fleche-${l}"`).length - 1, 1, `marqueur ${l} unique`);
+    assert.ok(sec.includes(`url(#reseau-fleche-${l})`) || l !== 'conseil', `flèche ${l} référencée`);
+  }
+  assert.equal(h.split('id="reseau-fleche"').length - 1, 1, 'marqueur de la carte prévue inchangé et unique');
+  assert.ok(h.indexOf('Carte des liens déclarés au cas') < h.indexOf('Carte du réseau réel : conseil'));
+  for (const t of ['conseil', 'information', 'confiance', 'dépendance']) assert.ok(sec.includes(`Carte du réseau réel : ${t}`), t);
+  assert.ok(sec.includes('déclaré par KB seulement'), 'tableau des valeurs : lien d’un seul côté');
+  assert.ok(sec.includes('cartes-reseau'));
+  // Titre visible par carte, qui donne aussi le sens de la flèche ; légende qui dit vers qui pointe la flèche.
+  for (const t of ['Conseil : qui demande conseil à qui', 'Information : qui reçoit une information utile de qui', 'Confiance : qui pourrait signaler une erreur sans crainte à qui', 'Dépendance : qui attend le travail de qui']) assert.ok(sec.includes(`<figcaption>${t}</figcaption>`), t);
+  assert.ok(sec.includes('flèche : déclaré d&#39;un seul côté, vers la personne citée') || sec.includes('flèche : déclaré d\'un seul côté, vers la personne citée'));
+  assert.ok(sec.includes('sans flèche : déclaré des deux côtés (réciproque)'));
+  assert.ok(!h.slice(0, h.indexOf('id="n3-reseau-reel"')).includes('<figcaption>'), 'carte prévue inchangée');
+});
+
+test('réseau réel : aucune carte sans accord de chacun, sans relevé suffisant, ni en variante Word', () => {
+  const sansCarte = structuredClone(faitsDemo);
+  sansCarte.reseau_reel.carte_nominative = false;
+  assert.ok(!rendreReseau(sansCarte).includes('Carte du réseau réel'));
+  const insuffisant = structuredClone(faitsDemo);
+  insuffisant.reseau_reel = { releve: true, suffisant: false, seuils: faitsDemo.reseau_reel.seuils };
+  assert.ok(!rendreReseau(insuffisant).includes('Carte du réseau réel'));
+  const sans = structuredClone(faitsDemo);
+  delete sans.reseau_reel;
+  assert.ok(!rendreReseau(sans).includes('Carte du réseau réel'));
+  assert.ok(!rendreReseau(faitsDemo, 'docx').includes('<svg'));
+});
+
+test('réseau réel : une personne non représentée reste sur la carte, marquée comme telle, sans aucun lien', () => {
+  const f = structuredClone(faitsDemo);
+  f.reseau_reel.non_representes = ['HT'];
+  f.reseau_reel.representes = ['AM', 'KB', 'SR'];
+  for (const l of Object.keys(f.reseau_reel.liens)) f.reseau_reel.liens[l] = f.reseau_reel.liens[l].filter((x) => x.a !== 'HT' && x.b !== 'HT');
+  const h = rendreReseau(f);
+  assert.ok(h.includes('HT, non représentée'));
+  assert.ok(!/HT et|et HT/.test(h.slice(h.indexOf('id="n3-reseau-reel"')).replace(/<caption>[^<]*<\/caption>/g, '')));
+});
