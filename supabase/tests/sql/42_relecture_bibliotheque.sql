@@ -213,9 +213,26 @@ SELECT is(
   'private.purger_historique_relecture : SECURITY DEFINER, search_path vide, tenga_owner, exécutable par aucun rôle de l''API');
 SELECT matches(pg_get_functiondef('private.purger_quotidien()'::regprocedure), 'PERFORM private\.purger_historique_relecture\(\);',
   'la purge quotidienne appelle la purge de l''historique de relecture');
-SELECT is(md5(replace((SELECT p.prosrc FROM pg_proc p WHERE p.oid = 'private.purger_quotidien()'::regprocedure),
-                       E'  PERFORM private.purger_historique_relecture();\n', '')),
-  '0fef778e812a5b2227b95447fc62eff3', 'le corps de la purge quotidienne est celui de 0018, hors la seule ligne ajoutée (md5)');
+SELECT is(md5(replace(replace(replace(replace(
+         (SELECT p.prosrc FROM pg_proc p WHERE p.oid = 'private.purger_quotidien()'::regprocedure),
+         E'  PERFORM private.purger_historique_relecture();\n', ''),
+         $blk$  v_reseau_reponses integer;
+  v_reseau_membres  integer;
+$blk$, ''),
+         $blk$  -- Relevé du réseau réel (0023) : réponses, puis lignes de membre échues.
+  DELETE FROM app.reseau_reponses
+   WHERE repondu_le < now() - pg_catalog.make_interval(months => (SELECT s.conservation_reseau_mois FROM private.settings s));
+  GET DIAGNOSTICS v_reseau_reponses = ROW_COUNT;
+  DELETE FROM app.reseau_membres
+   WHERE maj_le < now() - pg_catalog.make_interval(months => (SELECT s.conservation_reseau_mois FROM private.settings s));
+  GET DIAGNOSTICS v_reseau_membres = ROW_COUNT;
+
+$blk$, ''),
+         $blk$  PERFORM private.journaliser(NULL, 'purge.reseau_reponses', NULL, NULL, NULL, v_reseau_reponses);
+  PERFORM private.journaliser(NULL, 'purge.reseau_membres', NULL, NULL, NULL, v_reseau_membres);
+$blk$, '')),
+  '0fef778e812a5b2227b95447fc62eff3',
+  'le corps de la purge quotidienne est celui de 0018, hors la seule ligne de 0022 et les seuls ajouts du réseau (0023) (md5)');
 SELECT is(private.duree_historique_relecture(), interval '30 days', 'conservation de l''historique de relecture : 30 jours (décision d''Amine)');
 
 -- ===== suis_relecteur =====
@@ -362,8 +379,8 @@ SELECT is((SELECT count(*)::int FROM private.audit_log WHERE action ~ '^relectur
 
 -- ===== Droit d'accès : app.exporter_mes_donnees gagne la clé « relecture » =====
 SELECT is(pg_temp.appel(pg_temp.u_rl(), 'select (select string_agg(k, '','' order by k collate "C") from jsonb_object_keys(app.exporter_mes_donnees()) k)'),
-  'appartenances,binomes,compte,exporte_le,journal,participations,profil,relecture,resultats,tentatives',
-  'l''export garde ses clés de 0021 et gagne « relecture »');
+  'appartenances,binomes,compte,exporte_le,journal,participations,profil,relecture,reseau,resultats,tentatives',
+  'l''export garde ses clés de 0021 et gagne « relecture » (et « reseau », migration 0023)');
 SELECT is(pg_temp.appel(pg_temp.u_rl(), $q$select (e -> 'relecture' ->> 'ajoute_le' is not null)::text || '|' || jsonb_array_length(e -> 'relecture' -> 'verdicts')::text
                                           || '|' || (select string_agg(k, ',' order by k) from jsonb_object_keys(e -> 'relecture' -> 'verdicts' -> 0) k)
                                           || '|' || (e::text like '%À reformuler%')::text
@@ -374,7 +391,28 @@ SELECT is(pg_temp.appel(pg_temp.u_ad(), $q$select coalesce(e -> 'relecture' ->> 
                                           || '|' || (e -> 'relecture' -> 'verdicts' -> 0 ->> 'commentaire')
                                         from app.exporter_mes_donnees() e$q$),
   '-|1|À reformuler : « vous » pluriel.', 'export de l''administrateur (non désigné) : pas de date de désignation, son seul verdict');
-SELECT is((SELECT md5(replace(p.prosrc, $blk$    'relecture', pg_catalog.jsonb_build_object(
+SELECT is((SELECT md5(replace(replace(p.prosrc, $blk$    'reseau', pg_catalog.jsonb_build_object(
+      'membres', COALESCE((
+        SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+                 'participation', rm.participation_id, 'campagne', c.titre, 'organisation', o.nom,
+                 'informe_le', rm.informe_le, 'oppose_le', rm.oppose_le,
+                 'accord_repondre_le', rm.accord_repondre_le, 'accord_carte_le', rm.accord_carte_le,
+                 'maj_le', rm.maj_le) ORDER BY rm.informe_le, rm.participation_id)
+        FROM app.reseau_membres rm
+        JOIN app.participations p ON p.id = rm.participation_id
+        JOIN app.campaigns c ON c.id = rm.campaign_id
+        JOIN app.organizations o ON o.id = rm.organization_id
+        WHERE p.user_id = v_uid), '[]'::jsonb),
+      'reponses', COALESCE((
+        SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+                 'participation', rr.repondant, 'personne_citee', pc.nom, 'lien', rr.lien,
+                 'valeur', rr.valeur, 'repondu_le', rr.repondu_le) ORDER BY rr.repondu_le, rr.repondant, rr.cite, rr.lien)
+        FROM app.reseau_reponses rr
+        JOIN app.participations p ON p.id = rr.repondant
+        JOIN app.participations pcit ON pcit.id = rr.cite
+        LEFT JOIN app.profiles pc ON pc.user_id = pcit.user_id
+        WHERE p.user_id = v_uid), '[]'::jsonb)),
+$blk$, ''), $blk$    'relecture', pg_catalog.jsonb_build_object(
       'ajoute_le', (SELECT rb.ajoute_le FROM private.relecteurs_bibliotheque rb WHERE rb.user_id = v_uid),
       'verdicts', COALESCE((
         SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
@@ -383,7 +421,7 @@ SELECT is((SELECT md5(replace(p.prosrc, $blk$    'relecture', pg_catalog.jsonb_b
         FROM app.relectures_blocs v WHERE v.relecteur = v_uid), '[]'::jsonb)),
 $blk$, ''))
              FROM pg_proc p WHERE p.oid = 'app.exporter_mes_donnees()'::regprocedure),
-  '308646a222566783617d442bf2188be6', 'le corps de l''export est celui de 0021, hors la seule clé « relecture » ajoutée (md5)');
+  '308646a222566783617d442bf2188be6', 'le corps de l''export est celui de 0021, hors la seule clé « relecture » (0022) et la seule clé « reseau » (0023) (md5)');
 
 -- ===== Accès direct et historique en ajout seul =====
 SELECT is(pg_temp.appel(pg_temp.u_rl(), 'select count(*)::text from app.relectures_blocs'),
