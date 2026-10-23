@@ -15,7 +15,7 @@ const LIB = {
   E: 'énergie relationnelle, extraversion',
   O: 'ouverture',
   A: 'orientation vers autrui, agréabilité',
-  C: 'rigueur et constance, conscience'
+  C: 'rigueur et constance, conscienciosité'
 };
 const dom = (d) => `domaine ${d} (${LIB[d]})`;
 const Dom = (d) => `Domaine ${d} (${LIB[d]})`;

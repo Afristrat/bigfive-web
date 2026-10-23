@@ -10,6 +10,10 @@ const DOMAINES = ['N', 'E', 'O', 'A', 'C'];
 const COURT = { N: 'Névrosisme', E: 'Extraversion', O: 'Ouverture', A: 'Agréabilité', C: 'Conscienciosité' };
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const fmt = (x) => x.toFixed(2).replace('.', ',');
+// Colonne des libellés de facettes : assez large pour le plus long (13 px, au plus 6,1 unités par caractère mesurées
+// en Segoe UI, 6,3 retenues, marge comprise),
+// pour qu'aucun libellé ne passe sous la graduation 1 ni sous les cases de score.
+const largeurLibelles = (titres) => Math.max(235, Math.ceil(22 + 6.3 * Math.max(...DOMAINES.flatMap((d) => [1, 2, 3, 4, 5, 6].map((f) => String(titres[d + f]).length)))));
 
 // Deux profils ne se distinguent jamais par la seule teinte : une forme par profil (cercle, carré, triangle, losange).
 function marque(forme, x, y, r, fill, attrs = '') {
@@ -57,7 +61,7 @@ export function radarSvg(ps, { taille = 300, titre = 'Radar des cinq domaines' }
 
 // ---------- Écarts par facette : deux points reliés sur une échelle de 1 à 5 ----------
 export function dumbbellSvg(a, b, titres, ecartFn) {
-  const L = 780, ligne = 21, gauche = 235, droite = 755, haut = 56;
+  const L = 780, ligne = 21, gauche = largeurLibelles(titres), droite = 755, haut = 56;
   const x = (v) => gauche + ((v - 1) / 4) * (droite - gauche);
   let y = haut; let i = 0; let corps = ''; const lignes = [];
   for (const d of DOMAINES) {
@@ -90,7 +94,7 @@ const melange = (t) => { // 0 à 1 : teinte unique ; texte #0f2e2e toujours lisi
 export function heatmapSvg(ps, titres) {
   const lignes = [];
   for (const d of DOMAINES) { lignes.push({ groupe: d }); for (let f = 1; f <= 6; f++) lignes.push({ k: d + f }); }
-  const largeurNom = 235, cell = 66, hLigne = 23, haut = 48;
+  const largeurNom = largeurLibelles(titres), cell = 52, hLigne = 23, haut = 48;
   const nbCol = ps.length; const xEt = largeurNom + nbCol * cell + 18;
   let y = haut; let i = 0; let corps = ''; const tab = [];
   for (const l of lignes) {

@@ -1,6 +1,6 @@
 {
  "version": "rapport-cabinet-1.0",
- "empreinte_entrees": "3dfdf6225f1196568e81bcbbd3adeb291e939fb4e2b96878f28eada9070a8458",
+ "empreinte_entrees": "f735212733a9da211a5404493fa2de8ef5caa851797047dbec508cdb26cecf4d",
  "etiquette_fictif": "CAS FICTIF DE DÉMONSTRATION",
  "avertissements": [
   "Cas de démonstration : l’organisation, KB, SR et HT sont fictifs. AM est un profil estimé, pas une mesure ni un fictif : seules les réponses de la personne font foi.",
@@ -519,7 +519,7 @@
       },
       {
        "id": "n1-AM-tensions-8",
-       "texte": "Deux facettes de la conscience se situent à des niveaux éloignés. Il se peut que l’organisation, l’exigence ou la persévérance ne se manifestent pas avec la même intensité selon les tâches. À confirmer en entretien.",
+       "texte": "Deux facettes de la conscienciosité se situent à des niveaux éloignés. Il se peut que l’organisation, l’exigence ou la persévérance ne se manifestent pas avec la même intensité selon les tâches. À confirmer en entretien.",
        "statut": "hypothese",
        "confiance": "moyenne",
        "verification": "Demander deux situations récentes où ces facettes ont conduit à des comportements différents, et ce qui a fait la différence.",
@@ -4499,7 +4499,7 @@
       },
       {
        "id": "n3-cartographie-10",
-       "texte": "Domaine C (rigueur et constance, conscience) : plutôt haut ou haut pour AM, KB et HT ; plutôt bas ou bas pour aucune personne.",
+       "texte": "Domaine C (rigueur et constance, conscienciosité) : plutôt haut ou haut pour AM, KB et HT ; plutôt bas ou bas pour aucune personne.",
        "statut": "constate"
       },
       {
@@ -4544,7 +4544,7 @@
       },
       {
        "id": "n3-diversite-6",
-       "texte": "Pour une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. Dans cette équipe, AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscience) ; AM et SR se situent plutôt haut ou haut sur le domaine E (énergie relationnelle, extraversion).",
+       "texte": "Pour une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. Dans cette équipe, AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscienciosité) ; AM et SR se situent plutôt haut ou haut sur le domaine E (énergie relationnelle, extraversion).",
        "statut": "hypothese",
        "confiance": "moyenne",
        "verification": "Demander à l’équipe quels moments de la tâche ont été les plus difficiles à coordonner, et à qui elle s’adresse pour y remédier."
@@ -4668,7 +4668,7 @@
       },
       {
        "id": "n3-coordination-2",
-       "texte": "Ce risque tient à un délai extérieur à l’équipe. Il se peut que la part maîtrisable du risque (qualité du dossier, relances, suivi) soit déterminante : AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscience), ce qui reste à confirmer en entretien.",
+       "texte": "Ce risque tient à un délai extérieur à l’équipe. Il se peut que la part maîtrisable du risque (qualité du dossier, relances, suivi) soit déterminante : AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscienciosité), ce qui reste à confirmer en entretien.",
        "statut": "hypothese",
        "confiance": "faible",
        "verification": "Demander qui suit le dossier, comment les relances sont organisées et quelle part du délai l’équipe estime maîtrisable."
@@ -4699,7 +4699,7 @@
       },
       {
        "id": "n3-coordination-7",
-       "texte": "Avec des échéances rapprochées, il se peut que les écarts de rythme entre personnes pèsent davantage à l’approche des dates. En position de rigueur : AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscience).",
+       "texte": "Avec des échéances rapprochées, il se peut que les écarts de rythme entre personnes pèsent davantage à l’approche des dates. En position de rigueur : AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscienciosité).",
        "statut": "hypothese",
        "confiance": "faible",
        "verification": "Demander à l’équipe comment elle gère un retard de l’un de ses membres à l’approche d’une échéance."
@@ -4776,12 +4776,12 @@
       },
       {
        "id": "n4-profils-6",
-       "texte": "Domaine C (rigueur et constance, conscience) : la position d’ensemble de l’équipe se situe au niveau plutôt haut. Répartition des niveaux individuels : 1 au milieu de l’échelle, 1 au niveau plutôt haut et 2 au niveau haut.",
+       "texte": "Domaine C (rigueur et constance, conscienciosité) : la position d’ensemble de l’équipe se situe au niveau plutôt haut. Répartition des niveaux individuels : 1 au milieu de l’échelle, 1 au niveau plutôt haut et 2 au niveau haut.",
        "statut": "constate"
       },
       {
        "id": "n4-profils-7",
-       "texte": "La position d’ensemble ne décrit aucune personne : elle masque la dispersion individuelle. Les domaines où elle se situe plutôt haut ou haut sont le domaine E (énergie relationnelle, extraversion), le domaine O (ouverture) et le domaine C (rigueur et constance, conscience) ; ce sont les domaines dominants de l’ensemble au sens de cette lecture, et non des traits de l’organisation.",
+       "texte": "La position d’ensemble ne décrit aucune personne : elle masque la dispersion individuelle. Les domaines où elle se situe plutôt haut ou haut sont le domaine E (énergie relationnelle, extraversion), le domaine O (ouverture) et le domaine C (rigueur et constance, conscienciosité) ; ce sont les domaines dominants de l’ensemble au sens de cette lecture, et non des traits de l’organisation.",
        "statut": "hypothese",
        "confiance": "moyenne",
        "verification": "Confronter cette position d’ensemble à la perception du commanditaire et de l’équipe sur ce qui fonctionne et sur ce qui manque."
@@ -4827,7 +4827,7 @@
       },
       {
        "id": "n4-adequation-6",
-       "texte": "Les lectures de structure et de culture valorisent la maîtrise des processus, quand l’orientation sollicite la nouveauté. En position d’ensemble, le domaine C (rigueur et constance, conscience) se situe au niveau plutôt haut et le domaine O (ouverture) au niveau plutôt haut : l’ensemble dispose, au niveau agrégé, des deux ressources. Selon le modèle de congruence (Nadler et Tushman), la question porte alors moins sur les profils que sur l’espace laissé à l’ouverture dans un cadre de processus standardisés.",
+       "texte": "Les lectures de structure et de culture valorisent la maîtrise des processus, quand l’orientation sollicite la nouveauté. En position d’ensemble, le domaine C (rigueur et constance, conscienciosité) se situe au niveau plutôt haut et le domaine O (ouverture) au niveau plutôt haut : l’ensemble dispose, au niveau agrégé, des deux ressources. Selon le modèle de congruence (Nadler et Tushman), la question porte alors moins sur les profils que sur l’espace laissé à l’ouverture dans un cadre de processus standardisés.",
        "statut": "hypothese",
        "confiance": "faible",
        "verification": "Demander où, dans le fonctionnement actuel, une proposition nouvelle peut être faite, qui la reçoit et en combien de temps elle obtient une réponse."

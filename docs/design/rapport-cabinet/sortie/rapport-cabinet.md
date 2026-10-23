@@ -2,7 +2,7 @@
 
 CAS FICTIF DE DÉMONSTRATION
 
-Version du rapport rapport-cabinet-1.0 · empreinte des entrées 3dfdf6225f1196568e81bcbbd3adeb291e939fb4e2b96878f28eada9070a8458
+Version du rapport rapport-cabinet-1.0 · empreinte des entrées f735212733a9da211a5404493fa2de8ef5caa851797047dbec508cdb26cecf4d
 
 **Version de travail, à relire avant remise.** 85 textes types en attente de relecture, 12 références à contrôler. Relecture et signature : à faire.
 
@@ -551,7 +551,7 @@ Domaine Conscienciosité, règle TENS-C (écart d’au moins 1,5 point entre deu
 
 Hypothèse
 
-Deux facettes de la conscience se situent à des niveaux éloignés. Il se peut que l’organisation, l’exigence ou la persévérance ne se manifestent pas avec la même intensité selon les tâches. À confirmer en entretien.
+Deux facettes de la conscienciosité se situent à des niveaux éloignés. Il se peut que l’organisation, l’exigence ou la persévérance ne se manifestent pas avec la même intensité selon les tâches. À confirmer en entretien.
 
 Confiance  
 moyenne
@@ -5725,7 +5725,7 @@ Demander comment un désaccord s’est exprimé lors de la dernière décision d
 
 Constaté
 
-Domaine C (rigueur et constance, conscience) : plutôt haut ou haut pour AM, KB et HT ; plutôt bas ou bas pour aucune personne.
+Domaine C (rigueur et constance, conscienciosité) : plutôt haut ou haut pour AM, KB et HT ; plutôt bas ou bas pour aucune personne.
 
 Hypothèse
 
@@ -5767,7 +5767,7 @@ Vérifier la référence avant diffusion, puis demander à l’équipe ce qui, d
 
 Hypothèse
 
-Pour une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. Dans cette équipe, AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscience) ; AM et SR se situent plutôt haut ou haut sur le domaine E (énergie relationnelle, extraversion).
+Pour une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. Dans cette équipe, AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscienciosité) ; AM et SR se situent plutôt haut ou haut sur le domaine E (énergie relationnelle, extraversion).
 
 Confiance  
 moyenne
@@ -5893,7 +5893,7 @@ Risque inscrit au cas : délai d’autorisation de la CNDP non maîtrisé par l�
 
 Hypothèse
 
-Ce risque tient à un délai extérieur à l’équipe. Il se peut que la part maîtrisable du risque (qualité du dossier, relances, suivi) soit déterminante : AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscience), ce qui reste à confirmer en entretien.
+Ce risque tient à un délai extérieur à l’équipe. Il se peut que la part maîtrisable du risque (qualité du dossier, relances, suivi) soit déterminante : AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscienciosité), ce qui reste à confirmer en entretien.
 
 Confiance  
 faible
@@ -5931,7 +5931,7 @@ Demander aux membres de l’équipe ce qu’ils craignent que l’on fasse des r
 
 Hypothèse
 
-Avec des échéances rapprochées, il se peut que les écarts de rythme entre personnes pèsent davantage à l’approche des dates. En position de rigueur : AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscience).
+Avec des échéances rapprochées, il se peut que les écarts de rythme entre personnes pèsent davantage à l’approche des dates. En position de rigueur : AM, KB et HT se situent plutôt haut ou haut sur le domaine C (rigueur et constance, conscienciosité).
 
 Confiance  
 faible
@@ -6110,11 +6110,11 @@ Domaine A (orientation vers autrui, agréabilité) : la position d’ensemble de
 
 Constaté
 
-Domaine C (rigueur et constance, conscience) : la position d’ensemble de l’équipe se situe au niveau plutôt haut. Répartition des niveaux individuels : 1 au milieu de l’échelle, 1 au niveau plutôt haut et 2 au niveau haut.
+Domaine C (rigueur et constance, conscienciosité) : la position d’ensemble de l’équipe se situe au niveau plutôt haut. Répartition des niveaux individuels : 1 au milieu de l’échelle, 1 au niveau plutôt haut et 2 au niveau haut.
 
 Hypothèse
 
-La position d’ensemble ne décrit aucune personne : elle masque la dispersion individuelle. Les domaines où elle se situe plutôt haut ou haut sont le domaine E (énergie relationnelle, extraversion), le domaine O (ouverture) et le domaine C (rigueur et constance, conscience) ; ce sont les domaines dominants de l’ensemble au sens de cette lecture, et non des traits de l’organisation.
+La position d’ensemble ne décrit aucune personne : elle masque la dispersion individuelle. Les domaines où elle se situe plutôt haut ou haut sont le domaine E (énergie relationnelle, extraversion), le domaine O (ouverture) et le domaine C (rigueur et constance, conscienciosité) ; ce sont les domaines dominants de l’ensemble au sens de cette lecture, et non des traits de l’organisation.
 
 Confiance  
 moyenne
@@ -6170,7 +6170,7 @@ Demander au commanditaire quelle part des objectifs relève de la nouveauté et 
 
 Hypothèse
 
-Les lectures de structure et de culture valorisent la maîtrise des processus, quand l’orientation sollicite la nouveauté. En position d’ensemble, le domaine C (rigueur et constance, conscience) se situe au niveau plutôt haut et le domaine O (ouverture) au niveau plutôt haut : l’ensemble dispose, au niveau agrégé, des deux ressources. Selon le modèle de congruence (Nadler et Tushman), la question porte alors moins sur les profils que sur l’espace laissé à l’ouverture dans un cadre de processus standardisés.
+Les lectures de structure et de culture valorisent la maîtrise des processus, quand l’orientation sollicite la nouveauté. En position d’ensemble, le domaine C (rigueur et constance, conscienciosité) se situe au niveau plutôt haut et le domaine O (ouverture) au niveau plutôt haut : l’ensemble dispose, au niveau agrégé, des deux ressources. Selon le modèle de congruence (Nadler et Tushman), la question porte alors moins sur les profils que sur l’espace laissé à l’ouverture dans un cadre de processus standardisés.
 
 Confiance  
 faible

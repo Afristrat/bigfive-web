@@ -20,7 +20,7 @@ const lib = JSON.parse(fs.readFileSync(path.join(here, '..', 'bibliotheque-texte
 
 const MODE = process.env.MODE || 'html'; // 'docx' : variante pour pandoc (avatars en PNG, sans barres)
 const DOMAINES = ['N', 'E', 'O', 'A', 'C'];
-const NOM_DOMAINE = { N: 'Névrosisme', E: 'Extraversion', O: 'Ouverture', A: 'Agréabilité', C: 'Conscience' };
+const NOM_DOMAINE = { N: 'Névrosisme', E: 'Extraversion', O: 'Ouverture', A: 'Agréabilité', C: 'Conscienciosité' };
 const items = getItems('fr');
 
 // Libellés des 30 facettes (moteur de résultats de l'application)
