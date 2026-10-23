@@ -31,6 +31,7 @@ const namespaces = [
   'binome',
   'synthese',
   'apercu',
+  'relecture',
   'flow'
 ] as const;
 

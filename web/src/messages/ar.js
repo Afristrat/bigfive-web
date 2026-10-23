@@ -6,6 +6,7 @@ import rapportAr from './espace/rapport.ar.js';
 import binomeAr from './espace/binome.ar.js';
 import syntheseAr from './espace/synthese.ar.js';
 import apercuAr from './espace/apercu.ar.js';
+import relectureAr from './espace/relecture.ar.js';
 
 const arabic = {
   language: {
@@ -1131,6 +1132,7 @@ const arabic = {
   binome: binomeAr,
   synthese: syntheseAr,
   apercu: apercuAr,
+  relecture: relectureAr,
   // Mouvement du parcours (questionnaire et résultat).
   flow: {
     railLabel: 'محتويات النتيجة',

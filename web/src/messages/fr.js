@@ -6,6 +6,7 @@ import rapportFr from './espace/rapport.fr.js';
 import binomeFr from './espace/binome.fr.js';
 import syntheseFr from './espace/synthese.fr.js';
 import apercuFr from './espace/apercu.fr.js';
+import relectureFr from './espace/relecture.fr.js';
 
 const french = {
   language: {
@@ -1168,6 +1169,7 @@ const french = {
   binome: binomeFr,
   synthese: syntheseFr,
   apercu: apercuFr,
+  relecture: relectureFr,
   // Mouvement du parcours (questionnaire et résultat).
   flow: {
     railLabel: 'Sommaire du résultat',
