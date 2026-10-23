@@ -468,7 +468,7 @@ SELECT is(
      FROM pg_proc p WHERE p.oid = 'app.exporter_mes_donnees()'::regprocedure AND pg_get_function_result(p.oid) = 'jsonb'),
   'true|v|true|tenga_owner|false|false|false|true', 'exporter_mes_donnees : signature, SECURITY DEFINER, search_path vide, tenga_owner, authenticated seul (inchangés)');
 SELECT is((SELECT string_agg(k, ',' ORDER BY k COLLATE "C") FROM jsonb_object_keys(pg_temp.exp(pg_temp.u_pa())::jsonb) k),
-  'appartenances,binomes,compte,exporte_le,journal,participations,profil,reseau,resultats,tentatives', 'l''export garde ses clés de 0003 et gagne « binomes » (puis « reseau » en 0022)');
+  'appartenances,binomes,compte,exporte_le,journal,participations,profil,reseau,resultats,tentatives', 'l''export garde ses clés de 0003 et gagne « binomes » (puis « reseau » en 0023)');
 SELECT is(jsonb_array_length(pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes'), 3, 'pa retrouve ses trois propositions (d1-d2, d1-d3 refusée, d1-d3 en attente)');
 SELECT is((SELECT string_agg(e ->> 'statut', ',' ORDER BY e ->> 'statut') FROM jsonb_array_elements(pg_temp.exp(pg_temp.u_pa())::jsonb -> 'binomes') e),
   'actif,en_attente,retire', 'les statuts exportés sont actif, en_attente et retire');

@@ -1,4 +1,4 @@
--- 0022 : relevé du réseau réel d'une équipe (étape 2 de la structure invisible,
+-- 0023 : relevé du réseau réel d'une équipe (étape 2 de la structure invisible,
 -- cadrage docs/design/cadrage-reseau-reel.md, décisions d'Amine du 23/10/2026).
 --
 -- Besoin : relever à qui chacun demande conseil, d'où lui vient l'information, à
@@ -44,6 +44,8 @@
 --   app.reseau_informer(p_participation, p_opposition) : information lue ; opposition
 --     (efface mes accords et SUPPRIME tous les liens où je suis répondant OU
 --     personne citée) ou levée de l'opposition. Campagne ouverte ou close.
+--     L'opposition reste permise interrupteur fermé (défaut protecteur, non
+--     validé) ; lire l'information sans s'opposer exige le relevé ouvert.
 --   app.reseau_consentir(p_participation, p_repondre, p_carte) : deux accords
 --     indépendants, campagne ouverte ; retirer l'accord de réponse supprime mes
 --     réponses.
@@ -55,6 +57,10 @@
 --   app.reseau_lire(p_campagne) : réponses brutes par groupe, pour le consultant de
 --     l'organisation et l'administrateur Tenga seulement ; le responsable ne lit
 --     rien. Lecture journalisée avant le renvoi.
+--   Concurrence : reseau_repondre, reseau_retirer, l'opposition et le retrait de
+--   l'accord de réponse prennent d'abord un verrou consultatif transactionnel par
+--   groupe, puis les verrous de ligne : deux membres qui se citent l'un l'autre se
+--   suivent au lieu de s'interbloquer.
 --   Refus sans fuite : une participation d'autrui, inexistante ou hors groupe rend
 --   P0002 « Participation introuvable » ; une campagne interdite ou inexistante
 --   rend 42501, même message.
@@ -249,10 +255,11 @@ SECURITY DEFINER
 SET search_path = ''
 AS $$
 DECLARE
-  v_uid    uuid := auth.uid();
-  v_groupe uuid;
-  v_statut text;
-  v_moi    app.reseau_membres%ROWTYPE;
+  v_uid      uuid := auth.uid();
+  v_campagne uuid;
+  v_groupe   uuid;
+  v_statut   text;
+  v_moi      app.reseau_membres%ROWTYPE;
 BEGIN
   IF v_uid IS NULL THEN
     RAISE EXCEPTION 'Connexion requise' USING ERRCODE = '42501';
@@ -260,7 +267,7 @@ BEGIN
   IF NOT private.reseau_releve_ouvert() THEN
     RETURN pg_catalog.jsonb_build_object('ouvert', false);
   END IF;
-  SELECT r.group_id, r.campagne_statut INTO v_groupe, v_statut
+  SELECT r.campaign_id, r.group_id, r.campagne_statut INTO v_campagne, v_groupe, v_statut
     FROM private.reseau_participation(p_participation, v_uid) r;
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Participation introuvable' USING ERRCODE = 'P0002';
@@ -280,7 +287,8 @@ BEGIN
                         FROM app.reseau_membres m
                         JOIN app.participations pa ON pa.id = m.participation_id
                         LEFT JOIN app.profiles pr ON pr.user_id = pa.user_id
-                       WHERE m.group_id = v_groupe AND m.oppose_le IS NULL AND m.participation_id <> p_participation), '[]'::jsonb) END,
+                       WHERE m.campaign_id = v_campagne AND m.group_id = v_groupe AND m.oppose_le IS NULL
+                         AND m.participation_id <> p_participation), '[]'::jsonb) END,
     'reponses', COALESCE((
       SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object('cite', r.cite, 'lien', r.lien, 'valeur', r.valeur)
                                   ORDER BY r.cite, r.lien)
@@ -307,13 +315,19 @@ BEGIN
   IF p_opposition IS NULL THEN
     RAISE EXCEPTION 'Choix invalide : vrai ou faux attendu' USING ERRCODE = '22023';
   END IF;
-  IF NOT private.reseau_releve_ouvert() THEN
+  -- S'opposer reste permis interrupteur fermé (défaut protecteur) ; lire
+  -- l'information sans s'opposer exige le relevé ouvert.
+  IF NOT p_opposition AND NOT private.reseau_releve_ouvert() THEN
     RAISE EXCEPTION 'Relevé du réseau fermé' USING ERRCODE = '55000';
   END IF;
   SELECT r.campaign_id, r.organization_id, r.group_id INTO v_campagne, v_org, v_groupe
     FROM private.reseau_participation(p_participation, v_uid) r;
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Participation introuvable' USING ERRCODE = 'P0002';
+  END IF;
+  -- Opposition : verrou du groupe d'abord, même ordre que reseau_repondre.
+  IF p_opposition THEN
+    PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_groupe::text, 0));
   END IF;
   INSERT INTO app.reseau_membres (participation_id, campaign_id, organization_id, group_id)
   VALUES (p_participation, v_campagne, v_org, v_groupe)
@@ -343,6 +357,7 @@ DECLARE
   v_uid      uuid := auth.uid();
   v_campagne uuid;
   v_org      uuid;
+  v_groupe   uuid;
 BEGIN
   IF v_uid IS NULL THEN
     RAISE EXCEPTION 'Connexion requise' USING ERRCODE = '42501';
@@ -353,10 +368,14 @@ BEGIN
   IF NOT private.reseau_releve_ouvert() THEN
     RAISE EXCEPTION 'Relevé du réseau fermé' USING ERRCODE = '55000';
   END IF;
-  SELECT r.campaign_id, r.organization_id INTO v_campagne, v_org
+  SELECT r.campaign_id, r.organization_id, r.group_id INTO v_campagne, v_org, v_groupe
     FROM private.reseau_participation(p_participation, v_uid) r;
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Participation introuvable' USING ERRCODE = 'P0002';
+  END IF;
+  -- Retirer l'accord de réponse supprime des réponses : verrou du groupe d'abord.
+  IF NOT p_repondre THEN
+    PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_groupe::text, 0));
   END IF;
   -- Verrou partagé sur la campagne : la clôture attend la fin de ce consentement.
   PERFORM 1 FROM app.campaigns c WHERE c.id = v_campagne AND c.statut = 'ouverte' FOR SHARE OF c;
@@ -397,6 +416,8 @@ DECLARE
   v_effectif integer;
   v_cites    uuid[];
   v_valides  integer;
+  v_invalide boolean;
+  v_moi      uuid;
   v_n        integer;
 BEGIN
   IF v_uid IS NULL THEN
@@ -410,14 +431,19 @@ BEGIN
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Participation introuvable' USING ERRCODE = 'P0002';
   END IF;
+  -- Verrou du groupe, pris AVANT tout verrou de ligne : deux membres qui se citent
+  -- l'un l'autre (ou une opposition, un retrait concurrents) se suivent au lieu de
+  -- s'interbloquer.
+  PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_groupe::text, 0));
   PERFORM 1 FROM app.campaigns c WHERE c.id = v_campagne AND c.statut = 'ouverte' FOR SHARE OF c;
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Campagne non ouverte : consentement et réponses fermés' USING ERRCODE = '55000';
   END IF;
-  -- Ma ligne verrouillée : deux envois concurrents de la même personne se suivent.
-  PERFORM 1 FROM app.reseau_membres m
+  -- Ma ligne verrouillée et datée (maj_le) : la purge mesure la conservation depuis
+  -- la dernière réponse.
+  UPDATE app.reseau_membres m SET maj_le = now()
    WHERE m.participation_id = p_participation AND m.accord_repondre_le IS NOT NULL
-     FOR UPDATE OF m;
+  RETURNING m.participation_id INTO v_moi;
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Accord de réponse requis' USING ERRCODE = '55000';
   END IF;
@@ -426,9 +452,10 @@ BEGIN
   -- connu, valeur entière dans l'échelle du lien. CASE impose l'ordre des contrôles
   -- (aucune conversion n'est tentée sur une valeur non vérifiée).
   SELECT pg_catalog.count(*)::integer INTO v_effectif FROM app.group_members gm WHERE gm.group_id = v_groupe;
-  IF p_reponses IS NULL OR pg_catalog.jsonb_typeof(p_reponses) <> 'array'
-     OR pg_catalog.jsonb_array_length(p_reponses) > 4 * (v_effectif - 1)
-     OR EXISTS (
+  v_invalide := CASE
+       WHEN p_reponses IS NULL OR pg_catalog.jsonb_typeof(p_reponses) <> 'array' THEN true
+       WHEN pg_catalog.jsonb_array_length(p_reponses) > 4 * (v_effectif - 1) THEN true
+       ELSE EXISTS (
        SELECT 1 FROM pg_catalog.jsonb_array_elements(p_reponses) x(e)
         WHERE CASE
                 WHEN pg_catalog.jsonb_typeof(x.e) <> 'object' THEN true
@@ -441,7 +468,8 @@ BEGIN
                 WHEN pg_catalog.jsonb_typeof(x.e -> 'valeur') <> 'number' OR NOT ((x.e ->> 'valeur') ~ '^[0-4]$') THEN true
                 WHEN (x.e ->> 'lien') = 'confiance' AND (x.e ->> 'valeur') = '4' THEN true
                 ELSE false
-              END) THEN
+              END) END;
+  IF v_invalide THEN
     RAISE EXCEPTION 'Réponses invalides : une liste de membres du groupe, de liens et de valeurs est attendue' USING ERRCODE = '22023';
   END IF;
 
@@ -480,17 +508,22 @@ SECURITY DEFINER
 SET search_path = ''
 AS $$
 DECLARE
-  v_uid uuid := auth.uid();
-  v_org uuid;
-  v_n   integer;
+  v_uid    uuid := auth.uid();
+  v_org    uuid;
+  v_groupe uuid;
+  v_n      integer;
 BEGIN
   IF v_uid IS NULL THEN
     RAISE EXCEPTION 'Connexion requise' USING ERRCODE = '42501';
   END IF;
-  SELECT r.organization_id INTO v_org FROM private.reseau_participation(p_participation, v_uid) r;
+  SELECT r.organization_id, r.group_id INTO v_org, v_groupe FROM private.reseau_participation(p_participation, v_uid) r;
   IF NOT FOUND THEN
     RAISE EXCEPTION 'Participation introuvable' USING ERRCODE = 'P0002';
   END IF;
+  -- Verrou du groupe puis de ma ligne AVANT la suppression : un envoi concurrent ne
+  -- peut pas laisser de réponses sans accord.
+  PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_groupe::text, 0));
+  PERFORM 1 FROM app.reseau_membres m WHERE m.participation_id = p_participation FOR UPDATE OF m;
   DELETE FROM app.reseau_reponses r WHERE r.repondant = p_participation;
   GET DIAGNOSTICS v_n = ROW_COUNT;
   UPDATE app.reseau_membres m
@@ -545,12 +578,12 @@ BEGIN
                    FROM app.reseau_membres m
                    JOIN app.participations pa ON pa.id = m.participation_id
                    LEFT JOIN app.profiles pr ON pr.user_id = pa.user_id
-                  WHERE m.group_id = g.id), '[]'::jsonb),
+                  WHERE m.campaign_id = p_campagne AND m.group_id = g.id), '[]'::jsonb),
                'reponses', COALESCE((
                  SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
                           'de', r.repondant, 'vers', r.cite, 'lien', r.lien, 'valeur', r.valeur)
                           ORDER BY r.repondant, r.cite, r.lien)
-                   FROM app.reseau_reponses r WHERE r.group_id = g.id), '[]'::jsonb))
+                   FROM app.reseau_reponses r WHERE r.campaign_id = p_campagne AND r.group_id = g.id), '[]'::jsonb))
                ORDER BY g.ordre, g.nom, g.id)
         FROM app.groups g WHERE g.campaign_id = p_campagne), '[]'::jsonb));
 END
@@ -712,7 +745,7 @@ BEGIN
    WHERE soumis_le < now() - pg_catalog.make_interval(months => (SELECT s.conservation_resultats_mois FROM private.settings s));
   GET DIAGNOSTICS v_resultats = ROW_COUNT;
 
-  -- Relevé du réseau réel (0022) : réponses, puis lignes de membre échues.
+  -- Relevé du réseau réel (0023) : réponses, puis lignes de membre échues.
   DELETE FROM app.reseau_reponses
    WHERE repondu_le < now() - pg_catalog.make_interval(months => (SELECT s.conservation_reseau_mois FROM private.settings s));
   GET DIAGNOSTICS v_reseau_reponses = ROW_COUNT;

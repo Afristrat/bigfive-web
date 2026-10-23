@@ -1,8 +1,8 @@
--- Migration 0022 (étape 2 de la structure invisible) : relevé du réseau réel.
+-- Migration 0023 (étape 2 de la structure invisible) : relevé du réseau réel.
 -- app.reseau_membres (information préalable, opposition, accords) et
 -- app.reseau_reponses (liens déclarés), RLS forcée, aucun droit de table pour
 -- l'API, écriture refusée à l'API ; interrupteur private.settings.reseau_releve_ouvert
--- FERMÉ par défaut ; sept fonctions contrôlées (mes_releves_reseau, reseau_releve,
+-- FERMÉ par défaut (seules l'opposition et le retrait restent permis fermé) ; sept fonctions contrôlées (mes_releves_reseau, reseau_releve,
 -- reseau_informer, reseau_consentir, reseau_repondre, reseau_retirer, reseau_lire),
 -- export de la personne (clé « reseau ») et purge (conservation_reseau_mois).
 -- Le fichier tourne aussi sur la production, qui contient de vraies données :
@@ -10,7 +10,7 @@
 -- jamais une table app.* entière.
 -- (Enveloppé dans une transaction annulée par scripts/test-sql.sh.)
 SET LOCAL search_path TO tests, pg_catalog, public;
-SELECT plan(135);
+SELECT plan(145);
 
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
@@ -51,10 +51,17 @@ CREATE FUNCTION pg_temp.kb() RETURNS uuid LANGUAGE sql AS $$ SELECT '42200000-00
 CREATE FUNCTION pg_temp.g1() RETURNS uuid LANGUAGE sql AS $$ SELECT '42300000-0000-4000-8000-000000000001'::uuid $$;
 CREATE FUNCTION pg_temp.g2() RETURNS uuid LANGUAGE sql AS $$ SELECT '42300000-0000-4000-8000-000000000002'::uuid $$;
 CREATE FUNCTION pg_temp.gb() RETURNS uuid LANGUAGE sql AS $$ SELECT '42300000-0000-4000-8000-00000000000b'::uuid $$;
+-- K2 (ouverte, groupe G3 : Inès u(13), Jamal u(14)) sert à la purge ; K3 (brouillon,
+-- groupe G4 : Karim u(15)) à l'effacement en cascade par app.retirer_membre.
+CREATE FUNCTION pg_temp.k2() RETURNS uuid LANGUAGE sql AS $$ SELECT '42200000-0000-4000-8000-0000000000a2'::uuid $$;
+CREATE FUNCTION pg_temp.k3() RETURNS uuid LANGUAGE sql AS $$ SELECT '42200000-0000-4000-8000-0000000000a3'::uuid $$;
+CREATE FUNCTION pg_temp.g3() RETURNS uuid LANGUAGE sql AS $$ SELECT '42300000-0000-4000-8000-000000000003'::uuid $$;
+CREATE FUNCTION pg_temp.g4() RETURNS uuid LANGUAGE sql AS $$ SELECT '42300000-0000-4000-8000-000000000004'::uuid $$;
 -- Lettre d'une participation de ce fichier (lecture des résultats).
 CREATE FUNCTION pg_temp.code(x uuid) RETURNS text LANGUAGE sql AS $$
   SELECT CASE x WHEN pg_temp.p(1) THEN 'A' WHEN pg_temp.p(2) THEN 'B' WHEN pg_temp.p(3) THEN 'C'
                 WHEN pg_temp.p(4) THEN 'D' WHEN pg_temp.p(5) THEN 'E' WHEN pg_temp.p(12) THEN 'G'
+                WHEN pg_temp.p(13) THEN 'I' WHEN pg_temp.p(14) THEN 'J'
                 ELSE coalesce(x::text, 'NULL') END
 $$;
 
@@ -143,12 +150,15 @@ INSERT INTO auth.users (id, email, raw_user_meta_data) VALUES
   (pg_temp.u(9), 'reseau-cx@example.test', '{}'),
   (pg_temp.u(10), 'reseau-ad@example.test', '{}'),
   (pg_temp.u(11), 'reseau-qb@example.test', '{"nom": "Hamza"}'),
-  (pg_temp.u(12), 'reseau-g@example.test', '{"nom": "Ghita"}');
+  (pg_temp.u(12), 'reseau-g@example.test', '{"nom": "Ghita"}'),
+  (pg_temp.u(13), 'reseau-i@example.test', '{"nom": "Inès"}'),
+  (pg_temp.u(14), 'reseau-j@example.test', '{"nom": "Jamal"}'),
+  (pg_temp.u(15), 'reseau-k@example.test', '{"nom": "Karim"}');
 INSERT INTO app.organizations (id, slug, nom) VALUES
   (pg_temp.org_a(), 'reseau-essai-a', 'Organisation réseau A'),
   (pg_temp.org_b(), 'reseau-essai-b', 'Organisation réseau B');
 INSERT INTO app.memberships (user_id, organization_id, role)
-SELECT pg_temp.u(n), pg_temp.org_a(), 'participant' FROM unnest(ARRAY[1, 2, 3, 4, 5, 6, 12]) n;
+SELECT pg_temp.u(n), pg_temp.org_a(), 'participant' FROM unnest(ARRAY[1, 2, 3, 4, 5, 6, 12, 13, 14, 15]) n;
 INSERT INTO app.memberships (user_id, organization_id, role) VALUES
   (pg_temp.u(7), pg_temp.org_a(), 'responsable'),
   (pg_temp.u(8), pg_temp.org_a(), 'consultant'),
@@ -157,21 +167,31 @@ INSERT INTO app.memberships (user_id, organization_id, role) VALUES
 INSERT INTO private.tenga_admins (user_id) VALUES (pg_temp.u(10));
 INSERT INTO app.campaigns (id, organization_id, titre) VALUES
   (pg_temp.k1(), pg_temp.org_a(), 'Relevé A1'),
-  (pg_temp.kb(), pg_temp.org_b(), 'Relevé B1');
+  (pg_temp.kb(), pg_temp.org_b(), 'Relevé B1'),
+  (pg_temp.k2(), pg_temp.org_a(), 'Relevé A2'),
+  (pg_temp.k3(), pg_temp.org_a(), 'Relevé A3');
 INSERT INTO app.participations (id, campaign_id, organization_id, user_id)
 SELECT pg_temp.p(n), pg_temp.k1(), pg_temp.org_a(), pg_temp.u(n) FROM unnest(ARRAY[1, 2, 3, 4, 5, 6, 12]) n;
 INSERT INTO app.participations (id, campaign_id, organization_id, user_id) VALUES
-  (pg_temp.p(11), pg_temp.kb(), pg_temp.org_b(), pg_temp.u(11));
+  (pg_temp.p(11), pg_temp.kb(), pg_temp.org_b(), pg_temp.u(11)),
+  (pg_temp.p(13), pg_temp.k2(), pg_temp.org_a(), pg_temp.u(13)),
+  (pg_temp.p(14), pg_temp.k2(), pg_temp.org_a(), pg_temp.u(14)),
+  (pg_temp.p(15), pg_temp.k3(), pg_temp.org_a(), pg_temp.u(15));
 INSERT INTO app.groups (id, campaign_id, organization_id, nom, ordre) VALUES
   (pg_temp.g1(), pg_temp.k1(), pg_temp.org_a(), 'Équipe 1', 1),
   (pg_temp.g2(), pg_temp.k1(), pg_temp.org_a(), 'Équipe 2', 2),
-  (pg_temp.gb(), pg_temp.kb(), pg_temp.org_b(), 'Équipe B', 1);
+  (pg_temp.gb(), pg_temp.kb(), pg_temp.org_b(), 'Équipe B', 1),
+  (pg_temp.g3(), pg_temp.k2(), pg_temp.org_a(), 'Équipe 3', 1),
+  (pg_temp.g4(), pg_temp.k3(), pg_temp.org_a(), 'Équipe 4', 1);
 INSERT INTO app.group_members (group_id, campaign_id, organization_id, participation_id)
 SELECT pg_temp.g1(), pg_temp.k1(), pg_temp.org_a(), pg_temp.p(n) FROM unnest(ARRAY[1, 2, 3, 4, 12]) n;
 INSERT INTO app.group_members (group_id, campaign_id, organization_id, participation_id) VALUES
   (pg_temp.g2(), pg_temp.k1(), pg_temp.org_a(), pg_temp.p(5)),
-  (pg_temp.gb(), pg_temp.kb(), pg_temp.org_b(), pg_temp.p(11));
-UPDATE app.campaigns SET statut = 'ouverte', ouverte_le = now() WHERE id IN (pg_temp.k1(), pg_temp.kb());
+  (pg_temp.gb(), pg_temp.kb(), pg_temp.org_b(), pg_temp.p(11)),
+  (pg_temp.g3(), pg_temp.k2(), pg_temp.org_a(), pg_temp.p(13)),
+  (pg_temp.g3(), pg_temp.k2(), pg_temp.org_a(), pg_temp.p(14)),
+  (pg_temp.g4(), pg_temp.k3(), pg_temp.org_a(), pg_temp.p(15));
+UPDATE app.campaigns SET statut = 'ouverte', ouverte_le = now() WHERE id IN (pg_temp.k1(), pg_temp.kb(), pg_temp.k2());
 
 -- ===== Garde : les données de ce fichier ont le sens attendu =====
 SELECT is((SELECT count(*)::int FROM app.group_members gm WHERE gm.group_id = pg_temp.g1()), 5,
@@ -282,13 +302,13 @@ UPDATE private.settings SET reseau_releve_ouvert = false;
 SELECT is(pg_temp.mes(pg_temp.u(1)), '0', 'fermé : mes_releves_reseau ne rend aucune ligne');
 SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1))), '{"ouvert": false}'::jsonb, 'fermé : reseau_releve rend {"ouvert": false} et rien d''autre');
 SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(255))), '{"ouvert": false}'::jsonb, 'fermé : même réponse pour un identifiant forgé (aucune fuite)');
-SELECT is(pg_temp.inf(pg_temp.u(1), pg_temp.p(1), false), pg_temp.ferme(), 'fermé : reseau_informer refusé (55000)');
-SELECT is(pg_temp.inf(pg_temp.u(1), pg_temp.p(1), true), pg_temp.ferme(), 'fermé : l''opposition est refusée aussi (aucune ligne ne peut exister)');
+SELECT is(pg_temp.inf(pg_temp.u(1), pg_temp.p(1), false), pg_temp.ferme(), 'fermé : lire l''information sans s''opposer est refusé (55000)');
+SELECT is(pg_temp.inf(pg_temp.u(5), pg_temp.p(5), true), 'oppose', 'fermé : s''opposer reste permis (défaut protecteur, non validé) : Élise s''oppose');
 SELECT is(pg_temp.cons(pg_temp.u(1), pg_temp.p(1), true, true), pg_temp.ferme(), 'fermé : reseau_consentir refusé (55000)');
 SELECT is(pg_temp.rep(pg_temp.u(1), pg_temp.p(1), '[]'), pg_temp.ferme(), 'fermé : reseau_repondre refusé (55000)');
 SELECT is(pg_temp.ret(pg_temp.u(1), pg_temp.p(1)), '0', 'fermé : reseau_retirer reste permis (rien à retirer : 0)');
-SELECT is((SELECT count(*)::int FROM app.reseau_membres m WHERE m.campaign_id IN (pg_temp.k1(), pg_temp.kb())), 0,
-  'fermé : aucune ligne de membre écrite');
+SELECT is((SELECT string_agg(pg_temp.code(m.participation_id) || ':' || (m.oppose_le IS NOT NULL)::text, ',') FROM app.reseau_membres m WHERE m.campaign_id IN (pg_temp.k1(), pg_temp.kb())),
+  'E:true', 'fermé : seule la ligne d''opposition d''Élise est écrite');
 SELECT is(
   (SELECT string_agg(DISTINCT x, '|') FROM unnest(ARRAY[
      pg_temp.comme(NULL, 'authenticated', 'select count(*)::text from app.mes_releves_reseau()'),
@@ -320,7 +340,7 @@ SELECT is(
 SELECT is(pg_temp.cons(pg_temp.u(1), pg_temp.p(1), true, true), pg_temp.sans_info(), 'consentir avant d''avoir lu l''information : refusé (55000)');
 SELECT is(pg_temp.rep(pg_temp.u(1), pg_temp.p(1), '[]'), pg_temp.sans_accord(), 'répondre sans accord : refusé (55000)');
 SELECT is(pg_temp.inf(pg_temp.u(1), pg_temp.p(1), NULL), pg_temp.choix(), 'informer sans choix : refusé (22023)');
-SELECT is((SELECT count(*)::int FROM app.reseau_membres m WHERE m.campaign_id = pg_temp.k1()), 0, 'aucun refus n''a écrit de ligne');
+SELECT is((SELECT count(*)::int FROM app.reseau_membres m WHERE m.campaign_id = pg_temp.k1() AND m.participation_id <> pg_temp.p(5)), 0, 'aucun refus n''a écrit de ligne');
 
 -- ===== Informer =====
 SELECT is(pg_temp.inf(pg_temp.u(1), pg_temp.p(1), false), 'informe', 'Alice a lu l''information sans s''opposer : « informe »');
@@ -415,6 +435,13 @@ SELECT throws_ok(format($$INSERT INTO app.reseau_reponses (repondant, cite, camp
 SELECT is(pg_temp.cons(pg_temp.u(3), pg_temp.p(3), true, true) || '|'
           || pg_temp.rep(pg_temp.u(3), pg_temp.p(3), pg_temp.liste(pg_temp.e(pg_temp.p(1), 'conseil', 4), pg_temp.e(pg_temp.p(2), 'conseil', 4))),
   'enregistre|2', 'Camille accepte et répond');
+SELECT is(pg_temp.cons(pg_temp.u(3), pg_temp.p(3), false, true), 'enregistre', 'Camille retire son accord de réponse et garde l''accord de carte');
+SELECT ok(pg_temp.en_base(pg_temp.p(3)) = ''
+          AND (SELECT m.accord_repondre_le IS NULL AND m.accord_carte_le IS NOT NULL FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(3)),
+  'retirer l''accord de réponse supprime les réponses ; l''accord de carte est conservé');
+SELECT is(pg_temp.cons(pg_temp.u(3), pg_temp.p(3), true, true) || '|'
+          || pg_temp.rep(pg_temp.u(3), pg_temp.p(3), pg_temp.liste(pg_temp.e(pg_temp.p(1), 'conseil', 4), pg_temp.e(pg_temp.p(2), 'conseil', 4))),
+  'enregistre|2', 'Camille redonne son accord et répond de nouveau');
 SELECT is(pg_temp.ret(pg_temp.u(3), pg_temp.p(3)), '2', 'Camille retire ses réponses : deux supprimées');
 SELECT ok((SELECT m.accord_repondre_le IS NULL AND m.accord_carte_le IS NULL AND m.oppose_le IS NULL FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(3))
           AND pg_temp.en_base(pg_temp.p(3)) = '',
@@ -433,6 +460,8 @@ SELECT is(pg_temp.en_base(pg_temp.p(1)) || '/' || pg_temp.en_base(pg_temp.p(2)),
   'les autres réponses d''Alice et de Bruno restent');
 SELECT ok((SELECT m.oppose_le IS NOT NULL AND m.accord_repondre_le IS NULL AND m.accord_carte_le IS NULL FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(4)),
   'opposition datée, accords effacés');
+SELECT is((SELECT m ->> 'oppose' FROM jsonb_array_elements(pg_temp.j(pg_temp.lire(pg_temp.u(8), pg_temp.k1())) -> 'groupes' -> 0 -> 'membres') m WHERE m ->> 'nom' = 'Driss'),
+  'true', 'la lecture du consultant dit Driss opposé (non représenté), sans aucun lien');
 SELECT is(pg_temp.noms(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1)))), 'Bruno,Camille', 'Driss n''est plus proposé à Alice');
 SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(4), pg_temp.p(4))) -> 'membres', '[]'::jsonb, 'une personne opposée ne voit aucun membre');
 SELECT is(pg_temp.cons(pg_temp.u(4), pg_temp.p(4), true, false), pg_temp.sans_info(), 'une personne opposée ne consent pas (55000)');
@@ -478,9 +507,9 @@ SELECT is((SELECT string_agg(DISTINCT l.acteur::text || '|' || l.ressource_type 
 -- ===== Journal du parcours, sans nom ni adresse =====
 SELECT is(pg_temp.journal('reseau.informer') || ',' || pg_temp.journal('reseau.opposer') || ',' || pg_temp.journal('reseau.consentir') || ','
           || pg_temp.journal('reseau.repondre') || ',' || pg_temp.journal('reseau.retirer'),
-  '6,1,4,5,3', 'journal : six informations, une opposition, quatre consentements, cinq réponses, trois retraits ; aucun refus');
+  '6,2,6,6,3', 'journal : six informations, deux oppositions, six consentements, six réponses, trois retraits ; aucun refus');
 SELECT is((SELECT string_agg(l.quantite::text, ',' ORDER BY l.id) FROM private.audit_log l WHERE l.action = 'reseau.repondre' AND l.organization_id = pg_temp.org_a()),
-  '4,3,2,2,1', 'la quantité de chaque réponse est le nombre de lignes enregistrées');
+  '4,3,2,2,2,1', 'la quantité de chaque réponse est le nombre de lignes enregistrées');
 SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l.action ~ '^reseau\.' AND l.organization_id = pg_temp.org_a()
              AND (to_jsonb(l)::text ~ '(@|Alice|Bruno|Camille|Driss|Élise|Ghita)' OR l.acteur IS NULL)), 0,
   'aucune ligne du journal du relevé ne contient de nom ni d''adresse ; chacune a son acteur');
@@ -522,6 +551,17 @@ INSERT INTO app.reseau_reponses (repondant, cite, campaign_id, organization_id, 
   (pg_temp.p(2), pg_temp.p(3), pg_temp.k1(), pg_temp.org_a(), pg_temp.g1(), 'conseil', 2, now() - interval '3 months'),
   (pg_temp.p(3), pg_temp.p(2), pg_temp.k1(), pg_temp.org_a(), pg_temp.g1(), 'conseil', 2, now() - interval '1 month');
 UPDATE app.reseau_membres SET maj_le = now() - interval '3 months' WHERE participation_id = pg_temp.p(5);
+-- Membre aux réponses récentes (campagne K2 ouverte) : accord donné il y a 3 mois,
+-- réponse aujourd'hui ; reseau_repondre rafraîchit maj_le, la purge ne l'emporte pas.
+UPDATE private.settings SET reseau_releve_ouvert = true;
+SELECT is(pg_temp.inf(pg_temp.u(13), pg_temp.p(13), false) || '|' || pg_temp.inf(pg_temp.u(14), pg_temp.p(14), false) || '|'
+          || pg_temp.cons(pg_temp.u(13), pg_temp.p(13), true, false),
+  'informe|informe|enregistre', 'K2 : Inès et Jamal sont informés, Inès accepte de répondre');
+UPDATE app.reseau_membres SET maj_le = now() - interval '3 months' WHERE participation_id = pg_temp.p(13);
+SELECT is(pg_temp.rep(pg_temp.u(13), pg_temp.p(13), pg_temp.liste(pg_temp.e(pg_temp.p(14), 'conseil', 3))), '1', 'Inès répond');
+SELECT ok((SELECT m.maj_le = now() FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(13)),
+  'répondre rafraîchit maj_le de la ligne du répondant');
+UPDATE private.settings SET reseau_releve_ouvert = false;
 SELECT set_config('zz.repere', (SELECT coalesce(max(l.id), 0)::text FROM private.audit_log l), true);
 UPDATE private.settings SET conservation_reseau_mois = 36;
 SELECT private.purger_quotidien();
@@ -533,6 +573,8 @@ SELECT is(pg_temp.en_base(pg_temp.p(2)) || '/' || pg_temp.en_base(pg_temp.p(3)),
   'conservation de 2 mois : la réponse de 3 mois est purgée, celle d''un mois reste');
 SELECT is((SELECT string_agg(pg_temp.code(m.participation_id), ',' ORDER BY pg_temp.code(m.participation_id)) FROM app.reseau_membres m WHERE m.campaign_id = pg_temp.k1()),
   'A,B,C,D', 'conservation de 2 mois : le membre de 3 mois (Élise) est purgé, les autres restent');
+SELECT is((SELECT count(*)::text FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(13)) || '/' || pg_temp.en_base(pg_temp.p(13)),
+  '1/J:conseil:3', 'le membre aux réponses récentes (Inès) n''est pas purgé, sa réponse reste');
 SELECT ok((SELECT l.quantite >= 1 FROM private.audit_log l WHERE l.action = 'purge.reseau_reponses' AND l.id > current_setting('zz.repere')::bigint ORDER BY l.id DESC LIMIT 1)
           AND (SELECT l.quantite >= 1 FROM private.audit_log l WHERE l.action = 'purge.reseau_membres' AND l.id > current_setting('zz.repere')::bigint ORDER BY l.id DESC LIMIT 1),
   'traces chiffrées purge.reseau_reponses et purge.reseau_membres');
@@ -545,6 +587,11 @@ DELETE FROM auth.users WHERE id = pg_temp.u(3);
 SELECT is((SELECT count(*)::int FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(3))
           + (SELECT count(*)::int FROM app.reseau_reponses r WHERE pg_temp.p(3) IN (r.repondant, r.cite)), 0,
   'effacer le compte de Camille efface sa ligne et toutes les réponses où elle figure');
-SELECT is(pg_temp.journal('reseau.informer'), 7, 'le journal du relevé subsiste après l''effacement (sept informations, dont la levée après la clôture)');
+INSERT INTO app.reseau_membres (participation_id, campaign_id, organization_id, group_id) VALUES (pg_temp.p(15), pg_temp.k3(), pg_temp.org_a(), pg_temp.g4());
+SELECT is(pg_temp.comme(pg_temp.u(7), 'authenticated', format('select app.retirer_membre(%L)::text', pg_temp.p(15))), 'true',
+  'campagne en brouillon : le responsable retire Karim de son groupe');
+SELECT is((SELECT count(*)::int FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(15)), 0,
+  'app.retirer_membre efface en cascade la ligne de membre du relevé');
+SELECT is(pg_temp.journal('reseau.informer'), 9, 'le journal du relevé subsiste après l''effacement (neuf informations, dont la levée après la clôture et K2)');
 
 SELECT * FROM finish();
