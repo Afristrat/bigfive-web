@@ -77,7 +77,7 @@ BEGIN
   PERFORM private.journaliser(v_uid, 'resultat.lister', 'campagne', p_campagne, v_org, v_n);
   RETURN QUERY
     SELECT u.pid, u.dt
-      FROM pg_catalog.unnest(v_ids, v_dts) WITH ORDINALITY AS u(pid, dt, ord)
+      FROM ROWS FROM (pg_catalog.unnest(v_ids), pg_catalog.unnest(v_dts)) WITH ORDINALITY AS u(pid, dt, ord)
      ORDER BY u.ord;
 END
 $$;
