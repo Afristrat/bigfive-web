@@ -169,7 +169,8 @@ export function nombresDe(texte, references) {
 function nombresDesEntrees({ faits, cas, profils, references }) {
   const set = new Set();
   const visiter = (v) => {
-    if (typeof v === 'number') set.add(String(v));
+    // Un fait peut être affiché arrondi à une ou deux décimales : l'arrondi reste traçable.
+    if (typeof v === 'number') for (const x of [v, Number(v.toFixed(2)), Number(v.toFixed(1))]) set.add(String(x));
     else if (typeof v === 'string') for (const n of nombresDe(v, references)) set.add(n.valeur);
     else if (Array.isArray(v)) v.forEach(visiter);
     else if (v && typeof v === 'object') Object.values(v).forEach(visiter);

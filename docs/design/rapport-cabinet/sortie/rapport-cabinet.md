@@ -2742,7 +2742,7 @@ Tâche commune, selon le cas : Réussir ensemble le lancement du canal de vente 
 
 Constaté
 
-Écarts entre AM et KB, repris des faits calculés : domaine N (sensibilité à la tension) : écart 0,4583, proche ; AM plutôt bas, KB plutôt bas ; domaine E (énergie relationnelle) : écart 0,8333, intermédiaire ; AM haut, KB milieu de l’échelle ; domaine O (ouverture aux idées nouvelles) : écart 1,5417, notable ; AM haut, KB plutôt bas ; domaine A (façon de coopérer et de traiter un désaccord) : écart 0,2917, proche ; AM milieu de l’échelle, KB milieu de l’échelle ; domaine C (organisation et suivi des engagements) : écart 0,0833, proche ; AM haut, KB haut. Facettes notables les plus éloignées, retenues pour la tâche : O5 (écart 3 ; AM haut, KB plutôt bas) ; C6 (écart 2 ; AM plutôt bas, KB haut) ; O4 (écart 1,75 ; AM haut, KB plutôt bas). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : AM (français), KB (français) ; équivalence des versions non établie.
+Écarts entre AM et KB, repris des faits calculés : domaine N (sensibilité à la tension) : écart 0,46, proche ; AM plutôt bas, KB plutôt bas ; domaine E (énergie relationnelle) : écart 0,83, intermédiaire ; AM haut, KB milieu de l’échelle ; domaine O (ouverture aux idées nouvelles) : écart 1,54, notable ; AM haut, KB plutôt bas ; domaine A (façon de coopérer et de traiter un désaccord) : écart 0,29, proche ; AM milieu de l’échelle, KB milieu de l’échelle ; domaine C (organisation et suivi des engagements) : écart 0,08, proche ; AM haut, KB haut. Facettes notables les plus éloignées, retenues pour la tâche : O5 (écart 3 ; AM haut, KB plutôt bas) ; C6 (écart 2 ; AM plutôt bas, KB haut) ; O4 (écart 1,75 ; AM haut, KB plutôt bas). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : AM (français), KB (français) ; équivalence des versions non établie.
 
 Constaté
 
@@ -2788,7 +2788,7 @@ Dans une ligne hiérarchique, ce chapitre ne doit pas alimenter l’évaluation 
 
 Hypothèse
 
-Les réponses d’AM et de KB sont voisines sur le domaine N (écart 0,4583), le domaine A (écart 0,2917) et le domaine C (écart 0,0833). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine N, une façon voisine de réagir à l’incertitude et à la pression, qui peut faciliter le partage des inquiétudes sur le calendrier ; pour le domaine A, une manière voisine de coopérer et de traiter un désaccord, qui peut faciliter une franchise ou une prudence partagée ; pour le domaine C, un rapport voisin à l’organisation et au suivi des engagements, qui peut faciliter l’accord sur les points d’étape. Dans une ligne hiérarchique, ces points de rencontre peuvent aider à poser des attentes claires sans longue négociation (règles ECART-proche, CAL-NAT-ligne).
+Les réponses d’AM et de KB sont voisines sur le domaine N (écart 0,46), le domaine A (écart 0,29) et le domaine C (écart 0,08). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine N, une façon voisine de réagir à l’incertitude et à la pression, qui peut faciliter le partage des inquiétudes sur le calendrier ; pour le domaine A, une manière voisine de coopérer et de traiter un désaccord, qui peut faciliter une franchise ou une prudence partagée ; pour le domaine C, un rapport voisin à l’organisation et au suivi des engagements, qui peut faciliter l’accord sur les points d’étape. Dans une ligne hiérarchique, ces points de rencontre peuvent aider à poser des attentes claires sans longue négociation (règles ECART-proche, CAL-NAT-ligne).
 
 Confiance  
 faible
@@ -2798,7 +2798,7 @@ Demander à chacune des deux personnes un exemple récent où une incertitude su
 
 Hypothèse
 
-Sur le domaine O (ouverture aux idées nouvelles) : écart 1,5417, notable ; AM haut, KB plutôt bas. Il se peut que cette différence d’ouverture serve la tâche : AM peut apporter des pistes nouvelles pendant que KB les met à l’épreuve de l’existant, de sorte qu’exploration et sécurisation du lancement soient couvertes. Dans une ligne hiérarchique, cette complémentarité ne joue que si la personne qui oriente laisse une place explicite à l’autre manière de faire (règles ECART-notable, CAL-NAT-ligne).
+Sur le domaine O (ouverture aux idées nouvelles) : écart 1,54, notable ; AM haut, KB plutôt bas. Il se peut que cette différence d’ouverture serve la tâche : AM peut apporter des pistes nouvelles pendant que KB les met à l’épreuve de l’existant, de sorte qu’exploration et sécurisation du lancement soient couvertes. Dans une ligne hiérarchique, cette complémentarité ne joue que si la personne qui oriente laisse une place explicite à l’autre manière de faire (règles ECART-notable, CAL-NAT-ligne).
 
 Confiance  
 faible
@@ -2858,7 +2858,7 @@ Texte type de la bibliothèque : `O4/haut` `O4/plutot_bas`
 
 Hypothèse
 
-Sur le domaine O (ouverture aux idées nouvelles) : écart 1,5417, notable ; AM haut, KB plutôt bas. Il se peut qu’AM propose des façons de faire nouvelles que KB lit comme une remise en cause des méthodes en place, et que KB attende un cadre précis avant d’explorer (règles ECART-notable, CAL-NAT-ligne).
+Sur le domaine O (ouverture aux idées nouvelles) : écart 1,54, notable ; AM haut, KB plutôt bas. Il se peut qu’AM propose des façons de faire nouvelles que KB lit comme une remise en cause des méthodes en place, et que KB attende un cadre précis avant d’explorer (règles ECART-notable, CAL-NAT-ligne).
 
 Confiance  
 faible
@@ -3102,7 +3102,7 @@ Tâche commune, selon le cas : Réussir ensemble le lancement du canal de vente 
 
 Constaté
 
-Écarts entre AM et SR, repris des faits calculés : domaine N (sensibilité à la tension) : écart 0,6667, intermédiaire ; AM plutôt bas, SR milieu de l’échelle ; domaine E (énergie relationnelle) : écart 0,0417, proche ; AM haut, SR haut ; domaine O (ouverture aux idées nouvelles) : écart 0,375, proche ; AM haut, SR haut ; domaine A (façon de coopérer et de traiter un désaccord) : écart 0,0417, proche ; AM milieu de l’échelle, SR milieu de l’échelle ; domaine C (organisation et suivi des engagements) : écart 1,25, notable ; AM haut, SR milieu de l’échelle. Facettes notables les plus éloignées, retenues pour la tâche : C1 (écart 2 ; AM haut, SR milieu de l’échelle) ; C3 (écart 1,75 ; AM haut, SR milieu de l’échelle) ; E3 (écart 1,5 ; AM haut, SR plutôt haut). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : AM (français), SR (arabe) ; équivalence des versions non établie.
+Écarts entre AM et SR, repris des faits calculés : domaine N (sensibilité à la tension) : écart 0,67, intermédiaire ; AM plutôt bas, SR milieu de l’échelle ; domaine E (énergie relationnelle) : écart 0,04, proche ; AM haut, SR haut ; domaine O (ouverture aux idées nouvelles) : écart 0,38, proche ; AM haut, SR haut ; domaine A (façon de coopérer et de traiter un désaccord) : écart 0,04, proche ; AM milieu de l’échelle, SR milieu de l’échelle ; domaine C (organisation et suivi des engagements) : écart 1,25, notable ; AM haut, SR milieu de l’échelle. Facettes notables les plus éloignées, retenues pour la tâche : C1 (écart 2 ; AM haut, SR milieu de l’échelle) ; C3 (écart 1,75 ; AM haut, SR milieu de l’échelle) ; E3 (écart 1,5 ; AM haut, SR plutôt haut). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : AM (français), SR (arabe) ; équivalence des versions non établie.
 
 Constaté
 
@@ -3154,7 +3154,7 @@ Faire relire en entretien, dans la langue de travail de la relation, quelques af
 
 Hypothèse
 
-Les réponses d’AM et de SR sont voisines sur le domaine E (écart 0,0417), le domaine O (écart 0,375) et le domaine A (écart 0,0417). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine E, un niveau voisin d’énergie relationnelle, qui peut faciliter un rythme d’échange accepté par les deux ; pour le domaine O, une ouverture voisine aux idées nouvelles, qui peut faciliter l’accord sur le degré de changement souhaitable ; pour le domaine A, une manière voisine de coopérer et de traiter un désaccord, qui peut faciliter une franchise ou une prudence partagée. Dans un lien fonctionnel, ils peuvent aider les deux fonctions à se comprendre sans autorité commune (règles ECART-proche, CAL-NAT-fonctionnel).
+Les réponses d’AM et de SR sont voisines sur le domaine E (écart 0,04), le domaine O (écart 0,38) et le domaine A (écart 0,04). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine E, un niveau voisin d’énergie relationnelle, qui peut faciliter un rythme d’échange accepté par les deux ; pour le domaine O, une ouverture voisine aux idées nouvelles, qui peut faciliter l’accord sur le degré de changement souhaitable ; pour le domaine A, une manière voisine de coopérer et de traiter un désaccord, qui peut faciliter une franchise ou une prudence partagée. Dans un lien fonctionnel, ils peuvent aider les deux fonctions à se comprendre sans autorité commune (règles ECART-proche, CAL-NAT-fonctionnel).
 
 Confiance  
 moyenne
@@ -3478,7 +3478,7 @@ Tâche commune, selon le cas : Réussir ensemble le lancement du canal de vente 
 
 Constaté
 
-Écarts entre AM et HT, repris des faits calculés : domaine N (sensibilité à la tension) : écart 1,1667, notable ; AM plutôt bas, HT plutôt haut ; domaine E (énergie relationnelle) : écart 1,875, notable ; AM haut, HT plutôt bas ; domaine O (ouverture aux idées nouvelles) : écart 0,2917, proche ; AM haut, HT plutôt haut ; domaine A (façon de coopérer et de traiter un désaccord) : écart 1,2917, notable ; AM milieu de l’échelle, HT haut ; domaine C (organisation et suivi des engagements) : écart 0,2917, proche ; AM haut, HT plutôt haut. Facettes notables les plus éloignées, retenues pour la tâche : E3 (écart 3 ; AM haut, HT plutôt bas) ; A4 (écart 2,5 ; AM plutôt bas, HT haut) ; E4 (écart 2,25 ; AM haut, HT milieu de l’échelle). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : AM (français), HT (français) ; équivalence des versions non établie.
+Écarts entre AM et HT, repris des faits calculés : domaine N (sensibilité à la tension) : écart 1,17, notable ; AM plutôt bas, HT plutôt haut ; domaine E (énergie relationnelle) : écart 1,88, notable ; AM haut, HT plutôt bas ; domaine O (ouverture aux idées nouvelles) : écart 0,29, proche ; AM haut, HT plutôt haut ; domaine A (façon de coopérer et de traiter un désaccord) : écart 1,29, notable ; AM milieu de l’échelle, HT haut ; domaine C (organisation et suivi des engagements) : écart 0,29, proche ; AM haut, HT plutôt haut. Facettes notables les plus éloignées, retenues pour la tâche : E3 (écart 3 ; AM haut, HT plutôt bas) ; A4 (écart 2,5 ; AM plutôt bas, HT haut) ; E4 (écart 2,25 ; AM haut, HT milieu de l’échelle). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : AM (français), HT (français) ; équivalence des versions non établie.
 
 Constaté
 
@@ -3520,7 +3520,7 @@ Demander aux deux personnes à quel moment le travail de l’une dépend de celu
 
 Hypothèse
 
-Les réponses d’AM et de HT sont voisines sur le domaine O (écart 0,2917) et le domaine C (écart 0,2917). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine O, une ouverture voisine aux idées nouvelles, qui peut faciliter l’accord sur le degré de changement souhaitable ; pour le domaine C, un rapport voisin à l’organisation et au suivi des engagements, qui peut faciliter l’accord sur les points d’étape. En mentorat, ils peuvent donner un terrain d’entente pour les premiers échanges (règles ECART-proche, CAL-NAT-mentorat).
+Les réponses d’AM et de HT sont voisines sur le domaine O (écart 0,29) et le domaine C (écart 0,29). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine O, une ouverture voisine aux idées nouvelles, qui peut faciliter l’accord sur le degré de changement souhaitable ; pour le domaine C, un rapport voisin à l’organisation et au suivi des engagements, qui peut faciliter l’accord sur les points d’étape. En mentorat, ils peuvent donner un terrain d’entente pour les premiers échanges (règles ECART-proche, CAL-NAT-mentorat).
 
 Confiance  
 moyenne
@@ -3530,7 +3530,7 @@ Demander à chacune des deux personnes un exemple récent de changement de méth
 
 Hypothèse
 
-Sur le domaine E (énergie relationnelle) : écart 1,875, notable ; AM haut, HT plutôt bas. Il se peut que cette différence d’énergie relationnelle serve la tâche : AM peut porter la relation vers l’extérieur (siège, équipes) pendant que HT consolide le travail en profondeur. En mentorat, elle prend la forme d’un échange de perspectives : la personne mentorée peut y trouver une autre façon de faire sans devoir l’adopter (règles ECART-notable, CAL-NAT-mentorat).
+Sur le domaine E (énergie relationnelle) : écart 1,88, notable ; AM haut, HT plutôt bas. Il se peut que cette différence d’énergie relationnelle serve la tâche : AM peut porter la relation vers l’extérieur (siège, équipes) pendant que HT consolide le travail en profondeur. En mentorat, elle prend la forme d’un échange de perspectives : la personne mentorée peut y trouver une autre façon de faire sans devoir l’adopter (règles ECART-notable, CAL-NAT-mentorat).
 
 Confiance  
 moyenne
@@ -3540,7 +3540,7 @@ Demander à chacune des deux personnes comment elle préfère recevoir une deman
 
 Hypothèse
 
-Sur le domaine A (façon de coopérer et de traiter un désaccord) : écart 1,2917, notable ; AM milieu de l’échelle, HT haut. Il se peut que cette différence de façon de coopérer serve la tâche : HT peut entretenir la qualité de l’échange pendant qu’AM dit plus directement ce qui ne va pas. En mentorat, elle prend la forme d’un échange de perspectives : la personne mentorée peut y trouver une autre façon de faire sans devoir l’adopter (règles ECART-notable, CAL-NAT-mentorat).
+Sur le domaine A (façon de coopérer et de traiter un désaccord) : écart 1,29, notable ; AM milieu de l’échelle, HT haut. Il se peut que cette différence de façon de coopérer serve la tâche : HT peut entretenir la qualité de l’échange pendant qu’AM dit plus directement ce qui ne va pas. En mentorat, elle prend la forme d’un échange de perspectives : la personne mentorée peut y trouver une autre façon de faire sans devoir l’adopter (règles ECART-notable, CAL-NAT-mentorat).
 
 Confiance  
 moyenne
@@ -3600,7 +3600,7 @@ Texte type de la bibliothèque : `E4/haut` `E4/milieu`
 
 Hypothèse
 
-Sur le domaine E (énergie relationnelle) : écart 1,875, notable ; AM haut, HT plutôt bas. Il se peut que le temps de parole soit très inégal et que l’échange de mentorat prenne la forme d’un monologue d’AM plutôt que d’un dialogue où HT s’exprime (règles ECART-notable, CAL-NAT-mentorat).
+Sur le domaine E (énergie relationnelle) : écart 1,88, notable ; AM haut, HT plutôt bas. Il se peut que le temps de parole soit très inégal et que l’échange de mentorat prenne la forme d’un monologue d’AM plutôt que d’un dialogue où HT s’exprime (règles ECART-notable, CAL-NAT-mentorat).
 
 Confiance  
 moyenne
@@ -3610,7 +3610,7 @@ Demander à chacune des deux personnes comment elle préfère recevoir une deman
 
 Hypothèse
 
-Sur le domaine A (façon de coopérer et de traiter un désaccord) : écart 1,2917, notable ; AM milieu de l’échelle, HT haut. Il se peut que HT approuve les conseils reçus sans oser dire qu’ils ne conviennent pas, et qu’AM en conclue qu’ils sont utiles (règles ECART-notable, CAL-NAT-mentorat).
+Sur le domaine A (façon de coopérer et de traiter un désaccord) : écart 1,29, notable ; AM milieu de l’échelle, HT haut. Il se peut que HT approuve les conseils reçus sans oser dire qu’ils ne conviennent pas, et qu’AM en conclue qu’ils sont utiles (règles ECART-notable, CAL-NAT-mentorat).
 
 Confiance  
 moyenne
@@ -3850,7 +3850,7 @@ Tâche commune, selon le cas : Réussir ensemble le lancement du canal de vente 
 
 Constaté
 
-Écarts entre KB et SR, repris des faits calculés : domaine N (sensibilité à la tension) : écart 1,125, notable ; KB plutôt bas, SR milieu de l’échelle ; domaine E (énergie relationnelle) : écart 0,7917, intermédiaire ; KB milieu de l’échelle, SR haut ; domaine O (ouverture aux idées nouvelles) : écart 1,9167, notable ; KB plutôt bas, SR haut ; domaine A (façon de coopérer et de traiter un désaccord) : écart 0,3333, proche ; KB milieu de l’échelle, SR milieu de l’échelle ; domaine C (organisation et suivi des engagements) : écart 1,3333, notable ; KB haut, SR milieu de l’échelle. Facettes notables les plus éloignées, retenues pour la tâche : O4 (écart 2,5 ; KB plutôt bas, SR haut) ; O5 (écart 2 ; KB plutôt bas, SR haut) ; C2 (écart 1,75 ; KB haut, SR milieu de l’échelle). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : KB (français), SR (arabe) ; équivalence des versions non établie.
+Écarts entre KB et SR, repris des faits calculés : domaine N (sensibilité à la tension) : écart 1,13, notable ; KB plutôt bas, SR milieu de l’échelle ; domaine E (énergie relationnelle) : écart 0,79, intermédiaire ; KB milieu de l’échelle, SR haut ; domaine O (ouverture aux idées nouvelles) : écart 1,92, notable ; KB plutôt bas, SR haut ; domaine A (façon de coopérer et de traiter un désaccord) : écart 0,33, proche ; KB milieu de l’échelle, SR milieu de l’échelle ; domaine C (organisation et suivi des engagements) : écart 1,33, notable ; KB haut, SR milieu de l’échelle. Facettes notables les plus éloignées, retenues pour la tâche : O4 (écart 2,5 ; KB plutôt bas, SR haut) ; O5 (écart 2 ; KB plutôt bas, SR haut) ; C2 (écart 1,75 ; KB haut, SR milieu de l’échelle). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : KB (français), SR (arabe) ; équivalence des versions non établie.
 
 Constaté
 
@@ -3902,7 +3902,7 @@ Faire relire en entretien, dans la langue de travail de la relation, quelques af
 
 Hypothèse
 
-Les réponses de KB et de SR sont voisines sur le domaine A (écart 0,3333). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine A, une manière voisine de coopérer et de traiter un désaccord, qui peut faciliter une franchise ou une prudence partagée. Entre client et fournisseur internes, ils peuvent réduire les malentendus sur la demande (règles ECART-proche, CAL-NAT-client-fournisseur).
+Les réponses de KB et de SR sont voisines sur le domaine A (écart 0,33). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine A, une manière voisine de coopérer et de traiter un désaccord, qui peut faciliter une franchise ou une prudence partagée. Entre client et fournisseur internes, ils peuvent réduire les malentendus sur la demande (règles ECART-proche, CAL-NAT-client-fournisseur).
 
 Confiance  
 moyenne
@@ -3912,7 +3912,7 @@ Demander à chacune des deux personnes un exemple récent de désaccord, dit ou 
 
 Hypothèse
 
-Sur le domaine O (ouverture aux idées nouvelles) : écart 1,9167, notable ; KB plutôt bas, SR haut. Il se peut que cette différence d’ouverture serve la tâche : SR peut apporter des pistes nouvelles pendant que KB les met à l’épreuve de l’existant, de sorte qu’exploration et sécurisation du lancement soient couvertes. Entre client et fournisseur internes, elle joue si la demande et la réponse sont formulées de façon à laisser voir ce que chaque fonction apporte (règles ECART-notable, CAL-NAT-client-fournisseur).
+Sur le domaine O (ouverture aux idées nouvelles) : écart 1,92, notable ; KB plutôt bas, SR haut. Il se peut que cette différence d’ouverture serve la tâche : SR peut apporter des pistes nouvelles pendant que KB les met à l’épreuve de l’existant, de sorte qu’exploration et sécurisation du lancement soient couvertes. Entre client et fournisseur internes, elle joue si la demande et la réponse sont formulées de façon à laisser voir ce que chaque fonction apporte (règles ECART-notable, CAL-NAT-client-fournisseur).
 
 Confiance  
 moyenne
@@ -3922,7 +3922,7 @@ Demander à chacune des deux personnes un exemple récent de changement de méth
 
 Hypothèse
 
-Sur le domaine C (organisation et suivi des engagements) : écart 1,3333, notable ; KB haut, SR milieu de l’échelle. Il se peut que cette différence d’organisation serve la tâche : KB peut tenir le cadre, les dates et le suivi pendant que SR garde de la souplesse face aux imprévus du lancement. Entre client et fournisseur internes, elle joue si la demande et la réponse sont formulées de façon à laisser voir ce que chaque fonction apporte (règles ECART-notable, CAL-NAT-client-fournisseur).
+Sur le domaine C (organisation et suivi des engagements) : écart 1,33, notable ; KB haut, SR milieu de l’échelle. Il se peut que cette différence d’organisation serve la tâche : KB peut tenir le cadre, les dates et le suivi pendant que SR garde de la souplesse face aux imprévus du lancement. Entre client et fournisseur internes, elle joue si la demande et la réponse sont formulées de façon à laisser voir ce que chaque fonction apporte (règles ECART-notable, CAL-NAT-client-fournisseur).
 
 Confiance  
 moyenne
@@ -3982,7 +3982,7 @@ Texte type de la bibliothèque : `C2/haut` `C2/milieu`
 
 Hypothèse
 
-Sur le domaine O (ouverture aux idées nouvelles) : écart 1,9167, notable ; KB plutôt bas, SR haut. Il se peut que SR attende que le livrable intègre des idées nouvelles quand KB s’en tient à la spécification reçue, ce qui crée des reprises tardives (règles ECART-notable, CAL-NAT-client-fournisseur).
+Sur le domaine O (ouverture aux idées nouvelles) : écart 1,92, notable ; KB plutôt bas, SR haut. Il se peut que SR attende que le livrable intègre des idées nouvelles quand KB s’en tient à la spécification reçue, ce qui crée des reprises tardives (règles ECART-notable, CAL-NAT-client-fournisseur).
 
 Confiance  
 moyenne
@@ -3992,7 +3992,7 @@ Demander à chacune des deux personnes un exemple récent de changement de méth
 
 Hypothèse
 
-Sur le domaine C (organisation et suivi des engagements) : écart 1,3333, notable ; KB haut, SR milieu de l’échelle. Il se peut que KB soit exigeant sur le détail et le respect des échéances et que SR livre selon des critères moins formalisés : les reprises se concentrent alors près des échéances (règles ECART-notable, CAL-NAT-client-fournisseur).
+Sur le domaine C (organisation et suivi des engagements) : écart 1,33, notable ; KB haut, SR milieu de l’échelle. Il se peut que KB soit exigeant sur le détail et le respect des échéances et que SR livre selon des critères moins formalisés : les reprises se concentrent alors près des échéances (règles ECART-notable, CAL-NAT-client-fournisseur).
 
 Confiance  
 moyenne
@@ -4252,7 +4252,7 @@ Tâche commune, selon le cas : Réussir ensemble le lancement du canal de vente 
 
 Constaté
 
-Écarts entre KB et HT, repris des faits calculés : domaine N (sensibilité à la tension) : écart 1,625, notable ; KB plutôt bas, HT plutôt haut ; domaine E (énergie relationnelle) : écart 1,0417, notable ; KB milieu de l’échelle, HT plutôt bas ; domaine O (ouverture aux idées nouvelles) : écart 1,25, notable ; KB plutôt bas, HT plutôt haut ; domaine A (façon de coopérer et de traiter un désaccord) : écart 1, notable ; KB milieu de l’échelle, HT haut ; domaine C (organisation et suivi des engagements) : écart 0,375, proche ; KB haut, HT plutôt haut. Facettes notables les plus éloignées, retenues pour la tâche : E3 (écart 1,75 ; KB plutôt haut, HT plutôt bas) ; O5 (écart 1,75 ; KB plutôt bas, HT plutôt haut) ; O4 (écart 1,25 ; KB plutôt bas, HT plutôt haut). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : KB (français), HT (français) ; équivalence des versions non établie.
+Écarts entre KB et HT, repris des faits calculés : domaine N (sensibilité à la tension) : écart 1,63, notable ; KB plutôt bas, HT plutôt haut ; domaine E (énergie relationnelle) : écart 1,04, notable ; KB milieu de l’échelle, HT plutôt bas ; domaine O (ouverture aux idées nouvelles) : écart 1,25, notable ; KB plutôt bas, HT plutôt haut ; domaine A (façon de coopérer et de traiter un désaccord) : écart 1, notable ; KB milieu de l’échelle, HT haut ; domaine C (organisation et suivi des engagements) : écart 0,38, proche ; KB haut, HT plutôt haut. Facettes notables les plus éloignées, retenues pour la tâche : E3 (écart 1,75 ; KB plutôt haut, HT plutôt bas) ; O5 (écart 1,75 ; KB plutôt bas, HT plutôt haut) ; O4 (écart 1,25 ; KB plutôt bas, HT plutôt haut). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : KB (français), HT (français) ; équivalence des versions non établie.
 
 Constaté
 
@@ -4294,7 +4294,7 @@ Demander aux deux personnes à quel moment le travail de l’une dépend de celu
 
 Hypothèse
 
-Les réponses de KB et de HT sont voisines sur le domaine C (écart 0,375). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine C, un rapport voisin à l’organisation et au suivi des engagements, qui peut faciliter l’accord sur les points d’étape. Entre pairs, ils peuvent faciliter la décision commune en l’absence d’arbitre (règles ECART-proche, CAL-NAT-pairs).
+Les réponses de KB et de HT sont voisines sur le domaine C (écart 0,38). Il se peut que ce point de rencontre facilite la compréhension mutuelle : pour le domaine C, un rapport voisin à l’organisation et au suivi des engagements, qui peut faciliter l’accord sur les points d’étape. Entre pairs, ils peuvent faciliter la décision commune en l’absence d’arbitre (règles ECART-proche, CAL-NAT-pairs).
 
 Confiance  
 moyenne
@@ -4304,7 +4304,7 @@ Demander à chacune des deux personnes comment elle suit ses engagements et un e
 
 Hypothèse
 
-Sur le domaine N (sensibilité à la tension) : écart 1,625, notable ; KB plutôt bas, HT plutôt haut. Il se peut que cette différence de sensibilité à la tension devienne une ressource pour la tâche : HT repère plus tôt les risques à instruire pendant que KB garde le cap quand l’incertitude monte. Entre pairs, elle joue si aucune des deux manières de faire n’est présentée comme la référence (règles ECART-notable, CAL-NAT-pairs).
+Sur le domaine N (sensibilité à la tension) : écart 1,63, notable ; KB plutôt bas, HT plutôt haut. Il se peut que cette différence de sensibilité à la tension devienne une ressource pour la tâche : HT repère plus tôt les risques à instruire pendant que KB garde le cap quand l’incertitude monte. Entre pairs, elle joue si aucune des deux manières de faire n’est présentée comme la référence (règles ECART-notable, CAL-NAT-pairs).
 
 Confiance  
 moyenne
@@ -4374,7 +4374,7 @@ Texte type de la bibliothèque : `O4/plutot_bas` `O4/plutot_haut`
 
 Hypothèse
 
-Sur le domaine N (sensibilité à la tension) : écart 1,625, notable ; KB plutôt bas, HT plutôt haut. Il se peut que HT veuille lever une incertitude tout de suite quand KB juge pouvoir attendre, et que, sans arbitre entre elles, ce désaccord sur le bon moment de décider reste sans issue (règles ECART-notable, CAL-NAT-pairs).
+Sur le domaine N (sensibilité à la tension) : écart 1,63, notable ; KB plutôt bas, HT plutôt haut. Il se peut que HT veuille lever une incertitude tout de suite quand KB juge pouvoir attendre, et que, sans arbitre entre elles, ce désaccord sur le bon moment de décider reste sans issue (règles ECART-notable, CAL-NAT-pairs).
 
 Confiance  
 moyenne
@@ -4624,7 +4624,7 @@ Tâche commune, selon le cas : Réussir ensemble le lancement du canal de vente 
 
 Constaté
 
-Écarts entre SR et HT, repris des faits calculés : domaine N (sensibilité à la tension) : écart 0,5, proche ; SR milieu de l’échelle, HT plutôt haut ; domaine E (énergie relationnelle) : écart 1,8333, notable ; SR haut, HT plutôt bas ; domaine O (ouverture aux idées nouvelles) : écart 0,6667, intermédiaire ; SR haut, HT plutôt haut ; domaine A (façon de coopérer et de traiter un désaccord) : écart 1,3333, notable ; SR milieu de l’échelle, HT haut ; domaine C (organisation et suivi des engagements) : écart 0,9583, intermédiaire ; SR milieu de l’échelle, HT plutôt haut. Facettes notables les plus éloignées, retenues pour la tâche : E1 (écart 1,75 ; SR haut, HT plutôt bas) ; E3 (écart 1,5 ; SR plutôt haut, HT plutôt bas) ; A4 (écart 1,5 ; SR milieu de l’échelle, HT haut). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : SR (arabe), HT (français) ; équivalence des versions non établie.
+Écarts entre SR et HT, repris des faits calculés : domaine N (sensibilité à la tension) : écart 0,5, proche ; SR milieu de l’échelle, HT plutôt haut ; domaine E (énergie relationnelle) : écart 1,83, notable ; SR haut, HT plutôt bas ; domaine O (ouverture aux idées nouvelles) : écart 0,67, intermédiaire ; SR haut, HT plutôt haut ; domaine A (façon de coopérer et de traiter un désaccord) : écart 1,33, notable ; SR milieu de l’échelle, HT haut ; domaine C (organisation et suivi des engagements) : écart 0,96, intermédiaire ; SR milieu de l’échelle, HT plutôt haut. Facettes notables les plus éloignées, retenues pour la tâche : E1 (écart 1,75 ; SR haut, HT plutôt bas) ; E3 (écart 1,5 ; SR plutôt haut, HT plutôt bas) ; A4 (écart 1,5 ; SR milieu de l’échelle, HT haut). Le domaine N et les facettes à lecture sensible ne sont lus qu’au niveau du domaine. Langues de passation : SR (arabe), HT (français) ; équivalence des versions non établie.
 
 Constaté
 
@@ -4686,7 +4686,7 @@ Demander à chacune des deux personnes un exemple récent où une incertitude su
 
 Hypothèse
 
-Sur le domaine E (énergie relationnelle) : écart 1,8333, notable ; SR haut, HT plutôt bas. Il se peut que cette différence d’énergie relationnelle serve la tâche : SR peut porter la relation vers l’extérieur (siège, équipes) pendant que HT consolide le travail en profondeur. En co-direction, elle joue si chacune des deux personnes reconnaît devant l’équipe l’apport de l’autre (règles ECART-notable, CAL-NAT-co-direction).
+Sur le domaine E (énergie relationnelle) : écart 1,83, notable ; SR haut, HT plutôt bas. Il se peut que cette différence d’énergie relationnelle serve la tâche : SR peut porter la relation vers l’extérieur (siège, équipes) pendant que HT consolide le travail en profondeur. En co-direction, elle joue si chacune des deux personnes reconnaît devant l’équipe l’apport de l’autre (règles ECART-notable, CAL-NAT-co-direction).
 
 Confiance  
 moyenne
@@ -4696,7 +4696,7 @@ Demander à chacune des deux personnes comment elle préfère recevoir une deman
 
 Hypothèse
 
-Sur le domaine A (façon de coopérer et de traiter un désaccord) : écart 1,3333, notable ; SR milieu de l’échelle, HT haut. Il se peut que cette différence de façon de coopérer serve la tâche : HT peut entretenir la qualité de l’échange pendant que SR dit plus directement ce qui ne va pas. En co-direction, elle joue si chacune des deux personnes reconnaît devant l’équipe l’apport de l’autre (règles ECART-notable, CAL-NAT-co-direction).
+Sur le domaine A (façon de coopérer et de traiter un désaccord) : écart 1,33, notable ; SR milieu de l’échelle, HT haut. Il se peut que cette différence de façon de coopérer serve la tâche : HT peut entretenir la qualité de l’échange pendant que SR dit plus directement ce qui ne va pas. En co-direction, elle joue si chacune des deux personnes reconnaît devant l’équipe l’apport de l’autre (règles ECART-notable, CAL-NAT-co-direction).
 
 Confiance  
 moyenne
@@ -4756,7 +4756,7 @@ Texte type de la bibliothèque : `A4/milieu` `A4/haut`
 
 Hypothèse
 
-Sur le domaine E (énergie relationnelle) : écart 1,8333, notable ; SR haut, HT plutôt bas. Il se peut que, devant l’équipe ou le siège, la voix de SR domine et donne l’impression d’une position unique, alors que HT partage la responsabilité du résultat (règles ECART-notable, CAL-NAT-co-direction).
+Sur le domaine E (énergie relationnelle) : écart 1,83, notable ; SR haut, HT plutôt bas. Il se peut que, devant l’équipe ou le siège, la voix de SR domine et donne l’impression d’une position unique, alors que HT partage la responsabilité du résultat (règles ECART-notable, CAL-NAT-co-direction).
 
 Confiance  
 moyenne
@@ -4766,7 +4766,7 @@ Demander à chacune des deux personnes comment elle préfère recevoir une deman
 
 Hypothèse
 
-Sur le domaine A (façon de coopérer et de traiter un désaccord) : écart 1,3333, notable ; SR milieu de l’échelle, HT haut. Il se peut que HT cède pour garder l’entente et que SR tranche plus nettement ; sans règle explicite pour trancher à deux, les décisions risquent de refléter un seul point de vue (règles ECART-notable, CAL-NAT-co-direction).
+Sur le domaine A (façon de coopérer et de traiter un désaccord) : écart 1,33, notable ; SR milieu de l’échelle, HT haut. Il se peut que HT cède pour garder l’entente et que SR tranche plus nettement ; sans règle explicite pour trancher à deux, les décisions risquent de refléter un seul point de vue (règles ECART-notable, CAL-NAT-co-direction).
 
 Confiance  
 moyenne
@@ -5017,7 +5017,7 @@ Recueillir auprès des deux personnes, en entretien de calage, si l’action ré
 #### Instituer pour la ligne hiérarchique un point de priorités hebdomadaire écrit, et une voie de désaccord en une ligne, avec l’engagement écrit que ce chapitre ne sert à aucune évaluation. Pour AM et KB, elle est à situer avant l’échéance « Dépôt du dossier CNDP : dans les 3 mois » et répond au risque inscrit au cas : « Méfiance des équipes héritée de l’ancien outil d’évaluation ».
 
 Donnée  
-Écart de 1,5417 sur le domaine O, notable ; AM haut, KB plutôt bas (AM-KB).
+Écart de 1,54 sur le domaine O, notable ; AM haut, KB plutôt bas (AM-KB).
 
 Contexte  
 Relation de ligne hiérarchique directe entre Pilote du programme (AM) et Garant de l’exécution (KB), interdépendance séquentielle, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Dépôt du dossier CNDP : dans les 3 mois » (règles CAL-NAT-ligne, CAL-INT-sequentielle, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5040,7 +5040,7 @@ Relevé à 30 jours puis à 60 jours : le nombre de points de priorités tenus p
 #### Un coaching court, individuel pour chacune des deux personnes, sur la manière de présenter un changement de méthode et de recevoir une proposition de changement. Pour AM et KB, elle est à situer avant l’échéance « Pilote sur un seul site : dans les 6 mois » et répond au risque inscrit au cas : « Délai d’autorisation de la CNDP non maîtrisé par l’équipe ». Elle s’appuie sur la facette O5 (Curiosité intellectuelle) et la facette O4 (Goût de la variété).
 
 Donnée  
-Écart de 1,5417 sur le domaine O, notable ; AM haut, KB plutôt bas (AM-KB).
+Écart de 1,54 sur le domaine O, notable ; AM haut, KB plutôt bas (AM-KB).
 
 Contexte  
 Relation de ligne hiérarchique directe entre Pilote du programme (AM) et Garant de l’exécution (KB), interdépendance séquentielle, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Pilote sur un seul site : dans les 6 mois » (règles CAL-NAT-ligne, CAL-INT-sequentielle, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5063,7 +5063,7 @@ Entretien de suivi à 60 jours : le nombre de changements de méthode proposés 
 #### Un atelier de pratique de deux heures sur l’équilibre de la parole en réunion, avec pour objectifs d’apprentissage : alterner prise de parole et écoute, reformuler, choisir le bon canal. Pour AM et KB, elle est à situer avant l’échéance « Lancement : dans les 9 mois » et répond au risque inscrit au cas : « Décisions du siège tardives en raison du décalage horaire et de la langue de travail du groupe ». Le domaine est lu au niveau du domaine seulement, sans citer de facette.
 
 Donnée  
-Écart de 0,8333 sur le domaine E, intermédiaire ; AM haut, KB milieu de l’échelle (AM-KB).
+Écart de 0,83 sur le domaine E, intermédiaire ; AM haut, KB milieu de l’échelle (AM-KB).
 
 Contexte  
 Relation de ligne hiérarchique directe entre Pilote du programme (AM) et Garant de l’exécution (KB), interdépendance séquentielle, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Lancement : dans les 9 mois » (règles CAL-NAT-ligne, CAL-INT-sequentielle, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5155,7 +5155,7 @@ Relevé à 60 jours : la part des engagements communs datés qui sont tenus à l
 #### Un atelier de pratique de deux heures sur le signalement et la réception d’un risque, avec pour objectifs d’apprentissage : formuler un risque de façon factuelle, convenir d’un niveau d’alerte, répondre à un signalement. Pour AM et SR, elle est à situer avant l’échéance « Lancement : dans les 9 mois » et répond au risque inscrit au cas : « Délai d’autorisation de la CNDP non maîtrisé par l’équipe ». Le domaine est lu au niveau du domaine seulement, sans citer de facette.
 
 Donnée  
-Écart de 0,6667 sur le domaine N, intermédiaire ; AM plutôt bas, SR milieu de l’échelle (AM-SR).
+Écart de 0,67 sur le domaine N, intermédiaire ; AM plutôt bas, SR milieu de l’échelle (AM-SR).
 
 Contexte  
 Relation de lien fonctionnel entre Pilote du programme (AM) et Porteuse de l’innovation (SR), interdépendance réciproque, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Lancement : dans les 9 mois » (règles CAL-NAT-fonctionnel, CAL-INT-reciproque, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5224,7 +5224,7 @@ Relevé à 30 jours : un entretien de vérification a été tenu avec AM et avec
 #### Poser le cadre du mentorat : rythme des rencontres, objectifs d’apprentissage écrits par la personne accompagnée, confidentialité de l’échange. Pour AM et HT, elle est à situer avant l’échéance « Dépôt du dossier CNDP : dans les 3 mois » et répond au risque inscrit au cas : « Méfiance des équipes héritée de l’ancien outil d’évaluation ».
 
 Donnée  
-Écart de 1,875 sur le domaine E, notable ; AM haut, HT plutôt bas (AM-HT).
+Écart de 1,88 sur le domaine E, notable ; AM haut, HT plutôt bas (AM-HT).
 
 Contexte  
 Relation de mentorat entre Pilote du programme (AM) et Garante de la relation client (HT), interdépendance mise en commun, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Dépôt du dossier CNDP : dans les 3 mois » (règles CAL-NAT-mentorat, CAL-INT-mise-en-commun, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5247,7 +5247,7 @@ Relevé à 30 jours puis à 90 jours : le nombre de rencontres tenues par rappor
 #### Un coaching court, individuel pour chacune des deux personnes, sur l’équilibre entre prise de parole et écoute, et sur le choix du canal (oral ou écrit) selon le sujet. Pour AM et HT, elle est à situer avant l’échéance « Pilote sur un seul site : dans les 6 mois » et répond au risque inscrit au cas : « Délai d’autorisation de la CNDP non maîtrisé par l’équipe ». Elle s’appuie sur la facette E3 (Affirmation de soi) et la facette E4 (Niveau d’activité).
 
 Donnée  
-Écart de 1,875 sur le domaine E, notable ; AM haut, HT plutôt bas (AM-HT).
+Écart de 1,88 sur le domaine E, notable ; AM haut, HT plutôt bas (AM-HT).
 
 Contexte  
 Relation de mentorat entre Pilote du programme (AM) et Garante de la relation client (HT), interdépendance mise en commun, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Pilote sur un seul site : dans les 6 mois » (règles CAL-NAT-mentorat, CAL-INT-mise-en-commun, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5270,7 +5270,7 @@ Entretien de suivi à 60 jours : chacune des deux personnes indique si le rythme
 #### Un atelier de pratique de deux heures sur le désaccord constructif, avec pour objectifs d’apprentissage : nommer un désaccord, formuler une réserve ou un refus de façon claire, recevoir une remarque franche. Pour AM et HT, elle est à situer avant l’échéance « Lancement : dans les 9 mois » et répond au risque inscrit au cas : « Décisions du siège tardives en raison du décalage horaire et de la langue de travail du groupe ». Elle s’appuie sur la facette A4 (Coopération).
 
 Donnée  
-Écart de 1,2917 sur le domaine A, notable ; AM milieu de l’échelle, HT haut (AM-HT).
+Écart de 1,29 sur le domaine A, notable ; AM milieu de l’échelle, HT haut (AM-HT).
 
 Contexte  
 Relation de mentorat entre Pilote du programme (AM) et Garante de la relation client (HT), interdépendance mise en commun, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Lancement : dans les 9 mois » (règles CAL-NAT-mentorat, CAL-INT-mise-en-commun, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5316,7 +5316,7 @@ Relevé à 60 jours puis à 90 jours : la date du temps d’assemblage par rappo
 #### Instituer entre client et fournisseur internes une demande écrite avec critère d’acceptation, reformulée par le fournisseur, et un point de revue intermédiaire avant chaque échéance. Pour KB et SR, elle est à situer avant l’échéance « Dépôt du dossier CNDP : dans les 3 mois » et répond au risque inscrit au cas : « Délai d’autorisation de la CNDP non maîtrisé par l’équipe ».
 
 Donnée  
-Écart de 1,9167 sur le domaine O, notable ; KB plutôt bas, SR haut (KB-SR).
+Écart de 1,92 sur le domaine O, notable ; KB plutôt bas, SR haut (KB-SR).
 
 Contexte  
 Relation de client-fournisseur interne entre Garant de l’exécution (KB) et Porteuse de l’innovation (SR), interdépendance séquentielle, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Dépôt du dossier CNDP : dans les 3 mois » (règles CAL-NAT-client-fournisseur, CAL-INT-sequentielle, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5339,7 +5339,7 @@ Relevé à 30 jours puis à 60 jours : le nombre de reprises de livrables, rappo
 #### Un coaching court, individuel pour chacune des deux personnes, sur la manière de présenter un changement de méthode et de recevoir une proposition de changement. Pour KB et SR, elle est à situer avant l’échéance « Pilote sur un seul site : dans les 6 mois » et répond au risque inscrit au cas : « Décisions du siège tardives en raison du décalage horaire et de la langue de travail du groupe ». Elle s’appuie sur la facette O4 (Goût de la variété) et la facette O5 (Curiosité intellectuelle).
 
 Donnée  
-Écart de 1,9167 sur le domaine O, notable ; KB plutôt bas, SR haut (KB-SR).
+Écart de 1,92 sur le domaine O, notable ; KB plutôt bas, SR haut (KB-SR).
 
 Contexte  
 Relation de client-fournisseur interne entre Garant de l’exécution (KB) et Porteuse de l’innovation (SR), interdépendance séquentielle, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Pilote sur un seul site : dans les 6 mois » (règles CAL-NAT-client-fournisseur, CAL-INT-sequentielle, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5362,7 +5362,7 @@ Entretien de suivi à 60 jours : le nombre de changements de méthode proposés 
 #### Un atelier de pratique de deux heures sur les engagements et le suivi, avec pour objectifs d’apprentissage : convenir d’engagements datés et vérifiables, tenir un point d’étape, suivre sans contrôler. Pour KB et SR, elle est à situer avant l’échéance « Lancement : dans les 9 mois » et répond au risque inscrit au cas : « Méfiance des équipes héritée de l’ancien outil d’évaluation ». Elle s’appuie sur la facette C2 (Organisation et rangement).
 
 Donnée  
-Écart de 1,3333 sur le domaine C, notable ; KB haut, SR milieu de l’échelle (KB-SR).
+Écart de 1,33 sur le domaine C, notable ; KB haut, SR milieu de l’échelle (KB-SR).
 
 Contexte  
 Relation de client-fournisseur interne entre Garant de l’exécution (KB) et Porteuse de l’innovation (SR), interdépendance séquentielle, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Lancement : dans les 9 mois » (règles CAL-NAT-client-fournisseur, CAL-INT-sequentielle, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5431,7 +5431,7 @@ Relevé à 30 jours : un entretien de vérification a été tenu avec KB et avec
 #### Désigner à l’avance une tierce personne pour trancher un désaccord non résolu dans un délai convenu, et instaurer la parole à tour de rôle avant toute décision commune. Pour KB et HT, elle est à situer avant l’échéance « Dépôt du dossier CNDP : dans les 3 mois » et répond au risque inscrit au cas : « Délai d’autorisation de la CNDP non maîtrisé par l’équipe ».
 
 Donnée  
-Écart de 1,625 sur le domaine N, notable ; KB plutôt bas, HT plutôt haut (KB-HT).
+Écart de 1,63 sur le domaine N, notable ; KB plutôt bas, HT plutôt haut (KB-HT).
 
 Contexte  
 Relation de pairs entre Garant de l’exécution (KB) et Garante de la relation client (HT), interdépendance mise en commun, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Dépôt du dossier CNDP : dans les 3 mois » (règles CAL-NAT-pairs, CAL-INT-mise-en-commun, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5454,7 +5454,7 @@ Relevé à 30 jours puis à 60 jours : le nombre de décisions communes prises d
 #### Un coaching court, individuel pour chacune des deux personnes, sur la formulation et la réception d’un signalement de risque (dire un risque sans le dramatiser, l’entendre sans le lire comme de la pression). Pour KB et HT, elle est à situer avant l’échéance « Pilote sur un seul site : dans les 6 mois » et répond au risque inscrit au cas : « Décisions du siège tardives en raison du décalage horaire et de la langue de travail du groupe ». Le domaine est lu au niveau du domaine seulement, sans citer de facette.
 
 Donnée  
-Écart de 1,625 sur le domaine N, notable ; KB plutôt bas, HT plutôt haut (KB-HT).
+Écart de 1,63 sur le domaine N, notable ; KB plutôt bas, HT plutôt haut (KB-HT).
 
 Contexte  
 Relation de pairs entre Garant de l’exécution (KB) et Garante de la relation client (HT), interdépendance mise en commun, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Pilote sur un seul site : dans les 6 mois » (règles CAL-NAT-pairs, CAL-INT-mise-en-commun, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5523,7 +5523,7 @@ Relevé à 60 jours puis à 90 jours : la date du temps d’assemblage par rappo
 #### Écrire une règle de décision à deux (qui décide de quoi, que faire en cas d’avis opposés) et préparer un message commun avant toute prise de parole devant l’équipe ou le siège. Pour SR et HT, elle est à situer avant l’échéance « Dépôt du dossier CNDP : dans les 3 mois » et répond au risque inscrit au cas : « Décisions du siège tardives en raison du décalage horaire et de la langue de travail du groupe ».
 
 Donnée  
-Écart de 1,8333 sur le domaine E, notable ; SR haut, HT plutôt bas (SR-HT).
+Écart de 1,83 sur le domaine E, notable ; SR haut, HT plutôt bas (SR-HT).
 
 Contexte  
 Relation de co-direction entre Porteuse de l’innovation (SR) et Garante de la relation client (HT), interdépendance réciproque, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Dépôt du dossier CNDP : dans les 3 mois » (règles CAL-NAT-co-direction, CAL-INT-reciproque, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5546,7 +5546,7 @@ Relevé à 30 jours puis à 60 jours : le nombre de prises de parole communes pr
 #### Un coaching court, individuel pour chacune des deux personnes, sur l’équilibre entre prise de parole et écoute, et sur le choix du canal (oral ou écrit) selon le sujet. Pour SR et HT, elle est à situer avant l’échéance « Pilote sur un seul site : dans les 6 mois » et répond au risque inscrit au cas : « Méfiance des équipes héritée de l’ancien outil d’évaluation ». Elle s’appuie sur la facette E1 (Aisance à nouer des liens) et la facette E3 (Affirmation de soi).
 
 Donnée  
-Écart de 1,8333 sur le domaine E, notable ; SR haut, HT plutôt bas (SR-HT).
+Écart de 1,83 sur le domaine E, notable ; SR haut, HT plutôt bas (SR-HT).
 
 Contexte  
 Relation de co-direction entre Porteuse de l’innovation (SR) et Garante de la relation client (HT), interdépendance réciproque, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Pilote sur un seul site : dans les 6 mois » (règles CAL-NAT-co-direction, CAL-INT-reciproque, CAL-TACHE-projet, CAL-ORI-croissance).
@@ -5569,7 +5569,7 @@ Entretien de suivi à 60 jours : chacune des deux personnes indique si le rythme
 #### Un atelier de pratique de deux heures sur le désaccord constructif, avec pour objectifs d’apprentissage : nommer un désaccord, formuler une réserve ou un refus de façon claire, recevoir une remarque franche. Pour SR et HT, elle est à situer avant l’échéance « Lancement : dans les 9 mois » et répond au risque inscrit au cas : « Délai d’autorisation de la CNDP non maîtrisé par l’équipe ». Elle s’appuie sur la facette A4 (Coopération).
 
 Donnée  
-Écart de 1,3333 sur le domaine A, notable ; SR milieu de l’échelle, HT haut (SR-HT).
+Écart de 1,33 sur le domaine A, notable ; SR milieu de l’échelle, HT haut (SR-HT).
 
 Contexte  
 Relation de co-direction entre Porteuse de l’innovation (SR) et Garante de la relation client (HT), interdépendance réciproque, tâche de nature projet (lancement du canal de vente en ligne), orientation croissance, échéance visée : « Lancement : dans les 9 mois » (règles CAL-NAT-co-direction, CAL-INT-reciproque, CAL-TACHE-projet, CAL-ORI-croissance).

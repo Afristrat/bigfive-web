@@ -7,10 +7,10 @@
 import { DOMAINES, NIVEAU_FR, liste, bloc, paragraphe, recommandation, section, personne } from './outils.mjs';
 
 // ---------------------------------------------------------------- formats
-/** Nombre repris de faits tel quel : virgule décimale, sans arrondi au-delà de quatre décimales (l'audit compare aux faits). */
+/** Nombre repris de faits, arrondi à deux décimales avec virgule (décision d'Amine du 23/10/2026 ; l'audit accepte les arrondis d'un fait). */
 const exact = (x) => {
   if (!Number.isFinite(x)) throw new Error(`exact : nombre attendu, reçu ${x}`);
-  return String(Number(x.toFixed(4))).replace('.', ',');
+  return String(Number(x.toFixed(2))).replace('.', ',');
 };
 const remplir = (t, vars) => t.replace(/\{(\w+)\}/g, (_, k) => {
   if (!(k in vars)) throw new Error(`gabarit : variable ${k} manquante dans « ${t.slice(0, 50)} »`);

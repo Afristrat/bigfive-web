@@ -137,7 +137,7 @@ test('seuls des constats reprennent des chiffres de faits ; les lectures restent
     const ecarts = cadre.paragraphes.find((p) => /Écarts entre/.test(p.texte));
     assert.equal(ecarts.statut, 'constate');
     const rel = ctx.faits.relations.find((r) => r.id === id);
-    for (const d of rel.domaines) assert.ok(ecarts.texte.includes(String(d.ecart).replace('.', ',')), `${id} écart ${d.d}`);
+    for (const d of rel.domaines) assert.ok(ecarts.texte.includes(String(Number(d.ecart.toFixed(2))).replace('.', ',')), `${id} écart ${d.d}`);
     for (const f of facettesRetenues(rel)) assert.ok(ecarts.texte.includes(f.k), `${id} facette ${f.k}`);
   }
 });
@@ -390,10 +390,11 @@ test('mineur : l’ordre des personnes suit (a, b) de la relation dans les écar
   }
 });
 
-test('mineur : les valeurs exactes de faits sont conservées pour les écarts', () => {
+test('mineur : les écarts de faits sont repris arrondis à deux décimales, jamais au-delà', () => {
   for (const rel of ctx.faits.relations) {
     const t = texteChapitre(sortie.niveau, rel.id, 0);
-    for (const d of rel.domaines) assert.ok(t.includes(String(d.ecart).replace('.', ',')));
+    for (const d of rel.domaines) assert.ok(t.includes(String(Number(d.ecart.toFixed(2))).replace('.', ',')));
+    assert.ok(!/écart \d+,\d{3,}/.test(t), `${rel.id} : écart à plus de deux décimales`);
   }
 });
 
