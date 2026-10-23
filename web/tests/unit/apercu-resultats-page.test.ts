@@ -52,7 +52,9 @@ vi.mock('@/navigation', () => ({
         'aria-current': props['aria-current']
       },
       props.children as never
-    )
+    ),
+  // Écran du relevé (vue « reseau ») : composant client qui rafraîchit la page.
+  useRouter: () => ({ refresh: () => undefined, push: () => undefined })
 }));
 
 const requireAdmin = vi.fn();
@@ -285,6 +287,85 @@ describe('vue binôme', () => {
     });
     expect(html).toContain('data-profil="HT"');
     expect(html).toContain(fr.binome.etiquettes.autre);
+  });
+});
+
+describe('vue réseau', () => {
+  const echappe = (texte: string): string =>
+    texte.replace(/&/g, '&amp;').replace(/'/g, '&#x27;');
+
+  it('bandeau « données fictives » et mention du relevé fermé en production', async () => {
+    const html = await rendre({ vue: 'reseau' });
+    expect(html).toContain(fr.apercu.bandeau);
+    expect(html).toContain(echappe(fr.apercu.reseauFerme));
+    expect(fr.apercu.reseauFerme).toMatch(/fermé en production/);
+    expect(fr.apercu.reseauFerme).toMatch(/CNDP/);
+  });
+
+  it('monte le vrai écran, au premier temps par défaut', async () => {
+    const html = await rendre({ vue: 'reseau' });
+    expect(html).toContain('id="apercu-reseau"');
+    expect(html).toContain('data-etape="information"');
+    expect(html).toContain(echappe(fr.reseau.information.texte));
+  });
+
+  it.each([
+    ['consentement', 'consentement'],
+    ['releve', 'releve'],
+    ['repondu', 'releve'],
+    ['oppose', 'oppose']
+  ])('étape %s : écran %s', async (etape, attendu) => {
+    const html = await rendre({ vue: 'reseau', etape });
+    expect(html).toContain(`data-etape="${attendu}"`);
+  });
+
+  it('relevé : les trois autres personnes fictives, quatre questions chacune', async () => {
+    const html = await rendre({ vue: 'reseau', profil: 'AM', etape: 'releve' });
+    expect(nbOccurrences(html, '<fieldset')).toBe(3);
+    for (const nom of ['Karim B.', 'Salma R.', 'Hind T.']) {
+      expect(html).toContain(nom);
+    }
+  });
+
+  it('campagne close : lecture seule, retrait présent', async () => {
+    const html = await rendre({
+      vue: 'reseau',
+      etape: 'repondu',
+      campagne: 'close'
+    });
+    expect(html).not.toContain('type="radio"');
+    expect(html).toContain(echappe(fr.reseau.close.texte));
+    expect(html).toContain(echappe(fr.reseau.retrait.bouton));
+  });
+
+  it('propose les étapes et la clôture en liens, et marque les choix courants', async () => {
+    const html = await rendre({ vue: 'reseau', profil: 'SR', etape: 'oppose' });
+    for (const etape of [
+      'information',
+      'consentement',
+      'releve',
+      'repondu',
+      'oppose'
+    ]) {
+      expect(html).toContain(
+        `href="/admin/apercu-resultats?vue=reseau&amp;profil=SR&amp;etape=${etape}&amp;campagne=ouverte"`
+      );
+    }
+    expect(html).toContain('campagne=close');
+    // Vue, personne qui répond, étape et campagne.
+    expect(nbOccurrences(html, 'aria-current="page"')).toBe(4);
+  });
+
+  it('aucun identifiant en double', async () => {
+    const html = await rendre({ vue: 'reseau', etape: 'repondu' });
+    const ids = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it.each(['en', 'ar'])('%s : la vue réseau se rend', async (locale) => {
+    const html = await rendre({ vue: 'reseau', etape: 'releve' }, locale);
+    expect(html).toContain('id="apercu-reseau"');
+    expect(html).toContain('<fieldset');
   });
 });
 

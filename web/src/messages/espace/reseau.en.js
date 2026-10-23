@@ -1,0 +1,180 @@
+// Namespace "reseau": survey of a team's actual working network (framing of
+// 23 October, docs/design/cadrage-reseau-reel.md). The person's screen (notice
+// to the people named, consent, closed list) and the consultant's page. Outside
+// the legal blocks flagged below, every text is a default not yet validated by
+// Amine. The "who blocks you" question is withdrawn (framing §2).
+const reseauEn = {
+  title: 'Team network',
+  liste: {
+    titre: 'Your team’s network survey',
+    intro:
+      'Four questions about how you work with the members of your team. Taking part is optional.',
+    ouvrir: 'Open the survey',
+    ouvrirAria: 'Open the network survey for the campaign {titre}',
+    statut: {
+      brouillon: 'Campaign in preparation',
+      ouverte: 'Campaign open',
+      close: 'Campaign closed'
+    }
+  },
+  page: {
+    titre: 'Team network survey',
+    retour: 'Back to my results'
+  },
+  etapes: {
+    legende: 'Survey progress',
+    information: 'Notice',
+    consentement: 'Consent',
+    releve: 'Answers',
+    position: 'Step {numero} of {total}'
+  },
+  // À relire par Amine (relecteur juridique) : texte non validé.
+  information: {
+    titre: 'You may be named',
+    texte:
+      'The members of your team will be asked to describe how they work with you and with their other colleagues: advice, information, trust and dependence. You may therefore be named in their answers. These answers are used only for a feedback workshop with the team; none of them is shared with management or used for any decision about you. You may object to being named: your links will then be removed from the map, with no other consequence.',
+    opposition: 'I object to being named in this survey.',
+    oppositionAide:
+      'If you object, you will not answer the survey either, and any answers that name you are deleted. You can withdraw your objection later.',
+    lu: 'I have read this'
+  },
+  // À relire par Amine (relecteur juridique) : texte non validé.
+  consentement: {
+    titre: 'Your consent',
+    texte:
+      'Tenga Conseil invites you to answer four questions about how you work with the members of your team: advice, information, trust and dependence. Your answers name colleagues. They are used only to describe how the team actually works, during a feedback workshop. Only Tenga Conseil reads your answers one by one, to prepare that workshop: the consultant in charge of the assignment and the platform’s administrators. Your individual answers will never be shared with your management and will not be used for any decision about you or your colleagues. Taking part is optional: declining has no consequence, and your employer will not know whether you answered. You can change your answers until the campaign closes, and withdraw them at any time.',
+    repondre: 'I agree to answer.',
+    carte:
+      'I agree that the team map, showing first names or codes, may be shown to the members of the team during the workshop.',
+    carteAide:
+      'The map is shown only if every member of the team agrees; otherwise the workshop presents indicators without names.',
+    refusAide:
+      'Without the first box, you do not answer; this choice has no consequence. Unticking the first box deletes any answers already saved.',
+    enregistrer: 'Save my choice'
+  },
+  // À relire par Amine (relecteur juridique) : texte non validé.
+  mentions: {
+    titre: 'Controller and your rights',
+    responsable: 'Data controller: Tenga Conseil.',
+    contact:
+      'Rights of access, rectification and objection: write to {contact}.',
+    contactSansAdresse:
+      'Rights of access, rectification and objection: contact Tenga Conseil.',
+    conservation:
+      'Answers are deleted automatically three years after they are saved.',
+    cndp: 'Declaration to the CNDP: in progress.'
+  },
+  releve: {
+    titre: 'Your answers',
+    intro:
+      'Four questions for each member of your team. There is no right answer: describe what actually happens.',
+    vide: 'No other member of your team has joined the survey yet. Please come back later.',
+    repli: 'Team member {numero} (name not provided)',
+    questions: {
+      conseil:
+        'How often do you ask this person for advice to solve a work problem?',
+      information:
+        'How often do you receive information from this person that is useful for your work?',
+      confiance:
+        'Could you point out a mistake or a difficulty to this person without fear?',
+      dependance:
+        'How often do you have to wait for this person’s work before you can move on?'
+    },
+    frequences: {
+      jamais: 'Never',
+      rarement: 'Rarely',
+      mois: 'Every month',
+      semaine: 'Every week',
+      jour: 'Every day'
+    },
+    confiances: {
+      oui: 'Yes',
+      plutotOui: 'Rather yes',
+      plutotNon: 'Rather no',
+      non: 'No'
+    },
+    compteMembre: '{faites} of {total}',
+    progression: 'Answers given: {faites} of {total}',
+    manque: 'Missing answers: {nombre}. Each member needs all four answers.',
+    enregistrer: 'Save my answers',
+    lectureSeule: 'Your saved answers',
+    sansReponse: 'No answer'
+  },
+  accords: {
+    titre: 'Your consent',
+    repondre: 'You have agreed to answer.',
+    carteOui: 'You agree that the team map may be shown at the workshop.',
+    carteNon:
+      'You do not agree that the team map may be shown at the workshop.',
+    modifier: 'Change my consent',
+    annuler: 'Cancel'
+  },
+  close: {
+    titre: 'Campaign closed',
+    texte:
+      'The survey no longer accepts answers or changes. You can still withdraw your answers and object to being named.'
+  },
+  oppose: {
+    titre: 'Your objection has been recorded',
+    texte:
+      'Your links are removed from the survey and you do not answer it. You can withdraw your objection at any time.',
+    lever: 'Withdraw my objection'
+  },
+  opposer: {
+    bouton: 'I object to being named',
+    aide: 'Your links will be removed from the survey, including those your colleagues have already reported, and your own answers will be deleted.',
+    confirmer: 'Confirm my objection',
+    annuler: 'Cancel'
+  },
+  retrait: {
+    bouton: 'Withdraw my answers',
+    aide: 'Your answers and both of your consents will be deleted.',
+    aideOuverte:
+      'Your answers and both of your consents will be deleted. You can answer again while the campaign is open.',
+    confirmer: 'Confirm withdrawal',
+    annuler: 'Cancel'
+  },
+  working: 'Sending…',
+  messages: {
+    informe: 'Noted. You can now give your consent, or not.',
+    oppose:
+      'Your objection has been recorded. Your links are removed from the survey.',
+    enregistre: 'Your choice has been saved.',
+    repondu:
+      'Your answers have been saved. You can change them until the campaign closes.',
+    retire: 'Your answers and your consents have been deleted.',
+    closed:
+      'This action is no longer possible: the campaign is closed or the survey is not open.',
+    forbidden: 'You cannot perform this action.',
+    notfound: 'Survey not found.',
+    invalid:
+      'Answers rejected: the team list may have changed. Please reload the page.',
+    failed: 'Sending failed. Please try again in a moment.',
+    apercu: 'Preview: nothing is saved.'
+  },
+  consultant: {
+    lien: 'Network survey',
+    titre: 'Network survey',
+    intro:
+      'Counts by group, with no names. Raw answers can only be read in the export, which is reserved for preparing the report; every reading is logged.',
+    retour: 'Back to results',
+    campagne: 'Campaign: {titre}',
+    statut: 'Campaign status',
+    statuts: {
+      brouillon: 'In preparation',
+      ouverte: 'Open',
+      close: 'Closed'
+    },
+    effectif: 'Group size',
+    informes: 'Notified',
+    oppositions: 'Objections',
+    repondants: 'Respondents',
+    accordsCarte: 'Map consents',
+    aucunGroupe: 'No group in this campaign.',
+    exporter: 'Export the answers (JSON)',
+    exportAide:
+      'The file contains each person’s name and answers: do not share it with anyone outside the assignment.'
+  }
+};
+
+export default reseauEn;

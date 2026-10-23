@@ -32,7 +32,8 @@ export const VUES_APERCU = [
   'participant',
   'consultant',
   'groupe',
-  'binome'
+  'binome',
+  'reseau'
 ] as const;
 export type VueApercu = (typeof VUES_APERCU)[number];
 

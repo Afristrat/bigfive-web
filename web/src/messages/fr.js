@@ -7,6 +7,7 @@ import binomeFr from './espace/binome.fr.js';
 import syntheseFr from './espace/synthese.fr.js';
 import apercuFr from './espace/apercu.fr.js';
 import pilotageFr from './espace/pilotage.fr.js';
+import reseauFr from './espace/reseau.fr.js';
 
 const french = {
   language: {
@@ -1174,6 +1175,7 @@ const french = {
   synthese: syntheseFr,
   apercu: apercuFr,
   pilotage: pilotageFr,
+  reseau: reseauFr,
   // Mouvement du parcours (questionnaire et résultat).
   flow: {
     railLabel: 'Sommaire du résultat',

@@ -1,14 +1,15 @@
 const apercuEn = {
   title: 'Results preview',
   intro:
-    'The real platform rendering (results view, individual report, group summary, pair report) on fictitious profiles and groups, so it can be validated without an account or real data. Super administrators only.',
+    'The real platform rendering (results view, individual report, group summary, pair report, network survey) on fictitious profiles and groups, so it can be validated without an account or real data. Super administrators only.',
   bandeau: 'Fictitious data: no account, no real data',
   vueLegende: 'Audience',
   vues: {
     participant: 'Participant',
     consultant: 'Consultant',
     groupe: 'Group',
-    binome: 'Pair'
+    binome: 'Pair',
+    reseau: 'Network'
   },
   profilLegende: 'Fictitious profile',
   premiereLegende: 'First person',
@@ -39,7 +40,26 @@ const apercuEn = {
   consultantAide:
     'Consultant audience: unreviewed blocks are shown with their notice and facet O6 is removed.',
   participantAide:
-    'Participant audience: what the person actually sees on their own result.'
+    'Participant audience: what the person actually sees on their own result.',
+  reseauTitre: 'Team network survey',
+  reseauAide:
+    'What {moi} sees: the three other fictitious people are the members of their team. The buttons do nothing: no database is read or written.',
+  reseauFerme:
+    'Survey closed in production until the filing of the declaration to the CNDP is confirmed.',
+  repondantLegende: 'Person answering',
+  etapeLegende: 'Step',
+  etapes: {
+    information: 'Notice',
+    consentement: 'Consent',
+    releve: 'Empty survey',
+    repondu: 'Completed survey',
+    oppose: 'Objection'
+  },
+  campagneLegende: 'Campaign',
+  campagnes: {
+    ouverte: 'Open',
+    close: 'Closed'
+  }
 };
 
 export default apercuEn;

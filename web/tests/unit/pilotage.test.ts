@@ -605,6 +605,14 @@ describe('résultats d’une campagne : fiches', () => {
     ]);
     expect(await rendre()).not.toContain(binomes);
   });
+
+  it('lien vers le relevé du réseau de la campagne, même sans résultat remis', async () => {
+    const reseau = `/o/acme/campagnes/${CAMPAGNE}/reseau`;
+    loadResultatsCampagne.mockResolvedValue([]);
+    const html = await rendre();
+    expect(html).toContain(`href="${reseau}"`);
+    expect(html).toContain(fr.reseau.consultant.lien);
+  });
 });
 
 describe('aperçu du rapport cabinet : textes au catalogue', () => {

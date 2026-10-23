@@ -1,0 +1,386 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { createElement, type ReactElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import fr from '@/messages/fr.js';
+
+// Pages du relevé : écran de la personne (404 uniforme), lien depuis « Mes
+// résultats » seulement quand un relevé existe, page du consultant (nombres
+// seulement) et export JSON.
+
+type Tree = { [key: string]: string | Tree };
+vi.mock('next-intl/server', () => {
+  const lookup = (namespace: string, key: string): string => {
+    let node: string | Tree | undefined = (fr as Tree)[namespace];
+    for (const part of key.split('.')) {
+      node = typeof node === 'object' ? node[part] : undefined;
+    }
+    if (typeof node !== 'string')
+      throw new Error(`Message absent ${namespace}.${key}`);
+    return node;
+  };
+  return {
+    setRequestLocale: () => undefined,
+    getTranslations: async (arg: string | { namespace: string }) => {
+      const namespace = typeof arg === 'string' ? arg : arg.namespace;
+      return (key: string, values?: Record<string, string>) =>
+        lookup(namespace, key).replace(
+          /\{(\w+)\}/g,
+          (whole, name: string) => values?.[name] ?? whole
+        );
+    }
+  };
+});
+
+vi.mock('next/navigation', () => ({
+  notFound: () => {
+    throw new Error('NOT_FOUND');
+  },
+  redirect: (url: string) => {
+    throw new Error(`REDIRECT:${url}`);
+  }
+}));
+
+vi.mock('@/navigation', () => ({
+  Link: (props: { href: string; children?: unknown; className?: string }) =>
+    createElement(
+      'a',
+      { href: props.href, className: props.className },
+      props.children as never
+    ),
+  useRouter: () => ({ refresh: () => undefined, push: () => undefined })
+}));
+
+const VIEWER = {
+  id: '11111111-1111-4111-8111-111111111111',
+  email: 'p@client.test',
+  accessToken: 't'
+};
+const requireViewer = vi.fn();
+vi.mock('@/lib/session', () => ({
+  requireViewer: (locale: string, path: string) => requireViewer(locale, path),
+  isTengaAdmin: async () => false
+}));
+
+const loadMesRelevesReseau = vi.fn();
+const loadReleveReseau = vi.fn();
+const loadReseauCampagne = vi.fn();
+vi.mock('@/lib/reseau-data', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/reseau-data')>()),
+  loadMesRelevesReseau: (viewer: unknown) => loadMesRelevesReseau(viewer),
+  loadReleveReseau: (viewer: unknown, id: string) =>
+    loadReleveReseau(viewer, id),
+  loadReseauCampagne: (viewer: unknown, id: string) =>
+    loadReseauCampagne(viewer, id)
+}));
+
+const loadMesParticipations = vi.fn();
+vi.mock('@/lib/mes-resultats-data', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/mes-resultats-data')>()),
+  loadMesParticipations: (viewer: unknown) => loadMesParticipations(viewer)
+}));
+
+const loadOrgPage = vi.fn();
+vi.mock('@/lib/campaign-data', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/campaign-data')>()),
+  loadOrgPage: (viewer: unknown, slug: string) => loadOrgPage(viewer, slug)
+}));
+const loadCampagneOrganisation = vi.fn();
+vi.mock('@/lib/consultant-data', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/consultant-data')>()),
+  loadCampagneOrganisation: (viewer: unknown, org: string, id: string) =>
+    loadCampagneOrganisation(viewer, org, id)
+}));
+
+vi.mock('@/actions/reseau', () => ({
+  informerReseau: vi.fn(),
+  consentirReseau: vi.fn(),
+  repondreReseau: vi.fn(),
+  retirerReseau: vi.fn()
+}));
+
+import ReleveReseauPage, {
+  generateMetadata as metaReleve
+} from '@/app/[locale]/mes-resultats/reseau/[participation]/page';
+import MesResultatsPage from '@/app/[locale]/mes-resultats/page';
+import ReseauConsultantPage from '@/app/[locale]/o/[slug]/campagnes/[campagne]/reseau/page';
+import { GET as exporter } from '@/app/[locale]/o/[slug]/campagnes/[campagne]/reseau/export/route';
+
+const PART = '66666666-6666-4666-8666-666666666666';
+const M1 = '77777777-7777-4777-8777-777777777771';
+const ORG = '22222222-2222-4222-8222-222222222222';
+const CAMPAGNE = '33333333-3333-4333-8333-333333333333';
+const GROUPE = '44444444-4444-4444-8444-444444444444';
+
+const racine = resolve(__dirname, '../..');
+const lire = (relatif: string): string =>
+  readFileSync(resolve(racine, relatif), 'utf8');
+
+beforeEach(() => {
+  requireViewer.mockReset().mockResolvedValue(VIEWER);
+  loadMesRelevesReseau.mockReset().mockResolvedValue([]);
+  loadReleveReseau.mockReset();
+  loadReseauCampagne.mockReset();
+  loadMesParticipations.mockReset().mockResolvedValue([]);
+  loadOrgPage.mockReset().mockResolvedValue({
+    org: { id: ORG, nom: 'Acme', slug: 'acme' },
+    isAdmin: false,
+    role: 'consultant'
+  });
+  loadCampagneOrganisation
+    .mockReset()
+    .mockResolvedValue({ id: CAMPAGNE, titre: 'Cohorte 1' });
+});
+
+// ---------------------------------------------------------------------------
+// Écran de la personne.
+
+const releve = {
+  campagneOuverte: true,
+  moi: null,
+  membres: [],
+  reponses: []
+};
+
+const rendreReleve = async (participation = PART): Promise<string> =>
+  renderToStaticMarkup(
+    (await ReleveReseauPage({
+      params: Promise.resolve({ locale: 'fr', participation })
+    })) as ReactElement
+  );
+
+describe('page du relevé : /mes-resultats/reseau/[participation]', () => {
+  it('identifiant hors format : 404 avant toute lecture', async () => {
+    await expect(rendreReleve('x')).rejects.toThrow('NOT_FOUND');
+    expect(loadReleveReseau).not.toHaveBeenCalled();
+  });
+
+  it('interrupteur fermé ou refus de la base : 404 uniforme', async () => {
+    loadReleveReseau.mockResolvedValue(null);
+    await expect(rendreReleve()).rejects.toThrow('NOT_FOUND');
+    expect(requireViewer).toHaveBeenCalledWith(
+      'fr',
+      `/mes-resultats/reseau/${PART}`
+    );
+  });
+
+  it('relevé ouvert : l’écran au premier temps, avec l’organisation et la campagne', async () => {
+    loadReleveReseau.mockResolvedValue(releve);
+    loadMesRelevesReseau.mockResolvedValue([
+      {
+        participationId: PART,
+        organisationNom: 'Acme',
+        campagneTitre: 'Cohorte 1',
+        campagneStatut: 'ouverte'
+      }
+    ]);
+    const html = await rendreReleve();
+    expect(html).toContain('data-etape="information"');
+    expect(html).toContain('Acme');
+    expect(html).toContain('Cohorte 1');
+  });
+
+  it('noindex et rendu dynamique', async () => {
+    const meta = await metaReleve({
+      params: Promise.resolve({ locale: 'fr', participation: PART })
+    });
+    expect(meta.robots).toEqual({ index: false, follow: false });
+    const source = lire(
+      'src/app/[locale]/mes-resultats/reseau/[participation]/page.tsx'
+    );
+    expect(source).toContain("export const dynamic = 'force-dynamic'");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Lien depuis « Mes résultats ».
+
+const rendreMesResultats = async (): Promise<string> =>
+  renderToStaticMarkup(
+    (await MesResultatsPage({
+      params: Promise.resolve({ locale: 'fr' })
+    })) as ReactElement
+  );
+
+describe('« Mes résultats » : lien vers le relevé', () => {
+  it('aucune ligne (interrupteur fermé) : aucun lien', async () => {
+    const html = await rendreMesResultats();
+    expect(html).not.toContain('/mes-resultats/reseau/');
+    expect(html).not.toContain(fr.reseau.liste.titre);
+  });
+
+  it('une ligne : un lien vers le relevé de cette participation', async () => {
+    loadMesRelevesReseau.mockResolvedValue([
+      {
+        participationId: PART,
+        organisationNom: 'Acme',
+        campagneTitre: 'Cohorte 1',
+        campagneStatut: 'ouverte'
+      }
+    ]);
+    const html = await rendreMesResultats();
+    expect(html).toContain(`href="/mes-resultats/reseau/${PART}"`);
+    expect(html).toContain(fr.reseau.liste.titre);
+  });
+
+  it('relevés indisponibles (fonction absente, panne) : la page reste lisible, sans lien', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    loadMesRelevesReseau.mockRejectedValue(new Error('panne'));
+    const html = await rendreMesResultats();
+    expect(html).not.toContain('/mes-resultats/reseau/');
+    expect(warn).toHaveBeenCalledWith(
+      JSON.stringify({ event: 'reseau.liste_indisponible' })
+    );
+    warn.mockRestore();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Page du consultant.
+
+const lecture = {
+  statut: 'ouverte' as const,
+  groupes: [
+    {
+      groupeId: GROUPE,
+      nom: 'Équipe Atlas',
+      effectif: 6,
+      informes: 5,
+      oppositions: 1,
+      repondants: 4,
+      accordsCarte: 3
+    }
+  ],
+  brut: {
+    campagne_id: CAMPAGNE,
+    campagne_statut: 'ouverte',
+    groupes: [
+      {
+        groupe_id: GROUPE,
+        nom: 'Équipe Atlas',
+        effectif: 6,
+        membres: [
+          {
+            participation_id: M1,
+            nom: 'Karim Bennani',
+            informe: true,
+            oppose: false,
+            accord_repondre: true,
+            accord_carte: true,
+            a_repondu: true
+          }
+        ],
+        reponses: []
+      }
+    ]
+  }
+};
+
+const paramsConsultant = (surcharge: Record<string, string> = {}) =>
+  Promise.resolve({
+    locale: 'fr',
+    slug: 'acme',
+    campagne: CAMPAGNE,
+    ...surcharge
+  });
+
+const rendreConsultant = async (
+  surcharge: Record<string, string> = {}
+): Promise<string> =>
+  renderToStaticMarkup(
+    (await ReseauConsultantPage({
+      params: paramsConsultant(surcharge)
+    })) as ReactElement
+  );
+
+describe('page du consultant : /o/[slug]/campagnes/[campagne]/reseau', () => {
+  it('nombres par groupe, aucun nom de personne', async () => {
+    loadReseauCampagne.mockResolvedValue(lecture);
+    const html = await rendreConsultant();
+    for (const n of ['6', '5', '1', '4', '3']) expect(html).toContain(`>${n}<`);
+    expect(html).toContain('Équipe Atlas');
+    expect(html).not.toContain('Karim');
+    expect(html).not.toContain(M1);
+    expect(loadReseauCampagne).toHaveBeenCalledWith(VIEWER, CAMPAGNE);
+  });
+
+  it('propose l’export JSON par la route serveur', async () => {
+    loadReseauCampagne.mockResolvedValue(lecture);
+    const html = await rendreConsultant();
+    expect(html).toContain(
+      `href="/fr/o/acme/campagnes/${CAMPAGNE}/reseau/export"`
+    );
+  });
+
+  it('aucun groupe : état vide', async () => {
+    loadReseauCampagne.mockResolvedValue({ ...lecture, groupes: [] });
+    expect(await rendreConsultant()).toContain(
+      fr.reseau.consultant.aucunGroupe
+    );
+  });
+
+  it('responsable : 404 avant toute lecture du relevé', async () => {
+    loadOrgPage.mockResolvedValue({
+      org: { id: ORG, nom: 'Acme', slug: 'acme' },
+      isAdmin: false,
+      role: 'responsable'
+    });
+    await expect(rendreConsultant()).rejects.toThrow('NOT_FOUND');
+    expect(loadReseauCampagne).not.toHaveBeenCalled();
+  });
+
+  it('campagne d’une autre organisation, refus de la base, identifiant hors format : 404', async () => {
+    loadCampagneOrganisation.mockResolvedValue(null);
+    await expect(rendreConsultant()).rejects.toThrow('NOT_FOUND');
+    loadCampagneOrganisation.mockResolvedValue({ id: CAMPAGNE, titre: 'C' });
+    loadReseauCampagne.mockResolvedValue(null);
+    await expect(rendreConsultant()).rejects.toThrow('NOT_FOUND');
+    await expect(rendreConsultant({ campagne: 'x' })).rejects.toThrow(
+      'NOT_FOUND'
+    );
+  });
+});
+
+describe('export JSON du relevé', () => {
+  const appeler = (surcharge: Record<string, string> = {}) =>
+    exporter(new Request('https://tenga.test/x'), {
+      params: paramsConsultant(surcharge)
+    });
+
+  it('rend le rendu brut de reseau_lire, en pièce jointe, sans cache', async () => {
+    loadReseauCampagne.mockResolvedValue(lecture);
+    const reponse = await appeler();
+    expect(reponse.status).toBe(200);
+    expect(reponse.headers.get('Content-Type')).toBe(
+      'application/json; charset=utf-8'
+    );
+    expect(reponse.headers.get('Content-Disposition')).toBe(
+      `attachment; filename="reseau-${CAMPAGNE}.json"`
+    );
+    expect(reponse.headers.get('Cache-Control')).toBe('private, no-store');
+    expect(reponse.headers.get('X-Content-Type-Options')).toBe('nosniff');
+    expect(await reponse.json()).toEqual(lecture.brut);
+  });
+
+  it('refus, responsable ou campagne étrangère : 404 sans contenu', async () => {
+    loadReseauCampagne.mockResolvedValue(null);
+    expect((await appeler()).status).toBe(404);
+    loadOrgPage.mockResolvedValue({
+      org: { id: ORG, nom: 'Acme', slug: 'acme' },
+      isAdmin: false,
+      role: 'responsable'
+    });
+    loadReseauCampagne.mockResolvedValue(lecture);
+    const refus = await appeler();
+    expect(refus.status).toBe(404);
+    expect(await refus.text()).not.toContain('Karim');
+    loadOrgPage.mockResolvedValue(null);
+    expect((await appeler()).status).toBe(404);
+    expect((await appeler({ campagne: 'x' })).status).toBe(404);
+  });
+
+  it('langue inconnue : 404', async () => {
+    expect((await appeler({ locale: 'xx' })).status).toBe(404);
+  });
+});

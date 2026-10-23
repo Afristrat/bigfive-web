@@ -29,6 +29,9 @@ export async function generateMetadata({ params }: Props) {
 
 const rang = (i: number): CSSProperties => ({ ['--i' as string]: i });
 
+const lienPied =
+  'lien-fleche group inline-flex min-h-11 items-center gap-2 font-medium text-encre underline decoration-trait-fort underline-offset-4 hover:decoration-accent';
+
 // Liste des résultats d'une campagne pour le consultant et l'administrateur
 // Tenga. Aucune identité : une fiche par résultat remis, désignée par son rang
 // et sa date, qui mène à la lecture par l'identifiant opaque de la
@@ -62,6 +65,7 @@ export default async function ListeResultatsPage({ params }: Props) {
   const t = await getTranslations('rapport');
   const passation = await getTranslations('passation');
   const tb = await getTranslations('binome');
+  const tr = await getTranslations('reseau');
   const tp = await getTranslations('pilotage');
   // La page de l'organisation est réservée au responsable et à l'administrateur
   // Tenga : le consultant, lui, retourne à son compte.
@@ -98,65 +102,80 @@ export default async function ListeResultatsPage({ params }: Props) {
       {liste.length === 0 ? (
         <p className='carte text-texte-2'>{t('liste.aucun')}</p>
       ) : (
-        <>
-          <ol
-            role='list'
-            aria-label={t('liste.titre')}
-            className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'
-          >
-            {liste.map((ligne, position) => {
-              const numero = formatNombre(position + 1, locale);
-              return (
-                <li
-                  key={ligne.participationId}
-                  data-reveal='monte'
-                  style={rang(Math.min(position, 5))}
-                >
-                  <Link
-                    href={`/o/${slug}/campagnes/${campaignId}/resultats/${ligne.participationId}`}
-                    aria-label={t('liste.lireAria', {
-                      numero,
-                      titre: titreCampagne
-                    })}
-                    className='lien-fleche group flex h-full flex-col rounded-panneau border border-trait bg-surface p-5 transition-colors duration-courte ease-tenga hover:border-trait-fort'
-                  >
-                    <span
-                      aria-hidden='true'
-                      className='chiffres font-display text-titre-1 leading-none text-texte-3 transition-colors duration-courte ease-tenga group-hover:text-safran'
-                    >
-                      {numero.padStart(2, '0')}
-                    </span>
-                    <span className='mt-6 text-titre-3 text-encre'>
-                      {t('liste.resultat', { numero })}
-                    </span>
-                    <span className='mt-1 text-petit text-texte-2'>
-                      {t('liste.colDate')}{' '}
-                      <span className='chiffres'>
-                        {formatDateMaroc(ligne.soumisLe, locale)}
-                      </span>
-                    </span>
-                    <span className='mt-5 inline-flex items-center gap-2 font-medium text-accent'>
-                      {t('liste.lire')}
-                      <ArrowRightIcon size={16} />
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ol>
-          {liste.length >= 2 && (
-            <p className='border-t border-trait pt-6'>
-              <Link
-                href={`/o/${slug}/campagnes/${campaignId}/binomes`}
-                className='lien-fleche group inline-flex min-h-11 items-center gap-2 font-medium text-encre underline decoration-trait-fort underline-offset-4 hover:decoration-accent'
+        <ol
+          role='list'
+          aria-label={t('liste.titre')}
+          className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'
+        >
+          {liste.map((ligne, position) => {
+            const numero = formatNombre(position + 1, locale);
+            return (
+              <li
+                key={ligne.participationId}
+                data-reveal='monte'
+                style={rang(Math.min(position, 5))}
               >
-                {tb('proposition.titre')}
-                <ArrowRightIcon size={16} />
-              </Link>
-            </p>
-          )}
-        </>
+                <Link
+                  href={`/o/${slug}/campagnes/${campaignId}/resultats/${ligne.participationId}`}
+                  aria-label={t('liste.lireAria', {
+                    numero,
+                    titre: titreCampagne
+                  })}
+                  className='lien-fleche group flex h-full flex-col rounded-panneau border border-trait bg-surface p-5 transition-colors duration-courte ease-tenga hover:border-trait-fort'
+                >
+                  <span
+                    aria-hidden='true'
+                    className='chiffres font-display text-titre-1 leading-none text-texte-3 transition-colors duration-courte ease-tenga group-hover:text-safran'
+                  >
+                    {numero.padStart(2, '0')}
+                  </span>
+                  <span className='mt-6 text-titre-3 text-encre'>
+                    {t('liste.resultat', { numero })}
+                  </span>
+                  <span className='mt-1 text-petit text-texte-2'>
+                    {t('liste.colDate')}{' '}
+                    <span className='chiffres'>
+                      {formatDateMaroc(ligne.soumisLe, locale)}
+                    </span>
+                  </span>
+                  <span className='mt-5 inline-flex items-center gap-2 font-medium text-accent'>
+                    {t('liste.lire')}
+                    <ArrowRightIcon size={16} />
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
       )}
+
+      {/* Proposition de binôme (deux résultats remis au moins) et relevé du
+          réseau (nombres par groupe, lisibles même sans résultat remis). */}
+      <ul
+        role='list'
+        className='flex flex-wrap gap-x-8 gap-y-2 border-t border-trait pt-6'
+      >
+        {liste.length >= 2 && (
+          <li>
+            <Link
+              href={`/o/${slug}/campagnes/${campaignId}/binomes`}
+              className={lienPied}
+            >
+              {tb('proposition.titre')}
+              <ArrowRightIcon size={16} />
+            </Link>
+          </li>
+        )}
+        <li>
+          <Link
+            href={`/o/${slug}/campagnes/${campaignId}/reseau`}
+            className={lienPied}
+          >
+            {tr('consultant.lien')}
+            <ArrowRightIcon size={16} />
+          </Link>
+        </li>
+      </ul>
     </div>
   );
 }

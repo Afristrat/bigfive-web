@@ -11,6 +11,8 @@ import {
   loadMesParticipations,
   type MaParticipation
 } from '@/lib/mes-resultats-data';
+import { loadMesRelevesReseau } from '@/lib/reseau-data';
+import type { MonReleveReseau } from '@/lib/reseau-releve';
 import { requireViewer } from '@/lib/session';
 import { Link } from '@/navigation';
 
@@ -31,13 +33,31 @@ export async function generateMetadata({ params }: Props) {
 const peutPasser = (p: MaParticipation): boolean =>
   p.statut !== 'terminee' && p.campagneStatut === 'ouverte';
 
+// Relevés du réseau ouverts à la personne. Aucune ligne tant que l'interrupteur
+// de production est fermé. Le bloc est secondaire : s'il est indisponible
+// (passerelle, fonction pas encore déployée), la page reste complète, sans lien.
+async function relevesOuVide(
+  viewer: Parameters<typeof loadMesRelevesReseau>[0]
+): Promise<MonReleveReseau[]> {
+  try {
+    return await loadMesRelevesReseau(viewer);
+  } catch {
+    console.warn(JSON.stringify({ event: 'reseau.liste_indisponible' }));
+    return [];
+  }
+}
+
 export default async function MesResultatsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const viewer = await requireViewer(locale, '/mes-resultats');
-  const participations = await loadMesParticipations(viewer);
+  const [participations, releves] = await Promise.all([
+    loadMesParticipations(viewer),
+    relevesOuVide(viewer)
+  ]);
   const t = await getTranslations('mesResultats');
   const binome = await getTranslations('binome');
+  const reseau = await getTranslations('reseau');
 
   return (
     <ResultMotion locale={locale}>
@@ -116,6 +136,49 @@ export default async function MesResultatsPage({ params }: Props) {
             );
           })}
         </ol>
+      )}
+      {releves.length > 0 && (
+        <section aria-labelledby='mes-releves-reseau' className='mt-16'>
+          <h2
+            id='mes-releves-reseau'
+            className='font-display text-titre-2 text-encre'
+          >
+            {reseau('liste.titre')}
+          </h2>
+          <p className='mt-3 colonne-lecture text-texte-2'>
+            {reseau('liste.intro')}
+          </p>
+          <ul className='mt-6 border-t-2 border-encre'>
+            {releves.map((r, index) => (
+              <li
+                key={r.participationId}
+                style={{ ['--i' as string]: index }}
+                className={`grid gap-x-8 gap-y-4 border-b border-trait py-6 sm:grid-cols-[1fr_auto] sm:items-center ${styles.cascade}`}
+              >
+                <div className='min-w-0'>
+                  <p className='text-petit font-medium text-texte-2'>
+                    {isolerEnArabe(r.organisationNom, locale)}
+                  </p>
+                  <p className='mt-1 text-titre-3 text-encre'>
+                    {isolerEnArabe(r.campagneTitre, locale)}
+                  </p>
+                  <p className='mt-1 text-petit text-texte-2'>
+                    {reseau(`liste.statut.${r.campagneStatut}`)}
+                  </p>
+                </div>
+                <Link
+                  href={`/mes-resultats/reseau/${r.participationId}`}
+                  aria-label={reseau('liste.ouvrirAria', {
+                    titre: isolerEnArabe(r.campagneTitre, locale)
+                  })}
+                  className={secondaryButtonClass}
+                >
+                  {reseau('liste.ouvrir')}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </ResultMotion>
   );
