@@ -8,6 +8,7 @@ import syntheseAr from './espace/synthese.ar.js';
 import apercuAr from './espace/apercu.ar.js';
 import relectureAr from './espace/relecture.ar.js';
 import pilotageAr from './espace/pilotage.ar.js';
+import reseauAr from './espace/reseau.ar.js';
 
 const arabic = {
   language: {
@@ -1139,6 +1140,7 @@ const arabic = {
   apercu: apercuAr,
   relecture: relectureAr,
   pilotage: pilotageAr,
+  reseau: reseauAr,
   // Mouvement du parcours (questionnaire et résultat).
   flow: {
     railLabel: 'محتويات النتيجة',

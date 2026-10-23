@@ -1,3 +1,5 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import ar from '@/messages/ar.js';
 import en from '@/messages/en.js';
@@ -32,6 +34,7 @@ const namespaces = [
   'synthese',
   'apercu',
   'relecture',
+  'reseau',
   'flow'
 ] as const;
 
@@ -197,6 +200,116 @@ describe('parité des messages fr / en / ar', () => {
         );
       }
     }
+  });
+
+  describe('relevé du réseau : textes juridiques', () => {
+    const fichier = (lang: 'fr' | 'en' | 'ar'): string =>
+      readFileSync(
+        fileURLToPath(
+          new URL(
+            `../../src/messages/espace/reseau.${lang}.js`,
+            import.meta.url
+          )
+        ),
+        'utf8'
+      );
+    const reseau = (lang: 'fr' | 'en' | 'ar') => catalogs[lang].reseau as Tree;
+    const BLOCS = ['information', 'consentement', 'mentions'];
+
+    it.each(['fr', 'en', 'ar'] as const)(
+      '%s : chaque bloc juridique porte la mention de relecture par Amine',
+      (lang) => {
+        const source = fichier(lang);
+        const mention =
+          '// À relire par Amine (relecteur juridique) : texte non validé.';
+        for (const bloc of BLOCS) {
+          const debut = source.indexOf(`  ${bloc}: {`);
+          expect(debut, `${lang} ${bloc}`).toBeGreaterThan(0);
+          const avant = source.slice(0, debut).trimEnd().split('\n').pop();
+          expect(avant?.trim(), `${lang} ${bloc}`).toBe(mention);
+        }
+      }
+    );
+
+    it('la déclaration à la CNDP est dite « en cours », sans aucun numéro', () => {
+      expect(fr.reseau.mentions.cndp).toBe('Déclaration à la CNDP : en cours.');
+      for (const lang of ['fr', 'en', 'ar'] as const) {
+        const texte = JSON.stringify(reseau(lang));
+        expect(texte).toMatch(/CNDP/);
+        expect(texte).not.toMatch(/n°|\bno\.\s*\d|رقم/i);
+        expect(texte).not.toMatch(/\[[^\]]*\]/);
+      }
+    });
+
+    it('responsable du traitement : Tenga Conseil ; contact par gabarit {contact}', () => {
+      for (const lang of ['fr', 'en', 'ar'] as const) {
+        const mentions = reseau(lang).mentions as Tree;
+        expect(String(mentions.responsable)).toContain('Tenga Conseil');
+        expect(placeholders(String(mentions.contact))).toEqual(['contact']);
+        expect(placeholders(String(mentions.contactSansAdresse))).toEqual([]);
+      }
+    });
+
+    it('les gabarits sont les mêmes dans les trois langues pour chaque clé', () => {
+      const parCle = (lang: 'fr' | 'en' | 'ar'): Record<string, string[]> =>
+        Object.fromEntries(
+          leafEntries(reseau(lang)).map(([cle, texte]) => [
+            cle,
+            placeholders(texte)
+          ])
+        );
+      expect(parCle('en')).toEqual(parCle('fr'));
+      expect(parCle('ar')).toEqual(parCle('fr'));
+    });
+
+    it('aucune apostrophe droite (caractère d’échappement ICU)', () => {
+      for (const lang of ['fr', 'en', 'ar'] as const) {
+        for (const [cle, texte] of leafEntries(reseau(lang))) {
+          expect(texte, `${lang} ${cle}`).not.toContain("'");
+        }
+      }
+    });
+
+    // Le texte dit « trois ans » : il ne doit pas diverger en silence de la
+    // durée par défaut de la base (private.settings.conservation_reseau_mois).
+    // La migration vient du lot SQL ; tant qu'aucune migration ne définit la
+    // colonne (lot pas encore fusionné), le contrôle est sauté et le dit.
+    const migrations = fileURLToPath(
+      new URL('../../../supabase/migrations/', import.meta.url)
+    );
+    const definitions = readdirSync(migrations)
+      .filter((f) => f.endsWith('.sql'))
+      .map((f) => readFileSync(`${migrations}${f}`, 'utf8'))
+      .flatMap((sql) => [
+        ...sql.matchAll(
+          /ADD COLUMN conservation_reseau_mois\s+integer\s+NOT NULL\s+DEFAULT\s+(\d+)/g
+        )
+      ])
+      .map((m) => Number(m[1]));
+
+    it.skipIf(definitions.length === 0)(
+      'conservation : « trois ans » = défaut de 36 mois en base (migration du lot SQL, quel que soit son numéro)',
+      () => {
+        expect(definitions.at(-1)).toBe(36);
+        expect(String(fr.reseau.mentions.conservation)).toMatch(/trois ans/);
+        const en = (reseau('en').mentions as Tree).conservation;
+        expect(String(en)).toMatch(/three years/);
+      }
+    );
+
+    it('conservation : les réponses et les choix enregistrés sont nommés', () => {
+      expect(String(fr.reseau.mentions.conservation)).toMatch(
+        /réponses et vos choix/
+      );
+    });
+
+    it('la question « qui vous bloque » n’existe pas', () => {
+      for (const lang of ['fr', 'en', 'ar'] as const) {
+        expect(JSON.stringify(reseau(lang)).toLowerCase()).not.toMatch(
+          /bloque|blocks you|يعرقل/
+        );
+      }
+    });
   });
 
   it('le compteur annonce un seuil (« moins de N »), jamais un nombre exact accordé à tort', () => {

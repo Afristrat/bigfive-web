@@ -7,6 +7,7 @@ import syntheseEn from './espace/synthese.en.js';
 import apercuEn from './espace/apercu.en.js';
 import relectureEn from './espace/relecture.en.js';
 import pilotageEn from './espace/pilotage.en.js';
+import reseauEn from './espace/reseau.en.js';
 
 const english = {
   language: {
@@ -1162,6 +1163,7 @@ const english = {
   apercu: apercuEn,
   relecture: relectureEn,
   pilotage: pilotageEn,
+  reseau: reseauEn,
   // Mouvement du parcours (questionnaire et résultat).
   flow: {
     railLabel: 'Result contents',

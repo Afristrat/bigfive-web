@@ -71,6 +71,11 @@ vi.mock('@/lib/mes-resultats-data', async (importOriginal) => ({
     loadMaParticipation(viewer, id)
 }));
 
+// Relevé du réseau : fermé (aucune ligne), comme en production aujourd'hui.
+vi.mock('@/lib/reseau-data', () => ({
+  loadMesRelevesReseauOuVide: async () => []
+}));
+
 vi.mock('@/lib/account-data', () => ({
   loadAccount: async () => ({ nom: null, langue: 'fr', roles: [] })
 }));

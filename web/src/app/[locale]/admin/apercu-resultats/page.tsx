@@ -1,5 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { EntetePilotage } from '@/components/pilotage/entete-pilotage';
+import { EcranReseau } from '@/components/reseau/ecran-reseau';
+import { libellesReseau } from '@/components/reseau/libelles';
 import {
   RapportBinome,
   libellesRapportBinome
@@ -16,6 +18,17 @@ import {
   GroupSynthesis,
   libellesSynthese
 } from '@/components/synthese/group-synthesis';
+import { supportEmail } from '@/config/site';
+import {
+  actionsApercuReseau,
+  CAMPAGNES_APERCU_RESEAU,
+  ETAPES_APERCU_RESEAU,
+  lienApercuReseau,
+  lireReglagesReseau,
+  participationApercu,
+  releveApercu,
+  type ReglagesReseau
+} from '@/lib/apercu-reseau';
 import {
   groupesApercu,
   LECTEURS_BINOME,
@@ -60,7 +73,9 @@ const legende = 'min-w-[7rem] text-petit font-medium text-texte-3';
 // Aucune lecture de la base, aucune variable d'exploitation : la simulation de
 // la garde de relecture passe en paramètre d'appel. Le binôme saute ici la
 // garde des deux accords, qui vit en base (app.lire_binome) : il n'y a pas de
-// personne réelle à protéger.
+// personne réelle à protéger. Le relevé du réseau monte le vrai écran sur des
+// membres fictifs, avec des actions neutralisées (rien n'est lu ni écrit) ;
+// l'interrupteur de production, en base, n'est ni lu ni simulé.
 export default async function ApercuResultatsPage({
   params,
   searchParams
@@ -69,8 +84,10 @@ export default async function ApercuResultatsPage({
   setRequestLocale(locale);
   // 404 pour quiconque n'est pas dans private.tenga_admins (lu en base).
   await requireAdmin(locale, '/admin/apercu-resultats');
-  const reglages = lireReglagesApercu(await searchParams);
+  const recherche = await searchParams;
+  const reglages = lireReglagesApercu(recherche);
   const { vue, profil, partenaire, lecteur, simulation } = reglages;
+  const reseau = lireReglagesReseau(recherche);
 
   const t = await getTranslations('apercu');
   const mes = await getTranslations('mesResultats');
@@ -80,6 +97,7 @@ export default async function ApercuResultatsPage({
   const synthese = await getTranslations('synthese');
   const tp = await getTranslations('pilotage');
   const binomeT = await getTranslations('binome');
+  const reseauT = await getTranslations('reseau');
 
   const lien = (
     changement: Partial<ReglagesApercu>,
@@ -93,6 +111,24 @@ export default async function ApercuResultatsPage({
       className={`${segment} ${actif ? segmentActif : segmentInactif}`}
     >
       {/* Les noms fictifs sont latins : isolés, ils gardent leur ordre en arabe. */}
+      <bdi>{libelle}</bdi>
+    </Link>
+  );
+  // Vue « reseau » : chaque lien garde la personne, l'étape et la campagne.
+  const lienReseau = (
+    changement: Partial<ReglagesReseau> & { profil?: typeof profil },
+    libelle: string,
+    actif: boolean
+  ) => (
+    <Link
+      key={libelle}
+      href={lienApercuReseau(changement.profil ?? profil, {
+        ...reseau,
+        ...changement
+      })}
+      aria-current={actif ? 'page' : undefined}
+      className={`${segment} ${actif ? segmentActif : segmentInactif}`}
+    >
       <bdi>{libelle}</bdi>
     </Link>
   );
@@ -163,7 +199,39 @@ export default async function ApercuResultatsPage({
             )}
           </span>
         </div>
-        {vue !== 'groupe' && (
+        {vue === 'reseau' && (
+          <>
+            <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+              <span className={legende}>{t('repondantLegende')}</span>
+              <span className={groupe}>
+                {PROFILS_APERCU.map((p) =>
+                  lienReseau({ profil: p }, nommer(p), p === profil)
+                )}
+              </span>
+            </div>
+            <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+              <span className={legende}>{t('etapeLegende')}</span>
+              <span className={groupe}>
+                {ETAPES_APERCU_RESEAU.map((e) =>
+                  lienReseau({ etape: e }, t(`etapes.${e}`), e === reseau.etape)
+                )}
+              </span>
+            </div>
+            <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+              <span className={legende}>{t('campagneLegende')}</span>
+              <span className={groupe}>
+                {CAMPAGNES_APERCU_RESEAU.map((c) =>
+                  lienReseau(
+                    { campagne: c },
+                    t(`campagnes.${c}`),
+                    c === reseau.campagne
+                  )
+                )}
+              </span>
+            </div>
+          </>
+        )}
+        {vue !== 'groupe' && vue !== 'reseau' && (
           <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
             <span className={legende}>
               {vue === 'binome' ? t('premiereLegende') : t('profilLegende')}
@@ -227,7 +295,34 @@ export default async function ApercuResultatsPage({
         </section>
       )}
 
-      {vue === 'binome' ? (
+      {vue === 'reseau' ? (
+        <section aria-labelledby='apercu-reseau'>
+          <h2 id='apercu-reseau' className='text-titre-section text-encre'>
+            {t('reseauTitre')}
+          </h2>
+          <p className='mt-3 colonne-lecture text-texte-2'>
+            {t('reseauAide', { moi: isoler(nommer(profil)) })}
+          </p>
+          <p
+            role='note'
+            className='mt-5 colonne-lecture border-s-2 border-safran ps-4 font-semibold text-encre'
+          >
+            {t('reseauFerme')}
+          </p>
+          <div className='mt-8 max-w-[52rem]'>
+            <EcranReseau
+              key={`${profil}-${reseau.etape}-${reseau.campagne}`}
+              participationId={participationApercu(profil)}
+              releve={releveApercu(profil, reseau.etape, reseau.campagne)}
+              statutCampagne={reseau.campagne}
+              actions={actionsApercuReseau}
+              libelles={libellesReseau(reseauT, supportEmail)}
+              locale={locale}
+              reconnexion={`/connexion?next=${encodeURIComponent(lienApercuReseau(profil, reseau))}`}
+            />
+          </div>
+        </section>
+      ) : vue === 'binome' ? (
         <section aria-labelledby='apercu-binome'>
           <h2 id='apercu-binome' className='text-titre-section text-encre'>
             {t('binomeTitre')}
