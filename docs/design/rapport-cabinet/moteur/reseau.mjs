@@ -38,10 +38,14 @@ export function relaisPrevus(relations, codes) {
  * personnes du cas qui consentent à l'analyse d'équipe. Un consentement retiré ou donné après le relevé le rend caduc : ni texte
  * ni carte ne doivent alors le lire. Partagée par le texte du rapport (niveau34) et sa carte (rendu). */
 export function perimetreAJour(rr, cas) {
-  const releve = rr?.perimetre;
-  if (!Array.isArray(releve)) return false;
-  const actuel = new Set((cas?.personnes ?? []).filter((p) => p.consentements?.equipe === true).map((p) => p.code));
-  return releve.length === actuel.size && new Set(releve).size === releve.length && releve.every((c) => actuel.has(c));
+  return memeEnsemble(rr?.perimetre, (cas?.personnes ?? []).filter((p) => p.consentements?.equipe === true).map((p) => p.code));
+}
+
+/** Vrai si a et b sont deux listes sans doublon contenant exactement les mêmes codes, dans n'importe quel ordre. */
+function memeEnsemble(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b)) return false;
+  const sb = new Set(b);
+  return a.length === b.length && new Set(a).size === a.length && sb.size === b.length && a.every((c) => sb.has(c));
 }
 
 /** Lecture nominative autorisée (texte et carte) : carte_nominative du moteur, revérifiée sur les faits eux-mêmes (aucune
@@ -49,7 +53,7 @@ export function perimetreAJour(rr, cas) {
 export function nominatifAutorise(rr) {
   return rr?.carte_nominative === true
     && Array.isArray(rr.non_representes) && rr.non_representes.length === 0
-    && Array.isArray(rr.perimetre) && Array.isArray(rr.representes) && rr.representes.length === rr.perimetre.length;
+    && memeEnsemble(rr.representes, rr.perimetre);
 }
 
 /** Faits complets écrits par calculer.mjs : les faits du moteur, puis faits.reseau_reel. moteur.mjs reste sans import (ses mutants sont copiés seuls). */

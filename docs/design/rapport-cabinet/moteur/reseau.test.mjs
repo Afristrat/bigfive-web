@@ -284,3 +284,11 @@ test('carte nominative : seulement si chaque membre du périmètre est représen
   assert.equal(nominatifAutorise({ ...tous, non_representes: undefined }), false);
   assert.equal(nominatifAutorise(undefined), false);
 });
+
+test('nominatifAutorise : représentés et périmètre doivent être le même ensemble, pas seulement de même taille', () => {
+  const tous = lireReseau(casSynthetique(5));
+  assert.equal(nominatifAutorise({ ...tous, representes: [...tous.representes].reverse() }), true, 'l’ordre ne compte pas');
+  assert.equal(nominatifAutorise({ ...tous, representes: ['P1', 'P2', 'P3', 'P4', 'X9'] }), false, 'même taille, un code différent');
+  assert.equal(nominatifAutorise({ ...tous, representes: ['P1', 'P1', 'P2', 'P3', 'P4'] }), false, 'même taille, un doublon');
+  assert.equal(nominatifAutorise({ ...tous, perimetre: ['P1', 'P1', 'P2', 'P3', 'P4'], representes: ['P1', 'P2', 'P3', 'P4', 'P4'] }), false, 'doublons des deux côtés');
+});
