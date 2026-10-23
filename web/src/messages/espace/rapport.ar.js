@@ -19,7 +19,6 @@ const rapportAr = {
     campagne: 'الحملة: {titre}',
     retour: 'العودة إلى الحملات',
     aucun: 'لم تُسلَّم أي نتيجة بعدُ في هذه الحملة.',
-    colResultat: 'النتيجة',
     colDate: 'تاريخ التسليم',
     resultat: 'النتيجة {numero}',
     lire: 'قراءة',

@@ -19,7 +19,6 @@ const rapportFr = {
     campagne: 'Campagne : {titre}',
     retour: 'Retour aux campagnes',
     aucun: 'Aucun résultat n’a encore été remis pour cette campagne.',
-    colResultat: 'Résultat',
     colDate: 'Remis le',
     resultat: 'Résultat {numero}',
     lire: 'Lire',

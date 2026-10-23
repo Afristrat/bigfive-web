@@ -19,7 +19,6 @@ const rapportEn = {
     campagne: 'Campaign: {titre}',
     retour: 'Back to campaigns',
     aucun: 'No result has been submitted for this campaign yet.',
-    colResultat: 'Result',
     colDate: 'Submitted on',
     resultat: 'Result {numero}',
     lire: 'Read',
