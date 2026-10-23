@@ -1,6 +1,10 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { EntetePilotage } from '@/components/pilotage/entete-pilotage';
 import {
+  RapportBinome,
+  libellesRapportBinome
+} from '@/components/rapports/rapport-binome';
+import {
   RapportIndividuel,
   libellesRapport
 } from '@/components/rapports/rapport-individuel';
@@ -14,6 +18,7 @@ import {
 } from '@/components/synthese/group-synthesis';
 import {
   groupesApercu,
+  LECTEURS_BINOME,
   lienApercu,
   lireReglagesApercu,
   nomProfilApercu,
@@ -22,7 +27,9 @@ import {
   VUES_APERCU,
   type ReglagesApercu
 } from '@/lib/apercu-resultats';
+import { formatNombre } from '@/lib/format';
 import { profilDepuisScores } from '@/lib/moteur';
+import { construireRapportBinome } from '@/lib/rapports/binome';
 import { construireRapportIndividuel } from '@/lib/rapports/individuel';
 import { requireAdmin } from '@/lib/session';
 import { Link } from '@/navigation';
@@ -49,9 +56,11 @@ const groupe =
 const legende = 'min-w-[7rem] text-petit font-medium text-texte-3';
 
 // Aperçu interne : assemble les vrais composants (vue des résultats, rapport
-// individuel, synthèse de groupe) sur des données fictives. Aucune lecture de
-// la base, aucune variable d'exploitation : la simulation de la garde de
-// relecture passe en paramètre d'appel.
+// individuel, synthèse de groupe, rapport de binôme) sur des données fictives.
+// Aucune lecture de la base, aucune variable d'exploitation : la simulation de
+// la garde de relecture passe en paramètre d'appel. Le binôme saute ici la
+// garde des deux accords, qui vit en base (app.lire_binome) : il n'y a pas de
+// personne réelle à protéger.
 export default async function ApercuResultatsPage({
   params,
   searchParams
@@ -61,7 +70,7 @@ export default async function ApercuResultatsPage({
   // 404 pour quiconque n'est pas dans private.tenga_admins (lu en base).
   await requireAdmin(locale, '/admin/apercu-resultats');
   const reglages = lireReglagesApercu(await searchParams);
-  const { vue, profil, simulation } = reglages;
+  const { vue, profil, partenaire, lecteur, simulation } = reglages;
 
   const t = await getTranslations('apercu');
   const mes = await getTranslations('mesResultats');
@@ -70,6 +79,7 @@ export default async function ApercuResultatsPage({
   const rapportT = await getTranslations('rapport');
   const synthese = await getTranslations('synthese');
   const tp = await getTranslations('pilotage');
+  const binomeT = await getTranslations('binome');
 
   const lien = (
     changement: Partial<ReglagesApercu>,
@@ -88,6 +98,21 @@ export default async function ApercuResultatsPage({
 
   const scores = scoresApercu(profil);
   const audience = vue === 'consultant' ? 'consultant' : 'personne';
+  const nommer = (p: (typeof PROFILS_APERCU)[number]): string =>
+    `${p} : ${nomProfilApercu(p)}`;
+  // Mêmes étiquettes que la vraie page : « Vous » pour la personne qui lit,
+  // « Personne 1 » et « Personne 2 » pour le consultant.
+  const etiquettesBinome =
+    lecteur === 'personne'
+      ? { a: binomeT('etiquettes.moi'), b: binomeT('etiquettes.autre') }
+      : {
+          a: binomeT('etiquettes.personne', {
+            numero: formatNombre(1, locale)
+          }),
+          b: binomeT('etiquettes.personne', {
+            numero: formatNombre(2, locale)
+          })
+        };
   // Le réglage ne vaut que pour la vue participant ; le consultant voit toujours tout.
   const afficherNonRelus = vue === 'participant' ? simulation : undefined;
 
@@ -137,17 +162,35 @@ export default async function ApercuResultatsPage({
         </div>
         {vue !== 'groupe' && (
           <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
-            <span className={legende}>{t('profilLegende')}</span>
+            <span className={legende}>
+              {vue === 'binome' ? t('premiereLegende') : t('profilLegende')}
+            </span>
             <span className={groupe}>
               {PROFILS_APERCU.map((p) =>
-                lien(
-                  { profil: p },
-                  `${p} : ${nomProfilApercu(p)}`,
-                  p === profil
-                )
+                lien({ profil: p }, nommer(p), p === profil)
               )}
             </span>
           </div>
+        )}
+        {vue === 'binome' && (
+          <>
+            <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+              <span className={legende}>{t('partenaireLegende')}</span>
+              <span className={groupe}>
+                {PROFILS_APERCU.filter((p) => p !== profil).map((p) =>
+                  lien({ partenaire: p }, nommer(p), p === partenaire)
+                )}
+              </span>
+            </div>
+            <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+              <span className={legende}>{t('lecteurLegende')}</span>
+              <span className={groupe}>
+                {LECTEURS_BINOME.map((l) =>
+                  lien({ lecteur: l }, t(`lecteurs.${l}`), l === lecteur)
+                )}
+              </span>
+            </div>
+          </>
         )}
       </nav>
 
@@ -181,7 +224,36 @@ export default async function ApercuResultatsPage({
         </section>
       )}
 
-      {vue === 'groupe' ? (
+      {vue === 'binome' ? (
+        <section aria-labelledby='apercu-binome'>
+          <h2 id='apercu-binome' className='text-titre-section text-encre'>
+            {t('binomeTitre')}
+          </h2>
+          <p className='mt-3 colonne-lecture text-texte-2'>
+            {lecteur === 'personne'
+              ? t('binomePersonneAide', {
+                  premiere: nommer(profil),
+                  seconde: nommer(partenaire)
+                })
+              : t('binomeConsultantAide', {
+                  premiere: nommer(profil),
+                  seconde: nommer(partenaire)
+                })}
+          </p>
+          <div className='mt-8'>
+            <RapportBinome
+              rapport={construireRapportBinome({
+                a: scores,
+                b: scoresApercu(partenaire)
+              })}
+              locale={locale}
+              libelles={libellesRapportBinome(binomeT, niveaux)}
+              etiquettes={etiquettesBinome}
+              audience={lecteur}
+            />
+          </div>
+        </section>
+      ) : vue === 'groupe' ? (
         <section aria-labelledby='apercu-synthese'>
           <h2 id='apercu-synthese' className='text-titre-section text-encre'>
             {t('syntheseTitre')}

@@ -117,7 +117,7 @@ describe('accès : super administrateurs seulement', () => {
 });
 
 describe('bandeau et navigation', () => {
-  it.each(['participant', 'consultant', 'groupe'])(
+  it.each(['participant', 'consultant', 'groupe', 'binome'])(
     '%s : le bandeau « données fictives » est présent',
     async (vue) => {
       const html = await rendre({ vue });
@@ -128,9 +128,9 @@ describe('bandeau et navigation', () => {
     }
   );
 
-  it('propose les trois audiences et les quatre profils en liens', async () => {
+  it('propose les quatre audiences et les quatre profils en liens', async () => {
     const html = await rendre({ vue: 'consultant', profil: 'SR' });
-    for (const vue of ['participant', 'consultant', 'groupe']) {
+    for (const vue of ['participant', 'consultant', 'groupe', 'binome']) {
       expect(html).toContain(`href="/admin/apercu-resultats?vue=${vue}`);
     }
     for (const p of ['AM', 'KB', 'SR', 'HT']) {
@@ -194,7 +194,7 @@ describe('vue participant (audience personne)', () => {
 });
 
 describe('structure', () => {
-  it.each(['participant', 'consultant', 'groupe'])(
+  it.each(['participant', 'consultant', 'groupe', 'binome'])(
     '%s : aucun identifiant en double',
     async (vue) => {
       const html = await rendre({ vue });
@@ -234,9 +234,68 @@ describe('vue groupe', () => {
   });
 });
 
+describe('vue binôme', () => {
+  it('rend le vrai rapport de binôme, sans bouton de retrait d’accord', async () => {
+    const html = await rendre({
+      vue: 'binome',
+      profil: 'AM',
+      partenaire: 'KB'
+    });
+    expect(html).toContain('id="apercu-binome"');
+    expect(html).toContain(fr.apercu.binomeTitre);
+    expect(html).toContain(fr.binome.etiquettes.moi);
+    expect(html).toContain(fr.binome.etiquettes.autre);
+    expect(html).not.toContain(fr.binome.consent.retirer);
+    expect(html).not.toContain(fr.apercu.rapportTitre);
+    expect(html).not.toContain(fr.apercu.resultatTitre);
+  });
+
+  it('lu par le consultant : les deux personnes sont numérotées', async () => {
+    const html = await rendre({
+      vue: 'binome',
+      profil: 'SR',
+      partenaire: 'HT',
+      lecteur: 'consultant'
+    });
+    expect(html).toContain('Personne 1');
+    expect(html).toContain('Personne 2');
+    expect(html).not.toContain(`>${fr.binome.etiquettes.moi}<`);
+  });
+
+  it('marque la vue, les deux personnes et le lecteur courants', async () => {
+    const html = await rendre({
+      vue: 'binome',
+      profil: 'SR',
+      partenaire: 'HT'
+    });
+    expect(nbOccurrences(html, 'aria-current="page"')).toBe(4);
+  });
+
+  it('ne propose pas la première personne comme seconde', async () => {
+    const html = await rendre({ vue: 'binome', profil: 'SR' });
+    expect(html).not.toContain('partenaire=SR');
+    expect(html).toContain('partenaire=KB');
+  });
+
+  it('les deux personnes ne sont jamais la même, même forcées par l’adresse', async () => {
+    const html = await rendre({
+      vue: 'binome',
+      profil: 'HT',
+      partenaire: 'HT'
+    });
+    expect(html).toContain('data-profil="HT"');
+    expect(html).toContain(fr.binome.etiquettes.autre);
+  });
+});
+
 describe('autres langues', () => {
   it.each(['en', 'ar'])('%s : la page se rend', async (locale) => {
     const html = await rendre({ vue: 'participant' }, locale);
     expect(html.length).toBeGreaterThan(1000);
+  });
+
+  it.each(['en', 'ar'])('%s : la vue binôme se rend', async (locale) => {
+    const html = await rendre({ vue: 'binome' }, locale);
+    expect(html).toContain('id="apercu-binome"');
   });
 });

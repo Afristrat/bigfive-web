@@ -28,12 +28,24 @@ export const APERCU: { version: string; empreinte: string } = {
 export const PROFILS_APERCU = ['AM', 'KB', 'SR', 'HT'] as const;
 export type ProfilApercu = (typeof PROFILS_APERCU)[number];
 
-export const VUES_APERCU = ['participant', 'consultant', 'groupe'] as const;
+export const VUES_APERCU = [
+  'participant',
+  'consultant',
+  'groupe',
+  'binome'
+] as const;
 export type VueApercu = (typeof VUES_APERCU)[number];
+
+/** Qui lit le rapport de binôme : la première personne ou le consultant. */
+export const LECTEURS_BINOME = ['personne', 'consultant'] as const;
+export type LecteurBinome = (typeof LECTEURS_BINOME)[number];
 
 export type ReglagesApercu = {
   vue: VueApercu;
   profil: ProfilApercu;
+  /** Seconde personne du binôme ; toujours différente de `profil`. */
+  partenaire: ProfilApercu;
+  lecteur: LecteurBinome;
   /** Simule BIBLIOTHEQUE_NON_RELUS_PERSONNES=afficher pour la vue participant. */
   simulation: boolean;
 };
@@ -57,20 +69,43 @@ const estVue = (valeur: unknown): valeur is VueApercu =>
 
 type Recherche = Record<string, string | string[] | undefined>;
 
+/** Partenaire par défaut : KB, ou AM quand la première personne est KB. */
+export const partenaireParDefaut = (profil: ProfilApercu): ProfilApercu =>
+  profil === 'KB' ? 'AM' : 'KB';
+
 /** Réglages d'URL ; toute valeur inconnue ou multiple retombe sur le défaut. */
 export function lireReglagesApercu(recherche: Recherche): ReglagesApercu {
-  const { vue, profil, simulation } = recherche;
+  const { vue, profil, partenaire, lecteur, simulation } = recherche;
+  const premier = estProfil(profil) ? profil : 'AM';
   return {
     vue: estVue(vue) ? vue : 'participant',
-    profil: estProfil(profil) ? profil : 'AM',
+    profil: premier,
+    // Une personne ne forme pas un binôme avec elle-même.
+    partenaire:
+      estProfil(partenaire) && partenaire !== premier
+        ? partenaire
+        : partenaireParDefaut(premier),
+    lecteur: lecteur === 'consultant' ? 'consultant' : 'personne',
     simulation: simulation === 'afficher'
   };
 }
 
-/** Lien vers la page ; la simulation ne vaut que pour la vue participant. */
+/**
+ * Lien vers la page, avec les seuls réglages utiles à la vue : la simulation
+ * pour le participant, le partenaire et le lecteur pour le binôme.
+ */
 export function lienApercu(reglages: ReglagesApercu): string {
-  const base = `${CHEMIN}?vue=${reglages.vue}&profil=${reglages.profil}`;
-  return reglages.vue === 'participant' && reglages.simulation
+  const { vue, profil, simulation } = reglages;
+  const base = `${CHEMIN}?vue=${vue}&profil=${profil}`;
+  if (vue === 'binome') {
+    // Changer la première personne pour celle du partenaire libère ce dernier.
+    const partenaire =
+      reglages.partenaire === profil
+        ? partenaireParDefaut(profil)
+        : reglages.partenaire;
+    return `${base}&partenaire=${partenaire}&lecteur=${reglages.lecteur}`;
+  }
+  return vue === 'participant' && simulation
     ? `${base}&simulation=afficher`
     : base;
 }
