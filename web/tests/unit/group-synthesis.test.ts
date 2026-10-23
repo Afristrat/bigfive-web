@@ -97,6 +97,8 @@ const G1 = '44444444-4444-4444-8444-444444444444';
 const G2 = '55555555-5555-4555-8555-555555555555';
 
 const labels: SyntheseLabels = {
+  anonymat: 'MENTION-ANONYMAT',
+  repereComplement: 'REPERE-COMPLEMENT',
   groupeCaption: 'Le groupe',
   complementCaption: 'Le reste de la campagne',
   colDomaine: 'Domaine',

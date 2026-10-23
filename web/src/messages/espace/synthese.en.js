@@ -1,8 +1,9 @@
 const syntheseEn = {
   title: 'Group summary',
-  intro:
-    'Averages by domain, frozen when the campaign closed. Only groups whose size reaches the anonymity threshold are published. No individual data is shown.',
-  campagne: 'Campaign: {titre}',
+  intro: 'Averages by domain, frozen when the campaign closed.',
+  anonymat:
+    'Only groups whose size reaches the anonymity threshold are published. No individual data is shown.',
+  repereComplement: 'Vertical mark: average of the rest of the campaign',
   retour: 'Back to campaigns',
   lien: 'Summary',
   lienAria: 'Summary of the campaign “{titre}”',

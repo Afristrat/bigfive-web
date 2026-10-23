@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { canManageCampaigns } from '@/lib/access-rules';
-import { GroupSynthesis } from '@/components/synthese/group-synthesis';
-import { title } from '@/components/primitives';
+import { EntetePilotage } from '@/components/pilotage/entete-pilotage';
+import {
+  GroupSynthesis,
+  libellesSynthese
+} from '@/components/synthese/group-synthesis';
 import { loadOrgPage, parseOrgSlug } from '@/lib/campaign-data';
 import { isolerEnArabe } from '@/lib/format';
 import { VERSION_MOTEUR } from '@/lib/moteur/seuils';
@@ -12,7 +15,6 @@ import {
   parseCampaignId,
   peutLireSynthese
 } from '@/lib/synthese-data';
-import { Link } from '@/navigation';
 
 interface Props {
   params: Promise<{ locale: string; slug: string; campagne: string }>;
@@ -46,6 +48,7 @@ export default async function SynthesePage({ params }: Props) {
   const t = await getTranslations('synthese');
   const tn = await getTranslations('niveaux');
   const passation = await getTranslations('passation');
+  const tp = await getTranslations('pilotage');
   // La page de l'organisation est réservée au responsable et à l'administrateur
   // Tenga : le consultant, lui, retourne à son compte.
   const versOrganisation = canManageCampaigns({
@@ -54,66 +57,34 @@ export default async function SynthesePage({ params }: Props) {
   });
 
   return (
-    <div className='flex flex-col gap-10'>
-      <header>
-        <h1 className={title()}>
-          <bdi>{page.org.nom}</bdi>{' '}
-          <span className='mt-2 block text-titre-2 text-encre'>
-            {t('title')}
-          </span>
-        </h1>
-        <p className='mt-2 text-chapo text-texte-2'>
-          {t('campagne', {
-            titre: isolerEnArabe(synthese.campagne.titre, locale)
-          })}
-        </p>
-        <p className='mt-4 colonne-lecture text-texte-2'>{t('intro')}</p>
-        <p className='mt-4'>
-          {versOrganisation ? (
-            <Link href={`/o/${slug}`} className='underline'>
-              {t('retour')}
-            </Link>
-          ) : (
-            <Link href='/mon-compte' className='underline'>
-              {passation('backToAccount')}
-            </Link>
-          )}
-        </p>
-      </header>
+    <div className='flex flex-col gap-12'>
+      <EntetePilotage
+        retour={
+          versOrganisation
+            ? { href: `/o/${slug}`, libelle: t('retour') }
+            : { href: '/mon-compte', libelle: passation('backToAccount') }
+        }
+        surtitre={<bdi>{page.org.nom}</bdi>}
+        titre={t('title')}
+        chapo={<p>{t('intro')}</p>}
+        reperes={[
+          {
+            terme: tp('repere.campagne'),
+            valeur: <bdi>{isolerEnArabe(synthese.campagne.titre, locale)}</bdi>
+          }
+        ]}
+      />
 
       {synthese.etat === 'non_close' ? (
-        <p className='text-texte-2'>{t('nonClose')}</p>
+        <p className='carte text-texte-2'>{t('nonClose')}</p>
       ) : (
         <>
           <GroupSynthesis
             groupes={synthese.groupes}
             locale={locale}
-            labels={{
-              groupeCaption: t('groupeCaption'),
-              complementCaption: t('complementCaption'),
-              colDomaine: t('colDomaine'),
-              colEffectif: t('colEffectif'),
-              colMoyenne: t('colMoyenne'),
-              colEcartType: t('colEcartType'),
-              ecartTypeAbsent: t('ecartTypeAbsent'),
-              colNiveau: t('colNiveau'),
-              nonPublie: t('nonPublie'),
-              complementNonPublie: t('complementNonPublie'),
-              complementVide: t('complementVide'),
-              sansMoyenne: t('sansMoyenne'),
-              dispersion: t('dispersion'),
-              niveauLecture: t('niveauLecture', { niveau: '{niveau}' }),
-              niveaux: {
-                bas: tn('bas'),
-                plutot_bas: tn('plutot_bas'),
-                milieu: tn('milieu'),
-                plutot_haut: tn('plutot_haut'),
-                haut: tn('haut')
-              },
-              aucunGroupe: t('aucunGroupe')
-            }}
+            labels={libellesSynthese(t, tn)}
           />
-          <p className='text-legende text-texte-2'>
+          <p className='text-legende text-texte-3'>
             {tn('versionMoteur', { version: VERSION_MOTEUR })}
           </p>
         </>
