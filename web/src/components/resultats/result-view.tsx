@@ -1,5 +1,5 @@
-import type { ReactElement, ReactNode } from 'react';
-import { title } from '@/components/primitives';
+import type { CSSProperties, ReactElement, ReactNode } from 'react';
+import { DomainShape, domainNumber } from '@/components/domain-shape';
 import { RadarChart } from '@/components/radar-chart';
 import { ScoreBar } from '@/components/score-bar';
 import {
@@ -38,11 +38,13 @@ export type ResultViewLabels = {
   vue: FacetCardLabels & {
     radarTitle: string;
     radarSummary: string;
+    profilIntro: string;
     scoresTitre: string;
     columnDomain: string;
     columnScore: string;
     domainOutOf: string;
     facettes: string;
+    facettesIntro: string;
     tensionsTitre: string;
     tensionsIntro: string;
     /** Modèle avec {a}, {b} et {ecart}. */
@@ -79,12 +81,14 @@ export function libellesResultView(
     vue: {
       radarTitle: v('radarTitle'),
       radarSummary: v('radarSummary'),
+      profilIntro: v('profilIntro'),
       scoresTitre: v('scoresTitre'),
       columnDomain: v('columnDomain'),
       columnScore: v('columnScore'),
       domainOutOf: v('domainOutOf'),
       facetOutOf: v('facetOutOf'),
       facettes: v('facettes'),
+      facettesIntro: v('facettesIntro'),
       description: v('description'),
       apport: v('apport'),
       cout: v('cout'),
@@ -116,6 +120,16 @@ type ResultViewProps = {
   /** Ancres de la page ajoutées à la suite des trois parties du sommaire. */
   ancres?: readonly RailItem[];
 };
+
+// Repères de coupe de la planche du radar, comme sur l'accueil.
+const COINS = [
+  'start-0 top-0 border-s border-t',
+  'end-0 top-0 border-e border-t',
+  'bottom-0 start-0 border-b border-s',
+  'bottom-0 end-0 border-b border-e'
+] as const;
+
+const rangCss = (i: number): CSSProperties => ({ ['--i' as string]: i });
 
 const libelleFacette = (code: FacetteCode, locale: string): string => {
   const domaine: DomainCode | undefined = DOMAINES.find((d) => d === code[0]);
@@ -161,67 +175,102 @@ export function ResultView({
         ]}
       />
 
-      <div className='mt-8 grid gap-4 lg:grid-cols-[11fr_10fr]'>
+      {/* Profil : à gauche la planche du radar et ses repères de coupe, à
+          droite la fiche des cinq domaines, réglée d'un filet d'encre. */}
+      <div className='mt-12 grid gap-x-12 gap-y-14 lg:grid-cols-12'>
         <section
           id='profil'
           aria-labelledby='radar-titre'
-          className={`carte scroll-mt-32 ${styles['carte-profil']}`}
+          className={`scroll-mt-32 lg:col-span-6 ${styles.planche}`}
         >
-          <h2 id='radar-titre' className='text-titre-2 text-encre'>
+          <h2 id='radar-titre' className='text-titre-section text-encre'>
             {vue.radarTitle}
           </h2>
-          <RadarChart
-            className='mt-4'
-            domains={DOMAINES.map((code) => ({
-              code,
-              label: domainLabel(code, locale, 'short'),
-              value: profil.domaines[code].score
-            }))}
-            min={24}
-            max={120}
-            locale={locale}
-            title={vue.radarTitle}
-            summary={vue.radarSummary}
-            columnLabels={{ domain: vue.columnDomain, score: vue.columnScore }}
-          />
+          <p className='mt-3 max-w-[34em] text-petit text-texte-2'>
+            {vue.profilIntro}
+          </p>
+          <div className='relative mx-auto mt-6 w-full max-w-[560px] p-3 sm:p-5'>
+            {COINS.map((coin, i) => (
+              <span
+                key={coin}
+                aria-hidden='true'
+                style={rangCss(i)}
+                className={`absolute size-[18px] border-trait-fort ${coin} ${styles.coin}`}
+              />
+            ))}
+            <RadarChart
+              domains={DOMAINES.map((code) => ({
+                code,
+                label: domainLabel(code, locale, 'short'),
+                value: profil.domaines[code].score
+              }))}
+              min={24}
+              max={120}
+              locale={locale}
+              title={vue.radarTitle}
+              summary={vue.radarSummary}
+              columnLabels={{
+                domain: vue.columnDomain,
+                score: vue.columnScore
+              }}
+            />
+          </div>
         </section>
 
         <section
           id='scores'
           data-revele
           aria-labelledby='scores-titre'
-          className={`carte scroll-mt-32 ${styles['carte-scores']}`}
+          className='relative scroll-mt-32 self-start lg:col-span-6 lg:mt-2'
         >
           <h2 id='scores-titre' className='sr-only'>
             {vue.scoresTitre}
           </h2>
-          <ul className='flex flex-col divide-y divide-trait'>
+          <span
+            aria-hidden='true'
+            className={`absolute inset-x-0 top-0 block h-0.5 bg-encre ${styles['fiche-filet']}`}
+          />
+          <ol className='flex flex-col'>
             {DOMAINES.map((code, index) => {
               const domaine = profil.domaines[code];
               return (
                 <li
                   key={code}
-                  className={`break-inside-avoid py-5 first:pt-0 last:pb-0 ${styles.facteur}`}
-                  style={{ ['--i' as string]: index }}
+                  className={`break-inside-avoid border-b border-trait py-5 ${styles.facteur}`}
+                  style={rangCss(index)}
                 >
-                  <div className='flex flex-wrap items-baseline gap-3'>
-                    <span className='text-corps font-semibold text-encre'>
-                      {domainLabel(code, locale, 'short')}
+                  <div className='flex items-end gap-4'>
+                    <span
+                      aria-hidden='true'
+                      className='chiffres w-7 flex-none pb-1 text-legende font-medium text-texte-3'
+                    >
+                      {domainNumber(code)}
                     </span>
-                    <LevelBadge
-                      niveau={domaine.niveau}
-                      label={niveaux[domaine.niveau]}
+                    <div className='min-w-0 flex-1'>
+                      <p className='flex items-center gap-2 text-titre-3 text-encre'>
+                        <DomainShape
+                          domain={code}
+                          size={14}
+                          className='text-texte-3'
+                        />
+                        {domainLabel(code, locale, 'short')}
+                      </p>
+                      <div className='mt-1'>
+                        <LevelBadge
+                          niveau={domaine.niveau}
+                          label={niveaux[domaine.niveau]}
+                        />
+                      </div>
+                    </div>
+                    <ScoreValue
+                      taille='grand'
+                      valeur={formatNombre(domaine.score, locale)}
+                      compte={domaine.score}
+                      max={formatNombre(120, locale)}
+                      spoken={`${vue.columnScore} ${formatNombre(domaine.score, locale)} ${vue.domainOutOf}`}
                     />
-                    <span className='ms-auto'>
-                      <ScoreValue
-                        valeur={formatNombre(domaine.score, locale)}
-                        compte={domaine.score}
-                        max={formatNombre(120, locale)}
-                        spoken={`${vue.columnScore} ${formatNombre(domaine.score, locale)} ${vue.domainOutOf}`}
-                      />
-                    </span>
                   </div>
-                  <div className='mt-2'>
+                  <div className='mt-4 ps-11'>
                     <ScoreBar
                       score={domaine.score}
                       min={24}
@@ -234,44 +283,63 @@ export function ResultView({
                 </li>
               );
             })}
-          </ul>
+          </ol>
         </section>
       </div>
 
+      {/* Facettes : un chapitre par domaine. Le numéro, le nom et le niveau
+          restent à l'écran (colonne collante) pendant la lecture des six
+          facettes. */}
       <section
         id='facettes'
-        data-revele
         aria-labelledby='facettes-titre'
-        className='carte mt-4 scroll-mt-32'
+        className='mt-24 scroll-mt-32'
       >
-        <h2 id='facettes-titre' className={title({ size: 'section' })}>
-          {vue.facettes}
-        </h2>
+        <div data-revele className='max-w-[44em]'>
+          <h2 id='facettes-titre' className='text-titre-1 text-encre'>
+            {vue.facettes}
+          </h2>
+          <p className='mt-4 text-chapo text-texte-2'>{vue.facettesIntro}</p>
+        </div>
         {DOMAINES.map((code) => {
           const domaine = profil.domaines[code];
           return (
             <section
               key={code}
               data-domaine={code}
+              data-revele
               aria-labelledby={`titre-${code}`}
-              className='mt-8'
+              className='mt-16 grid gap-x-12 gap-y-6 border-t-2 border-encre pt-8 lg:grid-cols-12'
             >
-              <div className='flex flex-wrap items-baseline justify-between gap-3'>
-                <h3 id={`titre-${code}`} className='text-titre-3 text-encre'>
+              <div className='self-start lg:sticky lg:top-32 lg:col-span-4'>
+                <p
+                  aria-hidden='true'
+                  className='chiffres font-display text-[clamp(3rem,2.2rem+3vw,5rem)] font-semibold leading-none tracking-[-0.04em] text-trait-fort'
+                >
+                  {domainNumber(code)}
+                </p>
+                <h3
+                  id={`titre-${code}`}
+                  className='mt-4 text-titre-section text-encre'
+                >
                   {domainLabel(code, locale)}
                 </h3>
-                <LevelBadge
-                  niveau={domaine.niveau}
-                  label={niveaux[domaine.niveau]}
-                />
+                <div className='mt-3'>
+                  <LevelBadge
+                    ton='fort'
+                    niveau={domaine.niveau}
+                    label={niveaux[domaine.niveau]}
+                  />
+                </div>
               </div>
-              <ul className='mt-4 grid gap-3 md:grid-cols-2'>
+              <ul className='lg:col-span-8'>
                 {INDEX_FACETTES.map((f, rang) => {
                   const k: FacetteCode = `${code}${f}`;
                   const facette = profil.facettes[k];
                   return (
                     <FacetCard
                       key={k}
+                      titre='h4'
                       label={libelleFacette(k, locale)}
                       score={facette.score}
                       niveau={facette.niveau}
@@ -297,15 +365,23 @@ export function ResultView({
         <section
           aria-labelledby='titre-tensions'
           data-revele
-          className='carte mt-4'
+          className='mt-20 border-t-2 border-encre pt-8'
         >
-          <h2 id='titre-tensions' className='text-titre-3 text-encre'>
+          <h2 id='titre-tensions' className='text-titre-section text-encre'>
             {vue.tensionsTitre}
           </h2>
-          <p className='mt-1 text-petit text-texte-2'>{vue.tensionsIntro}</p>
-          <ul className='mt-3 list-disc ps-5 text-corps text-encre'>
-            {profil.tensions.map((tension) => (
-              <li key={tension.id}>
+          <p className='mt-3 max-w-[40em] text-texte-2'>{vue.tensionsIntro}</p>
+          <ul className='mt-6 flex flex-col'>
+            {profil.tensions.map((tension, index) => (
+              <li
+                key={tension.id}
+                style={rangCss(index)}
+                className={`flex items-baseline gap-4 border-b border-trait py-4 text-corps text-encre ${styles.cascade}`}
+              >
+                <span
+                  aria-hidden='true'
+                  className='block h-px w-6 flex-none -translate-y-1 bg-safran'
+                />
                 {remplir(vue.tension, {
                   a: libelleFacette(tension.facettes[0], locale),
                   b: libelleFacette(tension.facettes[1], locale),
@@ -320,7 +396,7 @@ export function ResultView({
         </section>
       )}
 
-      <p className='mt-6 text-petit text-texte-2'>
+      <p className='mt-16 border-t border-trait pt-6 text-petit text-texte-3'>
         {niveaux.echelle}.{' '}
         {remplir(niveaux.versionMoteur, { version: profil.versionMoteur })}
       </p>

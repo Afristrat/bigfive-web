@@ -181,8 +181,9 @@ describe('ResultView : niveaux', () => {
     };
     for (const [code, [niveau, mot]] of Object.entries(attendu)) {
       const section = html.split(`data-domaine="${code}"`)[1] ?? '';
+      // Curseur à cinq crans (décoratif), puis le niveau en toutes lettres.
       const badge = section.match(
-        /<span[^>]*data-niveau="([a-z_]+)"[^>]*>([^<]*)<\/span>/
+        /<span[^>]*data-niveau="([a-z_]+)"[\s\S]*?<span data-niveau-libelle="">([^<]*)<\/span>/
       );
       expect(badge?.[1], code).toBe(niveau);
       expect(badge?.[2], code).toBe(esc(mot));
@@ -348,6 +349,7 @@ describe('composants du dossier resultats', () => {
     expect(fichiers.sort()).toEqual([
       'facet-card.tsx',
       'level-badge.tsx',
+      'lien-retour.tsx',
       'result-header.tsx',
       'result-motion.tsx',
       'result-rail.tsx',

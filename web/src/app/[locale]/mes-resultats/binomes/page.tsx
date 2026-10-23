@@ -1,7 +1,13 @@
+import clsx from 'clsx';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { ArrowRightIcon } from '@/components/icons';
+import { boutonPrincipal } from '@/components/primitives';
 import { BinomeConsent } from '@/components/rapports/binome-consent';
 import { libellesConsent } from '@/components/rapports/rapport-binome';
-import { title } from '@/components/primitives';
+import { LienRetour } from '@/components/resultats/lien-retour';
+import { ResultHeader } from '@/components/resultats/result-header';
+import { ResultMotion } from '@/components/resultats/result-motion';
+import styles from '@/components/resultats/result-motion.module.css';
 import { loadMesBinomes, type MonBinome } from '@/lib/binome-data';
 import { formatDateMaroc, isolerEnArabe } from '@/lib/format';
 import { requireViewer } from '@/lib/session';
@@ -39,38 +45,43 @@ export default async function BinomesPage({ params }: Props) {
   const viewer = await requireViewer(locale, '/mes-resultats/binomes');
   const binomes = await loadMesBinomes(viewer);
   const t = await getTranslations('binome');
+  const mes = await getTranslations('mesResultats');
   const consent = libellesConsent(t);
 
   return (
-    <div>
-      <p>
-        <Link href='/mes-resultats' className='font-semibold text-accent'>
-          {t('liste.retour')}
-        </Link>
-      </p>
-      <h1 className={`mt-4 ${title()}`}>{t('liste.titre')}</h1>
-      <p className='mt-4 colonne-lecture text-texte-2'>{t('liste.intro')}</p>
+    <ResultMotion locale={locale}>
+      <ResultHeader
+        retour={
+          <LienRetour href='/mes-resultats'>{t('liste.retour')}</LienRetour>
+        }
+        surtitre={mes('title')}
+        titre={t('liste.titre')}
+        chapo={t('liste.intro')}
+      />
       {binomes.length === 0 ? (
-        <p className='mt-8 text-texte-2'>{t('liste.vide')}</p>
+        <p className='mt-12 max-w-[40em] border-t-2 border-encre pt-8 text-chapo text-texte-2'>
+          {t('liste.vide')}
+        </p>
       ) : (
-        <ul className='mt-8 divide-y divide-trait carte'>
-          {binomes.map((b) => {
+        <ul data-revele className='mt-12 border-t-2 border-encre'>
+          {binomes.map((b, index) => {
             const statut = etat(b);
             const date = formatDateMaroc(b.proposeLe, locale);
             return (
               <li
                 key={b.binomeId}
                 data-statut={statut}
-                className='flex flex-col gap-3 py-4 first:pt-0 last:pb-0'
+                style={{ ['--i' as string]: index }}
+                className={`flex flex-col gap-5 border-b border-trait py-7 ${styles.cascade}`}
               >
                 <div>
-                  <p className='font-semibold text-encre'>
+                  <p className='text-petit font-medium text-texte-2'>
                     {t('liste.organisation', {
                       nom: isolerEnArabe(b.organisationNom, locale)
                     })}
                   </p>
                   {statut !== 'retire' && (
-                    <p className='text-texte-2'>
+                    <p className='mt-1 font-display text-titre-2 text-encre'>
                       {t('liste.avec', {
                         nom: b.autreNom
                           ? isolerEnArabe(b.autreNom, locale)
@@ -78,11 +89,23 @@ export default async function BinomesPage({ params }: Props) {
                       })}
                     </p>
                   )}
-                  <p className='text-petit text-texte-2'>
+                  <p className='mt-2 flex flex-wrap items-center gap-x-2 text-petit text-texte-2'>
+                    <span
+                      aria-hidden='true'
+                      className={clsx(
+                        'block size-2 rounded-full',
+                        statut === 'actif'
+                          ? 'bg-encre'
+                          : statut === 'retire'
+                            ? 'border border-trait-fort'
+                            : 'bg-safran'
+                      )}
+                    />
+                    <span className='font-medium text-encre'>
+                      {t(`liste.statut.${statut}`)}
+                    </span>
+                    <span aria-hidden='true'>·</span>
                     {t('liste.propose', { date })}
-                  </p>
-                  <p className='text-petit font-semibold text-encre'>
-                    {t(`liste.statut.${statut}`)}
                   </p>
                 </div>
                 {statut === 'actif' && (
@@ -90,9 +113,11 @@ export default async function BinomesPage({ params }: Props) {
                     <Link
                       href={`/mes-resultats/binomes/${b.binomeId}`}
                       aria-label={t('liste.lireAria', { date })}
-                      className='font-semibold text-accent underline'
+                      data-aimant=''
+                      className={boutonPrincipal()}
                     >
                       {t('liste.lire')}
+                      <ArrowRightIcon size={18} />
                     </Link>
                   </p>
                 )}
@@ -108,6 +133,6 @@ export default async function BinomesPage({ params }: Props) {
           })}
         </ul>
       )}
-    </div>
+    </ResultMotion>
   );
 }

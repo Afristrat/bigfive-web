@@ -100,7 +100,9 @@ export function BinomeConsent({
   return (
     <div className='flex flex-col gap-3'>
       {!aDonneAccord && avecExplication && (
-        <p className='text-petit text-texte-2'>{labels.explication}</p>
+        <p className='max-w-[44em] text-petit text-texte-2'>
+          {labels.explication}
+        </p>
       )}
       <div className='flex flex-wrap gap-3'>
         {aDonneAccord ? (

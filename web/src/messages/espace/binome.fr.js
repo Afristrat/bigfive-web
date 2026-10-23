@@ -120,7 +120,7 @@ const binomeFr = {
   attention: {
     titre: 'Points d’attention documentés',
     intro:
-      'Deux points seulement, tirés de la littérature, apparaissent quand vos résultats s’y prêtent. Ce sont des pistes de conversation, jamais des prévisions.',
+      'Deux points seulement, tirés de la littérature, apparaissent quand les résultats des deux personnes s’y prêtent. Ce sont des pistes de conversation, jamais des prévisions.',
     aucun: 'Aucun des deux points documentés ne se présente ici.',
     limite:
       'Ces résultats portent sur des équipes, non sur des binômes : ils n’autorisent aucune conclusion sur ces deux personnes.',

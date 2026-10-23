@@ -1,6 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import clsx from 'clsx';
 import { secondaryButtonClass } from '@/components/form-styles';
-import { title } from '@/components/primitives';
+import { ArrowRightIcon } from '@/components/icons';
+import { boutonPrincipal } from '@/components/primitives';
+import { ResultHeader } from '@/components/resultats/result-header';
+import { ResultMotion } from '@/components/resultats/result-motion';
+import styles from '@/components/resultats/result-motion.module.css';
 import { isolerEnArabe } from '@/lib/format';
 import {
   loadMesParticipations,
@@ -35,22 +40,28 @@ export default async function MesResultatsPage({ params }: Props) {
   const binome = await getTranslations('binome');
 
   return (
-    <div>
-      <h1 className={title()}>{t('title')}</h1>
-      <p className='mt-4 text-texte-2'>{t('intro')}</p>
-      <p className='mt-4'>
-        <Link
-          href='/mes-resultats/binomes'
-          className='font-semibold text-accent'
-        >
-          {binome('liste.lien')}
-        </Link>
-      </p>
+    <ResultMotion locale={locale}>
+      <ResultHeader
+        surtitre={t('surtitre')}
+        titre={t('title')}
+        chapo={t('intro')}
+        actions={
+          <Link
+            href='/mes-resultats/binomes'
+            className='lien-fleche inline-flex min-h-11 items-center gap-2 font-medium text-accent underline-offset-4 hover:text-accent-survol hover:underline'
+          >
+            {binome('liste.lien')}
+            <ArrowRightIcon size={16} />
+          </Link>
+        }
+      />
       {participations.length === 0 ? (
-        <p className='mt-8 text-texte-2'>{t('empty')}</p>
+        <p className='mt-12 max-w-[40em] border-t-2 border-encre pt-8 text-chapo text-texte-2'>
+          {t('empty')}
+        </p>
       ) : (
-        <ul className='mt-8 divide-y divide-trait carte'>
-          {participations.map((p) => {
+        <ol data-revele className='mt-12 border-t-2 border-encre'>
+          {participations.map((p, index) => {
             const passer = peutPasser(p);
             const href = passer
               ? `/mes-resultats/${p.participationId}/questionnaire`
@@ -63,23 +74,38 @@ export default async function MesResultatsPage({ params }: Props) {
             return (
               <li
                 key={p.participationId}
-                className='flex flex-wrap items-center justify-between gap-3 py-4'
+                style={{ ['--i' as string]: index }}
+                className={`grid gap-x-8 gap-y-4 border-b border-trait py-7 sm:grid-cols-[1fr_auto] sm:items-center ${styles.cascade}`}
               >
-                <div>
-                  <p className='font-semibold text-encre'>
-                    {isolerEnArabe(p.campagneTitre, locale)}
-                  </p>
-                  <p className='text-petit text-texte-2'>
+                <div className='min-w-0'>
+                  <p className='text-petit font-medium text-texte-2'>
                     {isolerEnArabe(p.organisationNom, locale)}
                   </p>
-                  <p className='text-petit text-texte-2'>
+                  <p className='mt-1 font-display text-titre-2 text-encre'>
+                    {isolerEnArabe(p.campagneTitre, locale)}
+                  </p>
+                  <p className='mt-2 flex flex-wrap items-center gap-x-2 text-petit text-texte-2'>
+                    <span
+                      aria-hidden='true'
+                      className={clsx(
+                        'block size-2 rounded-full',
+                        p.statut === 'terminee'
+                          ? 'bg-encre'
+                          : p.statut === 'en_cours'
+                            ? 'bg-safran'
+                            : 'border border-trait-fort'
+                      )}
+                    />
                     {t(`statut.${p.statut}`)}
                     {p.campagneStatut === 'close' && p.statut !== 'terminee'
                       ? ` · ${t('campagneClose')}`
                       : ''}
                   </p>
                 </div>
-                <Link href={href} className={secondaryButtonClass}>
+                <Link
+                  href={href}
+                  className={passer ? boutonPrincipal() : secondaryButtonClass}
+                >
                   {t(`action.${action}`)}
                   <span className='sr-only'>
                     {' '}
@@ -89,8 +115,8 @@ export default async function MesResultatsPage({ params }: Props) {
               </li>
             );
           })}
-        </ul>
+        </ol>
       )}
-    </div>
+    </ResultMotion>
   );
 }

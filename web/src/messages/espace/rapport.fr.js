@@ -7,6 +7,7 @@ const rapportFr = {
   },
   consultant: {
     titre: 'Rapport individuel',
+    question: 'Une question à explorer avec la personne',
     retour: 'Retour à la liste des résultats',
     facetteRetiree:
       'Une facette du domaine Ouverture n’est pas montrée dans cette vue : elle porte sur des opinions, donnée sensible qui ne doit pas être restituée à un tiers.'
@@ -28,15 +29,28 @@ const rapportFr = {
   },
   lire: {
     titre: 'Lire ce rapport',
-    ce: 'Ce rapport décrit la façon dont vous avez répondu à un questionnaire de personnalité de 120 affirmations, selon cinq grands domaines et trente facettes.',
-    neDitPas:
-      'Il ne dit rien de ce que vous savez faire, de votre valeur professionnelle ni de votre avenir. Ce n’est pas un diagnostic, et il ne doit servir ni à recruter, ni à évaluer, ni à décider à votre place.',
-    niveaux:
-      'Les niveaux (bas, plutôt bas, milieu de l’échelle, plutôt haut, haut) sont des lectures de convention de vos propres réponses. Ils ne vous situent par rapport à aucun groupe et ne sont pas calibrés.',
-    hypotheses:
-      'Les textes d’interprétation sont des pistes de lecture à confirmer ensemble lors de l’entretien, jamais des constats.',
-    limites:
-      'Le questionnaire reflète ce que vous déclarez à un moment donné. Son comportement auprès de personnes au Maroc n’a pas encore été étudié.',
+    personne: {
+      ce: 'Ce rapport décrit la façon dont vous avez répondu à un questionnaire de personnalité de 120 affirmations, selon cinq grands domaines et trente facettes.',
+      neDitPas:
+        'Il ne dit rien de ce que vous savez faire, de votre valeur professionnelle ni de votre avenir. Ce n’est pas un diagnostic, et il ne doit servir ni à recruter, ni à évaluer, ni à décider à votre place.',
+      niveaux:
+        'Les niveaux (bas, plutôt bas, milieu de l’échelle, plutôt haut, haut) sont des lectures de convention de vos propres réponses. Ils ne vous situent par rapport à aucun groupe et ne sont pas calibrés.',
+      hypotheses:
+        'Les textes d’interprétation sont des pistes de lecture à confirmer ensemble lors de l’entretien, jamais des constats.',
+      limites:
+        'Le questionnaire reflète ce que vous déclarez à un moment donné. Son comportement auprès de personnes au Maroc n’a pas encore été étudié.'
+    },
+    consultant: {
+      ce: 'Ce rapport décrit la façon dont la personne a répondu à un questionnaire de personnalité de 120 affirmations, selon cinq grands domaines et trente facettes.',
+      neDitPas:
+        'Il ne dit rien de ce qu’elle sait faire, de sa valeur professionnelle ni de son avenir. Ce n’est pas un diagnostic, et il ne doit servir ni à recruter, ni à évaluer, ni à décider à sa place.',
+      niveaux:
+        'Les niveaux (bas, plutôt bas, milieu de l’échelle, plutôt haut, haut) sont des lectures de convention de ses propres réponses. Ils ne la situent par rapport à aucun groupe et ne sont pas calibrés.',
+      hypotheses:
+        'Les textes d’interprétation sont des pistes de lecture à confirmer avec elle lors de l’entretien, jamais des constats.',
+      limites:
+        'Le questionnaire reflète ce que la personne déclare à un moment donné. Son comportement auprès de personnes au Maroc n’a pas encore été étudié.'
+    },
     destinatairesPersonne:
       'Ce rapport vous est destiné. Le consultant qui vous accompagne dans l’organisation peut le lire ; le responsable de l’organisation n’y a pas accès.',
     destinatairesConsultant:

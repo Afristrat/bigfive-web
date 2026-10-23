@@ -11,6 +11,7 @@ export function PrintButton({ label }: PrintButtonProps) {
     <button
       type='button'
       onClick={() => window.print()}
+      data-aimant=''
       className={boutonPrincipal({ className: 'print:hidden' })}
     >
       {label}

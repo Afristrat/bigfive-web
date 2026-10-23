@@ -836,6 +836,7 @@ const english = {
     }
   },
   results: {
+    surtitre: 'Questionnaire result',
     title: 'Your profile across the five major factors',
     idLabel: 'Result ID',
     idHint: 'Keep it to find this result again later.',
@@ -1139,13 +1140,16 @@ const english = {
     }
   },
   getResult: {
-    result: 'Result',
+    surtitre: 'Questionnaire result',
+    result: 'Find a result',
     explanation:
-      'If you have taken the test and saved your ID, you can see the results here by typing in the ID you got i.e. ',
-    idInput: 'in the ID-input field',
-    urlOrId: 'URL or ID of your result',
-    getResult: 'Get result',
-    viewPrevious: 'View Previous Result'
+      'At the end of the questionnaire you were given a twenty-four character ID. Enter it, or paste the address of the result page, to see your profile again.',
+    idInput: 'Result ID or address',
+    urlOrId: 'For example 58a70606a835c400c8b38e84',
+    invalid:
+      'This ID is not in the right format: twenty-four characters, digits and the letters a to f.',
+    getResult: 'Show the result',
+    viewPrevious: 'See the last result from this browser'
   },
   niveaux: niveauxEn,
   passation: passationEn,

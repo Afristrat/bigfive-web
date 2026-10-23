@@ -1,17 +1,17 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { title } from '@/components/primitives';
 import { BinomeConsent } from '@/components/rapports/binome-consent';
 import {
   RapportBinome,
   libellesConsent,
   libellesRapportBinome
 } from '@/components/rapports/rapport-binome';
+import { LienRetour } from '@/components/resultats/lien-retour';
+import { ResultHeader } from '@/components/resultats/result-header';
 import { loadBinome, parseBinomeId } from '@/lib/binome-data';
 import { formatNombre } from '@/lib/format';
 import { construireRapportBinome } from '@/lib/rapports/binome';
 import { requireViewer } from '@/lib/session';
-import { Link } from '@/navigation';
 
 interface Props {
   params: Promise<{ locale: string; binome: string }>;
@@ -62,19 +62,19 @@ export default async function BinomePage({ params }: Props) {
 
   return (
     <div>
-      <p>
-        <Link
-          href={personne ? '/mes-resultats/binomes' : '/mon-compte'}
-          className='font-semibold text-accent'
-        >
-          {personne ? t('rapport.retour') : t('rapport.retourCompte')}
-        </Link>
-      </p>
-      <h1 className={`mt-4 ${title()}`}>{t('rapport.titre')}</h1>
-      {!personne && (
-        <p className='mt-2 text-texte-2'>{t('rapport.consultant')}</p>
-      )}
-      <div className='mt-8'>
+      <ResultHeader
+        retour={
+          <LienRetour
+            href={personne ? '/mes-resultats/binomes' : '/mon-compte'}
+          >
+            {personne ? t('rapport.retour') : t('rapport.retourCompte')}
+          </LienRetour>
+        }
+        surtitre={t('title')}
+        titre={t('rapport.titre')}
+        sousTitre={personne ? null : t('rapport.consultant')}
+      />
+      <div className='mt-12'>
         {premiere.scores && seconde.scores ? (
           <RapportBinome
             rapport={construireRapportBinome({
@@ -91,7 +91,7 @@ export default async function BinomePage({ params }: Props) {
         )}
       </div>
       {personne && (
-        <div className='mt-10'>
+        <div className='mt-16 border-t border-trait pt-8'>
           <BinomeConsent
             binomeId={lu.binomeId}
             statut='actif'

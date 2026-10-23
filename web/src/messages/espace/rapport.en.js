@@ -7,6 +7,7 @@ const rapportEn = {
   },
   consultant: {
     titre: 'Individual report',
+    question: 'A question to explore with the person',
     retour: 'Back to the list of results',
     facetteRetiree:
       'One facet of the Openness domain is not shown in this view: it concerns opinions, which are sensitive information and must not be passed on to a third party.'
@@ -28,15 +29,28 @@ const rapportEn = {
   },
   lire: {
     titre: 'Reading this report',
-    ce: 'This report describes how you answered a personality questionnaire of 120 statements, according to five broad domains and thirty facets.',
-    neDitPas:
-      'It says nothing about what you can do, about your professional worth or about your future. It is not a diagnosis, and it must not be used to recruit, to assess or to decide in your place.',
-    niveaux:
-      'The levels (low, rather low, middle of the scale, rather high, high) are readings by convention of your own answers. They do not place you against any group and are not calibrated.',
-    hypotheses:
-      'The interpretation texts are leads to confirm together during the interview, never findings.',
-    limites:
-      'The questionnaire reflects what you state at a given moment. How it behaves among people in Morocco has not yet been studied.',
+    personne: {
+      ce: 'This report describes how you answered a personality questionnaire of 120 statements, according to five broad domains and thirty facets.',
+      neDitPas:
+        'It says nothing about what you can do, about your professional worth or about your future. It is not a diagnosis, and it must not be used to recruit, to assess or to decide in your place.',
+      niveaux:
+        'The levels (low, rather low, middle of the scale, rather high, high) are readings by convention of your own answers. They do not place you against any group and are not calibrated.',
+      hypotheses:
+        'The interpretation texts are leads to confirm together during the interview, never findings.',
+      limites:
+        'The questionnaire reflects what you state at a given moment. How it behaves among people in Morocco has not yet been studied.'
+    },
+    consultant: {
+      ce: 'This report describes how the person answered a personality questionnaire of 120 statements, according to five broad domains and thirty facets.',
+      neDitPas:
+        'It says nothing about what they can do, about their professional worth or about their future. It is not a diagnosis, and it must not be used to recruit, to assess or to decide in their place.',
+      niveaux:
+        'The levels (low, rather low, middle of the scale, rather high, high) are readings by convention of their own answers. They do not place the person against any group and are not calibrated.',
+      hypotheses:
+        'The interpretation texts are leads to confirm with the person during the interview, never findings.',
+      limites:
+        'The questionnaire reflects what the person states at a given moment. How it behaves among people in Morocco has not yet been studied.'
+    },
     destinatairesPersonne:
       'This report is meant for you. The consultant who supports you in the organisation may read it; the head of the organisation has no access to it.',
     destinatairesConsultant:

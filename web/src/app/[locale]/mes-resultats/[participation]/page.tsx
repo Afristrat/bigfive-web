@@ -1,12 +1,14 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { secondaryButtonClass } from '@/components/form-styles';
-import { title } from '@/components/primitives';
+import { ArrowRightIcon } from '@/components/icons';
+import { boutonPrincipal } from '@/components/primitives';
+import { LienRetour } from '@/components/resultats/lien-retour';
+import { ResultHeader } from '@/components/resultats/result-header';
 import {
   ResultView,
   libellesResultView
 } from '@/components/resultats/result-view';
-import { formatDate, isolerEnArabe, formatDateMaroc } from '@/lib/format';
+import { formatDateMaroc, isolerEnArabe } from '@/lib/format';
 import {
   loadMaParticipation,
   parseParticipationId
@@ -49,42 +51,52 @@ export default async function MaParticipationPage({ params }: Props) {
     ? formatDateMaroc(participation.termineeLe, locale)
     : null;
 
+  const entete = (
+    <ResultHeader
+      retour={<LienRetour href='/mes-resultats'>{t('retour')}</LienRetour>}
+      surtitre={isolerEnArabe(participation.organisationNom, locale)}
+      titre={isolerEnArabe(participation.campagneTitre, locale)}
+      titreSaisi
+      sousTitre={date ? t('passeLe', { date }) : null}
+      actions={
+        participation.scores ? (
+          <Link
+            href={`/mes-resultats/${participation.participationId}/rapport`}
+            data-aimant=''
+            className={boutonPrincipal()}
+          >
+            {rapport('personne.titre')}
+            <ArrowRightIcon size={18} />
+          </Link>
+        ) : null
+      }
+    />
+  );
+
+  if (participation.scores) {
+    return (
+      <div>
+        {entete}
+        <ResultView
+          profil={profilDepuisScores(participation.scores)}
+          locale={locale}
+          audience='personne'
+          libelles={libellesResultView(t, niveaux, flow)}
+          date={null}
+        />
+      </div>
+    );
+  }
+
   return (
     <div>
-      <p>
-        <Link href='/mes-resultats' className='font-semibold text-accent'>
-          {t('retour')}
-        </Link>
-      </p>
-      <h1 className={`mt-4 ${title()}`}>
-        {isolerEnArabe(participation.campagneTitre, locale)}
-      </h1>
-      <p className='mt-2 text-texte-2'>
-        {isolerEnArabe(participation.organisationNom, locale)}
-      </p>
-
-      <div className='mt-8'>
-        {participation.scores ? (
-          <div className='flex flex-col items-start gap-6'>
-            <Link
-              href={`/mes-resultats/${participation.participationId}/rapport`}
-              className={secondaryButtonClass}
-            >
-              {rapport('personne.titre')}
-            </Link>
-            <ResultView
-              profil={profilDepuisScores(participation.scores)}
-              locale={locale}
-              audience='personne'
-              libelles={libellesResultView(t, niveaux, flow)}
-              date={date}
-            />
-          </div>
-        ) : participation.scoresIllisibles ? (
-          <p className='text-texte-2'>{t('formatAnterieur')}</p>
+      {entete}
+      <div className='mt-10 max-w-[40em] border-t-2 border-encre pt-8'>
+        {participation.scoresIllisibles ? (
+          <p className='text-chapo text-texte-2'>{t('formatAnterieur')}</p>
         ) : (
-          <div className='flex flex-col items-start gap-4'>
-            <p className='text-texte-2'>
+          <div className='flex flex-col items-start gap-6'>
+            <p className='text-chapo text-texte-2'>
               {participation.campagneStatut === 'close'
                 ? t('sansResultatClose')
                 : t('sansResultat')}
@@ -92,11 +104,13 @@ export default async function MaParticipationPage({ params }: Props) {
             {peutPasser && (
               <Link
                 href={`/mes-resultats/${participation.participationId}/questionnaire`}
-                className={secondaryButtonClass}
+                data-aimant=''
+                className={boutonPrincipal()}
               >
                 {participation.statut === 'ouverte'
                   ? t('action.start')
                   : t('action.resume')}
+                <ArrowRightIcon size={18} />
               </Link>
             )}
           </div>

@@ -115,7 +115,7 @@ const binomeEn = {
   attention: {
     titre: 'Documented points of attention',
     intro:
-      'Only two points, taken from the literature, appear when your results fit them. They are conversation leads, never forecasts.',
+      'Only two points, taken from the literature, appear when the two people’s results fit them. They are conversation leads, never forecasts.',
     aucun: 'Neither of the two documented points applies here.',
     limite:
       'These findings concern teams, not pairs: they allow no conclusion about these two people.',

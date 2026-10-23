@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import clsx from 'clsx';
 import { ScoreBar } from '@/components/score-bar';
 import { LevelBadge } from '@/components/resultats/level-badge';
 import type { EtatBloc } from '@/lib/bibliotheque';
@@ -29,30 +30,37 @@ type FacetCardProps = {
   locale: string;
   rang: number;
   labels: FacetCardLabels;
+  /** Niveau de titre de la facette dans la page (h3 par défaut). */
+  titre?: 'h3' | 'h4';
   /**
    * Présentation animée (page de résultat) : règle graduée qui se trace, pose
-   * en cascade et compteur de score. Faux pour le rapport imprimable.
+   * en cascade et compteur. Faux pour le rapport imprimable.
    */
   anime?: boolean;
 };
 
-const Paragraphes = ({
+const Rubrique = ({
   titre,
   textes
 }: {
   titre: string;
   textes: readonly string[];
 }): ReactElement => (
-  <div className='mt-3'>
-    <h4 className='text-petit font-bold text-encre'>{titre}</h4>
+  <div>
+    <p className='text-legende font-semibold text-encre'>{titre}</p>
     {textes.map((texte) => (
-      <p key={texte} className='mt-1 text-petit text-texte-2'>
+      <p key={texte} className='mt-1.5 text-petit text-texte-2'>
         {texte}
       </p>
     ))}
   </div>
 );
 
+// Une facette, mise en page comme une ligne de relevé : le nom et la valeur sur
+// une même ligne de base, le curseur de niveau, la règle graduée, puis les
+// textes de la bibliothèque (description, apport et coût côte à côte, et la
+// question, portée par un filet safran). Aucun encadré : les facettes se
+// séparent par des filets.
 export function FacetCard({
   label,
   score,
@@ -63,31 +71,37 @@ export function FacetCard({
   locale,
   rang,
   labels,
+  titre: Titre = 'h3',
   anime = false
 }: FacetCardProps): ReactElement {
   return (
     <li
-      className={`break-inside-avoid rounded-controle border border-trait bg-fond p-5${anime ? ` ${styles.facette}` : ''}`}
+      className={clsx(
+        'break-inside-avoid border-t border-trait py-6',
+        anime && styles.cascade
+      )}
       style={anime ? { ['--i' as string]: rang } : undefined}
     >
-      <div className='flex flex-wrap items-baseline justify-between gap-3'>
-        <h3 className='text-corps font-bold text-encre'>{label}</h3>
+      <div className='flex items-baseline justify-between gap-4'>
+        <Titre className='text-titre-3 text-encre'>{label}</Titre>
+        <p className='flex-none'>
+          <span dir='ltr' className='inline-block whitespace-nowrap'>
+            <span
+              className='chiffres font-display text-[1.625rem] font-semibold leading-none tracking-[-0.03em] text-encre'
+              data-compte={anime ? score : undefined}
+            >
+              {formatNombre(score, locale)}
+            </span>{' '}
+            <span className='text-petit font-medium text-texte-3'>
+              {labels.facetOutOf}
+            </span>
+          </span>
+        </p>
+      </div>
+      <div className='mt-2'>
         <LevelBadge niveau={niveau} label={niveauLabel} />
       </div>
-      <p className='mt-2 text-end'>
-        <span dir='ltr'>
-          <span
-            className='chiffres text-[22px] font-extrabold text-encre'
-            data-compte={anime ? score : undefined}
-          >
-            {formatNombre(score, locale)}
-          </span>{' '}
-          <span className='text-petit font-medium text-texte-2'>
-            {labels.facetOutOf}
-          </span>
-        </span>
-      </p>
-      <div className='mt-2'>
+      <div className='mt-3'>
         <ScoreBar
           taille='facette'
           score={score}
@@ -99,33 +113,37 @@ export function FacetCard({
         />
       </div>
       {avertissement && (
-        <p className='mt-3 text-petit text-texte-2'>
-          <strong className='font-bold text-encre'>
+        <p className='mt-4 text-petit text-texte-2'>
+          <strong className='font-semibold text-encre'>
             {labels.avertissement}
           </strong>{' '}
           {avertissement}
         </p>
       )}
       {etat.etat === 'en_relecture' && (
-        <p className='mt-3 text-petit text-texte-2'>{labels.enRelecture}</p>
+        <p className='mt-4 text-petit text-texte-3'>{labels.enRelecture}</p>
       )}
       {etat.etat === 'langue_absente' && (
-        <p className='mt-3 text-petit text-texte-2'>{labels.langueAbsente}</p>
+        <p className='mt-4 text-petit text-texte-3'>{labels.langueAbsente}</p>
       )}
       {etat.etat === 'affiche' && (
-        <div className='mt-3'>
+        <div className='mt-5 flex flex-col gap-5'>
           {etat.nonRelu && (
-            <p className='rounded-controle bg-avis-doux p-3 text-petit font-semibold text-avis'>
+            <p className='rounded-controle bg-avis-doux px-4 py-3 text-petit font-semibold text-avis'>
               {labels.nonRelu}
             </p>
           )}
-          <Paragraphes
-            titre={labels.description}
-            textes={etat.bloc.description}
-          />
-          <Paragraphes titre={labels.apport} textes={etat.bloc.apport} />
-          <Paragraphes titre={labels.cout} textes={etat.bloc.cout} />
-          <Paragraphes titre={labels.question} textes={[etat.bloc.question]} />
+          <Rubrique titre={labels.description} textes={etat.bloc.description} />
+          <div className='grid gap-5 sm:grid-cols-2'>
+            <Rubrique titre={labels.apport} textes={etat.bloc.apport} />
+            <Rubrique titre={labels.cout} textes={etat.bloc.cout} />
+          </div>
+          <div className='border-s-2 border-safran ps-4'>
+            <p className='text-legende font-semibold text-texte-2'>
+              {labels.question}
+            </p>
+            <p className='mt-1.5 text-corps text-encre'>{etat.bloc.question}</p>
+          </div>
         </div>
       )}
     </li>

@@ -184,9 +184,11 @@ export function libellesRapportBinome(
 
 // ---------------------------------------------------------------------------
 // Radar superposé : quatre axes (le domaine Ouverture n'est pas présenté), un
-// tracé par personne. Mêmes classes globales et même mouvement que le radar
-// partagé ; la seconde personne se distingue par le safran ET par des
-// marqueurs creux, jamais par la couleur seule.
+// tracé par personne. Mêmes classes et même mouvement que le radar partagé :
+// la première personne porte le tracé safran et les sommets d'encre pleins ;
+// la seconde, un contour d'encre en tirets et des sommets creux. Elles se
+// distinguent par la forme du trait et des sommets, jamais par la couleur
+// seule.
 
 type Etiquettes = { a: string; b: string };
 type Variante = 'large' | 'compact';
@@ -303,10 +305,14 @@ function RadarSvg({
     >
       <title id={`${id}t`}>{titre}</title>
       <desc id={`${id}d`}>{description}</desc>
-      {g.anneaux.map((points) => (
+      {g.anneaux.map((points, index) => (
         <polygon
           key={points}
-          className={clsx('radar-anneau', motion.anneau)}
+          className={clsx(
+            'radar-anneau',
+            motion.anneau,
+            index < g.anneaux.length - 1 && motion.pointille
+          )}
           points={points}
         />
       ))}
@@ -323,15 +329,15 @@ function RadarSvg({
         />
       ))}
       <polygon
-        className={clsx('radar-aire', motion.aire)}
-        points={g.trace(valeursB)}
-        style={{ fill: 'rgb(var(--c-safran))', fillOpacity: 0.1 }}
-      />
-      <polygon
-        className={clsx('radar-trace', motion.trace)}
+        className={clsx('radar-trace', motion.etiquette)}
         pathLength={1}
         points={g.trace(valeursB)}
-        style={{ stroke: 'rgb(var(--c-safran))' }}
+        style={{
+          ...rang(4),
+          stroke: 'rgb(var(--c-encre))',
+          strokeWidth: 2,
+          strokeDasharray: '0.02 0.012'
+        }}
       />
       <polygon
         className={clsx('radar-aire', motion.aire)}
@@ -348,9 +354,9 @@ function RadarSvg({
             className={clsx('radar-marqueur', motion.marqueur)}
             style={{
               ...rang(index),
-              fill: 'rgb(var(--c-surface))',
-              stroke: 'rgb(var(--c-safran))',
-              strokeWidth: 3
+              fill: 'rgb(var(--c-fond))',
+              stroke: 'rgb(var(--c-encre))',
+              strokeWidth: 2.5
             }}
             d={shapePath(
               domainShapes[domaine.code],
@@ -427,28 +433,43 @@ function RadarBinome({
     <div className={className}>
       <RadarSvg {...commun} variante='large' className='max-sm:hidden' />
       <RadarSvg {...commun} variante='compact' className='sm:hidden' />
-      <ul className='mt-2 flex flex-wrap justify-center gap-x-6 gap-y-1 text-petit text-encre'>
+      <ul className='mt-4 flex flex-wrap justify-center gap-x-8 gap-y-2 text-petit font-medium text-encre'>
         <li className='flex items-center gap-2'>
           <svg width='14' height='14' viewBox='0 0 14 14' aria-hidden='true'>
+            <line
+              x1='0'
+              y1='7'
+              x2='14'
+              y2='7'
+              style={{ stroke: 'rgb(var(--c-safran))', strokeWidth: 3 }}
+            />
             <circle
               cx='7'
               cy='7'
-              r='5'
-              style={{ fill: 'rgb(var(--c-accent))' }}
+              r='4'
+              style={{ fill: 'rgb(var(--c-encre))' }}
             />
           </svg>
           {etiquettes.a}
         </li>
         <li className='flex items-center gap-2'>
           <svg width='14' height='14' viewBox='0 0 14 14' aria-hidden='true'>
+            <line
+              x1='0'
+              y1='7'
+              x2='14'
+              y2='7'
+              strokeDasharray='3 2'
+              style={{ stroke: 'rgb(var(--c-encre))', strokeWidth: 2 }}
+            />
             <circle
               cx='7'
               cy='7'
-              r='4.5'
+              r='3.5'
               style={{
-                fill: 'rgb(var(--c-surface))',
-                stroke: 'rgb(var(--c-safran))',
-                strokeWidth: 2.5
+                fill: 'rgb(var(--c-fond))',
+                stroke: 'rgb(var(--c-encre))',
+                strokeWidth: 2
               }}
             />
           </svg>
@@ -486,9 +507,9 @@ function RadarBinome({
 // Pastille de classe : le sens ne dépend jamais de la couleur (le mot est écrit).
 
 const PASTILLES: Record<ClasseEcart, string> = {
-  notable: 'bg-accent text-sur-accent',
-  intermediaire: 'bg-accent-doux text-accent',
-  proche: 'border border-trait text-texte-2'
+  notable: 'bg-encre text-fond',
+  intermediaire: 'bg-creux text-encre',
+  proche: 'border border-trait-fort text-texte-2'
 };
 
 function PastilleClasse({
@@ -517,7 +538,14 @@ const libelleFacette = (code: FacetteCode, locale: string): string => {
   return facetLabel(domaine, Number(code.slice(1)), locale);
 };
 
-const th = 'px-3.5 py-3 text-start text-legende font-semibold text-texte-2';
+const th = 'py-3 pe-4 text-start text-legende font-semibold text-texte-2';
+
+// Partie du rapport : filet d'encre, titre dans une colonne à part (même
+// grammaire que le rapport individuel).
+const PARTIE =
+  'grid gap-x-12 gap-y-6 border-t-2 border-encre pt-8 lg:grid-cols-12';
+const TITRE_PARTIE = 'text-titre-section text-encre lg:col-span-4';
+const CORPS_PARTIE = 'lg:col-span-8';
 
 type RapportBinomeProps = {
   rapport: Rapport;
@@ -548,20 +576,24 @@ export function RapportBinome({
 
   return (
     <ResultMotion locale={locale}>
-      <div className='flex flex-col gap-12'>
-        <section data-section='lire' aria-labelledby='binome-lire'>
-          <h2 id='binome-lire' className='text-titre-3 text-encre'>
+      <div className='flex flex-col gap-20'>
+        <section
+          data-section='lire'
+          aria-labelledby='binome-lire'
+          className={PARTIE}
+        >
+          <h2 id='binome-lire' className={TITRE_PARTIE}>
             {lire.titre}
           </h2>
-          <div className='mt-3 colonne-lecture flex flex-col gap-2 text-texte-2'>
-            <p className='font-semibold text-encre'>
-              {lire.supportConversation}
-            </p>
+          <div
+            className={`colonne-lecture flex flex-col gap-3 text-texte-2 ${CORPS_PARTIE}`}
+          >
+            <p className='text-chapo text-encre'>{lire.supportConversation}</p>
             <p>{lire.aucuneNote}</p>
             <p>{lire.pasDecision}</p>
             <p>{lire.consentement}</p>
             <p>{lire.niveaux}</p>
-            <p className='font-semibold text-encre'>
+            <p className='mt-3 border-s-2 border-safran ps-4 font-medium text-encre'>
               {audience === 'personne'
                 ? lire.destinatairesPersonne
                 : lire.destinatairesConsultant}
@@ -569,12 +601,17 @@ export function RapportBinome({
           </div>
         </section>
 
-        <section data-section='ensemble' aria-labelledby='binome-ensemble'>
-          <h2 id='binome-ensemble' className='text-titre-3 text-encre'>
+        <section
+          data-section='ensemble'
+          data-revele
+          aria-labelledby='binome-ensemble'
+          className='border-t-2 border-encre pt-8'
+        >
+          <h2 id='binome-ensemble' className='text-titre-section text-encre'>
             {ensemble.titre}
           </h2>
           <RadarBinome
-            className='mx-auto mt-4 w-full max-w-2xl'
+            className='mx-auto mt-8 w-full max-w-2xl'
             domaines={rapport.domaines}
             locale={locale}
             titre={ensemble.radarTitle}
@@ -583,15 +620,15 @@ export function RapportBinome({
             surMax={surMax}
             etiquettes={etiquettes}
           />
-          <div className='mt-8 grid gap-6 md:grid-cols-3'>
+          <div className='mt-12 grid gap-x-10 gap-y-8 border-t border-trait pt-8 md:grid-cols-3'>
             <div>
-              <h3 className='text-corps font-bold text-encre'>
+              <h3 className='text-titre-3 text-encre'>
                 {ensemble.rapprocheTitre}
               </h3>
               {rapport.rapproche.length === 0 ? (
                 <p className='mt-1 text-texte-2'>{ensemble.rapprocheAucun}</p>
               ) : (
-                <ul className='mt-1 list-disc ps-5 text-encre'>
+                <ul className='mt-2 flex flex-col gap-1 text-encre'>
                   {rapport.rapproche.map((code) => (
                     <li key={code}>{domaine(code)}</li>
                   ))}
@@ -599,13 +636,13 @@ export function RapportBinome({
               )}
             </div>
             <div>
-              <h3 className='text-corps font-bold text-encre'>
+              <h3 className='text-titre-3 text-encre'>
                 {ensemble.distingueTitre}
               </h3>
               {rapport.distingue.length === 0 ? (
                 <p className='mt-1 text-texte-2'>{ensemble.distingueAucun}</p>
               ) : (
-                <ul className='mt-1 list-disc ps-5 text-encre'>
+                <ul className='mt-2 flex flex-col gap-1 text-encre'>
                   {rapport.distingue.map((code) => (
                     <li key={code}>{domaine(code)}</li>
                   ))}
@@ -613,7 +650,7 @@ export function RapportBinome({
               )}
             </div>
             <div>
-              <h3 className='text-corps font-bold text-encre'>
+              <h3 className='text-titre-3 text-encre'>
                 {ensemble.conversationTitre}
               </h3>
               {rapport.conversation.length === 0 ? (
@@ -625,7 +662,7 @@ export function RapportBinome({
                   <p className='mt-1 text-petit text-texte-2'>
                     {ensemble.conversationIntro}
                   </p>
-                  <ul className='mt-1 list-disc ps-5 text-encre'>
+                  <ul className='mt-2 flex flex-col gap-1 text-encre'>
                     {rapport.conversation.map((code) => (
                       <li key={code}>{libelleFacette(code, locale)}</li>
                     ))}
@@ -640,22 +677,22 @@ export function RapportBinome({
           data-section='domaines'
           data-revele
           aria-labelledby='binome-domaines'
-          className='carte'
+          className='border-t-2 border-encre pt-8'
         >
-          <h2 id='binome-domaines' className='text-titre-3 text-encre'>
+          <h2 id='binome-domaines' className='text-titre-section text-encre'>
             {domaines.titre}
           </h2>
-          <p className='mt-1 text-petit text-texte-2'>{domaines.intro}</p>
-          <ul className='mt-4 flex flex-col divide-y divide-trait'>
+          <p className='mt-3 max-w-[40em] text-texte-2'>{domaines.intro}</p>
+          <ul className='mt-6 flex flex-col'>
             {rapport.domaines.map((ligne, index) => (
               <li
                 key={ligne.code}
                 data-domaine={ligne.code}
-                className={`break-inside-avoid py-5 first:pt-0 last:pb-0 ${styles.facteur}`}
+                className={`break-inside-avoid border-t border-trait py-6 ${styles.cascade}`}
                 style={rang(index)}
               >
                 <div className='flex flex-wrap items-baseline gap-3'>
-                  <span className='text-corps font-semibold text-encre'>
+                  <span className='text-titre-3 text-encre'>
                     {domaine(ligne.code)}
                   </span>
                   <span className='ms-auto flex flex-wrap items-baseline gap-3 text-petit text-texte-2'>
@@ -711,12 +748,12 @@ export function RapportBinome({
           data-section='carte'
           data-revele
           aria-labelledby='binome-carte'
-          className='print:break-before-page'
+          className='border-t-2 border-encre pt-8 print:break-before-page'
         >
-          <h2 id='binome-carte' className='text-titre-3 text-encre'>
+          <h2 id='binome-carte' className='text-titre-section text-encre'>
             {carte.titre}
           </h2>
-          <p className='mt-1 text-petit text-texte-2'>
+          <p className='mt-3 max-w-[44em] text-texte-2'>
             {remplir(carte.intro, {
               proche: nombre(SEUILS_DEFAUT.ecarts.proche),
               notable: nombre(SEUILS_DEFAUT.ecarts.notable)
@@ -732,7 +769,7 @@ export function RapportBinome({
                 aria-labelledby={titreId}
                 className='mt-6'
               >
-                <h3 id={titreId} className='text-corps font-bold text-encre'>
+                <h3 id={titreId} className='text-titre-3 text-encre'>
                   {carte.groupes[classe]}
                 </h3>
                 {lignes.length === 0 ? (
@@ -742,11 +779,11 @@ export function RapportBinome({
                     role='region'
                     aria-labelledby={titreId}
                     tabIndex={0}
-                    className='carte mt-3 overflow-x-auto !p-0'
+                    className='mt-3 overflow-x-auto'
                   >
                     <table className='w-full text-petit'>
                       <caption className='sr-only'>{carte.caption}</caption>
-                      <thead className='border-b border-trait'>
+                      <thead className='border-b border-encre'>
                         <tr>
                           <th scope='col' className={th}>
                             {carte.colFacette}
@@ -774,20 +811,20 @@ export function RapportBinome({
                           >
                             <th
                               scope='row'
-                              className='px-3.5 py-2.5 text-start'
+                              className='py-2.5 pe-4 text-start font-medium text-encre'
                             >
                               {libelleFacette(ligne.code, locale)}
                             </th>
-                            <td className='px-3.5 py-2.5'>
+                            <td className='py-2.5 pe-4'>
                               {niveaux[ligne.niveauA]}
                             </td>
-                            <td className='px-3.5 py-2.5'>
+                            <td className='py-2.5 pe-4'>
                               {niveaux[ligne.niveauB]}
                             </td>
-                            <td className='chiffres px-3.5 py-2.5' dir='ltr'>
+                            <td className='chiffres py-2.5 pe-4' dir='ltr'>
                               {ecartAffiche(ligne.ecart)}
                             </td>
-                            <td className='px-3.5 py-2.5'>
+                            <td className='py-2.5 pe-4'>
                               {libelles.classe[ligne.classe]}
                             </td>
                           </tr>
@@ -805,54 +842,60 @@ export function RapportBinome({
           data-section='attention'
           data-revele
           aria-labelledby='binome-attention'
+          className={PARTIE}
         >
-          <h2 id='binome-attention' className='text-titre-3 text-encre'>
+          <h2 id='binome-attention' className={TITRE_PARTIE}>
             {attention.titre}
           </h2>
-          {rapport.attention.length === 0 ? (
-            <p className='mt-2 text-texte-2'>{attention.aucun}</p>
-          ) : (
-            <>
-              <p className='mt-1 text-petit text-texte-2'>{attention.intro}</p>
-              <ul className='mt-3 flex flex-col gap-4'>
-                {rapport.attention.map((cle) => (
-                  <li
-                    key={cle}
-                    data-attention={cle}
-                    className='rounded-controle border border-trait bg-fond p-5'
-                  >
-                    <h3 className='text-corps font-bold text-encre'>
-                      {attention[cle].titre}
-                    </h3>
-                    <p className='mt-2 text-texte-2'>{attention[cle].texte}</p>
-                    <p className='mt-2 text-petit text-texte-2'>
-                      {attention[cle].source}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-              <p className='mt-3 text-petit font-semibold text-encre'>
-                {attention.limite}
-              </p>
-            </>
-          )}
+          <div className={CORPS_PARTIE}>
+            {rapport.attention.length === 0 ? (
+              <p className='text-texte-2'>{attention.aucun}</p>
+            ) : (
+              <>
+                <p className='text-texte-2'>{attention.intro}</p>
+                <ul className='mt-6 flex flex-col'>
+                  {rapport.attention.map((cle) => (
+                    <li
+                      key={cle}
+                      data-attention={cle}
+                      className='border-t border-trait py-6'
+                    >
+                      <h3 className='text-titre-3 text-encre'>
+                        {attention[cle].titre}
+                      </h3>
+                      <p className='mt-2 text-texte-2'>
+                        {attention[cle].texte}
+                      </p>
+                      <p className='mt-3 text-legende text-texte-3'>
+                        {attention[cle].source}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+                <p className='mt-3 border-s-2 border-safran ps-4 text-petit font-medium text-encre'>
+                  {attention.limite}
+                </p>
+              </>
+            )}
+          </div>
         </section>
 
         <section
           data-section='fiabilite'
           data-revele
           aria-labelledby='binome-fiabilite'
+          className={PARTIE}
         >
-          <h2 id='binome-fiabilite' className='text-titre-3 text-encre'>
+          <h2 id='binome-fiabilite' className={TITRE_PARTIE}>
             {fiabilite.titre}
           </h2>
-          <div className='mt-2 flex flex-col gap-2 text-texte-2'>
+          <div className={`flex flex-col gap-3 text-texte-2 ${CORPS_PARTIE}`}>
             <p>{fiabilite.texte}</p>
             <p>{fiabilite.limite}</p>
           </div>
         </section>
 
-        <p className='text-petit text-texte-2'>
+        <p className='border-t border-trait pt-6 text-petit text-texte-3'>
           {niveaux.echelle}.{' '}
           {remplir(niveaux.versionMoteur, { version: rapport.versionMoteur })}
         </p>

@@ -1,10 +1,36 @@
-/* Construction du radar de la page de résultat, axe par axe. Styles locaux :
-   ils lisent les jetons globaux (--courbe, --c-*) et doublent la spécificité
-   des classes globales .radar-* pour remplacer leur animation. La grille se
-   pose, chaque axe se trace depuis le centre (stroke-dashoffset), chaque
-   sommet apparaît sur son axe, puis le contour se referme et l'aire se pose.
-   L'état final est l'état naturel des éléments : sans animation (mouvement
-   réduit, impression), tout est visible. */
+/* Identité et construction du radar (résultat, rapports). Styles locaux : ils
+   lisent les jetons globaux (--courbe, --c-*) et doublent la spécificité des
+   classes globales .radar-* pour remplacer leurs couleurs et leur animation.
+   Encre et safran, comme le radar de l'accueil : grille pointillée sous un
+   cadre plein, tracé et aire safran, sommets en encre détachés du fond.
+   La grille se pose, chaque axe se trace depuis le centre (stroke-dashoffset),
+   chaque sommet apparaît sur son axe, puis le contour se referme et l'aire se
+   pose. L'état final est l'état naturel des éléments : sans animation
+   (mouvement réduit, impression), tout est visible. */
+
+.radar .anneau {
+  stroke: rgb(var(--c-grille));
+}
+.radar .pointille {
+  stroke-dasharray: 2 7;
+}
+.radar .axe {
+  stroke: rgb(var(--c-trait-fort));
+  stroke-width: 1.25;
+}
+.radar .aire {
+  fill: rgb(var(--c-safran));
+  fill-opacity: 0.24;
+}
+.radar .trace {
+  stroke: rgb(var(--c-safran));
+  stroke-width: 3;
+}
+.radar .marqueur {
+  fill: rgb(var(--c-encre));
+  stroke: rgb(var(--c-fond));
+  stroke-width: 3;
+}
 
 .radar .anneau {
   animation: fondu 360ms var(--courbe) both;
