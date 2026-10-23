@@ -45,7 +45,7 @@ h1{font-size:1.9rem;line-height:1.25;margin:.2em 0}h2{margin:0 0 .6em;border-bot
 .muet{color:var(--mut);font-size:.9rem}
 .etiq{display:inline-block;font-size:.85rem;padding:2px 10px;border-radius:999px;border:1px solid var(--mut);color:var(--mut);font-weight:600}
 .avert{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:14px 18px;margin:16px 0}
-.avert ul{margin:.4em 0 0;padding-left:1.2em}.avert li{margin:.25em 0;max-width:68ch}
+.avert ul{margin:.4em 0 0;padding-left:1.2em}.avert li{margin:.25em 0}
 .chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
 .chiffres div{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:10px 14px}
 .chiffres dt{color:var(--mut);font-size:.85rem}.chiffres dd{margin:0;font-size:1.8rem;font-weight:700;font-variant-numeric:tabular-nums}
@@ -60,14 +60,14 @@ section.niveau{background:var(--card);border:1px solid var(--ln);border-radius:1
 .visuels{margin:8px 0 16px}
 .paire{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .initiales{flex:none;vertical-align:middle}
-.para{border-left:4px solid var(--ln);padding:6px 0 6px 12px;margin:12px 0;max-width:68ch}
+.para{border-left:4px solid var(--ln);padding:6px 0 6px 12px;margin:12px 0}
 .para.constate{border-left-color:var(--ok)}.para.hypothese{border-left-color:var(--mid)}
 .para p{margin:.3em 0}
 .statut{display:inline-block;font-size:.85rem;font-weight:700;padding:1px 9px;border-radius:999px;border:1px solid currentColor;text-transform:uppercase;letter-spacing:.03em}
 .constate>.statut{color:var(--ok)}.hypothese>.statut{color:var(--mid)}
 .meta{margin:.3em 0;font-size:.9rem}.meta dt{display:inline;font-weight:700}.meta dd{display:inline;margin:0 14px 0 4px}
 .blocs{font-size:.85rem;color:var(--mut)}.blocs code{background:var(--bg);border:1px solid var(--ln);border-radius:5px;padding:0 5px}
-.verif{color:var(--mut);font-weight:600}
+.meta dd.verif{color:var(--fg);font-weight:400}
 span.verif{display:inline-block;font-size:.85rem;padding:0 8px;border:1px solid var(--ln);border-radius:999px;color:var(--mut);background:var(--bg);font-weight:600}
 .recos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:14px;margin:12px 0}
 .reco{border:1px solid var(--ln);border-top:5px solid var(--mid);border-radius:12px;padding:14px;background:var(--bg)}
@@ -82,7 +82,7 @@ table.refs td[data-controle]{white-space:nowrap}
 .absent{color:var(--mut);font-style:italic}
 footer{margin-top:32px}
 @media (max-width:760px){main{padding:16px}h1{font-size:1.5rem}section.niveau{padding:12px}}
-@media print{:root,:root[data-theme=dark]{${CLAIR}}.toc{display:none}body{background:#fff;color:#1d1f21}section.niveau,.para,.reco{break-inside:avoid}section.niveau{border:0;padding:0}}
+@media print{:root,:root[data-theme=dark]{${CLAIR}}.toc{display:none}body{background:#fff;color:#1d1f21}section.niveau,.para,.reco{break-inside:avoid}section.niveau{border:0;padding:0}.recos{grid-template-columns:1fr}.reco dl{display:grid;grid-template-columns:9em 1fr;gap:.15em 1em;align-items:baseline}.reco dt{margin-top:0}#n2-relations .radar svg{width:min(100%,210px)}#n2-relations .halteres{max-width:none}#n2-relations .halteres svg{display:block;width:85%;margin:0 auto}}
 ${CSS_SANS_AVATAR}`;
 
 // Couleurs de profil en variables : une valeur claire, une valeur sombre, claire à l'impression.

@@ -7,7 +7,7 @@
 // En variante Word (MODE=docx), tous les visuels sont omis : pandoc ne sait pas les convertir.
 
 const DOMAINES = ['N', 'E', 'O', 'A', 'C'];
-const COURT = { N: 'Névrosisme', E: 'Extraversion', O: 'Ouverture', A: 'Agréabilité', C: 'Conscience' };
+const COURT = { N: 'Névrosisme', E: 'Extraversion', O: 'Ouverture', A: 'Agréabilité', C: 'Conscienciosité' };
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const fmt = (x) => x.toFixed(2).replace('.', ',');
 
@@ -57,7 +57,7 @@ export function radarSvg(ps, { taille = 300, titre = 'Radar des cinq domaines' }
 
 // ---------- Écarts par facette : deux points reliés sur une échelle de 1 à 5 ----------
 export function dumbbellSvg(a, b, titres, ecartFn) {
-  const L = 780, ligne = 21, gauche = 235, droite = 755, haut = 38;
+  const L = 780, ligne = 21, gauche = 235, droite = 755, haut = 56;
   const x = (v) => gauche + ((v - 1) / 4) * (droite - gauche);
   let y = haut; let i = 0; let corps = ''; const lignes = [];
   for (const d of DOMAINES) {
@@ -159,7 +159,7 @@ figure{margin:12px 0}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (forced-colors:active){.anneau,.axe,.gr,.lien{stroke:CanvasText}.lab,.gn,.grp,.fac,.ent,.val{fill:CanvasText}.eten{fill:CanvasText}}
-@media print{*{animation:none!important;transition:none!important}.js .reveal,.js .forme,.js .pt,.js .rang,.js .case,.js .eten,.js .barre span{opacity:1!important;transform:none!important}.js .lien,.js .contour{stroke-dashoffset:0!important}.outils,.toc{display:none!important}@page{size:A4;margin:14mm 12mm}body{font-size:12px;line-height:1.45;background:#fff}main{max-width:none;padding:0}h2,h4{break-after:avoid}figure,.carte,.bloc,tr{break-inside:avoid}.pilote{break-inside:auto}section.binome,section.equipe{border:0;padding:0;margin:0;break-before:page}.radar svg{width:min(100%,300px);min-width:0}.halteres svg,.chaleur svg{min-width:0!important}.valeurs{display:none}.grille{grid-template-columns:repeat(2,1fr)}}
+@media print{*{animation:none!important;transition:none!important}.js .reveal,.js .forme,.js .pt,.js .rang,.js .case,.js .eten,.js .barre span{opacity:1!important;transform:none!important}.js .lien,.js .contour{stroke-dashoffset:0!important}.outils,.toc{display:none!important}@page{size:A4;margin:14mm 12mm}html{font-size:12px}body{font-size:12px;line-height:1.45;background:#fff}main{max-width:none;padding:0}h2,h4{break-after:avoid}figure,.carte,.bloc,tr{break-inside:avoid}.pilote{break-inside:auto}section.binome,section.equipe{border:0;padding:0;margin:0;break-before:page}.radar svg{width:min(100%,300px);min-width:0}.halteres svg,.chaleur svg{min-width:0!important}.valeurs{display:none}.grille{grid-template-columns:repeat(2,1fr)}}
 `;
 
 export const SCRIPT_TETE = `document.documentElement.classList.add('js');`;

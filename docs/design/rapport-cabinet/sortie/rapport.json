@@ -90,12 +90,12 @@
       },
       {
        "id": "n1-AM-domaines-9",
-       "texte": "Conscience (C) : valeur 100 sur l’échelle de 24 à 120, niveau haut. Les six facettes du domaine vont de 2 (C6) à 5 (C1, C3 et C4) sur l’échelle de 1 à 5 ; la dispersion est large au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).",
+       "texte": "Conscienciosité (C) : valeur 100 sur l’échelle de 24 à 120, niveau haut. Les six facettes du domaine vont de 2 (C6) à 5 (C1, C3 et C4) sur l’échelle de 1 à 5 ; la dispersion est large au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).",
        "statut": "constate"
       },
       {
        "id": "n1-AM-domaines-10",
-       "texte": "Conscience : Les réponses se situent en haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.",
+       "texte": "Conscienciosité : Les réponses se situent en haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.",
        "statut": "hypothese",
        "confiance": "moyenne",
        "verification": "Demander à la personne si cette lecture correspond à son expérience du travail, avec un exemple récent."
@@ -388,11 +388,11 @@
     },
     {
      "id": "AM-facettes-C",
-     "titre": "Chapitre AM : facettes du domaine Conscience",
+     "titre": "Chapitre AM : facettes du domaine Conscienciosité",
      "paragraphes": [
       {
        "id": "n1-AM-facettes-C-1",
-       "texte": "Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.",
+       "texte": "Facettes du domaine Conscienciosité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.",
        "statut": "constate"
       },
       {
@@ -514,7 +514,7 @@
       },
       {
        "id": "n1-AM-tensions-7",
-       "texte": "Domaine Conscience, règle TENS-C (écart d’au moins 1,5 point entre deux facettes du domaine) : C1-C6 (C1 « Confiance déclarée dans sa maîtrise des tâches » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C2-C6 (C2 « Organisation et rangement » à 4 et C6 « Réflexion avant d’agir » à 2, écart de 2 points) ; C3-C6 (C3 « Respect des engagements et des règles » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C4-C6 (C4 « Effort et engagement au travail » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C5-C6 (C5 « Autodiscipline » à 4 et C6 « Réflexion avant d’agir » à 2, écart de 2 points).",
+       "texte": "Domaine Conscienciosité, règle TENS-C (écart d’au moins 1,5 point entre deux facettes du domaine) : C1-C6 (C1 « Confiance déclarée dans sa maîtrise des tâches » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C2-C6 (C2 « Organisation et rangement » à 4 et C6 « Réflexion avant d’agir » à 2, écart de 2 points) ; C3-C6 (C3 « Respect des engagements et des règles » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C4-C6 (C4 « Effort et engagement au travail » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C5-C6 (C5 « Autodiscipline » à 4 et C6 « Réflexion avant d’agir » à 2, écart de 2 points).",
        "statut": "constate"
       },
       {
@@ -573,7 +573,7 @@
       },
       {
        "id": "n1-AM-contribution-4",
-       "texte": "Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscience (C) au niveau haut ; Extraversion (E) au niveau haut. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau haut ; Ouverture (O) au niveau haut.",
+       "texte": "Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscienciosité (C) au niveau haut ; Extraversion (E) au niveau haut. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau haut ; Ouverture (O) au niveau haut.",
        "statut": "hypothese",
        "confiance": "faible",
        "verification": "Demander à la personne quelles échéances et quels interlocuteurs de la tâche sollicitent le plus ses apports, et lesquels demandent un effort."
@@ -614,7 +614,7 @@
       },
       {
        "id": "n1-AM-epanouissement-5",
-       "texte": "Conscience, niveau haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.",
+       "texte": "Conscienciosité, niveau haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.",
        "statut": "hypothese",
        "confiance": "moyenne",
        "verification": "Demander à la personne dans quelles conditions de travail son énergie se maintient, et dans lesquelles elle diminue."
@@ -643,7 +643,7 @@
       },
       {
        "id": "n1-AM-plan-2",
-       "texte": "Priorité 1, domaine Conscience : tension C1-C6 relevée par la règle TENS-C, avec C1 « Confiance déclarée dans sa maîtrise des tâches » à 5 (haut) et C6 « Réflexion avant d’agir » à 2 (plutôt bas), soit 3 points d’écart. Hypothèse de travail : l’apport possible de « Confiance déclarée dans sa maîtrise des tâches » (« Votre confiance peut vous permettre d’entreprendre des tâches exigeantes et d’entraîner d’autres personnes. ») et le coût possible de « Réflexion avant d’agir » (« Il se peut que des détails vous échappent dans les décisions prises dans l’urgence. ») peuvent se rencontrer dans une même situation de travail ; à confirmer en entretien.",
+       "texte": "Priorité 1, domaine Conscienciosité : tension C1-C6 relevée par la règle TENS-C, avec C1 « Confiance déclarée dans sa maîtrise des tâches » à 5 (haut) et C6 « Réflexion avant d’agir » à 2 (plutôt bas), soit 3 points d’écart. Hypothèse de travail : l’apport possible de « Confiance déclarée dans sa maîtrise des tâches » (« Votre confiance peut vous permettre d’entreprendre des tâches exigeantes et d’entraîner d’autres personnes. ») et le coût possible de « Réflexion avant d’agir » (« Il se peut que des détails vous échappent dans les décisions prises dans l’urgence. ») peuvent se rencontrer dans une même situation de travail ; à confirmer en entretien.",
        "statut": "hypothese",
        "confiance": "moyenne",
        "verification": "Demander à la personne si cette lecture lui parle et dans quelles situations elle la perçoit.",
@@ -805,12 +805,12 @@
       },
       {
        "id": "n1-KB-domaines-9",
-       "texte": "Conscience (C) : valeur 102 sur l’échelle de 24 à 120, niveau haut. Les six facettes du domaine vont de 4 (C5 et C6) à 4,5 (C2 et C3) sur l’échelle de 1 à 5 ; la dispersion est resserrée au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).",
+       "texte": "Conscienciosité (C) : valeur 102 sur l’échelle de 24 à 120, niveau haut. Les six facettes du domaine vont de 4 (C5 et C6) à 4,5 (C2 et C3) sur l’échelle de 1 à 5 ; la dispersion est resserrée au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).",
        "statut": "constate"
       },
       {
        "id": "n1-KB-domaines-10",
-       "texte": "Conscience : Les réponses se situent en haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.",
+       "texte": "Conscienciosité : Les réponses se situent en haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.",
        "statut": "hypothese",
        "confiance": "moyenne",
        "verification": "Demander à la personne si cette lecture correspond à son expérience du travail, avec un exemple récent."
@@ -1103,11 +1103,11 @@
     },
     {
      "id": "KB-facettes-C",
-     "titre": "Chapitre KB : facettes du domaine Conscience",
+     "titre": "Chapitre KB : facettes du domaine Conscienciosité",
      "paragraphes": [
       {
        "id": "n1-KB-facettes-C-1",
-       "texte": "Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.",
+       "texte": "Facettes du domaine Conscienciosité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.",
        "statut": "constate"
       },
       {
@@ -1222,7 +1222,7 @@
       },
       {
        "id": "n1-KB-contribution-4",
-       "texte": "Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscience (C) au niveau haut ; Extraversion (E) au niveau milieu de l’échelle. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau milieu de l’échelle ; Ouverture (O) au niveau plutôt bas.",
+       "texte": "Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscienciosité (C) au niveau haut ; Extraversion (E) au niveau milieu de l’échelle. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau milieu de l’échelle ; Ouverture (O) au niveau plutôt bas.",
        "statut": "hypothese",
        "confiance": "faible",
        "verification": "Demander à la personne quelles échéances et quels interlocuteurs de la tâche sollicitent le plus ses apports, et lesquels demandent un effort."
@@ -1263,7 +1263,7 @@
       },
       {
        "id": "n1-KB-epanouissement-5",
-       "texte": "Conscience, niveau haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.",
+       "texte": "Conscienciosité, niveau haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.",
        "statut": "hypothese",
        "confiance": "moyenne",
        "verification": "Demander à la personne dans quelles conditions de travail son énergie se maintient, et dans lesquelles elle diminue."
@@ -1367,12 +1367,12 @@
       },
       {
        "id": "n1-SR-domaines-9",
-       "texte": "Conscience (C) : valeur 70 sur l’échelle de 24 à 120, niveau milieu de l’échelle. Les six facettes du domaine vont de 2,25 (C6) à 3,5 (C4) sur l’échelle de 1 à 5 ; la dispersion est large au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).",
+       "texte": "Conscienciosité (C) : valeur 70 sur l’échelle de 24 à 120, niveau milieu de l’échelle. Les six facettes du domaine vont de 2,25 (C6) à 3,5 (C4) sur l’échelle de 1 à 5 ; la dispersion est large au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).",
        "statut": "constate"
       },
       {
        "id": "n1-SR-domaines-10",
-       "texte": "Conscience : Les réponses sont proches du milieu de l’échelle sur cet axe. Cela ne dit pas que la personne est équilibrée ou indécise : lecture de convention, à confirmer en entretien.",
+       "texte": "Conscienciosité : Les réponses sont proches du milieu de l’échelle sur cet axe. Cela ne dit pas que la personne est équilibrée ou indécise : lecture de convention, à confirmer en entretien.",
        "statut": "hypothese",
        "confiance": "faible",
        "verification": "Demander à la personne si cette lecture correspond à son expérience du travail, avec un exemple récent."
@@ -1665,11 +1665,11 @@
     },
     {
      "id": "SR-facettes-C",
-     "titre": "Chapitre SR : facettes du domaine Conscience",
+     "titre": "Chapitre SR : facettes du domaine Conscienciosité",
      "paragraphes": [
       {
        "id": "n1-SR-facettes-C-1",
-       "texte": "Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.",
+       "texte": "Facettes du domaine Conscienciosité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.",
        "statut": "constate"
       },
       {
@@ -1784,7 +1784,7 @@
       },
       {
        "id": "n1-SR-contribution-4",
-       "texte": "Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscience (C) au niveau milieu de l’échelle ; Extraversion (E) au niveau haut. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau haut ; Ouverture (O) au niveau haut.",
+       "texte": "Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscienciosité (C) au niveau milieu de l’échelle ; Extraversion (E) au niveau haut. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau haut ; Ouverture (O) au niveau haut.",
        "statut": "hypothese",
        "confiance": "faible",
        "verification": "Demander à la personne quelles échéances et quels interlocuteurs de la tâche sollicitent le plus ses apports, et lesquels demandent un effort."
@@ -1825,7 +1825,7 @@
       },
       {
        "id": "n1-SR-epanouissement-5",
-       "texte": "Conscience, niveau milieu de l’échelle : un cadre qui fixe l’essentiel et laisse de la marge sur le reste peut convenir ; l’entretien précisera les tâches où davantage de structure est souhaitée.",
+       "texte": "Conscienciosité, niveau milieu de l’échelle : un cadre qui fixe l’essentiel et laisse de la marge sur le reste peut convenir ; l’entretien précisera les tâches où davantage de structure est souhaitée.",
        "statut": "hypothese",
        "confiance": "faible",
        "verification": "Demander à la personne dans quelles conditions de travail son énergie se maintient, et dans lesquelles elle diminue."
@@ -1929,12 +1929,12 @@
       },
       {
        "id": "n1-HT-domaines-9",
-       "texte": "Conscience (C) : valeur 93 sur l’échelle de 24 à 120, niveau plutôt haut. Les six facettes du domaine vont de 3,5 (C6) à 4,25 (C2) sur l’échelle de 1 à 5 ; la dispersion est intermédiaire au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).",
+       "texte": "Conscienciosité (C) : valeur 93 sur l’échelle de 24 à 120, niveau plutôt haut. Les six facettes du domaine vont de 3,5 (C6) à 4,25 (C2) sur l’échelle de 1 à 5 ; la dispersion est intermédiaire au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).",
        "statut": "constate"
       },
       {
        "id": "n1-HT-domaines-10",
-       "texte": "Conscience : Les réponses se situent plutôt vers le haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.",
+       "texte": "Conscienciosité : Les réponses se situent plutôt vers le haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.",
        "statut": "hypothese",
        "confiance": "moyenne",
        "verification": "Demander à la personne si cette lecture correspond à son expérience du travail, avec un exemple récent."
@@ -2227,11 +2227,11 @@
     },
     {
      "id": "HT-facettes-C",
-     "titre": "Chapitre HT : facettes du domaine Conscience",
+     "titre": "Chapitre HT : facettes du domaine Conscienciosité",
      "paragraphes": [
       {
        "id": "n1-HT-facettes-C-1",
-       "texte": "Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.",
+       "texte": "Facettes du domaine Conscienciosité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.",
        "statut": "constate"
       },
       {
@@ -2346,7 +2346,7 @@
       },
       {
        "id": "n1-HT-contribution-4",
-       "texte": "Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscience (C) au niveau plutôt haut ; Extraversion (E) au niveau plutôt bas. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau plutôt bas ; Ouverture (O) au niveau plutôt haut.",
+       "texte": "Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscienciosité (C) au niveau plutôt haut ; Extraversion (E) au niveau plutôt bas. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau plutôt bas ; Ouverture (O) au niveau plutôt haut.",
        "statut": "hypothese",
        "confiance": "faible",
        "verification": "Demander à la personne quelles échéances et quels interlocuteurs de la tâche sollicitent le plus ses apports, et lesquels demandent un effort."
@@ -2387,7 +2387,7 @@
       },
       {
        "id": "n1-HT-epanouissement-5",
-       "texte": "Conscience, niveau plutôt haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.",
+       "texte": "Conscienciosité, niveau plutôt haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.",
        "statut": "hypothese",
        "confiance": "moyenne",
        "verification": "Demander à la personne dans quelles conditions de travail son énergie se maintient, et dans lesquelles elle diminue."
@@ -5058,7 +5058,7 @@
       },
       {
        "id": "n5-depart-5",
-       "texte": "Adéquation organisationnelle (effectif de 4 personnes pour un seuil d’anonymat de 5 : agrégat montré par dérogation de démonstration) : valeurs d’équipe pour Extraversion à 3,48 (plutôt haut), Ouverture à 3,64 (plutôt haut) et Conscience à 3,8 (plutôt haut), selon les conventions de l’outil. Ces valeurs se lisent avec la structure (bureaucratie mécaniste), la culture dominante (hiérarchie) et l’orientation de croissance ; leur effet sur le travail de l’équipe est à instruire en entretien, et les dispositifs d’organisation du plan en tiennent compte.",
+       "texte": "Adéquation organisationnelle (effectif de 4 personnes pour un seuil d’anonymat de 5 : agrégat montré par dérogation de démonstration) : valeurs d’équipe pour Extraversion à 3,48 (plutôt haut), Ouverture à 3,64 (plutôt haut) et Conscienciosité à 3,8 (plutôt haut), selon les conventions de l’outil. Ces valeurs se lisent avec la structure (bureaucratie mécaniste), la culture dominante (hiérarchie) et l’orientation de croissance ; leur effet sur le travail de l’équipe est à instruire en entretien, et les dispositifs d’organisation du plan en tiennent compte.",
        "statut": "constate"
       },
       {
@@ -5297,7 +5297,7 @@
   {
    "id": "REC-N1-AM-1",
    "niveau": "n1-individuel",
-   "texte": "Conduire la priorité 1 du plan de développement (domaine Conscience) sur 90 jours : explorer la tension C1-C6 avec un consultant qualifié, convenir d’une façon de limiter le coût possible de « Réflexion avant d’agir », puis faire le point.",
+   "texte": "Conduire la priorité 1 du plan de développement (domaine Conscienciosité) sur 90 jours : explorer la tension C1-C6 avec un consultant qualifié, convenir d’une façon de limiter le coût possible de « Réflexion avant d’agir », puis faire le point.",
    "donnee": "Tension C1-C6 : écart de 3 points entre C1 à 5 et C6 à 2.",
    "contexte": "Chapitre privé d’AM, fonction « Directeur du programme de transformation (fonction fictive) », tâche de nature « projet » avec des échéances rapprochées.",
    "preuve": {

@@ -1,7 +1,7 @@
 // Outils partagés par les modules de niveau du rapport « cabinet ». Fonctions pures, aucun aléa.
 export const NIVEAUX = ['bas', 'plutot_bas', 'milieu', 'plutot_haut', 'haut'];
 export const NIVEAU_FR = { bas: 'bas', plutot_bas: 'plutôt bas', milieu: 'milieu de l’échelle', plutot_haut: 'plutôt haut', haut: 'haut' };
-export const NOM_DOMAINE = { N: 'Névrosisme', E: 'Extraversion', O: 'Ouverture', A: 'Agréabilité', C: 'Conscience' };
+export const NOM_DOMAINE = { N: 'Névrosisme', E: 'Extraversion', O: 'Ouverture', A: 'Agréabilité', C: 'Conscienciosité' };
 export const DOMAINES = ['N', 'E', 'O', 'A', 'C'];
 
 /** Nombre au format français : virgule décimale, deux décimales au plus, sans zéro final inutile. */

@@ -93,11 +93,11 @@ Demander à la personne si cette lecture correspond à son expérience du travai
 
 Constaté
 
-Conscience (C) : valeur 100 sur l’échelle de 24 à 120, niveau haut. Les six facettes du domaine vont de 2 (C6) à 5 (C1, C3 et C4) sur l’échelle de 1 à 5 ; la dispersion est large au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).
+Conscienciosité (C) : valeur 100 sur l’échelle de 24 à 120, niveau haut. Les six facettes du domaine vont de 2 (C6) à 5 (C1, C3 et C4) sur l’échelle de 1 à 5 ; la dispersion est large au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).
 
 Hypothèse
 
-Conscience : Les réponses se situent en haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.
+Conscienciosité : Les réponses se situent en haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.
 
 Confiance  
 moyenne
@@ -417,11 +417,11 @@ Poser à la personne la question de la bibliothèque : « Comment préservez-vou
 
 Texte type de la bibliothèque : `A6/haut`
 
-### Chapitre AM : facettes du domaine Conscience
+### Chapitre AM : facettes du domaine Conscienciosité
 
 Constaté
 
-Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Conscienciosité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -547,7 +547,7 @@ Texte type de la bibliothèque : `A2/plutot_bas` `A3/haut` `A6/haut` `A4/plutot
 
 Constaté
 
-Domaine Conscience, règle TENS-C (écart d’au moins 1,5 point entre deux facettes du domaine) : C1-C6 (C1 « Confiance déclarée dans sa maîtrise des tâches » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C2-C6 (C2 « Organisation et rangement » à 4 et C6 « Réflexion avant d’agir » à 2, écart de 2 points) ; C3-C6 (C3 « Respect des engagements et des règles » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C4-C6 (C4 « Effort et engagement au travail » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C5-C6 (C5 « Autodiscipline » à 4 et C6 « Réflexion avant d’agir » à 2, écart de 2 points).
+Domaine Conscienciosité, règle TENS-C (écart d’au moins 1,5 point entre deux facettes du domaine) : C1-C6 (C1 « Confiance déclarée dans sa maîtrise des tâches » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C2-C6 (C2 « Organisation et rangement » à 4 et C6 « Réflexion avant d’agir » à 2, écart de 2 points) ; C3-C6 (C3 « Respect des engagements et des règles » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C4-C6 (C4 « Effort et engagement au travail » à 5 et C6 « Réflexion avant d’agir » à 2, écart de 3 points) ; C5-C6 (C5 « Autodiscipline » à 4 et C6 « Réflexion avant d’agir » à 2, écart de 2 points).
 
 Hypothèse
 
@@ -593,7 +593,7 @@ Texte type de la bibliothèque : `E3/haut` `E4/haut` `O5/haut` `C1/haut` `C3/ha
 
 Hypothèse
 
-Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscience (C) au niveau haut ; Extraversion (E) au niveau haut. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau haut ; Ouverture (O) au niveau haut.
+Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscienciosité (C) au niveau haut ; Extraversion (E) au niveau haut. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau haut ; Ouverture (O) au niveau haut.
 
 Confiance  
 faible
@@ -645,7 +645,7 @@ Demander à la personne dans quelles conditions de travail son énergie se maint
 
 Hypothèse
 
-Conscience, niveau haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.
+Conscienciosité, niveau haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.
 
 Confiance  
 moyenne
@@ -667,7 +667,7 @@ Le plan de développement retient trois priorités, chacune tirée d’une tensi
 
 Hypothèse
 
-Priorité 1, domaine Conscience : tension C1-C6 relevée par la règle TENS-C, avec C1 « Confiance déclarée dans sa maîtrise des tâches » à 5 (haut) et C6 « Réflexion avant d’agir » à 2 (plutôt bas), soit 3 points d’écart. Hypothèse de travail : l’apport possible de « Confiance déclarée dans sa maîtrise des tâches » (« Votre confiance peut vous permettre d’entreprendre des tâches exigeantes et d’entraîner d’autres personnes. ») et le coût possible de « Réflexion avant d’agir » (« Il se peut que des détails vous échappent dans les décisions prises dans l’urgence. ») peuvent se rencontrer dans une même situation de travail ; à confirmer en entretien.
+Priorité 1, domaine Conscienciosité : tension C1-C6 relevée par la règle TENS-C, avec C1 « Confiance déclarée dans sa maîtrise des tâches » à 5 (haut) et C6 « Réflexion avant d’agir » à 2 (plutôt bas), soit 3 points d’écart. Hypothèse de travail : l’apport possible de « Confiance déclarée dans sa maîtrise des tâches » (« Votre confiance peut vous permettre d’entreprendre des tâches exigeantes et d’entraîner d’autres personnes. ») et le coût possible de « Réflexion avant d’agir » (« Il se peut que des détails vous échappent dans les décisions prises dans l’urgence. ») peuvent se rencontrer dans une même situation de travail ; à confirmer en entretien.
 
 Confiance  
 moyenne
@@ -843,11 +843,11 @@ Demander à la personne si cette lecture correspond à son expérience du travai
 
 Constaté
 
-Conscience (C) : valeur 102 sur l’échelle de 24 à 120, niveau haut. Les six facettes du domaine vont de 4 (C5 et C6) à 4,5 (C2 et C3) sur l’échelle de 1 à 5 ; la dispersion est resserrée au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).
+Conscienciosité (C) : valeur 102 sur l’échelle de 24 à 120, niveau haut. Les six facettes du domaine vont de 4 (C5 et C6) à 4,5 (C2 et C3) sur l’échelle de 1 à 5 ; la dispersion est resserrée au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).
 
 Hypothèse
 
-Conscience : Les réponses se situent en haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.
+Conscienciosité : Les réponses se situent en haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.
 
 Confiance  
 moyenne
@@ -1167,11 +1167,11 @@ Poser à la personne la question de la bibliothèque : « Comment conciliez-vous
 
 Texte type de la bibliothèque : `A6/plutot_haut`
 
-### Chapitre KB : facettes du domaine Conscience
+### Chapitre KB : facettes du domaine Conscienciosité
 
 Constaté
 
-Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Conscienciosité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -1283,7 +1283,7 @@ Texte type de la bibliothèque : `C2/haut` `C3/haut` `N3/bas` `N6/bas` `C1/haut
 
 Hypothèse
 
-Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscience (C) au niveau haut ; Extraversion (E) au niveau milieu de l’échelle. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau milieu de l’échelle ; Ouverture (O) au niveau plutôt bas.
+Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscienciosité (C) au niveau haut ; Extraversion (E) au niveau milieu de l’échelle. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau milieu de l’échelle ; Ouverture (O) au niveau plutôt bas.
 
 Confiance  
 faible
@@ -1335,7 +1335,7 @@ Demander à la personne dans quelles conditions de travail son énergie se maint
 
 Hypothèse
 
-Conscience, niveau haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.
+Conscienciosité, niveau haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.
 
 Confiance  
 moyenne
@@ -1431,11 +1431,11 @@ Demander à la personne si cette lecture correspond à son expérience du travai
 
 Constaté
 
-Conscience (C) : valeur 70 sur l’échelle de 24 à 120, niveau milieu de l’échelle. Les six facettes du domaine vont de 2,25 (C6) à 3,5 (C4) sur l’échelle de 1 à 5 ; la dispersion est large au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).
+Conscienciosité (C) : valeur 70 sur l’échelle de 24 à 120, niveau milieu de l’échelle. Les six facettes du domaine vont de 2,25 (C6) à 3,5 (C4) sur l’échelle de 1 à 5 ; la dispersion est large au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).
 
 Hypothèse
 
-Conscience : Les réponses sont proches du milieu de l’échelle sur cet axe. Cela ne dit pas que la personne est équilibrée ou indécise : lecture de convention, à confirmer en entretien.
+Conscienciosité : Les réponses sont proches du milieu de l’échelle sur cet axe. Cela ne dit pas que la personne est équilibrée ou indécise : lecture de convention, à confirmer en entretien.
 
 Confiance  
 faible
@@ -1755,11 +1755,11 @@ Poser à la personne la question de la bibliothèque : « Dans quels cas la diff
 
 Texte type de la bibliothèque : `A6/milieu`
 
-### Chapitre SR : facettes du domaine Conscience
+### Chapitre SR : facettes du domaine Conscienciosité
 
 Constaté
 
-Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Conscienciosité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -1871,7 +1871,7 @@ Texte type de la bibliothèque : `O1/haut` `O4/haut` `E5/haut` `E6/haut` `O2/ha
 
 Hypothèse
 
-Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscience (C) au niveau milieu de l’échelle ; Extraversion (E) au niveau haut. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau haut ; Ouverture (O) au niveau haut.
+Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscienciosité (C) au niveau milieu de l’échelle ; Extraversion (E) au niveau haut. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau haut ; Ouverture (O) au niveau haut.
 
 Confiance  
 faible
@@ -1923,7 +1923,7 @@ Demander à la personne dans quelles conditions de travail son énergie se maint
 
 Hypothèse
 
-Conscience, niveau milieu de l’échelle : un cadre qui fixe l’essentiel et laisse de la marge sur le reste peut convenir ; l’entretien précisera les tâches où davantage de structure est souhaitée.
+Conscienciosité, niveau milieu de l’échelle : un cadre qui fixe l’essentiel et laisse de la marge sur le reste peut convenir ; l’entretien précisera les tâches où davantage de structure est souhaitée.
 
 Confiance  
 faible
@@ -2019,11 +2019,11 @@ Demander à la personne si cette lecture correspond à son expérience du travai
 
 Constaté
 
-Conscience (C) : valeur 93 sur l’échelle de 24 à 120, niveau plutôt haut. Les six facettes du domaine vont de 3,5 (C6) à 4,25 (C2) sur l’échelle de 1 à 5 ; la dispersion est intermédiaire au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).
+Conscienciosité (C) : valeur 93 sur l’échelle de 24 à 120, niveau plutôt haut. Les six facettes du domaine vont de 3,5 (C6) à 4,25 (C2) sur l’échelle de 1 à 5 ; la dispersion est intermédiaire au sens des conventions de l’outil (resserrée jusqu’à 0,5 point d’étendue, large à partir de 1 point).
 
 Hypothèse
 
-Conscience : Les réponses se situent plutôt vers le haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.
+Conscienciosité : Les réponses se situent plutôt vers le haut de l’échelle de la personne sur cet axe. Lecture de convention, sans comparaison à un groupe, à confirmer en entretien.
 
 Confiance  
 moyenne
@@ -2343,11 +2343,11 @@ Poser à la personne la question de la bibliothèque : « Comment préservez-vou
 
 Texte type de la bibliothèque : `A6/haut`
 
-### Chapitre HT : facettes du domaine Conscience
+### Chapitre HT : facettes du domaine Conscienciosité
 
 Constaté
 
-Facettes du domaine Conscience. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
+Facettes du domaine Conscienciosité. Une valeur haute signifie davantage de ce que décrit le libellé de la facette. Les passages entre guillemets sont des textes de la bibliothèque, adressés à la personne.
 
 Hypothèse
 
@@ -2459,7 +2459,7 @@ Texte type de la bibliothèque : `A2/haut` `A4/haut` `A6/haut` `N4/haut` `E5/ba
 
 Hypothèse
 
-Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscience (C) au niveau plutôt haut ; Extraversion (E) au niveau plutôt bas. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau plutôt bas ; Ouverture (O) au niveau plutôt haut.
+Conditions de la tâche à prendre en compte. Sur une tâche de projet à échéances, il se peut que le suivi des engagements et la circulation de l’information entre les personnes pèsent davantage que les préférences de style. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Conscienciosité (C) au niveau plutôt haut ; Extraversion (E) au niveau plutôt bas. Une orientation de croissance demande d’aller vers de nouveaux interlocuteurs et de nouvelles façons de faire : il se peut que l’énergie relationnelle et l’ouverture des profils soient plus sollicitées. À confirmer en entretien. Pour cette personne, les domaines pertinents sont : Extraversion (E) au niveau plutôt bas ; Ouverture (O) au niveau plutôt haut.
 
 Confiance  
 faible
@@ -2511,7 +2511,7 @@ Demander à la personne dans quelles conditions de travail son énergie se maint
 
 Hypothèse
 
-Conscience, niveau plutôt haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.
+Conscienciosité, niveau plutôt haut : des objectifs clairs, des délais connus et la maîtrise de son propre calendrier peuvent convenir ; des priorités changeantes ou des exigences de qualité floues peuvent peser.
 
 Confiance  
 moyenne
@@ -2533,7 +2533,7 @@ Pas de priorité de développement ; entretien de restitution seul. Aucune tensi
 
 ### Recommandations
 
-#### Conduire la priorité 1 du plan de développement (domaine Conscience) sur 90 jours : explorer la tension C1-C6 avec un consultant qualifié, convenir d’une façon de limiter le coût possible de « Réflexion avant d’agir », puis faire le point.
+#### Conduire la priorité 1 du plan de développement (domaine Conscienciosité) sur 90 jours : explorer la tension C1-C6 avec un consultant qualifié, convenir d’une façon de limiter le coût possible de « Réflexion avant d’agir », puis faire le point.
 
 Donnée  
 Tension C1-C6 : écart de 3 points entre C1 à 5 et C6 à 2.
@@ -6515,7 +6515,7 @@ Diversité d’équipe : les cinq domaines ont une dispersion diverse ; les éte
 
 Constaté
 
-Adéquation organisationnelle (effectif de 4 personnes pour un seuil d’anonymat de 5 : agrégat montré par dérogation de démonstration) : valeurs d’équipe pour Extraversion à 3,48 (plutôt haut), Ouverture à 3,64 (plutôt haut) et Conscience à 3,8 (plutôt haut), selon les conventions de l’outil. Ces valeurs se lisent avec la structure (bureaucratie mécaniste), la culture dominante (hiérarchie) et l’orientation de croissance ; leur effet sur le travail de l’équipe est à instruire en entretien, et les dispositifs d’organisation du plan en tiennent compte.
+Adéquation organisationnelle (effectif de 4 personnes pour un seuil d’anonymat de 5 : agrégat montré par dérogation de démonstration) : valeurs d’équipe pour Extraversion à 3,48 (plutôt haut), Ouverture à 3,64 (plutôt haut) et Conscienciosité à 3,8 (plutôt haut), selon les conventions de l’outil. Ces valeurs se lisent avec la structure (bureaucratie mécaniste), la culture dominante (hiérarchie) et l’orientation de croissance ; leur effet sur le travail de l’équipe est à instruire en entretien, et les dispositifs d’organisation du plan en tiennent compte.
 
 Constaté
 
