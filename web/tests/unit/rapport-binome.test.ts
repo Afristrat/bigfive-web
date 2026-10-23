@@ -578,6 +578,18 @@ const rendreRapport = (
     })
   );
 
+describe('RapportBinome : écart des domaines dans l’unité des totaux affichés', () => {
+  it('chaque domaine montre l’écart entre les deux totaux sur 120', () => {
+    const rapport = construireRapportBinome({ a: SCORES_AM, b: SCORES_KB });
+    // Les espaces insécables restent : seuls les blancs du balisage sont réduits.
+    const t = texte(rendreRapport()).replace(/[ \n]+/g, ' ');
+    for (const ligne of rapport.domaines) {
+      const ecart = Math.abs(ligne.scoreA - ligne.scoreB);
+      expect(t, ligne.code).toContain(`Écart : ${ecart} sur 120`);
+    }
+  });
+});
+
 describe('RapportBinome : rendu', () => {
   it('porte les sections dans l’ordre : lire, vue d’ensemble, domaines, carte, points d’attention, fiabilité', () => {
     const html = rendreRapport();
@@ -778,6 +790,32 @@ describe('page /mes-resultats/binomes : mes propositions', () => {
     expect(texte(html)).not.toContain(fr.binome.consent.retirer);
     expect(texte(html)).not.toContain(fr.binome.consent.accepter);
     expect(texte(html)).toContain(fr.binome.liste.statut.retire);
+  });
+
+  it('retour après un retrait ou un refus : confirmation annoncée en tête de liste', async () => {
+    loadMesBinomes.mockResolvedValue([]);
+    for (const decision of ['retrait', 'refus'] as const) {
+      const html = await rendre(
+        BinomesPage({
+          params: Promise.resolve({ locale: 'fr' }),
+          searchParams: Promise.resolve({ decision })
+        })
+      );
+      expect(html).toContain('role="status"');
+      expect(texte(html)).toContain(fr.binome.confirmation[decision]);
+    }
+  });
+
+  it('paramètre de décision inconnu : aucune confirmation', async () => {
+    loadMesBinomes.mockResolvedValue([]);
+    const html = await rendre(
+      BinomesPage({
+        params: Promise.resolve({ locale: 'fr' }),
+        searchParams: Promise.resolve({ decision: 'actif' })
+      })
+    );
+    expect(texte(html)).not.toContain(fr.binome.confirmation.retrait);
+    expect(texte(html)).not.toContain(fr.binome.confirmation.refus);
   });
 
   it('nom de l’autre personne absent : formule neutre, jamais « null »', async () => {

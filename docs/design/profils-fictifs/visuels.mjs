@@ -7,9 +7,13 @@
 // En variante Word (MODE=docx), tous les visuels sont omis : pandoc ne sait pas les convertir.
 
 const DOMAINES = ['N', 'E', 'O', 'A', 'C'];
-const COURT = { N: 'Névrosisme', E: 'Extraversion', O: 'Ouverture', A: 'Agréabilité', C: 'Conscience' };
+const COURT = { N: 'Névrosisme', E: 'Extraversion', O: 'Ouverture', A: 'Agréabilité', C: 'Conscienciosité' };
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const fmt = (x) => x.toFixed(2).replace('.', ',');
+// Colonne des libellés de facettes : assez large pour le plus long (13 px, au plus 6,1 unités par caractère mesurées
+// en Segoe UI, 6,3 retenues, marge comprise),
+// pour qu'aucun libellé ne passe sous la graduation 1 ni sous les cases de score.
+const largeurLibelles = (titres) => Math.max(235, Math.ceil(22 + 6.3 * Math.max(...DOMAINES.flatMap((d) => [1, 2, 3, 4, 5, 6].map((f) => String(titres[d + f]).length)))));
 
 // Deux profils ne se distinguent jamais par la seule teinte : une forme par profil (cercle, carré, triangle, losange).
 function marque(forme, x, y, r, fill, attrs = '') {
@@ -57,7 +61,7 @@ export function radarSvg(ps, { taille = 300, titre = 'Radar des cinq domaines' }
 
 // ---------- Écarts par facette : deux points reliés sur une échelle de 1 à 5 ----------
 export function dumbbellSvg(a, b, titres, ecartFn) {
-  const L = 780, ligne = 21, gauche = 235, droite = 755, haut = 38;
+  const L = 780, ligne = 21, gauche = largeurLibelles(titres), droite = 755, haut = 56;
   const x = (v) => gauche + ((v - 1) / 4) * (droite - gauche);
   let y = haut; let i = 0; let corps = ''; const lignes = [];
   for (const d of DOMAINES) {
@@ -82,6 +86,39 @@ export function dumbbellSvg(a, b, titres, ecartFn) {
   return `<figure class="halteres anim" role="region" tabindex="0" aria-label="${esc(titreFigure)}"><svg viewBox="0 0 ${L} ${y + 6}" style="min-width:${Math.round(L * 0.95)}px" role="img" aria-label="Positions de ${esc(a.nom)} et ${esc(b.nom)} sur les 30 facettes, échelle de 1 à 5, les écarts notables sont tracés en trait épais"><title>${esc(titreFigure)}</title>${grille}${legende}${corps}</svg>${table}</figure>`;
 }
 
+// ---------- Carte des liens déclarés : personnes en cercle, épaisseur selon la fréquence, flèche selon le sens ----------
+export function reseauSvg(ps, relations, natures = {}) {
+  const T = 420, H = T + 40, cx = T / 2, cy = T / 2, R = 140, r = 24;
+  const pos = Object.fromEntries(ps.map((p, i) => {
+    const a = -Math.PI / 2 + (2 * Math.PI * i) / ps.length;
+    return [p.code, { x: cx + R * Math.cos(a), y: cy + R * Math.sin(a), a, p }];
+  }));
+  const epais = { quotidienne: 5, hebdomadaire: 2.8, mensuelle: 1.2 };
+  const freqFr = { quotidienne: 'quotidien', hebdomadaire: 'hebdomadaire', mensuelle: 'mensuel' };
+  const interFr = { sequentielle: 'séquence', reciproque: 'réciprocité', 'mise-en-commun': 'mise en commun' };
+  const rels = relations.filter((l) => pos[l.a] && pos[l.b]);
+  const n = (v) => v.toFixed(1);
+  const traits = rels.map((l, i) => {
+    const [de, vers] = l.sens === 'b->a' ? [pos[l.b], pos[l.a]] : [pos[l.a], pos[l.b]];
+    const dx = vers.x - de.x, dy = vers.y - de.y, d = Math.hypot(dx, dy);
+    const x1 = de.x + (dx / d) * r, y1 = de.y + (dy / d) * r, x2 = vers.x - (dx / d) * (r + 10), y2 = vers.y - (dy / d) * (r + 10);
+    const fleche = l.sens === 'reciproque' ? '' : ' marker-end="url(#reseau-fleche)"';
+    const tiret = l.interdependance === 'mise-en-commun' ? ' stroke-dasharray="6 5"' : '';
+    return `<line class="lien-reseau" style="--i:${i}" x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" stroke-width="${epais[l.frequence] ?? 1.5}"${tiret}${fleche}/>`;
+  }).join('');
+  // Étiquette vers l'extérieur du cercle, jamais sur un trait.
+  const noeuds = Object.values(pos).map(({ x, y, a, p }) => {
+    const c = Math.cos(a), sn = Math.sin(a);
+    const ancre = c > 0.3 ? 'start' : c < -0.3 ? 'end' : 'middle';
+    return `<g class="noeud">${marque(p.forme, x, y, r * 0.62, p.couleur)}<text class="ent" x="${n(x + c * (r + 4))}" y="${n(y + sn * (r + 6) + 4.5)}" text-anchor="${ancre}">${esc(p.code)}</text></g>`;
+  }).join('');
+  const legende = `<g transform="translate(20,${H - 30})"><line class="lien-reseau" x1="0" y1="0" x2="30" y2="0" stroke-width="5"/><text class="gn" x="36" y="4.5">quotidien</text><line class="lien-reseau" x1="112" y1="0" x2="142" y2="0" stroke-width="2.8"/><text class="gn" x="148" y="4.5">hebdomadaire</text><line class="lien-reseau" x1="250" y1="0" x2="280" y2="0" stroke-width="1.2"/><text class="gn" x="286" y="4.5">mensuel</text><text class="gn" x="0" y="24">flèche : qui oriente, décide ou fournit ; tirets : mise en commun</text></g>`;
+  const titre = 'Carte des liens déclarés au cas';
+  const lignes = rels.map((l) => [`${l.a} et ${l.b}`, natures[l.nature] ?? l.nature, l.sens === 'reciproque' ? 'sans direction dominante' : (l.sens === 'b->a' ? `${l.b} vers ${l.a}` : `${l.a} vers ${l.b}`), freqFr[l.frequence] ?? l.frequence, interFr[l.interdependance] ?? l.interdependance]);
+  const table = tableau(titre, ['Lien', 'Nature', 'Sens', 'Fréquence', 'Interdépendance'], lignes);
+  return `<figure class="reseau anim" role="region" tabindex="0" aria-label="${titre}"><svg viewBox="0 0 ${T} ${H}" role="img" aria-label="${titre} : chaque personne est un point, l'épaisseur d'un trait dit la fréquence du lien, une flèche dit qui oriente, décide ou fournit pour l'autre"><title>${titre}</title><defs><marker id="reseau-fleche" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="fleche"/></marker></defs>${traits}${noeuds}${legende}</svg>${table}</figure>`;
+}
+
 // ---------- Carte de chaleur d'équipe : 30 facettes x personnes, plus l'étendue ----------
 const melange = (t) => { // 0 à 1 : teinte unique ; texte #0f2e2e toujours lisible (6,0 à 13,0)
   const a = [236, 245, 243], b = [111, 179, 179];
@@ -90,7 +127,7 @@ const melange = (t) => { // 0 à 1 : teinte unique ; texte #0f2e2e toujours lisi
 export function heatmapSvg(ps, titres) {
   const lignes = [];
   for (const d of DOMAINES) { lignes.push({ groupe: d }); for (let f = 1; f <= 6; f++) lignes.push({ k: d + f }); }
-  const largeurNom = 235, cell = 66, hLigne = 23, haut = 48;
+  const largeurNom = largeurLibelles(titres), cell = 52, hLigne = 23, haut = 48;
   const nbCol = ps.length; const xEt = largeurNom + nbCol * cell + 18;
   let y = haut; let i = 0; let corps = ''; const tab = [];
   for (const l of lignes) {
@@ -126,7 +163,7 @@ figure{margin:12px 0}
 .anneau{fill:none;stroke:var(--grid,var(--ln))}.axe{stroke:var(--grid,var(--ln))}.lab{font:600 14px system-ui,Segoe UI,Arial;fill:var(--mut)}
 .forme{transform-box:fill-box;transform-origin:center}
 .gr{stroke:var(--grid,var(--ln));stroke-dasharray:3 4}.gn{font:13px system-ui,Segoe UI,Arial;fill:var(--mut)}.grp{font:700 14px system-ui,Segoe UI,Arial;fill:var(--fg)}
-.fac{font:13px system-ui,Segoe UI,Arial;fill:var(--fg)}.val{font:600 13px system-ui,Segoe UI,Arial;fill:#0f2e2e}.ent{font:700 13px system-ui,Segoe UI,Arial;fill:var(--mut)}
+.lien-reseau{stroke:var(--mut);stroke-linecap:round}.fleche{fill:var(--mut)}.reseau svg{width:min(100%,420px);display:block;margin:0 auto}.fac{font:13px system-ui,Segoe UI,Arial;fill:var(--fg)}.val{font:600 13px system-ui,Segoe UI,Arial;fill:#0f2e2e}.ent{font:700 13px system-ui,Segoe UI,Arial;fill:var(--mut)}
 .lien{stroke:var(--mut);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0}.rang.notable .lien,.lien.notable{stroke:var(--ecart,var(--no));stroke-width:3.8}
 .rang.proche .lien{stroke-width:1.6}
 .eten{fill:var(--mut)}.eten.fort{fill:var(--ecart,var(--no))}
@@ -158,8 +195,8 @@ figure{margin:12px 0}
 .js:not(.sans-anim) .barre span{transform-origin:left center;transform:scaleX(0)}.js:not(.sans-anim) .vu .barre span{animation:etire .9s cubic-bezier(.2,.8,.2,1) .15s forwards}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-@media (forced-colors:active){.anneau,.axe,.gr,.lien{stroke:CanvasText}.lab,.gn,.grp,.fac,.ent,.val{fill:CanvasText}.eten{fill:CanvasText}}
-@media print{*{animation:none!important;transition:none!important}.js .reveal,.js .forme,.js .pt,.js .rang,.js .case,.js .eten,.js .barre span{opacity:1!important;transform:none!important}.js .lien,.js .contour{stroke-dashoffset:0!important}.outils,.toc{display:none!important}@page{size:A4;margin:14mm 12mm}body{font-size:12px;line-height:1.45;background:#fff}main{max-width:none;padding:0}h2,h4{break-after:avoid}figure,.carte,.bloc,tr{break-inside:avoid}.pilote{break-inside:auto}section.binome,section.equipe{border:0;padding:0;margin:0;break-before:page}.radar svg{width:min(100%,300px);min-width:0}.halteres svg,.chaleur svg{min-width:0!important}.valeurs{display:none}.grille{grid-template-columns:repeat(2,1fr)}}
+@media (forced-colors:active){.anneau,.axe,.gr,.lien,.lien-reseau{stroke:CanvasText}.fleche{fill:CanvasText}.lab,.gn,.grp,.fac,.ent,.val{fill:CanvasText}.eten{fill:CanvasText}}
+@media print{*{animation:none!important;transition:none!important}.js .reveal,.js .forme,.js .pt,.js .rang,.js .case,.js .eten,.js .barre span{opacity:1!important;transform:none!important}.js .lien,.js .contour{stroke-dashoffset:0!important}.outils,.toc{display:none!important}@page{size:A4;margin:14mm 12mm}html{font-size:12px}body{font-size:12px;line-height:1.45;background:#fff}main{max-width:none;padding:0}h2,h4{break-after:avoid}figure,.carte,.bloc,tr{break-inside:avoid}.pilote{break-inside:auto}section.binome,section.equipe{border:0;padding:0;margin:0;break-before:page}.radar svg{width:min(100%,300px);min-width:0}.halteres svg,.chaleur svg{min-width:0!important}.valeurs{display:none}.grille{grid-template-columns:repeat(2,1fr)}}
 `;
 
 export const SCRIPT_TETE = `document.documentElement.classList.add('js');`;

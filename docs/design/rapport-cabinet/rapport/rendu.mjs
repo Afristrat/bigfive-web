@@ -4,8 +4,9 @@
 //   rendreHtml({ rapport, cas, faits, profils, bib })           -> HTML complet
 //   rendreHtml({ ..., variante: 'docx' })                         -> variante sans SVG ni script (pandoc)
 // Fonction pure : aucune date, aucun hasard, aucune lecture de fichier.
-import { radarSvg, dumbbellSvg, heatmapSvg, CSS_VISUELS, SCRIPT_TETE, SCRIPT_MOUVEMENT } from '../../profils-fictifs/visuels.mjs';
+import { radarSvg, dumbbellSvg, heatmapSvg, reseauSvg, CSS_VISUELS, SCRIPT_TETE, SCRIPT_MOUVEMENT } from '../../profils-fictifs/visuels.mjs';
 import { bilanRelecture, sourceControlee, dateFr } from './outils.mjs';
+import { NATURE_LIEN } from './niveau34-equipe-organisation.mjs';
 
 const DOMAINES = ['N', 'E', 'O', 'A', 'C'];
 const NIVEAUX = [
@@ -16,7 +17,7 @@ const NIVEAUX = [
   { id: 'n5-accompagnement', court: 'Accompagnement', titre: 'Plan d\'accompagnement' }
 ];
 // Couleur de profil : [clair, sombre]. Clair >= 5:1 sur fond clair, sombre >= 6,8:1 sur carte sombre.
-const COULEURS = { AM: ['#0b6e6e', '#4fc3c3'], KB: ['#8a5a00', '#e0a83a'], SR: ['#a3306b', '#f08cb9'], HT: ['#3a4fa3', '#8fa6f5'] };
+const COULEURS = { AM: ['#141a33', '#c8cde0'], KB: ['#b07514', '#e0a640'], SR: ['#a3306b', '#f08cb9'], HT: ['#3a4fa3', '#8fa6f5'] };
 const PALETTE = [['#0b6e6e', '#4fc3c3'], ['#8a5a00', '#e0a83a'], ['#a3306b', '#f08cb9'], ['#3a4fa3', '#8fa6f5'], ['#4d6b17', '#a6d05c'], ['#7a3b8f', '#d29be6']];
 const NBSP = ' '; // espace insécable avant : ; ? !
 const CONFIANCE = { faible: 'faible', moyenne: 'moyenne', elevee: 'élevée', 'élevée': 'élevée' };
@@ -31,8 +32,8 @@ const CSS_SANS_AVATAR = CSS_VISUELS.split('\n')
   .filter((l) => !l.startsWith('.avatar') && !l.startsWith('@keyframes cligne') && !l.startsWith('@keyframes flotte'))
   .join('\n');
 
-const CLAIR = '--bg:#f7f6f2;--fg:#1d1f21;--mut:#545a62;--card:#fff;--ln:#dedbd2;--grid:#7f858c;--ok:#1f7a4d;--mid:#8a5a00;--no:#545a62;--ecart:#5b3f9a;--focus:#1d4ed8;--link:#1d4ed8;color-scheme:light';
-const SOMBRE = '--bg:#15171a;--fg:#ecece8;--mut:#9aa0a8;--card:#1f2226;--ln:#363b41;--grid:#7b828a;--ok:#5fcf97;--mid:#e0b24a;--no:#9aa0a8;--ecart:#c4b8f5;--focus:#8fb4ff;--link:#8fb4ff;color-scheme:dark';
+const CLAIR = '--bg:#f7f6f2;--fg:#1d1f21;--mut:#545a62;--card:#fff;--ln:#dedbd2;--grid:#7f858c;--ok:#1f7a4d;--mid:#8a5a00;--no:#545a62;--ecart:#11162b;--focus:#1d4ed8;--link:#1d4ed8;color-scheme:light';
+const SOMBRE = '--bg:#15171a;--fg:#ecece8;--mut:#9aa0a8;--card:#1f2226;--ln:#363b41;--grid:#7b828a;--ok:#5fcf97;--mid:#e0b24a;--no:#9aa0a8;--ecart:#ecedf3;--focus:#8fb4ff;--link:#8fb4ff;color-scheme:dark';
 const CSS = `
 :root{${CLAIR}}
 :root[data-theme=dark]{${SOMBRE}}
@@ -45,7 +46,7 @@ h1{font-size:1.9rem;line-height:1.25;margin:.2em 0}h2{margin:0 0 .6em;border-bot
 .muet{color:var(--mut);font-size:.9rem}
 .etiq{display:inline-block;font-size:.85rem;padding:2px 10px;border-radius:999px;border:1px solid var(--mut);color:var(--mut);font-weight:600}
 .avert{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:14px 18px;margin:16px 0}
-.avert ul{margin:.4em 0 0;padding-left:1.2em}.avert li{margin:.25em 0;max-width:68ch}
+.avert ul{margin:.4em 0 0;padding-left:1.2em}.avert li{margin:.25em 0}
 .chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
 .chiffres div{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:10px 14px}
 .chiffres dt{color:var(--mut);font-size:.85rem}.chiffres dd{margin:0;font-size:1.8rem;font-weight:700;font-variant-numeric:tabular-nums}
@@ -60,14 +61,14 @@ section.niveau{background:var(--card);border:1px solid var(--ln);border-radius:1
 .visuels{margin:8px 0 16px}
 .paire{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .initiales{flex:none;vertical-align:middle}
-.para{border-left:4px solid var(--ln);padding:6px 0 6px 12px;margin:12px 0;max-width:68ch}
+.para{border-left:4px solid var(--ln);padding:6px 0 6px 12px;margin:12px 0}
 .para.constate{border-left-color:var(--ok)}.para.hypothese{border-left-color:var(--mid)}
 .para p{margin:.3em 0}
 .statut{display:inline-block;font-size:.85rem;font-weight:700;padding:1px 9px;border-radius:999px;border:1px solid currentColor;text-transform:uppercase;letter-spacing:.03em}
 .constate>.statut{color:var(--ok)}.hypothese>.statut{color:var(--mid)}
 .meta{margin:.3em 0;font-size:.9rem}.meta dt{display:inline;font-weight:700}.meta dd{display:inline;margin:0 14px 0 4px}
 .blocs{font-size:.85rem;color:var(--mut)}.blocs code{background:var(--bg);border:1px solid var(--ln);border-radius:5px;padding:0 5px}
-.verif{color:var(--mut);font-weight:600}
+.meta dd.verif{color:var(--fg);font-weight:400}
 span.verif{display:inline-block;font-size:.85rem;padding:0 8px;border:1px solid var(--ln);border-radius:999px;color:var(--mut);background:var(--bg);font-weight:600}
 .recos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:14px;margin:12px 0}
 .reco{border:1px solid var(--ln);border-top:5px solid var(--mid);border-radius:12px;padding:14px;background:var(--bg)}
@@ -82,7 +83,7 @@ table.refs td[data-controle]{white-space:nowrap}
 .absent{color:var(--mut);font-style:italic}
 footer{margin-top:32px}
 @media (max-width:760px){main{padding:16px}h1{font-size:1.5rem}section.niveau{padding:12px}}
-@media print{:root,:root[data-theme=dark]{${CLAIR}}.toc{display:none}body{background:#fff;color:#1d1f21}section.niveau,.para,.reco{break-inside:avoid}section.niveau{border:0;padding:0}}
+@media print{:root,:root[data-theme=dark]{${CLAIR}}.toc{display:none}body{background:#fff;color:#1d1f21}section.niveau{break-before:page}.para,.reco{break-inside:avoid}section.niveau{border:0;padding:0}.recos{grid-template-columns:1fr}.reco dl{display:grid;grid-template-columns:9em 1fr;gap:.15em 1em;align-items:baseline}.reco dt{margin-top:0}#n2-relations .radar svg{width:min(100%,170px)}#n2-relations .halteres{max-width:none}#n2-relations .halteres svg{display:block;width:72%;margin:0 auto}#n2-relations .sec+.sec:has(.visuels){break-before:page}#n2-relations .sec h3{break-after:avoid}#n2-relations .visuels,#n3-equipe .visuels{display:flex;flex-direction:column}#n2-relations .halteres,#n3-equipe .chaleur{order:-1}#n2-relations .paire{order:-2}}
 ${CSS_SANS_AVATAR}`;
 
 // Couleurs de profil en variables : une valeur claire, une valeur sombre, claire à l'impression.
@@ -227,17 +228,23 @@ export function rendreHtml({ rapport, cas, faits, profils, bib, variante } = {})
 
   // Visuels par niveau
   const dejaRadar = new Set();
+  const dejaPaire = new Set(); // radar et écarts d'un binôme : une seule fois, dans sa première sous-section
   const visuelSection = (num, titreSection, idSection) => {
     const cites = codesCites(`${titreSection} ${idSection}`.replace(/[-_/×]/g, ' '), codes);
     if (num === 1 && cites.length >= 1 && !dejaRadar.has(cites[0])) {
       const p = parCode[cites[0]]; dejaRadar.add(p.code);
       return `<div class="visuels paire">${avatar(p, 56, variante)}${visuel(radarSvg([p], { taille: 260, titre: 'Radar de ' + p.nom }))}</div>`;
     }
-    if (num === 2 && cites.length >= 2) {
-      const [a, b] = [parCode[cites[0]], parCode[cites[1]]];
+    if (num === 2 && cites.length >= 2 && !dejaPaire.has(cites[0] + '×' + cites[1])) {
+      const [a, b] = [parCode[cites[0]], parCode[cites[1]]]; dejaPaire.add(a.code + '×' + b.code);
       return `<div class="visuels"><div class="paire">${avatar(a, 48, variante)}<span aria-hidden="true">×</span>${avatar(b, 48, variante)}</div>`
         + visuel(radarSvg([a, b], { titre: 'Radar de ' + a.nom + ' et ' + b.nom }))
         + visuel(dumbbellSvg(a, b, titres, ecart)) + '</div>';
+    }
+    if (num === 3 && idSection === 'n3-structure') {
+      const equipe = new Set((cas?.personnes ?? []).filter((p) => p.consentements?.equipe === true).map((p) => p.code));
+      const membres = ps.filter((p) => equipe.has(p.code));
+      if (membres.length >= 2) return `<div class="visuels">${visuel(reseauSvg(membres, cas?.relations ?? [], NATURE_LIEN))}</div>`;
     }
     return '';
   };

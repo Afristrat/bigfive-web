@@ -15,7 +15,7 @@ const LIB = {
   E: 'énergie relationnelle, extraversion',
   O: 'ouverture',
   A: 'orientation vers autrui, agréabilité',
-  C: 'rigueur et constance, conscience'
+  C: 'rigueur et constance, conscienciosité'
 };
 const dom = (d) => `domaine ${d} (${LIB[d]})`;
 const Dom = (d) => `Domaine ${d} (${LIB[d]})`;
@@ -31,7 +31,7 @@ const NIVEAUX_ORDRE = ['bas', 'plutot_bas', 'milieu', 'plutot_haut', 'haut'];
 const estHaut = (n) => n === 'plutot_haut' || n === 'haut';
 
 const NATURE_FR = { routine: 'routine', creative: 'création', urgence: 'urgence', projet: 'projet à échéances' };
-const NATURE_LIEN = {
+export const NATURE_LIEN = {
   ligne: 'ligne hiérarchique',
   fonctionnel: 'lien fonctionnel',
   pairs: 'pairs',
@@ -283,6 +283,83 @@ export function construire(ctx) {
   ));
   const secDec = sec(3, 'decision', 'Mécanismes de décision', specDec);
 
+  // Structure de l'équipe : liens déclarés au cas (structure prévue), jamais le réseau réel
+  const POIDS_FREQ = { quotidienne: 3, hebdomadaire: 2, mensuelle: 1 };
+  const FREQ_ADJ = { quotidienne: 'quotidien', hebdomadaire: 'hebdomadaire', mensuelle: 'mensuel' };
+  const liensDe = (code) => relationsP.filter((r) => r.a === code || r.b === code);
+  const autre = (r, code) => (r.a === code ? r.b : r.a);
+  const amont = (r) => (r.sens === 'b->a' ? r.b : r.a);
+  const aval = (r) => (r.sens === 'b->a' ? r.a : r.b);
+  const paires = [];
+  participants.forEach((p, i) => participants.slice(i + 1).forEach((q) => paires.push([p.code, q.code])));
+  const sansLien = paires.filter(([x, y]) => !relationsP.some((r) => (r.a === x && r.b === y) || (r.a === y && r.b === x)));
+  const charge = participants.map((p) => ({ code: p.code, liens: liensDe(p.code), poids: liensDe(p.code).reduce((s, r) => s + (POIDS_FREQ[r.frequence] ?? 0), 0) }));
+  const poidsMax = Math.max(0, ...charge.map((x) => x.poids));
+  const poidsMin = Math.min(...charge.map((x) => x.poids));
+  const carrefours = poidsMax > poidsMin ? charge.filter((x) => x.poids === poidsMax).map((x) => x.code) : [];
+  const sequences = relationsP.filter((r) => r.interdependance === 'sequentielle' && r.sens !== 'reciproque');
+  const relais = participants.map((p) => p.code).filter((code) => sequences.some((r) => aval(r) === code) && sequences.some((r) => amont(r) === code));
+  const chaine = (code) => {
+    const entrees = sequences.filter((r) => aval(r) === code).map(amont);
+    const sorties = sequences.filter((r) => amont(r) === code).map(aval);
+    return `${liste(entrees)} vers ${code} vers ${liste(sorties)}`;
+  };
+  const rares = relationsP.filter((r) => r.frequence === 'mensuelle');
+  const detailFreq = (rels) => liste(Object.keys(POIDS_FREQ)
+    .map((f) => [f, rels.filter((r) => r.frequence === f).length])
+    .filter(([, n]) => n)
+    .map(([f, n]) => `${n} ${FREQ_ADJ[f]}${n > 1 ? 's' : ''}`));
+
+  const specStruct = [
+    c(`Cette section lit les liens de travail déclarés au cas (nature, sens, fréquence, interdépendance) : ils décrivent la structure prévue de l'équipe. Le réseau réel, c'est-à-dire à qui chacun demande conseil, à qui il fait confiance et par où l'information circule vraiment, n'est pas mesuré ici ; il peut s'écarter nettement de la structure prévue (réseau informel au sens de ${nom('krackhardt-hanson-1993')}, 1993).`),
+    c(`${relationsP.length} lien${relationsP.length > 1 ? 's' : ''} déclaré${relationsP.length > 1 ? 's' : ''} sur ${paires.length} paire${paires.length > 1 ? 's' : ''} possible${paires.length > 1 ? 's' : ''} entre les personnes ayant consenti. ${sansLien.length ? `Paires sans lien déclaré : ${sansLien.map(([x, y]) => `${x} et ${y}`).join(' ; ')}.` : 'Chaque paire a un lien déclaré.'}`),
+    c(`Liens déclarés par personne, et leur fréquence : ${charge.map((x) => `${x.code}, ${x.liens.length} lien${x.liens.length > 1 ? 's' : ''} (${detailFreq(x.liens)})`).join(' ; ')}.`)
+  ];
+  if (sequences.length) {
+    specStruct.push(c(`Liens de séquence orientés (le travail de la première personne alimente celui de la seconde) : ${sequences.map((r) => `${amont(r)} vers ${aval(r)}`).join(' ; ')}.`));
+  }
+  for (const code of relais) {
+    specStruct.push(h(
+      `${code} se situe au milieu d'une chaîne de séquence déclarée (${chaine(code)}). Il se peut que les retards et les informations incomplètes de l'amont se concentrent à ce point de passage, et que ce rôle de relais n'apparaisse dans aucun organigramme ni dans aucune fiche de poste.`,
+      'faible',
+      `Demander à ${code} ce qu'il reçoit de l'amont, sous quelle forme et avec quel délai, et ce qu'il doit reprendre ou compléter avant de transmettre.`
+    ));
+  }
+  if (carrefours.length) {
+    specStruct.push(h(
+      `En pondérant chaque lien par sa fréquence (quotidien 3, hebdomadaire 2, mensuel 1, convention de ce rapport), ${liste(carrefours)} ${carrefours.length > 1 ? 'portent' : 'porte'} la charge de liens la plus élevée de l'équipe. Il se peut que la coordination repose davantage sur ${carrefours.length > 1 ? 'ces personnes' : 'cette personne'}, et qu'une absence y produise un blocage que la structure prévue ne montre pas.`,
+      'faible',
+      `Demander à l'équipe ce qui s'est passé la dernière fois que ${carrefours.length > 1 ? `${carrefours.slice(0, -1).join(', ')} ou ${carrefours.at(-1)}` : carrefours[0]} était absent, et qui a pris le relais.`
+    ));
+  }
+  if (rares.length) {
+    specStruct.push(h(
+      `Lien${rares.length > 1 ? 's' : ''} à fréquence mensuelle : ${rares.map((r) => `${r.id} (${NATURE_LIEN[r.nature] ?? r.nature})`).join(' ; ')}. Il se peut qu'un lien aussi espacé laisse passer des questions sans réponse entre deux rencontres, et que l'échange réel passe alors par une tierce personne.`,
+      'faible',
+      `Demander aux personnes concernées comment elles se joignent entre deux rencontres prévues, et par qui passe l'information dans l'intervalle.`
+    ));
+  }
+  if (sansLien.length) {
+    specStruct.push(h(
+      `Pour les paires sans lien déclaré, il se peut que l'information transite par une tierce personne, ce qui allonge le circuit et charge cette personne.`,
+      'faible',
+      "Demander à chacune des deux personnes à qui elle s'adresse quand elle a besoin de l'autre."
+    ));
+  }
+  const leviers = [];
+  if (relais.length) leviers.push(`rendre visible et partager la charge de relais de ${liste(relais)} (un point de passage écrit, une personne de suppléance désignée)`);
+  if (carrefours.length) leviers.push(`organiser une suppléance pour ${liste(carrefours)}, afin qu'aucune décision ne dépende d'une seule présence`);
+  if (rares.length) leviers.push(`installer un canal d'échange entre deux rencontres sur ${rares.length > 1 ? 'les liens' : 'le lien'} ${ids(rares)}`);
+  if (sansLien.length) leviers.push('créer un lien direct là où l\'information transite par un tiers');
+  if (!leviers.length) leviers.push('confronter la structure prévue au réseau réel avant tout changement, faute de point de fragilité visible dans les liens déclarés');
+  specStruct.push(h(
+    `Leviers pour développer cette structure, à choisir avec l'équipe et non à imposer : ${leviers.join(' ; ')}. Le réseau informel se développe par des occasions de travail réelles, non par un organigramme ; ${nom('cross-parker-2004')} (2004) décrivent ce travail à partir des personnes centrales, des intermédiaires et des personnes en périphérie.`,
+    'faible',
+    "Soumettre ces leviers à l'équipe et lui demander lesquels répondent à une difficulté qu'elle a déjà rencontrée, et lesquels seraient une charge de plus."
+  ));
+  specStruct.push(c("Étape suivante proposée, non réalisée dans ce rapport : relever le réseau réel par quatre questions posées à chaque membre (à qui il demande conseil, d'où lui vient l'information utile, à qui il se fie pour signaler une erreur, de qui il dépend pour avancer), avec un consentement spécifique, puisque chaque réponse porte sur des collègues, et un cadrage au titre de la loi 09-08. La comparaison entre la structure prévue et le réseau réel est la seule lecture directe de la structure invisible de l'équipe."));
+  const secStruct = sec(3, 'structure', "Structure de l'équipe : liens déclarés et comment les développer", specStruct);
+
   // Sécurité psychologique
   const facteurs = [];
   const heritage = parType('heritage')[0];
@@ -331,7 +408,7 @@ export function construire(ctx) {
   const n3 = {
     id: 'n3-equipe',
     titre: "Analyse d'équipe",
-    sections: participants.length >= 2 ? [secPerimetre, secCarto, secDiv, secDec, secSecu, secCoord] : [secPerimetre]
+    sections: participants.length >= 2 ? [secPerimetre, secCarto, secDiv, secDec, secStruct, secSecu, secCoord] : [secPerimetre]
   };
 
   // ---------------------------------------------------------------- N4 : lecture organisationnelle

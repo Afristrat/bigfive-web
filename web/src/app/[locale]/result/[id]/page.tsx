@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getTestResult, type Report } from '@/actions';
 import { B5Error } from '@/types';
 import { getTranslations } from 'next-intl/server';
-import { boutonPrincipal } from '@/components/primitives';
+import { secondaryButtonClass } from '@/components/form-styles';
 import { ResultHeader } from '@/components/resultats/result-header';
 import {
   ResultView,
@@ -70,8 +70,9 @@ export default async function ResultPage({
       ancres={[{ id: 'identifiant', label: flow('railId') }]}
       entete={
         <ResultHeader
+          surtitre={t('surtitre')}
           titre={t('title')}
-          date={remplir(libelles.passeLe, {
+          sousTitre={remplir(libelles.passeLe, {
             date: formatDate(report.timestamp, locale)
           })}
           chapo={t('intro')}
@@ -79,7 +80,7 @@ export default async function ResultPage({
         />
       }
     >
-      <div id='identifiant' data-revele className='scroll-mt-32'>
+      <div id='identifiant' data-revele className='mt-20 scroll-mt-32'>
         <CopyId
           id={report.id}
           title={t('idLabel')}
@@ -89,15 +90,9 @@ export default async function ResultPage({
         />
       </div>
 
-      <div className='mt-6 flex flex-wrap gap-3 print:hidden'>
+      <div className='mt-10 flex flex-wrap gap-3 print:hidden'>
         <PrintButton label={t('print')} />
-        <Link
-          href='/'
-          className={boutonPrincipal({
-            className:
-              'border-trait-fort bg-surface text-encre shadow-none hover:bg-creux'
-          })}
-        >
+        <Link href='/' data-aimant='' className={secondaryButtonClass}>
           {t('backHome')}
         </Link>
       </div>

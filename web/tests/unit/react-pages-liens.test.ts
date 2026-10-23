@@ -232,8 +232,9 @@ describe('FacetCard : alignement du score', () => {
 
   it('le paragraphe suit le sens de la page (fin logique) ; seul le nombre est isolé en LTR', () => {
     const html = rendreCarte('ar');
-    expect(html).toMatch(/<p class="mt-2 text-end">/);
-    expect(html).toMatch(/<span dir="ltr">/);
+    // Le nombre et son plafond forment un bloc posé en fin de ligne logique.
+    expect(html).toMatch(/<p class="flex-none">/);
+    expect(html).toMatch(/<span dir="ltr"[^>]*>/);
     expect(html).not.toMatch(/<p[^>]*dir="ltr"/);
   });
 });

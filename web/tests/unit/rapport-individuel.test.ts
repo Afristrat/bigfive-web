@@ -699,15 +699,103 @@ describe('RapportIndividuel : rendu', () => {
   it('« Lire ce rapport » dit ce que le rapport ne dit pas, et à qui il va (personne)', () => {
     const html = rendreRapport('personne');
     expect(html).toContain(fr.rapport.lire.titre);
-    expect(html).toContain(fr.rapport.lire.neDitPas);
+    for (const texteLire of Object.values(fr.rapport.lire.personne)) {
+      expect(html).toContain(texteLire);
+    }
     expect(html).toContain(fr.rapport.lire.destinatairesPersonne);
     expect(html).not.toContain(fr.rapport.lire.destinatairesConsultant);
+    expect(html).not.toContain(fr.rapport.lire.consultant.ce);
   });
 
   it('« Lire ce rapport » côté consultant : destinataires propres au consultant', () => {
     const html = rendreRapport('consultant');
     expect(html).toContain(fr.rapport.lire.destinatairesConsultant);
     expect(html).not.toContain(fr.rapport.lire.destinatairesPersonne);
+  });
+
+  it('côté consultant, le rapport parle de la personne à la troisième personne', () => {
+    const html = rendreRapport('consultant');
+    for (const texteLire of Object.values(fr.rapport.lire.consultant)) {
+      expect(html).toContain(texteLire);
+    }
+    expect(html).not.toContain(fr.rapport.lire.personne.ce);
+    const lire = /data-section="lire"[\s\S]*?<\/section>/.exec(html)?.[0];
+    expect(lire).toBeDefined();
+    expect(texte(lire ?? '')).not.toMatch(/\b(vous|votre|vos)\b/i);
+    // La question d'entretien s'adresse au consultant, pas à la personne.
+    expect(html).toContain(fr.rapport.consultant.question);
+    expect(html).not.toContain(fr.mesResultats.vue.question);
+  });
+
+  it('tensions : l’écart est un écart de totaux sur 20, l’unité de la carte des facettes', () => {
+    const rapport = construireRapportIndividuel({
+      scores: SCORES_AM,
+      locale: 'fr',
+      audience: 'personne'
+    });
+    expect(rapport.tensions.length).toBeGreaterThan(0);
+    const total = (code: FacetteCode): number =>
+      rapport.carte.find((ligne) => ligne.code === code)?.score ?? NaN;
+    const t = texte(rendreRapport('personne')).replace(/\s+/g, ' ');
+    for (const tension of rapport.tensions) {
+      const ecart = Math.abs(
+        total(tension.facettes[0]) - total(tension.facettes[1])
+      );
+      expect(Number.isInteger(ecart)).toBe(true);
+      expect(t).toContain(`écart de ${ecart} sur 20`);
+    }
+  });
+
+  it('glose du névrosisme sous l’en-tête du domaine N, une seule fois', () => {
+    for (const audience of ['personne', 'consultant'] as const) {
+      const html = rendreRapport(audience);
+      const section =
+        /data-domaine="N"[\s\S]*?<\/section>/.exec(html)?.[0] ?? '';
+      expect(section).toContain(fr.mesResultats.vue.gloseNevrosisme);
+      expect(html.split(fr.mesResultats.vue.gloseNevrosisme).length - 1).toBe(
+        1
+      );
+    }
+  });
+
+  it('les questions d’entretien ne sont pas annoncées au nombre de trois (il y en a de zéro à trois)', () => {
+    for (const catalogue of [fr, en, ar]) {
+      expect(catalogue.rapport.ensemble.entretienIntro).not.toMatch(
+        /trois|three|ثلاثة/i
+      );
+    }
+  });
+
+  it('« Conscience » n’est jamais le nom du domaine C dans les textes de l’application', () => {
+    const espaces = ['rapport', 'mesResultats', 'niveaux', 'binome'] as const;
+    for (const espace of espaces) {
+      const valeurs = feuilles(
+        (fr as unknown as Record<string, Tree>)[espace] as Tree
+      ).map(([, v]) => v);
+      for (const v of valeurs) {
+        expect(v).not.toMatch(/\bConscience\b(?! de soi)/);
+      }
+    }
+    for (const audience of ['personne', 'consultant'] as const) {
+      expect(texte(rendreRapport(audience))).not.toMatch(
+        /\bConscience\b(?! de soi)/
+      );
+    }
+  });
+
+  it('les textes « Lire ce rapport » existent dans les deux voix, dans les trois langues', () => {
+    for (const catalogue of [fr, en, ar]) {
+      const lire = catalogue.rapport.lire;
+      expect(Object.keys(lire.consultant).sort()).toEqual(
+        Object.keys(lire.personne).sort()
+      );
+    }
+    for (const valeur of Object.values(en.rapport.lire.consultant)) {
+      expect(valeur).not.toMatch(/\b(you|your)\b/i);
+    }
+    for (const valeur of Object.values(ar.rapport.lire.consultant)) {
+      expect(valeur).not.toMatch(/(إجابتك|مستقبلك|عنك|تضعك)/);
+    }
   });
 
   it('personne : les 30 facettes dans la carte, dont O6', () => {
@@ -876,7 +964,10 @@ describe('page /mes-resultats/[participation]/rapport : audience personne', () =
     loadMaParticipation.mockResolvedValue(participation());
     const html = await appeler(ID);
     expect(loadMaParticipation).toHaveBeenCalledWith(expect.anything(), ID);
-    expect(html).toContain(fr.rapport.personne.titre);
+    // Le titre monte mot à mot : on le lit dans le texte de la page.
+    expect(texte(html).replace(/\s+/g, ' ')).toContain(
+      fr.rapport.personne.titre
+    );
     expect(html).toContain('data-carte="O6"');
     expect(html).toContain(fr.rapport.lire.destinatairesPersonne);
     expect(html).toContain(fr.mesResultats.vue.enRelecture);

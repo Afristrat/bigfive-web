@@ -1,87 +1,94 @@
 'use client';
 
-import { button as buttonStyles } from '@nextui-org/theme';
-import { Link } from '@nextui-org/link';
+import { FormEvent, useEffect, useId, useState } from 'react';
 import clsx from 'clsx';
-import { Button } from '@nextui-org/button';
-import { useRouter } from '@/navigation';
+import { ArrowRightIcon } from '@/components/icons';
+import { labelClass, secondaryButtonClass } from '@/components/form-styles';
+import { boutonPrincipal } from '@/components/primitives';
 import { formatAndValidateId, formatId } from '@/lib/helpers';
-import { useEffect, useMemo, useState } from 'react';
-import { Input } from '@nextui-org/input';
-import { ResultIcon } from '@/components/icons';
+import { Link, useRouter } from '@/navigation';
 
 interface GetResultPageProps {
-  viewPreviousText: string;
-  getResultsText: string;
+  labels: {
+    champ: string;
+    exemple: string;
+    invalide: string;
+    afficher: string;
+    precedent: string;
+  };
 }
 
-export const GetResultPage = ({
-  viewPreviousText,
-  getResultsText
-}: GetResultPageProps) => {
+// Champ « identifiant ou adresse » : l'erreur de format n'apparaît qu'à
+// l'envoi ou en quittant le champ, jamais pendant la saisie ; elle est reliée
+// au champ (aria-describedby) et annoncée. Le dernier résultat ouvert dans ce
+// navigateur reste proposé à côté.
+export const GetResultPage = ({ labels }: GetResultPageProps) => {
   const router = useRouter();
+  const ids = useId();
+  const [precedent, setPrecedent] = useState<string | null>(null);
+  const [saisie, setSaisie] = useState('');
+  const [verifie, setVerifie] = useState(false);
 
-  const [previousResultId, setPreviousResultId] = useState<string | null>(null);
-  const [id, setId] = useState('');
-
-  const isInvalidId = useMemo(() => {
-    if (id === '') return false;
-
-    return !formatAndValidateId(id);
-  }, [id]);
+  const invalide = verifie && saisie !== '' && !formatAndValidateId(saisie);
 
   useEffect(() => {
-    const resultId = localStorage.getItem('resultId');
-    if (resultId) {
-      setPreviousResultId(resultId);
+    try {
+      setPrecedent(localStorage.getItem('resultId'));
+    } catch {
+      setPrecedent(null);
     }
   }, []);
 
-  const handleGetResults = () => {
-    if (!formatAndValidateId(id)) return;
-    router.push(`/result/${formatId(id)}`);
+  const envoyer = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    setVerifie(true);
+    if (!formatAndValidateId(saisie)) return;
+    router.push(`/result/${formatId(saisie)}`);
   };
 
   return (
-    <>
-      <div className='w-full my-3'>
-        <Input
-          type='text'
-          label='ID'
-          labelPlacement='outside'
-          placeholder='58a70606a835c400c8b38e84'
-          startContent={
-            <ResultIcon className='text-2xl text-default-400 pointer-events-none flex-shrink-0' />
-          }
-          isInvalid={isInvalidId}
-          color={isInvalidId ? 'danger' : 'default'}
-          onValueChange={setId}
-          errorMessage={isInvalidId && 'Please enter a valid ID'}
-          value={id}
-        />
-      </div>
-      <div className='flex justify-end gap-3'>
-        {previousResultId && (
-          <Link
-            className={clsx(
-              buttonStyles({ color: 'danger', size: 'lg' }),
-              'w-full md:w-auto'
-            )}
-            href={`/result/${previousResultId}`}
-          >
-            {viewPreviousText}
+    <form onSubmit={envoyer} noValidate>
+      <label htmlFor={`${ids}-champ`} className={labelClass}>
+        {labels.champ}
+      </label>
+      <input
+        id={`${ids}-champ`}
+        type='text'
+        dir='ltr'
+        inputMode='text'
+        autoComplete='off'
+        spellCheck={false}
+        value={saisie}
+        onChange={(e) => setSaisie(e.target.value)}
+        onBlur={() => setVerifie(true)}
+        aria-invalid={invalide || undefined}
+        aria-describedby={`${ids}-aide${invalide ? ` ${ids}-erreur` : ''}`}
+        className={clsx(
+          'block min-h-11 w-full rounded-controle border bg-surface px-3 font-mono text-corps text-encre transition-colors duration-courte ease-tenga hover:border-encre focus-visible:border-accent motion-reduce:transition-none rtl:text-end',
+          invalide ? 'border-erreur' : 'border-trait-fort'
+        )}
+      />
+      <p id={`${ids}-aide`} className='mt-2 text-petit text-texte-3'>
+        {labels.exemple}
+      </p>
+      <p
+        id={`${ids}-erreur`}
+        role='alert'
+        className='mt-2 min-h-[1.5em] text-petit text-erreur'
+      >
+        {invalide ? labels.invalide : ''}
+      </p>
+      <div className='mt-4 flex flex-wrap gap-3'>
+        <button type='submit' data-aimant='' className={boutonPrincipal()}>
+          {labels.afficher}
+          <ArrowRightIcon size={18} />
+        </button>
+        {precedent && (
+          <Link href={`/result/${precedent}`} className={secondaryButtonClass}>
+            {labels.precedent}
           </Link>
         )}
-        <Button
-          color='primary'
-          size='lg'
-          className='w-full md:w-auto'
-          onClick={handleGetResults}
-          isDisabled={id === '' || isInvalidId}
-        >
-          {getResultsText}
-        </Button>
       </div>
-    </>
+    </form>
   );
 };

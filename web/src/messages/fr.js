@@ -7,6 +7,7 @@ import binomeFr from './espace/binome.fr.js';
 import syntheseFr from './espace/synthese.fr.js';
 import apercuFr from './espace/apercu.fr.js';
 import relectureFr from './espace/relecture.fr.js';
+import pilotageFr from './espace/pilotage.fr.js';
 
 const french = {
   language: {
@@ -851,6 +852,7 @@ const french = {
     }
   },
   results: {
+    surtitre: 'Résultat du questionnaire',
     title: 'Votre profil selon les cinq grands facteurs',
     idLabel: 'Identifiant de ce résultat',
     idHint: 'Conservez-le pour retrouver ce résultat plus tard.',
@@ -1154,13 +1156,16 @@ const french = {
     }
   },
   getResult: {
-    result: 'Résultat',
+    surtitre: 'Résultat du questionnaire',
+    result: 'Retrouver un résultat',
     explanation:
-      "Si vous avez passé le test et enregistré votre identifiant, vous pouvez voir les résultats ici en tapant l'identifiant que vous avez obtenu, c'est-à-dire",
-    idInput: 'dans le champ de saisie ID',
-    urlOrId: 'URL ou ID de votre résultat',
-    getResult: 'Obtenez le résultat',
-    viewPrevious: 'Afficher le résultat précédent'
+      'À la fin du questionnaire, un identifiant de vingt-quatre caractères vous a été donné. Saisissez-le, ou collez l’adresse de la page de résultat, pour afficher à nouveau votre profil.',
+    idInput: 'Identifiant ou adresse du résultat',
+    urlOrId: 'Par exemple 58a70606a835c400c8b38e84',
+    invalid:
+      'Cet identifiant n’a pas le bon format : vingt-quatre caractères, chiffres et lettres de a à f.',
+    getResult: 'Afficher le résultat',
+    viewPrevious: 'Revoir le dernier résultat de ce navigateur'
   },
   niveaux: niveauxFr,
   passation: passationFr,
@@ -1170,6 +1175,7 @@ const french = {
   synthese: syntheseFr,
   apercu: apercuFr,
   relecture: relectureFr,
+  pilotage: pilotageFr,
   // Mouvement du parcours (questionnaire et résultat).
   flow: {
     railLabel: 'Sommaire du résultat',

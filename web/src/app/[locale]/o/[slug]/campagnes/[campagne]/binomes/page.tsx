@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { title } from '@/components/primitives';
+import { EntetePilotage } from '@/components/pilotage/entete-pilotage';
 import { BinomeProposition } from '@/components/rapports/binome-consent';
 import { libellesProposition } from '@/components/rapports/rapport-binome';
 import { loadOrgPage, parseOrgSlug } from '@/lib/campaign-data';
@@ -12,7 +12,6 @@ import {
 import { formatDateMaroc, formatNombre, isolerEnArabe } from '@/lib/format';
 import { requireViewer } from '@/lib/session';
 import { parseCampaignId } from '@/lib/synthese-data';
-import { Link } from '@/navigation';
 
 interface Props {
   params: Promise<{ locale: string; slug: string; campagne: string }>;
@@ -66,34 +65,28 @@ export default async function PropositionPage({ params }: Props) {
   }));
 
   return (
-    <div className='flex flex-col gap-8'>
-      <header>
-        <h1 className={title()}>
-          <bdi>{page.org.nom}</bdi>{' '}
-          <span className='mt-2 block text-titre-2 text-encre'>
-            {t('proposition.titre')}
-          </span>
-        </h1>
-        <p className='mt-2 text-chapo text-texte-2'>
-          {t('proposition.campagne', {
-            titre: isolerEnArabe(campagne.titre, locale)
-          })}
-        </p>
-        <p className='mt-4 colonne-lecture text-texte-2'>
-          {t('proposition.intro')}
-        </p>
-        <p className='mt-4'>
-          <Link
-            href={`/o/${slug}/campagnes/${campaignId}/resultats`}
-            className='underline'
-          >
-            {t('proposition.retour')}
-          </Link>
-        </p>
-      </header>
+    <div className='flex flex-col gap-12'>
+      <EntetePilotage
+        retour={{
+          href: `/o/${slug}/campagnes/${campaignId}/resultats`,
+          libelle: t('proposition.retour')
+        }}
+        surtitre={<bdi>{page.org.nom}</bdi>}
+        titre={t('proposition.titre')}
+        chapo={
+          <>
+            <p>
+              {t('proposition.campagne', {
+                titre: isolerEnArabe(campagne.titre, locale)
+              })}
+            </p>
+            <p className='mt-3 text-corps'>{t('proposition.intro')}</p>
+          </>
+        }
+      />
 
       {options.length < 2 ? (
-        <p className='text-texte-2'>{t('proposition.moinsDeDeux')}</p>
+        <p className='carte text-texte-2'>{t('proposition.moinsDeDeux')}</p>
       ) : (
         <BinomeProposition options={options} labels={libellesProposition(t)} />
       )}

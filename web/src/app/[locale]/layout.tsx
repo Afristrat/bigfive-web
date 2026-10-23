@@ -137,7 +137,8 @@ export default async function RootLayout({
                   mainNav: t('a11y.mainNav'),
                   language: t('language.label'),
                   toDark: t('theme.toDark'),
-                  toLight: t('theme.toLight')
+                  toLight: t('theme.toLight'),
+                  reports: t('pilotage.menu.bouton')
                 }}
               />
               <main

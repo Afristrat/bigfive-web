@@ -1,6 +1,8 @@
 const mesResultatsEn = {
   title: 'My results',
-  intro: 'Your assessments, with their status and your results.',
+  surtitre: 'Your personal space',
+  intro:
+    'Each questionnaire offered to you, its status and, once completed, your profile.',
   empty: 'You have no assessment yet.',
   statut: {
     ouverte: 'To start',
@@ -21,14 +23,18 @@ const mesResultatsEn = {
   formatAnterieur:
     'Result saved in an earlier format: it cannot be displayed here.',
   vue: {
-    radarTitle: 'Your five domains',
+    radarTitle: 'The shape of your profile',
     radarSummary: 'Radar chart with five axes, from 24 to 120.',
+    profilIntro:
+      'Each axis runs from 24 at the centre to 120 at the edge. The further a point sits from the centre, the more your answers lean towards that domain.',
     scoresTitre: 'Your scores by domain',
     columnDomain: 'Domain',
     columnScore: 'Score',
     domainOutOf: 'out of 120',
     facetOutOf: 'out of 20',
-    facettes: 'Facets',
+    facettes: 'Thirty facets, domain by domain',
+    facettesIntro:
+      'Each domain breaks down into six facets, each from 4 to 20. The texts that go with them are leads for reading, not findings.',
     description: 'Description',
     apport: 'What this brings',
     cout: 'What this can cost',
@@ -38,9 +44,11 @@ const mesResultatsEn = {
     langueAbsente:
       'The interpretation texts are not yet available in this language.',
     nonRelu: 'Unreviewed text: this content has not been reviewed yet.',
+    gloseNevrosisme:
+      'Sensitivity to negative emotions and stress; not a diagnosis.',
     tensionsTitre: 'Internal tensions',
     tensionsIntro: 'Facets of the same domain whose levels differ markedly.',
-    tension: 'Between {a} and {b}: gap of {ecart}'
+    tension: 'Between {a} and {b}: gap of {ecart} out of 20'
   }
 };
 

@@ -181,8 +181,9 @@ describe('ResultView : niveaux', () => {
     };
     for (const [code, [niveau, mot]] of Object.entries(attendu)) {
       const section = html.split(`data-domaine="${code}"`)[1] ?? '';
+      // Curseur à cinq crans (décoratif), puis le niveau en toutes lettres.
       const badge = section.match(
-        /<span[^>]*data-niveau="([a-z_]+)"[^>]*>([^<]*)<\/span>/
+        /<span[^>]*data-niveau="([a-z_]+)"[\s\S]*?<span data-niveau-libelle="">([^<]*)<\/span>/
       );
       expect(badge?.[1], code).toBe(niveau);
       expect(badge?.[2], code).toBe(esc(mot));
@@ -339,6 +340,35 @@ describe('ResultView : tensions internes', () => {
       `Entre ${esc(facetLabel('O', 1, 'fr'))} et ${esc(facetLabel('O', 2, 'fr'))}${NBSP}: écart de`
     );
   });
+
+  it('l’écart s’exprime dans l’unité des facettes affichées : des totaux sur 20', () => {
+    const reponses = Object.fromEntries(
+      items.map((item) => [
+        item.id,
+        item.domain === 'O' && item.facet === 1
+          ? 5
+          : item.domain === 'O' && item.facet === 2
+            ? 1
+            : 3
+      ])
+    );
+    const profil = profilDepuisScores(calculerScores(reponses, null));
+    const ecart = Math.abs(profil.facettes.O1.score - profil.facettes.O2.score);
+    expect(ecart).toBeGreaterThan(5);
+    const html = rendre({ profil });
+    expect(html).toContain(`écart de ${ecart} sur 20`);
+  });
+});
+
+describe('ResultView : glose du névrosisme', () => {
+  it('à la première occurrence du domaine dans la fiche : ce n’est pas un diagnostic', () => {
+    const html = rendre();
+    const glose = (
+      fr as unknown as { mesResultats: { vue: { gloseNevrosisme: string } } }
+    ).mesResultats.vue.gloseNevrosisme;
+    expect(glose).toMatch(/pas un diagnostic/);
+    expect(html.split(esc(glose)).length - 1).toBe(1);
+  });
 });
 
 describe('composants du dossier resultats', () => {
@@ -348,6 +378,7 @@ describe('composants du dossier resultats', () => {
     expect(fichiers.sort()).toEqual([
       'facet-card.tsx',
       'level-badge.tsx',
+      'lien-retour.tsx',
       'result-header.tsx',
       'result-motion.tsx',
       'result-rail.tsx',

@@ -129,6 +129,17 @@ describe('groupes fictifs', () => {
     }
   });
 
+  it('noms traduits en anglais et en arabe, français par défaut', () => {
+    expect(groupesApercu('fr')[0]?.nom).toBe('Équipe Atlas (fictive)');
+    expect(groupesApercu('en')[0]?.nom).toBe('Atlas team (fictitious)');
+    expect(groupesApercu('ar')[0]?.nom).toBe('فريق أطلس (وهمي)');
+    for (const locale of ['en', 'ar']) {
+      for (const g of groupesApercu(locale)) {
+        expect(g.nom).not.toMatch(/Équipe|fictive/);
+      }
+    }
+  });
+
   it('les identifiants sont des uuid distincts', () => {
     const ids = groupes.map((g) => g.id);
     expect(new Set(ids).size).toBe(3);
@@ -137,10 +148,12 @@ describe('groupes fictifs', () => {
 });
 
 describe('réglages d’URL', () => {
-  it('valeurs par défaut : participant, AM, sans simulation', () => {
+  it('valeurs par défaut : participant, AM avec KB, lu par la personne, sans simulation', () => {
     expect(lireReglagesApercu({})).toEqual({
       vue: 'participant',
       profil: 'AM',
+      partenaire: 'KB',
+      lecteur: 'personne',
       simulation: false
     });
   });
@@ -152,31 +165,104 @@ describe('réglages d’URL', () => {
         profil: 'HT',
         simulation: 'afficher'
       })
-    ).toEqual({ vue: 'consultant', profil: 'HT', simulation: true });
+    ).toEqual({
+      vue: 'consultant',
+      profil: 'HT',
+      partenaire: 'KB',
+      lecteur: 'personne',
+      simulation: true
+    });
     expect(lireReglagesApercu({ vue: 'groupe' }).vue).toBe('groupe');
+    expect(
+      lireReglagesApercu({
+        vue: 'binome',
+        profil: 'SR',
+        partenaire: 'HT',
+        lecteur: 'consultant'
+      })
+    ).toEqual({
+      vue: 'binome',
+      profil: 'SR',
+      partenaire: 'HT',
+      lecteur: 'consultant',
+      simulation: false
+    });
   });
 
   it('retombe sur les défauts pour toute valeur inconnue ou multiple', () => {
     expect(
       lireReglagesApercu({ vue: 'admin', profil: 'ZZ', simulation: 'oui' })
-    ).toEqual({ vue: 'participant', profil: 'AM', simulation: false });
+    ).toEqual({
+      vue: 'participant',
+      profil: 'AM',
+      partenaire: 'KB',
+      lecteur: 'personne',
+      simulation: false
+    });
+    expect(lireReglagesApercu({ lecteur: 'responsable' }).lecteur).toBe(
+      'personne'
+    );
     expect(lireReglagesApercu({ vue: ['groupe', 'consultant'] }).vue).toBe(
       'participant'
     );
     expect(lireReglagesApercu({ profil: 'sr' }).profil).toBe('AM');
   });
 
-  it('construit les liens avec les seuls réglages utiles', () => {
+  it('le partenaire n’est jamais la première personne', () => {
+    expect(lireReglagesApercu({ profil: 'KB' }).partenaire).toBe('AM');
     expect(
-      lienApercu({ vue: 'participant', profil: 'KB', simulation: true })
+      lireReglagesApercu({ profil: 'SR', partenaire: 'SR' }).partenaire
+    ).toBe('KB');
+    expect(lireReglagesApercu({ partenaire: 'ZZ' }).partenaire).toBe('KB');
+  });
+
+  it('construit les liens avec les seuls réglages utiles', () => {
+    const defaut = { partenaire: 'HT', lecteur: 'personne' } as const;
+    expect(
+      lienApercu({
+        vue: 'participant',
+        profil: 'KB',
+        simulation: true,
+        ...defaut
+      })
     ).toBe(
       '/admin/apercu-resultats?vue=participant&profil=KB&simulation=afficher'
     );
     expect(
-      lienApercu({ vue: 'consultant', profil: 'KB', simulation: true })
+      lienApercu({
+        vue: 'consultant',
+        profil: 'KB',
+        simulation: true,
+        ...defaut
+      })
     ).toBe('/admin/apercu-resultats?vue=consultant&profil=KB');
-    expect(lienApercu({ vue: 'groupe', profil: 'SR', simulation: false })).toBe(
-      '/admin/apercu-resultats?vue=groupe&profil=SR'
+    expect(
+      lienApercu({ vue: 'groupe', profil: 'SR', simulation: false, ...defaut })
+    ).toBe('/admin/apercu-resultats?vue=groupe&profil=SR');
+    expect(
+      lienApercu({
+        vue: 'binome',
+        profil: 'SR',
+        partenaire: 'HT',
+        lecteur: 'consultant',
+        simulation: true
+      })
+    ).toBe(
+      '/admin/apercu-resultats?vue=binome&profil=SR&partenaire=HT&lecteur=consultant'
+    );
+  });
+
+  it('binôme : choisir le partenaire comme première personne libère la place', () => {
+    expect(
+      lienApercu({
+        vue: 'binome',
+        profil: 'KB',
+        partenaire: 'KB',
+        lecteur: 'personne',
+        simulation: false
+      })
+    ).toBe(
+      '/admin/apercu-resultats?vue=binome&profil=KB&partenaire=AM&lecteur=personne'
     );
   });
 });

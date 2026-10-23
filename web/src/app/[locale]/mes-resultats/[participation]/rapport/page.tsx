@@ -1,18 +1,18 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { title } from '@/components/primitives';
 import {
   RapportIndividuel,
   libellesRapport
 } from '@/components/rapports/rapport-individuel';
-import { formatDate, isolerEnArabe, formatDateMaroc } from '@/lib/format';
+import { LienRetour } from '@/components/resultats/lien-retour';
+import { ResultHeader } from '@/components/resultats/result-header';
+import { formatDateMaroc, isolerEnArabe, remplir } from '@/lib/format';
 import {
   loadMaParticipation,
   parseParticipationId
 } from '@/lib/mes-resultats-data';
 import { construireRapportIndividuel } from '@/lib/rapports/individuel';
 import { requireViewer } from '@/lib/session';
-import { Link } from '@/navigation';
 
 interface Props {
   params: Promise<{ locale: string; participation: string }>;
@@ -56,27 +56,25 @@ export default async function RapportPersonnePage({ params }: Props) {
     ? formatDateMaroc(participation.termineeLe, locale)
     : null;
 
+  const libelles = libellesRapport(t, mes, niveaux);
   return (
     <div>
-      <p>
-        <Link
-          href={`/mes-resultats/${participation.participationId}`}
-          className='font-semibold text-accent'
-        >
-          {t('personne.retour')}
-        </Link>
-      </p>
-      <h1 className={`mt-4 ${title()}`}>{t('personne.titre')}</h1>
-      <p className='mt-2 text-texte-2'>
-        {isolerEnArabe(participation.campagneTitre, locale)},{' '}
-        {isolerEnArabe(participation.organisationNom, locale)}
-      </p>
-      <div className='mt-8'>
+      <ResultHeader
+        retour={
+          <LienRetour href={`/mes-resultats/${participation.participationId}`}>
+            {t('personne.retour')}
+          </LienRetour>
+        }
+        surtitre={`${isolerEnArabe(participation.campagneTitre, locale)}, ${isolerEnArabe(participation.organisationNom, locale)}`}
+        titre={t('personne.titre')}
+        sousTitre={date ? remplir(libelles.rempliLe, { date }) : null}
+      />
+      <div className='mt-12'>
         <RapportIndividuel
           rapport={rapport}
           locale={locale}
-          libelles={libellesRapport(t, mes, niveaux)}
-          date={date}
+          libelles={libelles}
+          date={null}
         />
       </div>
     </div>

@@ -1,8 +1,9 @@
 const syntheseFr = {
   title: 'Synthèse de groupe',
-  intro:
-    'Moyennes par domaine, figées à la clôture de la campagne. Seuls les groupes dont l’effectif atteint le seuil d’anonymat sont publiés. Aucune donnée individuelle n’est affichée.',
-  campagne: 'Campagne : {titre}',
+  intro: 'Moyennes par domaine, figées à la clôture de la campagne.',
+  anonymat:
+    'Seuls les groupes dont l’effectif atteint le seuil d’anonymat sont publiés. Aucune donnée individuelle n’est affichée.',
+  repereComplement: 'Trait vertical : moyenne du reste de la campagne',
   retour: 'Retour aux campagnes',
   lien: 'Synthèse',
   lienAria: 'Synthèse de la campagne « {titre} »',
@@ -19,10 +20,9 @@ const syntheseFr = {
   colMoyenne: 'Moyenne du score (de 24 à 120)',
   colEcartType: 'Écart type',
   ecartTypeAbsent: 'écart type non disponible',
-  colNiveau: 'Niveau',
+  colNiveau: 'Niveau (lecture de convention)',
   dispersion:
-    'Écart type : dispersion des réponses, sans étiquette faute de convention.',
-  niveauLecture: 'Lecture de convention : {niveau}'
+    'Écart type : dispersion des réponses, sans étiquette faute de convention.'
 };
 
 export default syntheseFr;

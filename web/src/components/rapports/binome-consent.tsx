@@ -17,12 +17,15 @@ import { LiveMessage, type MessageTon } from '@/components/live-message';
 import { PendingButton } from '@/components/pending-button';
 import { boutonPrincipal } from '@/components/primitives';
 import { transitionSubmit } from '@/components/transition-submit';
+import { apresReponse, type ActionBinome } from '@/lib/binome-decision';
 import { Link, useRouter } from '@/navigation';
 
 // Consentement au binôme : accepter, refuser, retirer. Le serveur décide de
 // tout (la base vérifie qui répond) ; ce composant ne fait qu'envoyer la
-// réponse, dire ce qui s'est passé dans une région vivante, puis rafraîchir la
-// page pour que la liste et le lien vers le rapport suivent l'état réel.
+// réponse et dire ce qui s'est passé dans une région vivante. Après un accord,
+// la page se rafraîchit pour suivre l'état réel ; après un retrait ou un refus,
+// le rapport est fermé : la personne revient à la liste de ses binômes, qui
+// confirme la décision (jamais un 404 sur la page du rapport).
 
 export type BinomeConsentLabels = {
   accepter: string;
@@ -59,14 +62,6 @@ const SUCCES: readonly ReponseBinome['status'][] = [
   'retire'
 ];
 
-// Après ces réponses l'état de la proposition a changé, ou n'est plus tel
-// qu'affiché : la page se rafraîchit.
-const RAFRAICHIR: readonly ReponseBinome['status'][] = [
-  ...SUCCES,
-  'closed',
-  'notfound'
-];
-
 export function BinomeConsent({
   binomeId,
   statut,
@@ -78,12 +73,17 @@ export function BinomeConsent({
   const [pending, demarrer] = useTransition();
   const [reponse, setReponse] = useState<ReponseBinome['status'] | null>(null);
 
-  const envoyer = (action: () => Promise<ReponseBinome>): void => {
+  const envoyer = (
+    geste: ActionBinome,
+    action: () => Promise<ReponseBinome>
+  ): void => {
     if (pending) return;
     demarrer(async () => {
       const retour = await action();
       setReponse(retour.status);
-      if (RAFRAICHIR.includes(retour.status)) router.refresh();
+      const suite = apresReponse(geste, retour.status);
+      if (suite === 'rafraichir') router.refresh();
+      else if (suite) router.push(suite.aller);
     });
   };
 
@@ -100,7 +100,9 @@ export function BinomeConsent({
   return (
     <div className='flex flex-col gap-3'>
       {!aDonneAccord && avecExplication && (
-        <p className='text-petit text-texte-2'>{labels.explication}</p>
+        <p className='max-w-[44em] text-petit text-texte-2'>
+          {labels.explication}
+        </p>
       )}
       <div className='flex flex-wrap gap-3'>
         {aDonneAccord ? (
@@ -108,7 +110,7 @@ export function BinomeConsent({
             type='button'
             className={secondaryButtonClass}
             aria-disabled={pending ? true : undefined}
-            onClick={() => envoyer(() => retirerBinome(binomeId))}
+            onClick={() => envoyer('retirer', () => retirerBinome(binomeId))}
           >
             {labels.retirer}
           </button>
@@ -118,7 +120,9 @@ export function BinomeConsent({
               type='button'
               className={boutonPrincipal()}
               aria-disabled={pending ? true : undefined}
-              onClick={() => envoyer(() => repondreBinome(binomeId, true))}
+              onClick={() =>
+                envoyer('accepter', () => repondreBinome(binomeId, true))
+              }
             >
               {labels.accepter}
             </button>
@@ -126,7 +130,9 @@ export function BinomeConsent({
               type='button'
               className={secondaryButtonClass}
               aria-disabled={pending ? true : undefined}
-              onClick={() => envoyer(() => repondreBinome(binomeId, false))}
+              onClick={() =>
+                envoyer('refuser', () => repondreBinome(binomeId, false))
+              }
             >
               {labels.refuser}
             </button>

@@ -7,6 +7,7 @@ import binomeAr from './espace/binome.ar.js';
 import syntheseAr from './espace/synthese.ar.js';
 import apercuAr from './espace/apercu.ar.js';
 import relectureAr from './espace/relecture.ar.js';
+import pilotageAr from './espace/pilotage.ar.js';
 
 const arabic = {
   language: {
@@ -825,6 +826,7 @@ const arabic = {
     }
   },
   results: {
+    surtitre: 'نتيجة الاستبيان',
     title: 'ملفك وفق العوامل الخمسة الكبرى',
     idLabel: 'رمز هذه النتيجة',
     idHint: 'احتفظ به للعودة إلى هذه النتيجة لاحقًا.',
@@ -1117,13 +1119,16 @@ const arabic = {
     }
   },
   getResult: {
-    result: 'النتيجة',
+    surtitre: 'نتيجة الاستبيان',
+    result: 'استرجاع نتيجة',
     explanation:
-      'سبق وأخذت الاختبار واحتفظت برمز النتيجة؟ يمكنك تحصيل نتيجتك هنا عن طريق إدخال رمز النتيجة مثل ',
-    idInput: ' في الحقل أدناه',
-    urlOrId: 'رابط أو رمز النتيجة',
-    getResult: 'احصل على النتيجة',
-    viewPrevious: 'عرض النتيجة السابقة'
+      'في نهاية الاستبيان، حصلت على رمز من أربعة وعشرين حرفًا. أدخله، أو الصق رابط صفحة النتيجة، لتعرض صورتك الشخصية من جديد.',
+    idInput: 'رمز النتيجة أو رابطها',
+    urlOrId: 'مثلًا 58a70606a835c400c8b38e84',
+    invalid:
+      'صيغة هذا الرمز غير صحيحة: أربعة وعشرون حرفًا، من الأرقام والحروف من a إلى f.',
+    getResult: 'عرض النتيجة',
+    viewPrevious: 'عرض آخر نتيجة في هذا المتصفح'
   },
   niveaux: niveauxAr,
   passation: passationAr,
@@ -1133,6 +1138,7 @@ const arabic = {
   synthese: syntheseAr,
   apercu: apercuAr,
   relecture: relectureAr,
+  pilotage: pilotageAr,
   // Mouvement du parcours (questionnaire et résultat).
   flow: {
     railLabel: 'محتويات النتيجة',

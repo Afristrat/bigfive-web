@@ -37,6 +37,12 @@ vi.mock('next/navigation', () => ({
   }
 }));
 
+// En-tête de pilotage : lien de retour rendu en simple ancre.
+vi.mock('@/navigation', () => ({
+  Link: (props: { href: string; children?: unknown }) =>
+    createElement('a', { href: props.href }, props.children as string)
+}));
+
 vi.mock('@/lib/session', () => ({
   requireViewer: async () => ({
     id: '11111111-1111-4111-8111-111111111111',

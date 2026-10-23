@@ -6,6 +6,11 @@ import { usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 
 import { LanguageMenu } from '@/components/language-menu';
+import {
+  RapportsBarre,
+  RapportsMenuMobile,
+  useMenuRapports
+} from '@/components/rapports-menu';
 import { ThemeSwitch } from '@/components/theme-switch';
 import { Marque } from '@/components/cadre/marque';
 import { Wordmark } from '@/components/icons';
@@ -19,6 +24,8 @@ export type NavbarLabels = {
   language: string;
   toDark: string;
   toLight: string;
+  /** Accès « Rapports », montré seulement si le serveur reconnaît un rôle. */
+  reports: string;
 };
 
 interface NavbarProps {
@@ -41,6 +48,7 @@ export const Navbar = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const locale = useLocale();
+  const rapports = useMenuRapports(locale, pathname);
 
   // Le menu natif se referme à chaque navigation et sur Échap.
   useEffect(() => {
@@ -99,6 +107,11 @@ export const Navbar = ({
             })}
           </ul>
         </nav>
+        <RapportsBarre
+          sections={rapports}
+          pathname={pathname}
+          libelle={labels.reports}
+        />
         <span className='flex-1' />
         <LanguageMenu label={labels.language} />
         <ThemeSwitch
@@ -133,7 +146,7 @@ export const Navbar = ({
           </summary>
           <nav
             aria-label={labels.mainNav}
-            className='absolute end-0 top-14 z-menu grid w-[min(300px,calc(100vw-32px))] origin-top-right gap-0.5 rounded-panneau border border-trait bg-surface p-2 shadow-flottant menu-panneau rtl:origin-top-left dark:shadow-flottant-sombre'
+            className='absolute end-0 top-14 z-menu grid max-h-[calc(100dvh-5rem)] w-[min(300px,calc(100vw-32px))] origin-top-right gap-0.5 overflow-y-auto overscroll-contain rounded-panneau border border-trait bg-surface p-2 shadow-flottant menu-panneau rtl:origin-top-left dark:shadow-flottant-sombre'
           >
             {navMenuItems.map((item, index) => {
               const isActive = isCurrentPath(item.href);
@@ -155,6 +168,12 @@ export const Navbar = ({
                 </NextLink>
               );
             })}
+            <RapportsMenuMobile
+              sections={rapports}
+              pathname={pathname}
+              libelle={labels.reports}
+              onChoisir={() => setIsMenuOpen(false)}
+            />
           </nav>
         </details>
       </div>

@@ -1,79 +1,107 @@
-/* Mouvement du résultat (public, « Mes résultats », aperçu). Styles locaux : ils lisent les jetons
-   globaux (--courbe, --c-*) et n'en définissent aucun. Rien n'est masqué par
-   défaut : la classe .attente n'est posée que par JavaScript, sur ce qui se
-   trouve sous la ligne de flottaison, puis retirée à l'entrée dans l'écran.
-   Animés : transform, opacity, clip-path seulement. */
+/* Mise en scène du résultat (public, « Mes résultats », rapports, aperçu), sur
+   la grammaire de l'accueil : surtitre réglé d'un filet safran, titre qui monte
+   mot à mot (classe globale .mot), planche du radar et ses repères de coupe,
+   fiche des domaines réglée d'un filet d'encre, cascades courtes. Styles
+   locaux : ils lisent les jetons globaux (--courbe, --courbe-glisse, --c-*) et
+   n'en définissent aucun. Rien n'est masqué par défaut : la classe .attente
+   n'est posée que par JavaScript, sur ce qui se trouve sous la ligne de
+   flottaison, puis retirée à l'entrée dans l'écran. Animés : transform,
+   opacity seulement. */
 
-/* Ouverture : le titre se révèle par un masque qui monte, puis la date et le
-   chapeau se posent ; le radar se construit pendant ce temps. */
-.titre {
-  animation: masque 620ms var(--courbe) both;
+/* Ouverture : le surtitre et son filet, puis le chapeau après le titre. */
+.surtitre {
+  animation: monte 600ms var(--courbe) both;
 }
-.sous-titre {
-  animation: monte 480ms var(--courbe) 180ms both;
+.filet {
+  transform-origin: 0 50%;
+  animation: regle 900ms var(--courbe-glisse) 150ms both;
+}
+:global([dir='rtl']) .filet {
+  transform-origin: 100% 50%;
 }
 .chapo {
-  animation: monte 520ms var(--courbe) 300ms both;
-}
-.carte-profil {
-  animation: monte 560ms var(--courbe) 120ms both;
-}
-.carte-scores {
-  animation: monte 560ms var(--courbe) 220ms both;
+  animation: monte 700ms var(--courbe) 420ms both;
 }
 
-/* Facteurs : chaque ligne se pose à son rang. */
+/* Planche du radar : elle se pose, ses quatre repères de coupe se tracent. */
+.planche {
+  animation: monte 800ms var(--courbe) 200ms both;
+}
+.coin {
+  animation: coin 700ms var(--courbe) both;
+  animation-delay: calc(700ms + var(--i, 0) * 80ms);
+}
+
+/* Fiche des domaines : un filet d'encre se règle de bout en bout, puis chaque
+   ligne se pose à son rang. */
+.fiche-filet {
+  transform-origin: 0 50%;
+  animation: regle 1100ms var(--courbe-glisse) 300ms both;
+}
+:global([dir='rtl']) .fiche-filet {
+  transform-origin: 100% 50%;
+}
 .facteur {
-  animation: monte 440ms var(--courbe) both;
-  animation-delay: calc(360ms + var(--i, 0) * 70ms);
+  animation: monte 600ms var(--courbe) both;
+  animation-delay: calc(420ms + var(--i, 0) * 80ms);
 }
 
-/* Cartes de facettes : les six d'un domaine se posent en cascade, leurs règles
-   se tracent dans le même ordre. */
-.facette {
-  animation: monte 380ms var(--courbe) both;
-  animation-delay: calc(80ms + var(--i, 0) * 55ms);
-}
-
-/* Révélation à l'entrée dans l'écran (posée par JavaScript). */
+/* Révélation à l'entrée dans l'écran (posée par JavaScript) : le bloc monte,
+   puis ses éléments en cascade (.cascade, rang --i) le suivent. */
 .attente {
   opacity: 0;
-  clip-path: inset(0 0 100% 0);
+  transform: translateY(28px);
+}
+.vu {
+  transition:
+    opacity 600ms var(--courbe),
+    transform 800ms var(--courbe);
+}
+.cascade {
+  transition:
+    opacity 600ms var(--courbe),
+    transform 700ms var(--courbe);
+  transition-delay: calc(140ms + var(--i, 0) * 60ms);
+}
+.attente .cascade {
+  opacity: 0;
   transform: translateY(16px);
 }
 .attente :global(.regle-trait) {
   animation-play-state: paused;
 }
-.vu {
-  transition:
-    opacity 520ms var(--courbe),
-    clip-path 680ms var(--courbe),
-    transform 680ms var(--courbe);
-}
 
-@keyframes masque {
-  from {
-    clip-path: inset(0 0 100% 0);
-    transform: translateY(0.3em);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-    transform: translateY(0);
-  }
-}
 @keyframes monte {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
+  }
+}
+@keyframes regle {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes coin {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-/* Rail de progression collant : l'élément actif est souligné par un trait
-   qui se trace depuis le bord de début de ligne. */
+/* Sommaire collant : l'élément actif est souligné par un trait safran qui se
+   trace depuis le bord de début de ligne. */
 .rail-lien {
   position: relative;
   touch-action: manipulation;
@@ -86,7 +114,7 @@
   bottom: 0.375rem;
   height: 2px;
   border-radius: 1px;
-  background: rgb(var(--c-accent));
+  background: rgb(var(--c-safran));
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 260ms var(--courbe);
@@ -99,34 +127,35 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .titre,
-  .sous-titre,
+  .surtitre,
+  .filet,
   .chapo,
-  .carte-profil,
-  .carte-scores,
-  .facteur,
-  .facette {
+  .planche,
+  .coin,
+  .fiche-filet,
+  .facteur {
     animation: none;
   }
   .vu,
+  .cascade,
   .rail-lien::after {
     transition: none;
   }
 }
 
 @media print {
-  .titre,
-  .sous-titre,
+  .surtitre,
+  .filet,
   .chapo,
-  .carte-profil,
-  .carte-scores,
-  .facteur,
-  .facette {
+  .planche,
+  .coin,
+  .fiche-filet,
+  .facteur {
     animation: none;
   }
-  .attente {
+  .attente,
+  .attente .cascade {
     opacity: 1;
-    clip-path: none;
     transform: none;
   }
 }

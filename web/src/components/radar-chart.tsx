@@ -20,10 +20,11 @@
 // libellé complet et sa valeur : la lecture ne dépend ni de la couleur ni de la
 // grille. Deux variantes sont rendues, une large et une resserrée (libellés plus
 // grands) sous 640 px ; les classes Tailwind n'en montrent qu'une.
-// Mouvement (radar-motion.module.css) : la grille se pose, chaque axe se trace
-// depuis le centre, son sommet apparaît, puis le contour se referme et l'aire
-// se pose, en 1,9 s au total ; opacité, transformation et stroke-dashoffset
-// seulement. Chaque valeur porte data-compte pour la montée du compteur (page
+// Identité et mouvement (radar-motion.module.css) : grille pointillée sous un
+// cadre plein, tracé et aire safran, sommets en encre (comme le radar de
+// l'accueil). La grille se pose, chaque axe se trace depuis le centre, son
+// sommet apparaît, puis le contour se referme et l'aire se pose, en 1,9 s au
+// total ; opacité, transformation et stroke-dashoffset seulement. Chaque valeur porte data-compte pour la montée du compteur (page
 // de résultat). prefers-reduced-motion et l'impression affichent l'état final.
 import { ReactElement, useId } from 'react';
 import clsx from 'clsx';
@@ -182,10 +183,14 @@ function RadarSvg({
     >
       <title id={`${id}t`}>{title}</title>
       <desc id={`${id}d`}>{description}</desc>
-      {geometry.rings.map((points) => (
+      {geometry.rings.map((points, index) => (
         <polygon
           key={points}
-          className={clsx('radar-anneau', motion.anneau)}
+          className={clsx(
+            'radar-anneau',
+            motion.anneau,
+            index < geometry.rings.length - 1 && motion.pointille
+          )}
           points={points}
         />
       ))}
