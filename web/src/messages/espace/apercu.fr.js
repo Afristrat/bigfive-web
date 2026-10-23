@@ -54,7 +54,8 @@ const apercuFr = {
     releve: 'Relevé vide',
     repondu: 'Relevé rempli',
     oppose: 'Opposition',
-    ferme: 'Relevé fermé'
+    ferme: 'Relevé fermé',
+    fermeOppose: 'Relevé fermé, opposition'
   },
   campagneLegende: 'Campagne',
   campagnes: {

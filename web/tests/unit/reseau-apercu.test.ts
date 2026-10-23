@@ -108,6 +108,14 @@ describe('relevé fictif', () => {
     expect(r.moi?.accordRepondreLe).toBeTruthy();
   });
 
+  it('relevé fermé, personne opposée : opposition posée, aucun accord', () => {
+    const r = releveApercu('AM', 'fermeOppose', 'ouverte');
+    expect(r.ferme).toBe(true);
+    expect(r.moi?.opposeLe).toBeTruthy();
+    expect(r.moi?.accordRepondreLe).toBeNull();
+    expect(r.nbReponses).toBe(0);
+  });
+
   it('campagne close', () => {
     expect(releveApercu('AM', 'repondu', 'close').campagneOuverte).toBe(false);
     expect(releveApercu('AM', 'repondu', 'ouverte').campagneOuverte).toBe(true);

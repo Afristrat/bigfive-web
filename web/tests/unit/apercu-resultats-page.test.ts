@@ -314,7 +314,8 @@ describe('vue réseau', () => {
     ['releve', 'releve'],
     ['repondu', 'releve'],
     ['oppose', 'oppose'],
-    ['ferme', 'ferme']
+    ['ferme', 'ferme'],
+    ['fermeOppose', 'ferme']
   ])('étape %s : écran %s', async (etape, attendu) => {
     const html = await rendre({ vue: 'reseau', etape });
     expect(html).toContain(`data-etape="${attendu}"`);
@@ -347,7 +348,8 @@ describe('vue réseau', () => {
       'releve',
       'repondu',
       'oppose',
-      'ferme'
+      'ferme',
+      'fermeOppose'
     ]) {
       expect(html).toContain(
         `href="/admin/apercu-resultats?vue=reseau&amp;profil=SR&amp;etape=${etape}&amp;campagne=ouverte"`
@@ -356,6 +358,15 @@ describe('vue réseau', () => {
     expect(html).toContain('campagne=close');
     // Vue, personne qui répond, étape et campagne.
     expect(nbOccurrences(html, 'aria-current="page"')).toBe(4);
+  });
+
+  it('relevé fermé : non opposé avec bouton d’opposition, opposé avec la phrase de réouverture', async () => {
+    const libre = await rendre({ vue: 'reseau', etape: 'ferme' });
+    expect(libre).toContain(echappe(fr.reseau.opposer.bouton));
+    expect(libre).toContain(echappe(fr.reseau.retrait.bouton));
+    const oppose = await rendre({ vue: 'reseau', etape: 'fermeOppose' });
+    expect(oppose).toContain(echappe(fr.reseau.ferme.leverPlusTard));
+    expect(oppose).not.toContain(echappe(fr.reseau.oppose.lever));
   });
 
   it('campagne en préparation : bandeau propre', async () => {

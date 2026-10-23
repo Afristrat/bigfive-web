@@ -392,10 +392,19 @@ describe('relevé fermé (interrupteur), ma ligne présente', () => {
     );
   });
 
-  it('opposé : lever l’opposition, pas de nouvelle opposition', () => {
+  it('opposé : ni levée (refusée par la base fermée), ni nouvelle opposition ; la phrase de réouverture', () => {
     const html = ferme({ opposeLe: '2026-10-23T09:10:00Z' });
-    expect(html).toContain(echappe(fr.reseau.oppose.lever));
+    expect(html).not.toContain(echappe(fr.reseau.oppose.lever));
     expect(html).not.toContain(echappe(fr.reseau.opposer.bouton));
+    expect(html).toContain(echappe(fr.reseau.ferme.leverPlusTard));
+    // « à tout moment » serait faux tant que le relevé est fermé.
+    expect(html).not.toContain(echappe(fr.reseau.oppose.texte));
+  });
+
+  it('non opposé : le bouton d’opposition, sans la phrase de réouverture', () => {
+    const html = ferme();
+    expect(html).toContain(echappe(fr.reseau.opposer.bouton));
+    expect(html).not.toContain(echappe(fr.reseau.ferme.leverPlusTard));
   });
 });
 

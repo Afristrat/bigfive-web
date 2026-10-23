@@ -120,7 +120,9 @@ const reseauFr = {
   ferme: {
     titre: 'Relevé fermé',
     texte:
-      'Le relevé est fermé aux réponses ; vous pouvez toujours retirer vos réponses ou vous opposer à être cité.'
+      'Le relevé est fermé aux réponses ; vous pouvez toujours retirer vos réponses ou vous opposer à être cité.',
+    leverPlusTard:
+      'Vous pourrez lever votre opposition à la réouverture du relevé.'
   },
   brouillon: {
     titre: 'Relevé pas encore ouvert',

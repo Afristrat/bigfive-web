@@ -118,7 +118,9 @@ const reseauEn = {
   ferme: {
     titre: 'Survey closed',
     texte:
-      'The survey is closed to answers; you can still withdraw your answers or object to being named.'
+      'The survey is closed to answers; you can still withdraw your answers or object to being named.',
+    leverPlusTard:
+      'You will be able to withdraw your objection when the survey reopens.'
   },
   brouillon: {
     titre: 'Survey not open yet',

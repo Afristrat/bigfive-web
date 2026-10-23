@@ -226,22 +226,10 @@ export function EcranReseau({
                 : libelles.ferme.titre}
             </h2>
             <p className={texteClass}>{libelles.ferme.texte}</p>
+            {/* La base refuse de lever une opposition relevé fermé : on dit
+                seulement quand ce sera possible. */}
             {etape === 'oppose' && (
-              <>
-                <p className={texteClass}>{libelles.oppose.texte}</p>
-                <p>
-                  <button
-                    type='button'
-                    className={secondaryButtonClass}
-                    aria-disabled={pending ? true : undefined}
-                    onClick={() =>
-                      envoyer(() => actions.informer(participationId, false))
-                    }
-                  >
-                    {libelles.oppose.lever}
-                  </button>
-                </p>
-              </>
+              <p className={texteClass}>{libelles.ferme.leverPlusTard}</p>
             )}
             <Mentions libelles={libelles} />
           </>

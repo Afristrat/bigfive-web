@@ -53,7 +53,8 @@ const apercuAr = {
     releve: 'استبيان فارغ',
     repondu: 'استبيان مملوء',
     oppose: 'الاعتراض',
-    ferme: 'الاستبيان مغلق'
+    ferme: 'الاستبيان مغلق',
+    fermeOppose: 'الاستبيان مغلق، مع اعتراض'
   },
   campagneLegende: 'الحملة',
   campagnes: {

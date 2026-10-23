@@ -32,7 +32,8 @@ export const ETAPES_APERCU_RESEAU = [
   'releve',
   'repondu',
   'oppose',
-  'ferme'
+  'ferme',
+  'fermeOppose'
 ] as const;
 export type EtapeApercuReseau = (typeof ETAPES_APERCU_RESEAU)[number];
 
@@ -99,16 +100,18 @@ export function releveApercu(
     .sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
 
   // Interrupteur fermé : mon état et le nombre de mes réponses, rien d'autre.
-  if (etape === 'ferme') {
+  // Opposée : l'opposition a effacé accords et réponses.
+  if (etape === 'ferme' || etape === 'fermeOppose') {
+    const oppose = etape === 'fermeOppose';
     return {
       ferme: true,
-      nbReponses: membres.length * LIENS.length,
+      nbReponses: oppose ? 0 : membres.length * LIENS.length,
       campagneOuverte: false,
       moi: {
         informeLe: DATE,
-        opposeLe: null,
-        accordRepondreLe: DATE,
-        accordCarteLe: DATE
+        opposeLe: oppose ? DATE : null,
+        accordRepondreLe: oppose ? null : DATE,
+        accordCarteLe: oppose ? null : DATE
       },
       membres: [],
       reponses: []

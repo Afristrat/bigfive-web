@@ -68,7 +68,7 @@ export type LibellesReseau = {
   };
   close: { titre: string; texte: string };
   brouillon: { titre: string; texte: string };
-  ferme: { titre: string; texte: string };
+  ferme: { titre: string; texte: string; leverPlusTard: string };
   oppose: { titre: string; texte: string; lever: string };
   opposer: { bouton: string; aide: string; confirmer: string; annuler: string };
   retrait: {
@@ -186,7 +186,11 @@ export function libellesReseau(t: Traducteur, contact: string): LibellesReseau {
     },
     close: { titre: t('close.titre'), texte: t('close.texte') },
     brouillon: { titre: t('brouillon.titre'), texte: t('brouillon.texte') },
-    ferme: { titre: t('ferme.titre'), texte: t('ferme.texte') },
+    ferme: {
+      titre: t('ferme.titre'),
+      texte: t('ferme.texte'),
+      leverPlusTard: t('ferme.leverPlusTard')
+    },
     oppose: {
       titre: t('oppose.titre'),
       texte: t('oppose.texte'),
