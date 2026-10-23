@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { title } from '@/components/primitives';
+import { EntetePilotage } from '@/components/pilotage/entete-pilotage';
 import {
   RapportIndividuel,
   libellesRapport
@@ -11,12 +11,11 @@ import {
   loadResultatIndividuel,
   peutLireResultats
 } from '@/lib/consultant-data';
-import { formatDate, isolerEnArabe, formatDateMaroc } from '@/lib/format';
+import { formatDateMaroc, isolerEnArabe } from '@/lib/format';
 import { parseParticipationId } from '@/lib/mes-resultats-data';
 import { construireRapportIndividuel } from '@/lib/rapports/individuel';
 import { requireViewer } from '@/lib/session';
 import { parseCampaignId } from '@/lib/synthese-data';
-import { Link } from '@/navigation';
 
 interface Props {
   params: Promise<{
@@ -85,20 +84,23 @@ export default async function LectureResultatPage({ params }: Props) {
   const niveaux = await getTranslations('niveaux');
 
   return (
-    <div>
-      <p>
-        <Link
-          href={`/o/${slug}/campagnes/${campaignId}/resultats`}
-          className='font-semibold text-accent'
-        >
-          {t('consultant.retour')}
-        </Link>
-      </p>
-      <h1 className={`mt-4 ${title()}`}>{t('consultant.titre')}</h1>
-      <p className='mt-2 text-texte-2'>
-        {t('liste.campagne', { titre: isolerEnArabe(campagne.titre, locale) })}
-      </p>
-      <div className='mt-8'>
+    <div className='flex flex-col gap-12'>
+      <EntetePilotage
+        retour={{
+          href: `/o/${slug}/campagnes/${campaignId}/resultats`,
+          libelle: t('consultant.retour')
+        }}
+        surtitre={<bdi>{page.org.nom}</bdi>}
+        titre={t('consultant.titre')}
+        chapo={
+          <p>
+            {t('liste.campagne', {
+              titre: isolerEnArabe(campagne.titre, locale)
+            })}
+          </p>
+        }
+      />
+      <div>
         {resultat.scores ? (
           <RapportIndividuel
             rapport={construireRapportIndividuel({

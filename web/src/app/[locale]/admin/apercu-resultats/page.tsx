@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { title } from '@/components/primitives';
+import { EntetePilotage } from '@/components/pilotage/entete-pilotage';
 import {
   RapportIndividuel,
   libellesRapport
@@ -8,7 +8,10 @@ import {
   ResultView,
   libellesResultView
 } from '@/components/resultats/result-view';
-import { GroupSynthesis } from '@/components/synthese/group-synthesis';
+import {
+  GroupSynthesis,
+  libellesSynthese
+} from '@/components/synthese/group-synthesis';
 import {
   groupesApercu,
   lienApercu,
@@ -35,7 +38,15 @@ export async function generateMetadata({ params }: Props) {
   return { title: t('title'), robots: { index: false, follow: false } };
 }
 
-const pastille = 'rounded-full border px-3.5 py-1.5 font-semibold';
+// Sélecteur segmenté : la valeur courante est pleine, à l'encre ; les autres
+// restent au trait. Chaque choix est un lien (l'état vit dans l'adresse).
+const segment =
+  'appui inline-flex min-h-10 items-center rounded-petit px-3.5 text-petit font-medium';
+const segmentActif = 'bg-encre text-fond';
+const segmentInactif = 'text-texte-2 hover:bg-creux hover:text-encre';
+const groupe =
+  'inline-flex flex-wrap gap-1 rounded-controle border border-trait bg-surface p-1';
+const legende = 'min-w-[7rem] text-petit font-medium text-texte-3';
 
 // Aperçu interne : assemble les vrais composants (vue des résultats, rapport
 // individuel, synthèse de groupe) sur des données fictives. Aucune lecture de
@@ -58,6 +69,7 @@ export default async function ApercuResultatsPage({
   const flow = await getTranslations('flow');
   const rapportT = await getTranslations('rapport');
   const synthese = await getTranslations('synthese');
+  const tp = await getTranslations('pilotage');
 
   const lien = (
     changement: Partial<ReglagesApercu>,
@@ -68,7 +80,7 @@ export default async function ApercuResultatsPage({
       key={libelle}
       href={lienApercu({ ...reglages, ...changement })}
       aria-current={actif ? 'page' : undefined}
-      className={`${pastille} ${actif ? 'border-encre text-encre' : 'border-trait hover:border-texte-2'}`}
+      className={`${segment} ${actif ? segmentActif : segmentInactif}`}
     >
       {libelle}
     </Link>
@@ -80,32 +92,61 @@ export default async function ApercuResultatsPage({
   const afficherNonRelus = vue === 'participant' ? simulation : undefined;
 
   return (
-    <div className='flex flex-col gap-8' data-vue={vue} data-profil={profil}>
-      <header>
-        <h1 className={title()}>{t('title')}</h1>
-        <p className='mt-4 colonne-lecture text-chapo text-texte-2'>
-          {t('intro')}
-        </p>
-      </header>
+    <div className='flex flex-col gap-10' data-vue={vue} data-profil={profil}>
+      <EntetePilotage
+        retour={{ href: '/admin', libelle: tp('retourAdmin') }}
+        surtitre={tp('surtitreApercu')}
+        titre={t('title')}
+        chapo={<p>{t('intro')}</p>}
+      />
 
       <p
         role='note'
-        className='rounded-panneau border-2 border-encre px-4 py-3 text-base font-bold text-encre'
+        className='flex items-start gap-3 rounded-panneau border border-avis/40 bg-avis-doux px-4 py-3 font-semibold text-avis'
       >
-        {t('bandeau')}
+        <svg
+          aria-hidden='true'
+          focusable='false'
+          viewBox='0 0 20 20'
+          width={18}
+          height={18}
+          fill='none'
+          stroke='currentColor'
+          strokeWidth={1.7}
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          className='mt-1 shrink-0'
+        >
+          <path d='M10 2.5l8 14H2z' />
+          <path d='M10 8v4M10 14.5v.01' />
+        </svg>
+        <span>{t('bandeau')}</span>
       </p>
 
-      <nav aria-label={t('vueLegende')} className='flex flex-col gap-4'>
-        <div className='flex flex-wrap items-center gap-3'>
-          <span className='text-texte-2'>{t('vueLegende')}</span>
-          {VUES_APERCU.map((v) => lien({ vue: v }, t(`vues.${v}`), v === vue))}
+      <nav
+        aria-label={t('vueLegende')}
+        className='flex flex-col gap-5 border-y border-trait py-6'
+      >
+        <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+          <span className={legende}>{t('vueLegende')}</span>
+          <span className={groupe}>
+            {VUES_APERCU.map((v) =>
+              lien({ vue: v }, t(`vues.${v}`), v === vue)
+            )}
+          </span>
         </div>
         {vue !== 'groupe' && (
-          <div className='flex flex-wrap items-center gap-3'>
-            <span className='text-texte-2'>{t('profilLegende')}</span>
-            {PROFILS_APERCU.map((p) =>
-              lien({ profil: p }, `${p} : ${nomProfilApercu(p)}`, p === profil)
-            )}
+          <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+            <span className={legende}>{t('profilLegende')}</span>
+            <span className={groupe}>
+              {PROFILS_APERCU.map((p) =>
+                lien(
+                  { profil: p },
+                  `${p} : ${nomProfilApercu(p)}`,
+                  p === profil
+                )
+              )}
+            </span>
           </div>
         )}
       </nav>
@@ -113,16 +154,24 @@ export default async function ApercuResultatsPage({
       {vue === 'participant' && (
         <section
           aria-labelledby='apercu-simulation'
-          className='carte flex flex-col gap-2'
+          className='carte grid gap-x-8 gap-y-4 md:grid-cols-[1fr_auto] md:items-center'
         >
-          <h2 id='apercu-simulation' className='text-titre-3 text-encre'>
-            {t('simulationTitre')}
-          </h2>
-          <p className='colonne-lecture text-texte-2'>{t('simulationAide')}</p>
-          <p className='font-semibold'>
-            {simulation ? t('simulationOn') : t('simulationOff')}
-          </p>
-          <p>
+          <div>
+            <h2 id='apercu-simulation' className='text-titre-3 text-encre'>
+              {t('simulationTitre')}
+            </h2>
+            <p className='mt-2 colonne-lecture text-texte-2'>
+              {t('simulationAide')}
+            </p>
+            <p className='mt-3 flex items-center gap-2 font-semibold text-encre'>
+              <span
+                aria-hidden='true'
+                className={`inline-block size-2 shrink-0 rounded-full ${simulation ? 'bg-safran' : 'bg-trait-fort'}`}
+              />
+              {simulation ? t('simulationOn') : t('simulationOff')}
+            </p>
+          </div>
+          <p className={`${groupe} self-start md:self-center`}>
             {lien(
               { simulation: !simulation },
               simulation ? t('simulationDesactiver') : t('simulationActiver'),
@@ -134,56 +183,34 @@ export default async function ApercuResultatsPage({
 
       {vue === 'groupe' ? (
         <section aria-labelledby='apercu-synthese'>
-          <h2 id='apercu-synthese' className='text-titre-2 text-encre'>
+          <h2 id='apercu-synthese' className='text-titre-section text-encre'>
             {t('syntheseTitre')}
           </h2>
-          <p className='mt-2 colonne-lecture text-texte-2'>
+          <p className='mt-3 colonne-lecture text-texte-2'>
             {t('syntheseAide')}
           </p>
-          <div className='mt-6'>
+          <div className='mt-8'>
             <GroupSynthesis
               groupes={groupesApercu()}
               locale={locale}
-              labels={{
-                groupeCaption: synthese('groupeCaption'),
-                complementCaption: synthese('complementCaption'),
-                colDomaine: synthese('colDomaine'),
-                colEffectif: synthese('colEffectif'),
-                colMoyenne: synthese('colMoyenne'),
-                colEcartType: synthese('colEcartType'),
-                ecartTypeAbsent: synthese('ecartTypeAbsent'),
-                colNiveau: synthese('colNiveau'),
-                nonPublie: synthese('nonPublie'),
-                complementNonPublie: synthese('complementNonPublie'),
-                complementVide: synthese('complementVide'),
-                sansMoyenne: synthese('sansMoyenne'),
-                dispersion: synthese('dispersion'),
-                niveauLecture: synthese('niveauLecture', {
-                  niveau: '{niveau}'
-                }),
-                niveaux: {
-                  bas: niveaux('bas'),
-                  plutot_bas: niveaux('plutot_bas'),
-                  milieu: niveaux('milieu'),
-                  plutot_haut: niveaux('plutot_haut'),
-                  haut: niveaux('haut')
-                },
-                aucunGroupe: synthese('aucunGroupe')
-              }}
+              labels={libellesSynthese(synthese, niveaux)}
             />
           </div>
         </section>
       ) : (
         <>
-          <p className='colonne-lecture text-texte-2'>
+          <p className='colonne-lecture text-chapo text-texte-2'>
             {vue === 'consultant' ? t('consultantAide') : t('participantAide')}
           </p>
           {vue === 'participant' && (
             <section aria-labelledby='apercu-resultat'>
-              <h2 id='apercu-resultat' className='text-titre-2 text-encre'>
+              <h2
+                id='apercu-resultat'
+                className='text-titre-section text-encre'
+              >
                 {t('resultatTitre')}
               </h2>
-              <div className='mt-6'>
+              <div className='mt-8'>
                 <ResultView
                   profil={profilDepuisScores(scores)}
                   locale={locale}
@@ -196,10 +223,10 @@ export default async function ApercuResultatsPage({
             </section>
           )}
           <section aria-labelledby='apercu-rapport'>
-            <h2 id='apercu-rapport' className='text-titre-2 text-encre'>
+            <h2 id='apercu-rapport' className='text-titre-section text-encre'>
               {t('rapportTitre')}
             </h2>
-            <div className='mt-6'>
+            <div className='mt-8'>
               <RapportIndividuel
                 rapport={construireRapportIndividuel({
                   scores,

@@ -2,7 +2,6 @@ const apercuEn = {
   title: 'Results preview',
   intro:
     'The real platform rendering (results view, individual report, group summary) on fictitious profiles and groups, so it can be validated without an account or real data. Super administrators only.',
-  lien: 'Results preview (real rendering, fictitious data)',
   bandeau: 'Fictitious data: no account, no real data',
   vueLegende: 'Audience',
   vues: {

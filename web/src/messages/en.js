@@ -5,6 +5,7 @@ import rapportEn from './espace/rapport.en.js';
 import binomeEn from './espace/binome.en.js';
 import syntheseEn from './espace/synthese.en.js';
 import apercuEn from './espace/apercu.en.js';
+import pilotageEn from './espace/pilotage.en.js';
 
 const english = {
   language: {
@@ -1158,6 +1159,7 @@ const english = {
   binome: binomeEn,
   synthese: syntheseEn,
   apercu: apercuEn,
+  pilotage: pilotageEn,
   // Mouvement du parcours (questionnaire et résultat).
   flow: {
     railLabel: 'Result contents',

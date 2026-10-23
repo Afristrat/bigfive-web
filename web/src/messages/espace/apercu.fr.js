@@ -2,7 +2,6 @@ const apercuFr = {
   title: 'Aperçu des résultats',
   intro:
     'Le vrai rendu de la plateforme (vue des résultats, rapport individuel, synthèse par groupe) sur des profils et des groupes fictifs, pour le valider sans compte ni donnée réelle. Réservé aux super administrateurs.',
-  lien: 'Aperçu des résultats (rendu réel, données fictives)',
   bandeau: 'Données fictives : aucun compte, aucune donnée réelle',
   vueLegende: 'Audience',
   vues: {

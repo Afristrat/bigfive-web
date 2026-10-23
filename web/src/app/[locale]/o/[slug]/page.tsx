@@ -7,7 +7,8 @@ import {
 } from '@/components/campaign-forms';
 import { InviteForm } from '@/components/invite-form';
 import { MemberInviteForm } from '@/components/member-invite-form';
-import { title } from '@/components/primitives';
+import { EntetePilotage } from '@/components/pilotage/entete-pilotage';
+import { TitreSection } from '@/components/pilotage/titre-section';
 import {
   CAMPAIGN_TITLE_MAX,
   INVITATION_MESSAGE_MAX,
@@ -38,8 +39,21 @@ export async function generateMetadata({ params }: Props) {
   return { title: t('title'), robots: { index: false, follow: false } };
 }
 
-const th = 'px-3.5 py-3 text-start text-legende font-semibold text-texte-2';
-const td = 'px-3.5 py-3 align-top';
+const th = 'px-4 py-3 text-start text-legende font-medium text-texte-3';
+const td = 'px-4 py-4 align-top';
+const chiffre = `${td} chiffres font-display text-titre-3 text-encre`;
+
+// Pastille de statut : un point de couleur et le mot (jamais la couleur seule).
+const pastilleStatut: Record<string, string> = {
+  brouillon: 'border-trait text-texte-2',
+  ouverte: 'border-accent/30 bg-accent-doux text-accent',
+  close: 'border-trait bg-creux text-encre'
+};
+const pointStatut: Record<string, string> = {
+  brouillon: 'border border-trait-fort',
+  ouverte: 'bg-accent',
+  close: 'bg-encre'
+};
 
 const asLanguage = (value: string): InvitationLocale =>
   isInvitationLocale(value) ? value : 'fr';
@@ -75,6 +89,8 @@ export default async function OrganizationPage({ params }: Props) {
   const tr = await getTranslations('roles');
   const ts = await getTranslations('synthese');
   const trp = await getTranslations('rapport');
+  const tp = await getTranslations('pilotage');
+  const ta = await getTranslations('admin');
   // Résultats individuels : le consultant et l'administrateur Tenga seulement
   // (le responsable n'y a pas accès).
   const peutLireLesResultats = peutLireResultats({
@@ -161,38 +177,43 @@ export default async function OrganizationPage({ params }: Props) {
   };
 
   return (
-    <div className='flex flex-col gap-12'>
-      <header>
-        <h1 className={title()}>
-          <bdi>{page.org.nom}</bdi>{' '}
-          <span className='mt-2 block text-titre-2 text-encre'>
-            {t('title')}
-          </span>
-        </h1>
-        <p className='mt-4 colonne-lecture text-chapo text-texte-2'>
-          {t('intro')}
-        </p>
-      </header>
+    <div className='flex flex-col gap-16'>
+      <EntetePilotage
+        surtitre={tp('organisation.surtitre')}
+        titre={page.org.nom}
+        complementTitre={t('title')}
+        chapo={<p>{t('intro')}</p>}
+        reperes={[
+          {
+            terme: tp('organisation.roleTenu'),
+            valeur: page.role ? tr(page.role) : account('adminLink')
+          },
+          {
+            terme: t('colStatus'),
+            valeur: archived ? ta('status.archivee') : ta('status.active')
+          }
+        ]}
+      />
 
-      <section>
-        <h2 id='campagnes-titre' className='text-titre-2 text-encre'>
+      <section aria-labelledby='campagnes-titre'>
+        <TitreSection id='campagnes-titre' numero={1} locale={locale}>
           {t('listTitle')}
-        </h2>
-        <p className='mt-2 text-texte-2'>{t('statsHelp')}</p>
+        </TitreSection>
+        <p className='mt-3 colonne-lecture text-texte-2'>{t('statsHelp')}</p>
         {/* Région d'annonce persistante : « Ouvrir » et « Clôturer » re-rendent la page. */}
         <CampaignAnnouncer>
           {campaigns.length === 0 ? (
-            <p className='mt-4 text-texte-2'>{t('empty')}</p>
+            <p className='carte mt-6 text-texte-2'>{t('empty')}</p>
           ) : (
             <div
               role='region'
               aria-labelledby='campagnes-titre'
               tabIndex={0}
-              className='carte mt-4 overflow-x-auto !p-0'
+              className='mt-6 overflow-x-auto rounded-panneau border border-trait bg-surface'
             >
               <table className='w-full min-w-[900px] text-petit'>
                 <caption className='sr-only'>{t('tableCaption')}</caption>
-                <thead className='border-b border-trait'>
+                <thead className='border-b border-trait bg-creux/60'>
                   <tr>
                     <th scope='col' className={th}>
                       {t('colTitle')}
@@ -228,21 +249,44 @@ export default async function OrganizationPage({ params }: Props) {
                           scope='row'
                           id={`campagne-${campaign.id}`}
                           tabIndex={-1}
-                          className={`${td} text-start font-semibold [overflow-wrap:anywhere] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-anneau`}
+                          className={`${td} text-start text-corps font-semibold text-encre [overflow-wrap:anywhere] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-anneau`}
                         >
                           <bdi>{campaign.titre}</bdi>
                         </th>
-                        <td className={td}>{t(`status.${campaign.statut}`)}</td>
-                        <td className={`${td} chiffres`}>
+                        <td className={td}>
+                          <span
+                            className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-legende font-medium ${pastilleStatut[campaign.statut] ?? ''}`}
+                          >
+                            <span
+                              aria-hidden='true'
+                              className={`size-1.5 rounded-full ${pointStatut[campaign.statut] ?? ''}`}
+                            />
+                            {t(`status.${campaign.statut}`)}
+                          </span>
+                        </td>
+                        <td className={chiffre}>
                           {number(figures?.participants)}
                         </td>
-                        <td className={`${td} chiffres`}>
-                          {number(figures?.enCours)}
-                        </td>
-                        <td className={`${td} chiffres`}>
+                        <td className={chiffre}>{number(figures?.enCours)}</td>
+                        <td className={chiffre}>
                           {number(figures?.termines)}
+                          {figures && figures.participants > 0 && (
+                            // Part des réponses terminées : image seule, le
+                            // nombre exact est écrit juste au-dessus.
+                            <span
+                              aria-hidden='true'
+                              className='regle-piste mt-2 block h-1 w-16 overflow-hidden rounded-full bg-creux'
+                            >
+                              <span
+                                className='regle-trait block h-full origin-left animate-tracer rounded-full bg-accent rtl:origin-right'
+                                style={{
+                                  width: `${Math.min(100, (figures.termines / figures.participants) * 100)}%`
+                                }}
+                              />
+                            </span>
+                          )}
                         </td>
-                        <td className={`${td} chiffres`}>
+                        <td className={chiffre}>
                           {number(figures?.enAttente)}
                         </td>
                         <td className={td}>
@@ -280,7 +324,7 @@ export default async function OrganizationPage({ params }: Props) {
                                 `/o/${slug}/campagnes/${campaign.id}/synthese`
                               )}
                               aria-label={ts('lienAria', { titre })}
-                              className='mt-2 inline-block underline'
+                              className='me-4 mt-3 inline-flex min-h-11 items-center font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent'
                             >
                               {ts('lien')}
                             </a>
@@ -293,7 +337,7 @@ export default async function OrganizationPage({ params }: Props) {
                                   `/o/${slug}/campagnes/${campaign.id}/resultats`
                                 )}
                                 aria-label={trp('liste.lienAria', { titre })}
-                                className='mt-2 inline-block underline ms-4'
+                                className='mt-3 inline-flex min-h-11 items-center font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent'
                               >
                                 {trp('liste.lien')}
                               </a>
@@ -313,6 +357,7 @@ export default async function OrganizationPage({ params }: Props) {
         <section
           key={campaign.id}
           aria-labelledby={`inviter-${campaign.id}`}
+          data-reveal='monte'
           className='carte'
         >
           <h2
@@ -332,7 +377,11 @@ export default async function OrganizationPage({ params }: Props) {
       ))}
 
       {memberRoles.length > 0 && (
-        <section aria-labelledby='membres-titre' className='carte'>
+        <section
+          aria-labelledby='membres-titre'
+          data-reveal='monte'
+          className='carte'
+        >
           <h2 id='membres-titre' className='text-titre-2 text-encre'>
             {tm('title')}
           </h2>
@@ -370,7 +419,11 @@ export default async function OrganizationPage({ params }: Props) {
         </section>
       )}
 
-      <section aria-labelledby='creer-campagne-titre' className='carte'>
+      <section
+        aria-labelledby='creer-campagne-titre'
+        data-reveal='monte'
+        className='carte'
+      >
         <h2 id='creer-campagne-titre' className='text-titre-2 text-encre'>
           {t('createTitle')}
         </h2>
