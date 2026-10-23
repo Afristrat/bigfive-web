@@ -357,7 +357,7 @@ export function construire(ctx) {
     'faible',
     "Soumettre ces leviers à l'équipe et lui demander lesquels répondent à une difficulté qu'elle a déjà rencontrée, et lesquels seraient une charge de plus."
   ));
-  specStruct.push(c("Étape suivante proposée, non réalisée dans ce rapport : relever le réseau réel par quatre ou cinq questions posées à chaque membre (à qui il demande conseil, d'où lui vient l'information utile, à qui il fait confiance, qui le bloque), avec un consentement spécifique, puisque chaque réponse porte sur des collègues, et un cadrage au titre de la loi 09-08. La comparaison entre la structure prévue et le réseau réel est la seule lecture directe de la structure invisible de l'équipe."));
+  specStruct.push(c("Étape suivante proposée, non réalisée dans ce rapport : relever le réseau réel par quatre questions posées à chaque membre (à qui il demande conseil, d'où lui vient l'information utile, à qui il se fie pour signaler une erreur, de qui il dépend pour avancer), avec un consentement spécifique, puisque chaque réponse porte sur des collègues, et un cadrage au titre de la loi 09-08. La comparaison entre la structure prévue et le réseau réel est la seule lecture directe de la structure invisible de l'équipe."));
   const secStruct = sec(3, 'structure', "Structure de l'équipe : liens déclarés et comment les développer", specStruct);
 
   // Sécurité psychologique
