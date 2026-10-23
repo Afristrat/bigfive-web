@@ -7,7 +7,7 @@
 import { radarSvg, dumbbellSvg, heatmapSvg, reseauSvg, CSS_VISUELS, SCRIPT_TETE, SCRIPT_MOUVEMENT } from '../../profils-fictifs/visuels.mjs';
 import { bilanRelecture, sourceControlee, dateFr } from './outils.mjs';
 import { NATURE_LIEN } from './niveau34-equipe-organisation.mjs';
-import { LIENS as LIENS_RESEAU, perimetreAJour } from '../moteur/reseau.mjs';
+import { LIENS as LIENS_RESEAU, perimetreAJour, nominatifAutorise } from '../moteur/reseau.mjs';
 
 const DOMAINES = ['N', 'E', 'O', 'A', 'C'];
 const NIVEAUX = [
@@ -248,11 +248,10 @@ export function rendreHtml({ rapport, cas, faits, profils, bib, variante } = {})
       if (membres.length >= 2) return `<div class="visuels">${visuel(reseauSvg(membres, cas?.relations ?? [], NATURE_LIEN))}</div>`;
     }
     if (num === 3 && idSection === 'n3-reseau-reel') {
-      // Carte nominative seulement si le relevé est à jour du périmètre actuel (même garde que le texte), suffisant, ET que chaque
-      // personne représentée l'a acceptée ; sinon aucune carte. Seules les personnes représentées sont dessinées : une personne
-      // opposée ou non informée n'apparaît jamais, pas même en creux.
+      // Carte nominative seulement si le relevé est à jour du périmètre actuel, suffisant, ET que chaque membre du périmètre est
+      // représenté et l'a acceptée (mêmes gardes que le texte) ; sinon aucune carte. Seules les personnes représentées sont dessinées.
       const rr = faits?.reseau_reel;
-      if (rr?.suffisant === true && rr.carte_nominative === true && rr.liens && perimetreAJour(rr, cas)) {
+      if (rr?.suffisant === true && nominatifAutorise(rr) && rr.liens && perimetreAJour(rr, cas)) {
         const representes = new Set(rr.representes ?? []);
         const membres = ps.filter((p) => representes.has(p.code));
         if (membres.length >= 2) return `<div class="visuels cartes-reseau">${LIENS_RESEAU.map((l) => visuel(reseauSvg(membres, rr.liens[l] ?? [], {}, { lien: l, marqueur: `reseau-fleche-${l}` }))).join('')}</div>`;

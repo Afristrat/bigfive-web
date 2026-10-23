@@ -536,7 +536,7 @@ test('réseau réel : section juste après la structure, relevé fictif, seuils,
   assert.match(t, /aucun usage pour une décision d'emploi ou une évaluation des personnes/);
   assert.match(t, /Borgatti et Molina \(2003\)/);
   assert.ok(r.reference_ids.includes('borgatti-molina-2003'));
-  assert.match(t, /carte nominative/);
+  assert.match(t, /Chaque membre de l'équipe a accepté que la carte nominative/);
   assert.match(t, /Conseil, à qui chacun demande conseil[^\n]*: 3 paires reliées sur 6 possibles\. Liens réciproques : AM et KB ; SR et HT\. Lien déclaré d'un seul côté : KB demande conseil à HT \(déclaré par KB seulement\)\./);
   assert.match(t, /Information[^\n]*: 5 paires reliées sur 6 possibles/);
   assert.match(t, /AM reçoit une information utile de SR \(déclaré par AM seulement\)/);
@@ -645,16 +645,16 @@ const avecOpposition = () => {
   return relire(ctx);
 };
 
-test('réseau réel : une opposition avec carte nominative, la personne opposée n’est jamais nommée, seulement décomptée', () => {
+test('réseau réel : une opposition, les quatre autres d’accord, toute la section sans noms, décompte présent', () => {
   const ctx = avecOpposition();
   const rr = ctx.faits.reseau_reel;
-  assert.deepEqual([rr.non_representes, rr.suffisant, rr.carte_nominative], [['NR'], true, true]);
+  assert.deepEqual([rr.non_representes, rr.suffisant, rr.carte_nominative], [['NR'], true, false]);
   const r = construire(ctx);
   const t = texteReseau(r) + '\n' + verifsReseau(r);
-  assert.ok(!/\bNR\b|Nadia/.test(t), 'personne opposée nommée');
-  assert.ok(!/Non représentée/.test(t));
+  assert.ok(!/\b(AM|KB|SR|HT|NR)\b|Amine|Karim|Salma|Hind|Nadia/.test(t), 'aucun nom ni code');
   assert.match(t, /1 personne non représentée dans ce relevé : ses liens, dans les deux sens, sont retirés de la lecture, et rien n'est dit de sa place dans l'équipe\./);
-  assert.match(t, /Chaque personne représentée a accepté que la carte nominative/);
+  assert.match(t, /Au moins un membre de l'équipe n'a pas accepté la carte nominative, ou n'est pas représenté dans ce relevé : aucune carte n'est montrée/);
+  assert.match(t, /Conseil[^\n]*: 3 paires reliées sur 6 possibles, dont/);
   assert.deepEqual(auditContenu(ctx, r), []);
 });
 

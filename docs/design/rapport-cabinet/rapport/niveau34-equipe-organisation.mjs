@@ -2,7 +2,7 @@
 // Fonction pure : aucun aléa, aucun calcul de score. Tout nombre cité vient de faits.json, du cas ou de leurs listes.
 // construire(ctx) -> { niveaux: [n3, n4], recommandations, reference_ids }
 import { paragraphe, recommandation, section, liste, fmt, DOMAINES } from './outils.mjs';
-import { relaisPrevus, perimetreAJour, LIENS } from '../moteur/reseau.mjs';
+import { relaisPrevus, perimetreAJour, nominatifAutorise, LIENS } from '../moteur/reseau.mjs';
 
 const NB = ' ';
 const gui = (s) => `«${NB}${s}${NB}»`;
@@ -380,7 +380,7 @@ export function construire(ctx) {
     } else if (!rr.suffisant) {
       specR.push(c(`Relevé insuffisant : ${rr.n_repondants} ${pluriel(rr.n_repondants, 'répondant')} sur ${rr.n_representes} ${pluriel(rr.n_representes, 'personne représentée', 'personnes représentées')}, quand la lecture exige au moins ${rr.seuils.repondants_min} répondants et au moins ${rr.seuils.taux_reponse_min_pct} pour cent de réponses. Aucune lecture du réseau réel n'est produite : un lien que ne déclare pas une personne qui n'a pas répondu n'est pas un lien inexistant.${fictifR ? ' Relevé de démonstration fictif.' : ''}`));
     } else {
-      const nominatif = rr.carte_nominative === true;
+      const nominatif = nominatifAutorise(rr);
       const SEUIL_TXT = { conseil: 'au moins chaque mois', information: 'au moins chaque mois', confiance: `au moins ${gui('plutôt oui')}`, dependance: 'au moins chaque mois' };
       const LIEN_FR = {
         conseil: { titre: 'Conseil', question: 'à qui chacun demande conseil pour résoudre un problème de travail', verbe: 'demande conseil à' },
@@ -403,8 +403,8 @@ export function construire(ctx) {
       }
       specR.push(c(`Garantie du relevé : aucun usage pour une décision d'emploi ou une évaluation des personnes. Il sert à décrire avec l'équipe, en atelier de restitution, sa façon réelle de travailler ; les questions d'éthique propres à l'analyse de réseau en organisation sont traitées par ${nom('borgatti-molina-2003')} (2003).`));
       specR.push(c(nominatif
-        ? "Chaque personne représentée a accepté que la carte nominative de l'équipe soit montrée aux membres en atelier : la carte du réseau réel, par type de lien, nomme les personnes."
-        : "Au moins une personne représentée n'a pas accepté la carte nominative : aucune carte n'est montrée, et cette section ne donne que des indicateurs sans noms."));
+        ? "Chaque membre de l'équipe a accepté que la carte nominative de l'équipe soit montrée aux membres en atelier : la carte du réseau réel, par type de lien, nomme les personnes."
+        : "Au moins un membre de l'équipe n'a pas accepté la carte nominative, ou n'est pas représenté dans ce relevé : aucune carte n'est montrée, et cette section ne donne que des indicateurs sans noms."));
 
       // Carte : indicateurs par type de lien, nominatifs seulement sur accord de chacun.
       const declares = [];

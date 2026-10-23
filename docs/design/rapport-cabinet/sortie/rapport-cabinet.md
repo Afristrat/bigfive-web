@@ -5887,7 +5887,7 @@ Garantie du relevé : aucun usage pour une décision d’emploi ou une évaluati
 
 Constaté
 
-Chaque personne représentée a accepté que la carte nominative de l’équipe soit montrée aux membres en atelier : la carte du réseau réel, par type de lien, nomme les personnes.
+Chaque membre de l’équipe a accepté que la carte nominative de l’équipe soit montrée aux membres en atelier : la carte du réseau réel, par type de lien, nomme les personnes.
 
 Constaté
 

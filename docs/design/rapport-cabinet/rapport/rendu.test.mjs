@@ -293,17 +293,14 @@ test('réseau réel : aucune carte sans accord de chacun, sans relevé suffisant
   assert.ok(!rendreReseau(faitsDemo, 'docx').includes('<svg'));
 });
 
-test('réseau réel : une personne non représentée n’apparaît sur aucune carte du réseau réel', () => {
+test('réseau réel : faits anciens disant la carte nominative malgré une personne non représentée, aucune carte', () => {
   const f = structuredClone(faitsDemo);
   f.reseau_reel.non_representes = ['HT'];
   f.reseau_reel.representes = ['AM', 'KB', 'SR'];
   for (const l of Object.keys(f.reseau_reel.liens)) f.reseau_reel.liens[l] = f.reseau_reel.liens[l].filter((x) => x.a !== 'HT' && x.b !== 'HT');
+  assert.equal(f.reseau_reel.carte_nominative, true);
   const h = rendreReseau(f);
-  const debut = h.indexOf('class="visuels cartes-reseau"');
-  assert.ok(debut > 0, 'cartes présentes');
-  const cartes = h.slice(debut, h.indexOf('</section>', debut));
-  for (const code of ['AM', 'KB', 'SR']) assert.ok(new RegExp(`>${code}<`).test(cartes), code);
-  assert.ok(!/\bHT\b|Hind|non représentée/.test(cartes));
+  assert.ok(!h.includes('Carte du réseau réel') && !h.includes('class="visuels cartes-reseau"'));
 });
 
 test('réseau réel : consentement à l’équipe retiré, ou donné, après le relevé, aucune carte du réseau réel', () => {
@@ -328,14 +325,14 @@ test('réseau réel : une opposition ne laisse aucune trace nominative dans le H
   p5.push(clone(p5.find((p) => p.code === 'HT')));
   c5.reseau_reel.membres.push({ code: 'NR', informe: true, oppose: true, accord_repondre: false, accord_carte: false, a_repondu: false });
   const f5 = { ...structuredClone(faitsDemo), reseau_reel: lireReseau(c5) };
-  assert.deepEqual([f5.reseau_reel.non_representes, f5.reseau_reel.suffisant, f5.reseau_reel.carte_nominative], [['NR'], true, true]);
+  assert.deepEqual([f5.reseau_reel.non_representes, f5.reseau_reel.suffisant, f5.reseau_reel.carte_nominative], [['NR'], true, false]);
   const r = construire34({ cas: c5, faits: f5, profils: p5, bib, regles: lire('..', 'moteur', 'regles.json'), refs: lire('..', 'references-autorisees.json') });
   const sections = r.niveaux.find((n) => n.id === 'n3-equipe').sections;
   const avecSections = (ids) => ({ ...rapportReseau, niveaux: [{ ...rapportReseau.niveaux[0], sections: sections.filter((s) => ids.includes(s.id)) }] });
   const rendre = (ids) => rendreHtml({ rapport: avecSections(ids), cas: c5, faits: f5, profils: p5, bib });
   const avec = rendre(['n3-structure', 'n3-reseau-reel']);
   const sans = rendre(['n3-structure']);
-  assert.ok(avec.includes('Carte du réseau réel : conseil'), 'cartes nominatives présentes');
+  assert.ok(!avec.includes('Carte du réseau réel') && !avec.includes('class="visuels cartes-reseau"'), 'aucune carte');
   assert.ok(avec.includes('1 personne non représentée dans ce relevé'), 'décompte anonyme');
   // Sortie entière : la section du réseau réel n'ajoute aucune mention de NR, ni texte, ni SVG, ni tableau, ni visuel déclenché.
   const mentions = (x) => (x.match(/\bNR\b|Nadia/g) ?? []).length;
@@ -343,5 +340,6 @@ test('réseau réel : une opposition ne laisse aucune trace nominative dans le H
   assert.equal(mentions(avec), mentions(sans), 'mentions de la personne opposée ajoutées par la section du réseau réel');
   const debut = avec.indexOf('id="n3-reseau-reel"');
   const section = avec.slice(debut, avec.indexOf('</section>', debut));
-  assert.ok(!/\bNR\b|Nadia|Non représentée|, non représentée/.test(section));
+  assert.ok(!/\b(AM|KB|SR|HT|NR)\b|Amine|Karim|Salma|Hind|Nadia|<svg/.test(section), 'aucun code de personne dans la section, texte ou SVG');
+  assert.ok(section.includes('1 personne non représentée dans ce relevé'));
 });

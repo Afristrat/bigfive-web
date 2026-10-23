@@ -72,7 +72,7 @@ Aucun usage pour une décision d'emploi, une évaluation ou une rémunération :
 
 - Une table `reseau_reponses` (participation, personne citée, type de lien, fréquence, date), sous RLS : le répondant lit et modifie ses lignes jusqu'à la clôture, le consultant de l'organisation lit, personne d'autre.
 - **Retrait d'un répondant** : ses réponses sont supprimées et la carte recalculée ; si le seuil n'est plus atteint, le rapport l'indique.
-- **Opposition d'une personne citée** : ses liens (entrants et sortants) sont retirés de la lecture ; elle n'est jamais nommée, ni sur la carte ni dans le texte (son opposition ne doit pas être visible de l'équipe en atelier), seulement comptée de façon anonyme (« 1 personne non représentée dans ce relevé »), et jamais décrite comme isolée.
+- **Opposition d'une personne citée** : ses liens (entrants et sortants) sont retirés de la lecture ; elle n'est jamais nommée, ni sur la carte ni dans le texte (son opposition ne doit pas être visible de l'équipe en atelier), seulement comptée de façon anonyme (« 1 personne non représentée dans ce relevé »), et jamais décrite comme isolée. Elle n'a pas donné l'accord à la carte nominative (décision n°2) : toute la section passe alors en indicateurs sans noms, faute de quoi elle serait identifiable par élimination.
 - Conservation : durée de la mission plus une durée à décider ; suppression automatique ensuite.
 
 ## 8. Projets de textes (à faire relire par un juriste)

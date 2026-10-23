@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
-  lireReseau, suffisance, relaisPrevus, ajouterReseau, perimetreAJour,
+  lireReseau, suffisance, relaisPrevus, ajouterReseau, perimetreAJour, nominatifAutorise,
   REPONDANTS_MIN, TAUX_REPONSE_MIN_PCT, VALEUR_SIGNIFICATIVE, VALEUR_HEBDOMADAIRE, LIENS
 } from './reseau.mjs';
 
@@ -91,7 +91,7 @@ test('une opposition : la personne est non représentée, ses liens entrants et 
   assert.ok(!tous.some((x) => x.a === 'P6' || x.b === 'P6'), 'aucun lien de P6');
   assert.equal(r.paires_possibles, 10, 'paires entre personnes représentées seulement');
   assert.ok(!JSON.stringify(r).includes('isol'), 'jamais dite isolée');
-  assert.equal(r.carte_nominative, true, 'la personne opposée ne bloque pas la carte des membres représentés');
+  assert.equal(r.carte_nominative, false, 'carte nominative seulement sur accord de chaque membre : une personne opposée ne l’a pas donné');
 });
 
 test('une personne non informée est non représentée ; une personne hors périmètre est ignorée', () => {
@@ -267,4 +267,20 @@ test('perimetreAJour : vrai seulement si le relevé couvre exactement les person
   assert.equal(perimetreAJour({ releve: true }, CAS), false, 'périmètre absent');
   assert.equal(perimetreAJour(undefined, CAS), false);
   assert.equal(perimetreAJour(rr, undefined), false);
+});
+
+test('carte nominative : seulement si chaque membre du périmètre est représenté et a accepté la carte', () => {
+  const tous = lireReseau(casSynthetique(5));
+  assert.equal(tous.carte_nominative, true);
+  assert.equal(nominatifAutorise(tous), true);
+  const nonInforme = casSynthetique(5);
+  Object.assign(membre(nonInforme, 'P5'), { informe: false });
+  const r = lireReseau(nonInforme);
+  assert.deepEqual([r.non_representes, r.carte_nominative, nominatifAutorise(r)], [['P5'], false, false]);
+  // Défense en profondeur : des faits anciens qui diraient carte_nominative vrai avec une personne non représentée.
+  assert.equal(nominatifAutorise({ ...tous, non_representes: ['P5'], representes: tous.representes.slice(0, 4) }), false);
+  assert.equal(nominatifAutorise({ ...tous, representes: tous.representes.slice(0, 4) }), false, 'représentés plus courts que le périmètre');
+  assert.equal(nominatifAutorise({ ...tous, carte_nominative: false }), false);
+  assert.equal(nominatifAutorise({ ...tous, non_representes: undefined }), false);
+  assert.equal(nominatifAutorise(undefined), false);
 });

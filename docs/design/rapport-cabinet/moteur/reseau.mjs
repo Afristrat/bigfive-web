@@ -44,6 +44,14 @@ export function perimetreAJour(rr, cas) {
   return releve.length === actuel.size && new Set(releve).size === releve.length && releve.every((c) => actuel.has(c));
 }
 
+/** Lecture nominative autorisée (texte et carte) : carte_nominative du moteur, revérifiée sur les faits eux-mêmes (aucune
+ * personne non représentée, chaque personne du périmètre représentée), pour qu'un fichier de faits ancien ne nomme personne. */
+export function nominatifAutorise(rr) {
+  return rr?.carte_nominative === true
+    && Array.isArray(rr.non_representes) && rr.non_representes.length === 0
+    && Array.isArray(rr.perimetre) && Array.isArray(rr.representes) && rr.representes.length === rr.perimetre.length;
+}
+
 /** Faits complets écrits par calculer.mjs : les faits du moteur, puis faits.reseau_reel. moteur.mjs reste sans import (ses mutants sont copiés seuls). */
 export function ajouterReseau(faits, cas) {
   return { ...faits, reseau_reel: lireReseau(cas) };
@@ -161,7 +169,9 @@ export function lireReseau(cas) {
 
   return {
     ...base,
-    carte_nominative: representes.every((c) => fiche.get(c).accord_carte === true),
+    // Décision n°2 : carte nominative seulement sur accord de chaque membre du périmètre ; une personne opposée ou non informée
+    // ne l'a pas donné, et la nommer par élimination rendrait son opposition visible de l'équipe.
+    carte_nominative: nonRepresentes.length === 0 && representes.every((c) => fiche.get(c).accord_carte === true),
     paires_possibles: paires.length,
     liens,
     indicateurs,
