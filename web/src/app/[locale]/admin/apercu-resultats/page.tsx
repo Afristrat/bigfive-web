@@ -92,7 +92,8 @@ export default async function ApercuResultatsPage({
       aria-current={actif ? 'page' : undefined}
       className={`${segment} ${actif ? segmentActif : segmentInactif}`}
     >
-      {libelle}
+      {/* Les noms fictifs sont latins : isolés, ils gardent leur ordre en arabe. */}
+      <bdi>{libelle}</bdi>
     </Link>
   );
 
@@ -100,6 +101,8 @@ export default async function ApercuResultatsPage({
   const audience = vue === 'consultant' ? 'consultant' : 'personne';
   const nommer = (p: (typeof PROFILS_APERCU)[number]): string =>
     `${p} : ${nomProfilApercu(p)}`;
+  // Isolat bidirectionnel (FSI … PDI) pour un nom latin inséré dans une phrase.
+  const isoler = (texte: string): string => `⁨${texte}⁩`;
   // Mêmes étiquettes que la vraie page : « Vous » pour la personne qui lit,
   // « Personne 1 » et « Personne 2 » pour le consultant.
   const etiquettesBinome =
@@ -230,15 +233,15 @@ export default async function ApercuResultatsPage({
             {t('binomeTitre')}
           </h2>
           <p className='mt-3 colonne-lecture text-texte-2'>
-            {lecteur === 'personne'
-              ? t('binomePersonneAide', {
-                  premiere: nommer(profil),
-                  seconde: nommer(partenaire)
-                })
-              : t('binomeConsultantAide', {
-                  premiere: nommer(profil),
-                  seconde: nommer(partenaire)
-                })}
+            {t(
+              lecteur === 'personne'
+                ? 'binomePersonneAide'
+                : 'binomeConsultantAide',
+              {
+                premiere: isoler(nommer(profil)),
+                seconde: isoler(nommer(partenaire))
+              }
+            )}
           </p>
           <div className='mt-8'>
             <RapportBinome

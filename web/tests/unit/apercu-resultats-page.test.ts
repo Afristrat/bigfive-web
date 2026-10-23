@@ -298,4 +298,10 @@ describe('autres langues', () => {
     const html = await rendre({ vue: 'binome' }, locale);
     expect(html).toContain('id="apercu-binome"');
   });
+
+  it('ar : les noms latins sont isolés (sélecteurs et phrase d’aide)', async () => {
+    const html = await rendre({ vue: 'binome', profil: 'SR' }, 'ar');
+    expect(html).toContain('<bdi>SR : Salma R.</bdi>');
+    expect(html).toContain('⁨SR : Salma R.⁩');
+  });
 });
