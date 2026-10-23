@@ -20,10 +20,11 @@ describe('cibleApresVerdict', () => {
   const base = {
     titreId: 'bloc-N1-bas-titre',
     suivantId: 'bloc-N1-haut-titre',
-    repliId: 'selection-relecture'
+    repliId: 'selection-relecture',
+    revalide: false
   };
 
-  it('le bloc est toujours affiché : on attend, sans déplacer le focus', () => {
+  it('avant la revalidation, le bloc encore affiché : on attend, sans déplacer le focus', () => {
     expect(
       cibleApresVerdict({
         ...base,
@@ -31,6 +32,28 @@ describe('cibleApresVerdict', () => {
         focusLibre: true
       })
     ).toBe('attendre');
+  });
+
+  it('revalidation observée et bloc toujours affiché : on s’arrête aussitôt, focus laissé en place', () => {
+    expect(
+      cibleApresVerdict({
+        ...base,
+        revalide: true,
+        present: () => true,
+        focusLibre: true
+      })
+    ).toBeNull();
+  });
+
+  it('revalidation observée et bloc sorti : titre du bloc suivant', () => {
+    expect(
+      cibleApresVerdict({
+        ...base,
+        revalide: true,
+        present: (id) => id !== base.titreId,
+        focusLibre: true
+      })
+    ).toBe('bloc-N1-haut-titre');
   });
 
   it('le bloc sort du filtre et le focus est perdu : titre du bloc suivant', () => {

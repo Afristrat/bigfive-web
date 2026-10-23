@@ -20,19 +20,24 @@ export function voisinDuBloc(
 }
 
 /**
- * Cible du focus après un verdict : « attendre » tant que le bloc est encore
- * affiché, l'identifiant à focaliser une fois qu'il a disparu, null pour ne
- * rien faire.
+ * Cible du focus après un verdict : « attendre » tant que la page n'a pas été
+ * revalidée et que le bloc est encore affiché ; null dès que la revalidation
+ * est observée avec le bloc toujours là (le focus reste en place) ;
+ * l'identifiant à focaliser une fois le bloc disparu.
  */
 export function cibleApresVerdict(entree: {
   titreId: string;
   suivantId: string | null;
   repliId: string;
   present: (id: string) => boolean;
-  /** Le focus est perdu (sur le document), ou encore dans le bloc. */
+  /** Le focus est perdu : sur le document, ou nulle part. */
   focusLibre: boolean;
+  /** Le rendu de la page a changé depuis l'envoi du verdict. */
+  revalide: boolean;
 }): string | null | 'attendre' {
-  if (entree.present(entree.titreId)) return 'attendre';
+  if (entree.present(entree.titreId)) {
+    return entree.revalide ? null : 'attendre';
+  }
   if (!entree.focusLibre) return null;
   if (entree.suivantId !== null && entree.present(entree.suivantId)) {
     return entree.suivantId;

@@ -4,7 +4,9 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode
 } from 'react';
@@ -22,7 +24,7 @@ import {
 // décompte de la sélection), jamais repris si la personne l'a déjà placé
 // ailleurs.
 
-// Délai d'attente du nouvel affichage après le verdict (revalidation).
+// Garde-fou : si la revalidation n'est jamais observée, l'attente s'arrête.
 const ATTENTE_MAX_MS = 5_000;
 
 export type Signal = {
@@ -32,31 +34,37 @@ export type Signal = {
   suivantId: string | null;
   /** Suivre le focus : seulement après un verdict enregistré. */
   suivre: boolean;
+  /** Jeton de rendu de la page relevé à l'envoi du verdict. */
+  jetonAvant: string;
 };
 
-type Contexte = { signaler: (signal: Signal) => void };
+type Contexte = {
+  signaler: (signal: Signal) => void;
+  /** Jeton du dernier rendu serveur de la page (change à chaque revalidation). */
+  jeton: () => string;
+};
 const AnnoncesContexte = createContext<Contexte | null>(null);
+const sansFournisseur: Contexte = {
+  signaler: () => undefined,
+  jeton: () => ''
+};
 
 /** Signaler une annonce (et suivre le focus) ; sans fournisseur, rien. */
-export const useAnnoncesRelecture = (): Contexte['signaler'] =>
-  useContext(AnnoncesContexte)?.signaler ?? (() => undefined);
+export const useAnnoncesRelecture = (): Contexte =>
+  useContext(AnnoncesContexte) ?? sansFournisseur;
 
-const suivreFocus = (signal: Signal): void => {
+const suivreFocus = (signal: Signal, jeton: () => string): void => {
   const debut = performance.now();
   const present = (id: string): boolean => document.getElementById(id) !== null;
   const etape = (): void => {
     const actif = document.activeElement;
-    const titre = document.getElementById(signal.titreId);
-    const focusLibre =
-      actif === null ||
-      actif === document.body ||
-      (titre?.closest('[data-bloc]')?.contains(actif) ?? false);
     const cible = cibleApresVerdict({
       titreId: signal.titreId,
       suivantId: signal.suivantId,
       repliId: REPLI_FOCUS_ID,
       present,
-      focusLibre
+      focusLibre: actif === null || actif === document.body,
+      revalide: jeton() !== signal.jetonAvant
     });
     if (cible === 'attendre') {
       if (performance.now() - debut < ATTENTE_MAX_MS) {
@@ -69,16 +77,34 @@ const suivreFocus = (signal: Signal): void => {
   requestAnimationFrame(etape);
 };
 
-export function AnnoncesRelecture({ children }: { children: ReactNode }) {
+export function AnnoncesRelecture({
+  rendu,
+  children
+}: {
+  /** Jeton propre à chaque rendu serveur de la page. */
+  rendu: string;
+  children: ReactNode;
+}) {
   const [annonce, setAnnonce] = useState<{ texte: string; n: number } | null>(
     null
   );
-  const signaler = useCallback((signal: Signal): void => {
-    // Clé changeante : le même message, répété, est annoncé de nouveau.
-    setAnnonce((avant) => ({ texte: signal.message, n: (avant?.n ?? 0) + 1 }));
-    if (signal.suivre) suivreFocus(signal);
-  }, []);
-  const valeur = useMemo(() => ({ signaler }), [signaler]);
+  const renduCourant = useRef(rendu);
+  useEffect(() => {
+    renduCourant.current = rendu;
+  }, [rendu]);
+  const jeton = useCallback((): string => renduCourant.current, []);
+  const signaler = useCallback(
+    (signal: Signal): void => {
+      // Clé changeante : le même message, répété, est annoncé de nouveau.
+      setAnnonce((avant) => ({
+        texte: signal.message,
+        n: (avant?.n ?? 0) + 1
+      }));
+      if (signal.suivre) suivreFocus(signal, jeton);
+    },
+    [jeton]
+  );
+  const valeur = useMemo(() => ({ signaler, jeton }), [signaler, jeton]);
   return (
     <AnnoncesContexte.Provider value={valeur}>
       {children}

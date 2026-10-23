@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import clsx from 'clsx';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { MotsCinetiques } from '@/components/mots-cinetiques';
@@ -216,7 +217,7 @@ export default async function RelecturePage({ params, searchParams }: Props) {
           {t('indisponible')}
         </p>
       ) : (
-        <AnnoncesRelecture>
+        <AnnoncesRelecture rendu={randomUUID()}>
           <section
             aria-labelledby='avancement-titre'
             className='grid gap-x-8 gap-y-6 border-t-2 border-encre py-10 lg:grid-cols-12'

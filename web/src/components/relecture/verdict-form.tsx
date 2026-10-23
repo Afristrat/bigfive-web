@@ -87,7 +87,7 @@ export function VerdictForm({
   const [state, setState] = useState<RelectureState>(idle);
   const [pending, startTransition] = useTransition();
   const [commentaire, setCommentaire] = useState('');
-  const signaler = useAnnoncesRelecture();
+  const { signaler, jeton } = useAnnoncesRelecture();
   // Bouton qui a soumis (clic ou Entrée sur le bouton) : plus sûr que le
   // `submitter` de FormData, absent des navigateurs anciens.
   const verdict = useRef<'relu' | 'a_corriger'>('relu');
@@ -103,6 +103,8 @@ export function VerdictForm({
       (titre) => titre.id
     );
     const suivantId = voisinDuBloc(ordre, titreId);
+    // Rendu de la page avant le verdict : sa revalidation se lit à son changement.
+    const jetonAvant = jeton();
     startTransition(async () => {
       const resultat = await relireBloc(state, data);
       setState(resultat);
@@ -111,7 +113,7 @@ export function VerdictForm({
       if (reussi) setCommentaire('');
       const message = texteDe(resultat, labels);
       if (message) {
-        signaler({ message, titreId, suivantId, suivre: reussi });
+        signaler({ message, titreId, suivantId, suivre: reussi, jetonAvant });
       }
     });
   };
