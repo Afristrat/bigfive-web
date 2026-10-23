@@ -32,11 +32,20 @@ export default async function MesResultatsPage({ params }: Props) {
   const viewer = await requireViewer(locale, '/mes-resultats');
   const participations = await loadMesParticipations(viewer);
   const t = await getTranslations('mesResultats');
+  const binome = await getTranslations('binome');
 
   return (
     <div>
       <h1 className={title()}>{t('title')}</h1>
       <p className='mt-4 text-texte-2'>{t('intro')}</p>
+      <p className='mt-4'>
+        <Link
+          href='/mes-resultats/binomes'
+          className='font-semibold text-accent'
+        >
+          {binome('liste.lien')}
+        </Link>
+      </p>
       {participations.length === 0 ? (
         <p className='mt-8 text-texte-2'>{t('empty')}</p>
       ) : (
