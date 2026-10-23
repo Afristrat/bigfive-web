@@ -39,8 +39,6 @@ export type SyntheseLabels = {
   complementVide: string;
   sansMoyenne: string;
   dispersion: string;
-  /** Contient « {niveau} ». */
-  niveauLecture: string;
   niveaux: Record<Niveau, string>;
   aucunGroupe: string;
 };
@@ -67,7 +65,6 @@ export const libellesSynthese = (
   complementVide: t('complementVide'),
   sansMoyenne: t('sansMoyenne'),
   dispersion: t('dispersion'),
-  niveauLecture: t('niveauLecture', { niveau: '{niveau}' }),
   niveaux: {
     bas: tn('bas'),
     plutot_bas: tn('plutot_bas'),
@@ -107,7 +104,7 @@ function Regle({
     >
       <span
         style={{ ...rang(ordre), width: position(moyenne) }}
-        className='regle-trait barre-reglee absolute inset-y-0 start-0 rounded-petit bg-accent'
+        className='regle-trait barre-reglee absolute inset-y-0 start-0 rounded-petit bg-encre'
       />
       <span
         className='absolute -inset-y-[3px] w-px bg-trait-fort'
@@ -115,7 +112,7 @@ function Regle({
       />
       {repere !== null && (
         <span
-          className='regle-trait absolute -inset-y-[5px] w-[3px] -translate-x-1/2 rounded-full bg-safran ring-2 ring-surface rtl:translate-x-1/2 dark:bg-encre'
+          className='regle-trait absolute -inset-y-[5px] w-[3px] -translate-x-1/2 rounded-full bg-safran ring-2 ring-surface rtl:translate-x-1/2'
           style={{ insetInlineStart: position(repere) }}
         />
       )}
@@ -209,12 +206,11 @@ function Tableau({
                       )}
                     </td>
                     <td className={`${td} text-texte-2`}>
-                      {labels.niveauLecture.replace(
-                        '{niveau}',
+                      {
                         labels.niveaux[
                           niveau(ligne.moyenne / QUESTIONS_PAR_DOMAINE)
                         ]
-                      )}
+                      }
                     </td>
                   </>
                 )}
@@ -311,7 +307,7 @@ export function GroupSynthesis({ groupes, locale, labels }: Props) {
                   <p className='mt-3 flex items-center gap-2 text-legende text-texte-2'>
                     <span
                       aria-hidden='true'
-                      className='inline-block h-3 w-[3px] rounded-full bg-safran dark:bg-encre'
+                      className='inline-block h-3 w-[3px] rounded-full bg-safran'
                     />
                     {labels.repereComplement}
                   </p>

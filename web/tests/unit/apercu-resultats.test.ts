@@ -129,6 +129,17 @@ describe('groupes fictifs', () => {
     }
   });
 
+  it('noms traduits en anglais et en arabe, français par défaut', () => {
+    expect(groupesApercu('fr')[0]?.nom).toBe('Équipe Atlas (fictive)');
+    expect(groupesApercu('en')[0]?.nom).toBe('Atlas team (fictitious)');
+    expect(groupesApercu('ar')[0]?.nom).toBe('فريق أطلس (وهمي)');
+    for (const locale of ['en', 'ar']) {
+      for (const g of groupesApercu(locale)) {
+        expect(g.nom).not.toMatch(/Équipe|fictive/);
+      }
+    }
+  });
+
   it('les identifiants sont des uuid distincts', () => {
     const ids = groupes.map((g) => g.id);
     expect(new Set(ids).size).toBe(3);

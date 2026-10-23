@@ -20,10 +20,9 @@ const syntheseFr = {
   colMoyenne: 'Moyenne du score (de 24 à 120)',
   colEcartType: 'Écart type',
   ecartTypeAbsent: 'écart type non disponible',
-  colNiveau: 'Niveau',
+  colNiveau: 'Niveau (lecture de convention)',
   dispersion:
-    'Écart type : dispersion des réponses, sans étiquette faute de convention.',
-  niveauLecture: 'Lecture de convention : {niveau}'
+    'Écart type : dispersion des réponses, sans étiquette faute de convention.'
 };
 
 export default syntheseFr;

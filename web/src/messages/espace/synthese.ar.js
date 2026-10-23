@@ -20,9 +20,8 @@ const syntheseAr = {
   colMoyenne: 'متوسط الدرجة (من 24 إلى 120)',
   colEcartType: 'الانحراف المعياري',
   ecartTypeAbsent: 'الانحراف المعياري غير متوفر',
-  colNiveau: 'المستوى',
-  dispersion: 'الانحراف المعياري: تشتت الإجابات، دون وصف لغياب أي اصطلاح.',
-  niveauLecture: 'قراءة بحكم الاصطلاح: {niveau}'
+  colNiveau: 'المستوى (قراءة بحكم الاصطلاح)',
+  dispersion: 'الانحراف المعياري: تشتت الإجابات، دون وصف لغياب أي اصطلاح.'
 };
 
 export default syntheseAr;

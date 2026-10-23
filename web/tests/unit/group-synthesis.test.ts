@@ -106,13 +106,12 @@ const labels: SyntheseLabels = {
   colMoyenne: 'Moyenne',
   colEcartType: 'Écart type',
   ecartTypeAbsent: 'écart type non disponible',
-  colNiveau: 'Niveau',
+  colNiveau: 'NIVEAU-CONVENTION',
   nonPublie: 'NON-PUBLIE',
   complementNonPublie: 'COMPLEMENT-NON-PUBLIE',
   complementVide: 'COMPLEMENT-VIDE',
   sansMoyenne: 'SANS-MOYENNE',
   dispersion: 'DISPERSION-SANS-ETIQUETTE',
-  niveauLecture: 'CONVENTION {niveau}',
   niveaux: {
     bas: 'N-bas',
     plutot_bas: 'N-plutot-bas',
@@ -163,13 +162,14 @@ describe('GroupSynthesis', () => {
     ];
     for (const [moyenne, attendu] of cas) {
       const html = rendre([{ ...publie, groupe: domaines(moyenne) }]);
-      expect(html).toContain(`CONVENTION ${attendu}`);
+      expect(html).toContain(`${attendu}</td>`);
     }
   });
 
-  it('chaque niveau est précédé de la mention de lecture de convention', () => {
+  it('la lecture de convention est dite une fois, dans l’en-tête de la colonne', () => {
     const html = rendre([publie]);
-    expect(html.match(/CONVENTION /g)).toHaveLength(5);
+    expect(html.match(/NIVEAU-CONVENTION/g)).toHaveLength(1);
+    expect(html.match(/N-milieu<\/td>/g)).toHaveLength(5);
   });
 
   it('domaines seuls : cinq lignes de domaine, aucune facette', () => {
@@ -217,7 +217,7 @@ describe('GroupSynthesis', () => {
     expect(html).toContain('COMPLEMENT-VIDE');
     expect(html).toContain('SANS-MOYENNE');
     // Un seul niveau : celui du groupe ; le complément vide n'en porte pas.
-    expect(html.match(/CONVENTION /g)).toHaveLength(1);
+    expect(html.match(/N-milieu<\/td>/g)).toHaveLength(1);
   });
 
   it('complément publié : moyenne et niveau affichés', () => {
@@ -229,7 +229,7 @@ describe('GroupSynthesis', () => {
       }
     ]);
     expect(html).toContain('Le reste de la campagne');
-    expect(html).toContain('CONVENTION N-haut');
+    expect(html).toContain('N-haut</td>');
   });
 
   it('groupe publié sans complément : mention neutre, sans raison', () => {

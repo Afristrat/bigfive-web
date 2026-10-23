@@ -21,10 +21,9 @@ const syntheseEn = {
   colMoyenne: 'Average score (24 to 120)',
   colEcartType: 'Standard deviation',
   ecartTypeAbsent: 'standard deviation not available',
-  colNiveau: 'Level',
+  colNiveau: 'Level (reading by convention)',
   dispersion:
-    'Standard deviation: spread of the answers, with no label for lack of a convention.',
-  niveauLecture: 'Reading by convention: {niveau}'
+    'Standard deviation: spread of the answers, with no label for lack of a convention.'
 };
 
 export default syntheseEn;

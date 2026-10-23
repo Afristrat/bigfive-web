@@ -32,8 +32,8 @@ const CSS_SANS_AVATAR = CSS_VISUELS.split('\n')
   .filter((l) => !l.startsWith('.avatar') && !l.startsWith('@keyframes cligne') && !l.startsWith('@keyframes flotte'))
   .join('\n');
 
-const CLAIR = '--bg:#f7f6f2;--fg:#1d1f21;--mut:#545a62;--card:#fff;--ln:#dedbd2;--grid:#7f858c;--ok:#1f7a4d;--mid:#8a5a00;--no:#545a62;--ecart:#5b3f9a;--focus:#1d4ed8;--link:#1d4ed8;color-scheme:light';
-const SOMBRE = '--bg:#15171a;--fg:#ecece8;--mut:#9aa0a8;--card:#1f2226;--ln:#363b41;--grid:#7b828a;--ok:#5fcf97;--mid:#e0b24a;--no:#9aa0a8;--ecart:#c4b8f5;--focus:#8fb4ff;--link:#8fb4ff;color-scheme:dark';
+const CLAIR = '--bg:#f7f6f2;--fg:#1d1f21;--mut:#545a62;--card:#fff;--ln:#dedbd2;--grid:#7f858c;--ok:#1f7a4d;--mid:#8a5a00;--no:#545a62;--ecart:#11162b;--focus:#1d4ed8;--link:#1d4ed8;color-scheme:light';
+const SOMBRE = '--bg:#15171a;--fg:#ecece8;--mut:#9aa0a8;--card:#1f2226;--ln:#363b41;--grid:#7b828a;--ok:#5fcf97;--mid:#e0b24a;--no:#9aa0a8;--ecart:#ecedf3;--focus:#8fb4ff;--link:#8fb4ff;color-scheme:dark';
 const CSS = `
 :root{${CLAIR}}
 :root[data-theme=dark]{${SOMBRE}}

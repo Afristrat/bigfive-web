@@ -266,7 +266,7 @@ export default async function ApercuResultatsPage({
           </p>
           <div className='mt-8'>
             <GroupSynthesis
-              groupes={groupesApercu()}
+              groupes={groupesApercu(locale)}
               locale={locale}
               labels={libellesSynthese(synthese, niveaux)}
             />

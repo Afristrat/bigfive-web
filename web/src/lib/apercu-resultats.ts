@@ -147,10 +147,32 @@ export function scoresApercu(code: ProfilApercu): ScoresTenga {
   return lu;
 }
 
+// Noms des groupes fictifs par langue ; le français reste celui du fichier.
+// L'arabe est à faire relire par un natif, comme le reste.
+const NOMS_GROUPES: Record<string, { en: string; ar: string }> = {
+  '11111111-aaaa-4aaa-8aaa-000000000001': {
+    en: 'Atlas team (fictitious)',
+    ar: 'فريق أطلس (وهمي)'
+  },
+  '11111111-aaaa-4aaa-8aaa-000000000002': {
+    en: 'Borj team (fictitious)',
+    ar: 'فريق برج (وهمي)'
+  },
+  '11111111-aaaa-4aaa-8aaa-000000000003': {
+    en: 'Cedar team (fictitious, size below the threshold)',
+    ar: 'فريق الأرز (وهمي، عدد أفراده أقل من العتبة)'
+  }
+};
+
 /** Trois groupes fictifs, dont un sans aucune ligne (sous le seuil d'anonymat). */
-export function groupesApercu(): GroupeSynthese[] {
-  return assemblerGroupes(
+export function groupesApercu(locale = 'fr'): GroupeSynthese[] {
+  const groupes = assemblerGroupes(
     groupRows.parse(donnees.groupes),
     aggregateRows.parse(donnees.agregats)
   );
+  if (locale !== 'en' && locale !== 'ar') return groupes;
+  return groupes.map((g) => ({
+    ...g,
+    nom: NOMS_GROUPES[g.id]?.[locale] ?? g.nom
+  }));
 }
