@@ -8,17 +8,22 @@ interface ScoreBarProps {
   taille?: 'domaine' | 'facette';
   anime?: boolean;
   rang?: number; // position dans la liste, pour le décalage du tracé
+  gradue?: boolean; // graduations au quart, à la moitié et aux trois quarts
 }
 
+const GRADUATIONS = ['start-1/4', 'start-1/2', 'start-3/4'] as const;
+
 // Barre de score décorative (la valeur est écrite à côté, en texte). Le trait
-// part du bord de début de ligne : il croît vers la gauche en arabe.
+// part du bord de début de ligne : il croît vers la gauche en arabe. Les
+// graduations découpent la piste comme une règle, par-dessus le trait.
 export function ScoreBar({
   score,
   min,
   max,
   taille = 'domaine',
   anime = false,
-  rang = 0
+  rang = 0,
+  gradue = false
 }: ScoreBarProps) {
   return (
     <span
@@ -38,6 +43,16 @@ export function ScoreBar({
           animationDelay: anime ? `${rang * 60}ms` : undefined
         }}
       />
+      {gradue &&
+        GRADUATIONS.map((position) => (
+          <span
+            key={position}
+            className={clsx(
+              'absolute inset-y-0 w-px bg-surface print:bg-white',
+              position
+            )}
+          />
+        ))}
     </span>
   );
 }

@@ -18,6 +18,15 @@ export const codeLimits = {
   perIp: { max: 20, windowMs: HOUR_MS }
 } as const satisfies Record<string, Limit>;
 
+// Mot de passe et code TOTP des administrateurs : 20 essais par IP et par heure
+// (comme le code à 6 chiffres), 10 opérations de sécurité par compte et par
+// heure. Le blocage par compte (5 échecs en 15 minutes, 6 en 24 heures) vit en
+// base : migration 0018.
+export const passwordLimits = {
+  perIp: { max: 20, windowMs: HOUR_MS },
+  perUser: { max: 10, windowMs: HOUR_MS }
+} as const satisfies Record<string, Limit>;
+
 export type RateLimiter = {
   /**
    * Renvoie true si la requête courante dépasse le plafond (elle n'est alors

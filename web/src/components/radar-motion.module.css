@@ -1,0 +1,100 @@
+/* Construction du radar de la page de résultat, axe par axe. Styles locaux :
+   ils lisent les jetons globaux (--courbe, --c-*) et doublent la spécificité
+   des classes globales .radar-* pour remplacer leur animation. La grille se
+   pose, chaque axe se trace depuis le centre (stroke-dashoffset), chaque
+   sommet apparaît sur son axe, puis le contour se referme et l'aire se pose.
+   L'état final est l'état naturel des éléments : sans animation (mouvement
+   réduit, impression), tout est visible. */
+
+.radar .anneau {
+  animation: fondu 360ms var(--courbe) both;
+}
+
+.radar .axe {
+  stroke-dasharray: 1;
+  animation: tracer 520ms var(--courbe) both;
+  animation-delay: calc(120ms + var(--i, 0) * 90ms);
+}
+
+.radar .marqueur {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: sommet 460ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(420ms + var(--i, 0) * 110ms);
+}
+
+.radar .etiquette {
+  animation: fondu 360ms var(--courbe) both;
+  animation-delay: calc(300ms + var(--i, 0) * 90ms);
+}
+
+.radar .trace {
+  stroke-dasharray: 1;
+  transform: none;
+  animation: tracer 760ms cubic-bezier(0.77, 0, 0.175, 1) 820ms both;
+}
+
+.radar .aire {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: aire 560ms var(--courbe) 1380ms both;
+}
+
+@keyframes fondu {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes tracer {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes sommet {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes aire {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radar .anneau,
+  .radar .axe,
+  .radar .marqueur,
+  .radar .etiquette,
+  .radar .trace,
+  .radar .aire {
+    animation: none;
+  }
+}
+
+@media print {
+  .radar .anneau,
+  .radar .axe,
+  .radar .marqueur,
+  .radar .etiquette,
+  .radar .trace,
+  .radar .aire {
+    animation: none;
+  }
+}

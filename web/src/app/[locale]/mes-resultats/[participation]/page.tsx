@@ -40,6 +40,7 @@ export default async function MaParticipationPage({ params }: Props) {
   const t = await getTranslations('mesResultats');
   const niveaux = await getTranslations('niveaux');
   const rapport = await getTranslations('rapport');
+  const flow = await getTranslations('flow');
 
   const peutPasser =
     participation.statut !== 'terminee' &&
@@ -75,7 +76,7 @@ export default async function MaParticipationPage({ params }: Props) {
               profil={profilDepuisScores(participation.scores)}
               locale={locale}
               audience='personne'
-              libelles={libellesResultView(t, niveaux)}
+              libelles={libellesResultView(t, niveaux, flow)}
               date={date}
             />
           </div>

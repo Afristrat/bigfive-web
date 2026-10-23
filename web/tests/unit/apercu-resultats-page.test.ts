@@ -160,6 +160,13 @@ describe('vue participant (audience personne)', () => {
     expect(html).toContain(facetLabel('O', 6, 'fr'));
   });
 
+  it('même présentation animée que le résultat public : sommaire, compteurs, règles', async () => {
+    const html = await rendre({ vue: 'participant', profil: 'KB' });
+    expect(html).toContain(`aria-label="${fr.flow.railLabel}"`);
+    expect(html).toContain('data-compte=');
+    expect(html).toContain('animate-tracer');
+  });
+
   it('la simulation montre les textes avec la mention « non relu »', async () => {
     const html = await rendre({
       vue: 'participant',

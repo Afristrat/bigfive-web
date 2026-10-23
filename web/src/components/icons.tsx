@@ -15,12 +15,8 @@ export const Wordmark = ({ className }: { className?: string }) => (
       className
     )}
   >
-    <span className='relative text-[1.25rem] font-semibold leading-none tracking-[-0.01em] text-encre'>
+    <span className='font-display text-[1.375rem] font-bold leading-none tracking-[-0.03em] text-encre'>
       Tenga
-      <span
-        aria-hidden='true'
-        className='absolute -bottom-1.5 start-0 h-0.5 w-[62%] bg-accent'
-      />
     </span>
     <span className='text-petit font-normal text-texte-3 max-[440px]:hidden'>
       Assessments

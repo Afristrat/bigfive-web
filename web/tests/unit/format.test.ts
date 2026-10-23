@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   formatDate,
   formatDateMaroc,
+  formatDateHeure,
   formatNombre,
   FUSEAU_MAROC,
   isoler,
@@ -41,6 +42,14 @@ describe('format', () => {
     const tard = Date.UTC(2026, 9, 19, 23, 30);
     expect(formatDate(tard, 'fr', 'UTC')).toBe('19 octobre 2026');
     expect(formatDate(tard, 'fr', 'Africa/Casablanca')).toBe('20 octobre 2026');
+  });
+
+  it('lit la date et l’heure au fuseau demandé, pas à celui du serveur', () => {
+    const tard = Date.UTC(2026, 9, 19, 23, 30);
+    expect(formatDateHeure(tard, 'fr', 'UTC')).toBe('19/10/2026 23:30');
+    expect(formatDateHeure(tard, 'fr', 'Africa/Casablanca')).toBe(
+      '20/10/2026 00:30'
+    );
   });
 
   it('isole un segment latin par les marques FSI et PDI', () => {

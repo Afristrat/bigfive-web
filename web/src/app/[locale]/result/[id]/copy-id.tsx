@@ -32,8 +32,8 @@ export function CopyId({
   };
 
   return (
-    <section aria-labelledby='identifiant' className='carte mt-4'>
-      <h2 id='identifiant' className='text-titre-3 text-encre'>
+    <section aria-labelledby='identifiant-titre' className='carte mt-4'>
+      <h2 id='identifiant-titre' className='text-titre-3 text-encre'>
         {title}
       </h2>
       <p className='mt-1 text-petit text-texte-2'>{hint}</p>

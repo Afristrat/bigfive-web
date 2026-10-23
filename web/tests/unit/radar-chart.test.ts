@@ -34,7 +34,7 @@ const rendre = (locale: string) =>
 const boutsDAxe = (html: string): number[] =>
   [
     ...html.matchAll(
-      /<line class="radar-axe" x1="[\d.]+" y1="[\d.]+" x2="([\d.]+)"/g
+      /<line class="radar-axe[^"]*"[^>]*? x1="[\d.]+" y1="[\d.]+" x2="([\d.]+)"/g
     )
   ]
     .slice(0, 5)
@@ -155,15 +155,20 @@ describe('RadarChart', () => {
     ]) {
       expect(html).toContain(`>${libelle}</text>`);
     }
-    expect(html).toContain('<tspan class="radar-valeur">97</tspan>');
+    expect(html).toContain(
+      '<tspan class="radar-valeur" data-compte="97">97</tspan>'
+    );
     expect(html).toContain('Névrosisme : 62 / 120, Extraversion : 88 / 120');
   });
 
-  it('place un marqueur par domaine avec un décalage croissant', () => {
+  it('place un marqueur par domaine avec un rang de cascade croissant', () => {
     const html = rendre('fr');
-    expect(html.match(/class="radar-marqueur"/g)).toHaveLength(10);
-    expect(html).toContain('animation-delay:0.5s');
-    expect(html).toContain('animation-delay:1.22s');
+    expect(html.match(/class="radar-marqueur[^"]*"/g)).toHaveLength(10);
+    // Axes, sommets et étiquettes portent leur rang 0 à 4, dans chaque variante.
+    for (let i = 0; i < 5; i += 1) {
+      expect(html.match(new RegExp(`--i:${i}`, 'g'))).toHaveLength(6);
+    }
+    expect(html.match(/pathLength="1"/g)).toHaveLength(12);
   });
 
   it('se retourne en arabe et garde des chiffres occidentaux', () => {

@@ -55,6 +55,7 @@ export default async function ApercuResultatsPage({
   const t = await getTranslations('apercu');
   const mes = await getTranslations('mesResultats');
   const niveaux = await getTranslations('niveaux');
+  const flow = await getTranslations('flow');
   const rapportT = await getTranslations('rapport');
   const synthese = await getTranslations('synthese');
 
@@ -187,7 +188,7 @@ export default async function ApercuResultatsPage({
                   profil={profilDepuisScores(scores)}
                   locale={locale}
                   audience={audience}
-                  libelles={libellesResultView(mes, niveaux)}
+                  libelles={libellesResultView(mes, niveaux, flow)}
                   date={null}
                   afficherNonRelus={afficherNonRelus}
                 />

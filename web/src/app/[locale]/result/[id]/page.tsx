@@ -3,13 +3,14 @@ import { notFound } from 'next/navigation';
 import { getTestResult, type Report } from '@/actions';
 import { B5Error } from '@/types';
 import { getTranslations } from 'next-intl/server';
-import { boutonPrincipal, title } from '@/components/primitives';
+import { boutonPrincipal } from '@/components/primitives';
+import { ResultHeader } from '@/components/resultats/result-header';
 import {
   ResultView,
   libellesResultView
 } from '@/components/resultats/result-view';
 import { basePath } from '@/config/site';
-import { formatDate } from '@/lib/format';
+import { formatDate, remplir } from '@/lib/format';
 import { Link } from '@/navigation';
 import { CopyId } from './copy-id';
 import { PrintButton } from './print-button';
@@ -56,36 +57,37 @@ export default async function ResultPage({
   const t = await getTranslations({ locale, namespace: 'results' });
   const mes = await getTranslations({ locale, namespace: 'mesResultats' });
   const niveaux = await getTranslations({ locale, namespace: 'niveaux' });
+  const flow = await getTranslations({ locale, namespace: 'flow' });
+  const libelles = libellesResultView(mes, niveaux, flow);
 
   return (
-    <>
-      <header>
-        <h1 className={title({ size: 'display' })}>{t('title')}</h1>
-        <p className='mt-4 colonne-lecture text-chapo text-texte-2'>
-          {t('intro')}
-        </p>
-        <p className='mt-3 colonne-lecture text-petit text-texte-2'>
-          {t('interpretationNote')}
-        </p>
-      </header>
-
-      <div className='mt-8'>
-        <ResultView
-          profil={report.profil}
-          locale={locale}
-          audience='personne'
-          libelles={libellesResultView(mes, niveaux)}
-          date={formatDate(report.timestamp, locale)}
+    <ResultView
+      profil={report.profil}
+      locale={locale}
+      audience='personne'
+      libelles={libelles}
+      date={null}
+      ancres={[{ id: 'identifiant', label: flow('railId') }]}
+      entete={
+        <ResultHeader
+          titre={t('title')}
+          date={remplir(libelles.passeLe, {
+            date: formatDate(report.timestamp, locale)
+          })}
+          chapo={t('intro')}
+          note={t('interpretationNote')}
+        />
+      }
+    >
+      <div id='identifiant' data-revele className='scroll-mt-32'>
+        <CopyId
+          id={report.id}
+          title={t('idLabel')}
+          hint={t('idHint')}
+          copyLabel={t('copyId')}
+          copiedLabel={t('copied')}
         />
       </div>
-
-      <CopyId
-        id={report.id}
-        title={t('idLabel')}
-        hint={t('idHint')}
-        copyLabel={t('copyId')}
-        copiedLabel={t('copied')}
-      />
 
       <div className='mt-6 flex flex-wrap gap-3 print:hidden'>
         <PrintButton label={t('print')} />
@@ -99,6 +101,6 @@ export default async function ResultPage({
           {t('backHome')}
         </Link>
       </div>
-    </>
+    </ResultView>
   );
 }

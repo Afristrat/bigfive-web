@@ -119,6 +119,7 @@ const SCORES_UNIFORMES = calculerScores(
   600
 );
 
+const RAIL_FR = (fr as unknown as { flow: Record<string, string> }).flow;
 const libellesDe = (
   locale: 'fr' | 'ar',
   vue: ResultViewLabels['vue'],
@@ -126,6 +127,12 @@ const libellesDe = (
 ): ResultViewLabels => ({
   vue,
   niveaux,
+  rail: {
+    label: RAIL_FR.railLabel ?? '',
+    profil: RAIL_FR.railProfile ?? '',
+    scores: RAIL_FR.railScores ?? '',
+    facettes: RAIL_FR.railDetail ?? ''
+  },
   passeLe: locale === 'fr' ? 'Passé le {date}' : 'تم الاختبار في {date}'
 });
 const LIBELLES_FR = libellesDe(
@@ -341,7 +348,11 @@ describe('composants du dossier resultats', () => {
     expect(fichiers.sort()).toEqual([
       'facet-card.tsx',
       'level-badge.tsx',
-      'result-view.tsx'
+      'result-header.tsx',
+      'result-motion.tsx',
+      'result-rail.tsx',
+      'result-view.tsx',
+      'score-value.tsx'
     ]);
     for (const f of fichiers) {
       expect(readFileSync(join(dossier, f), 'utf8'), f).not.toMatch(
@@ -504,6 +515,14 @@ describe('page /mes-resultats/[participation]', () => {
     expect(html).toContain(`Texte en relecture${NBSP}:`);
     expect(html).not.toContain('Texte non relu');
     expect(html).toContain('Retour à mes résultats');
+  });
+
+  it('même présentation animée que le résultat public : sommaire et compteurs', async () => {
+    loadMaParticipation.mockResolvedValue(participation());
+    const html = await rendreDetail(P1);
+    expect(html).toContain('aria-label="Sommaire du résultat"');
+    expect(html).toContain('data-compte="72"');
+    expect(html).toContain('animate-tracer');
   });
 
   it('scores illisibles : message de format antérieur, jamais d’erreur', async () => {

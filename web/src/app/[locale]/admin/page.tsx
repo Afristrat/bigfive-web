@@ -4,6 +4,7 @@ import {
   OrganizationForm,
   RoleForm
 } from '@/components/admin-forms';
+import { UnlockButton } from '@/components/password-unlock';
 import { title } from '@/components/primitives';
 import { TengaAdminsPanel } from '@/components/tenga-admins-panel';
 import {
@@ -12,6 +13,7 @@ import {
   loadTengaAdmins
 } from '@/lib/admin-data';
 import { formatDate, formatDateHeure, isolerEnArabe } from '@/lib/format';
+import { loadLockedAccounts } from '@/lib/password-locked-accounts';
 import { requireAdmin } from '@/lib/session';
 import { Link } from '@/navigation';
 
@@ -25,6 +27,7 @@ export async function generateMetadata({ params }: Props) {
   return { title: t('title'), robots: { index: false, follow: false } };
 }
 
+const TIME_ZONE = 'Africa/Casablanca';
 const th = 'px-3.5 py-3 text-start text-legende font-semibold text-texte-2';
 const td = 'px-3.5 py-3 align-top';
 
@@ -33,10 +36,11 @@ export default async function AdminPage({ params }: Props) {
   setRequestLocale(locale);
   // 404 pour quiconque n'est pas dans private.tenga_admins (lu en base).
   const viewer = await requireAdmin(locale, '/admin');
-  const [organizations, journal, admins] = await Promise.all([
+  const [organizations, journal, admins, locked] = await Promise.all([
     loadOrganizations(viewer),
     loadJournal(viewer),
-    loadTengaAdmins(viewer)
+    loadTengaAdmins(viewer),
+    loadLockedAccounts(viewer)
   ]);
   const t = await getTranslations('admin');
   const roles = await getTranslations('roles');
@@ -260,6 +264,83 @@ export default async function AdminPage({ params }: Props) {
               error: t('removeError')
             }}
           />
+        )}
+      </section>
+
+      <section aria-labelledby='verrous-titre'>
+        <h2 id='verrous-titre' className='text-titre-2 text-encre'>
+          {t('locked.title')}
+        </h2>
+        <p className='mt-2 colonne-lecture text-texte-2'>{t('locked.intro')}</p>
+        {locked === null ? (
+          <p className='mt-4 text-texte-2'>{t('locked.unavailable')}</p>
+        ) : locked.length === 0 ? (
+          <p className='mt-4 text-texte-2'>{t('locked.empty')}</p>
+        ) : (
+          <div
+            role='region'
+            aria-labelledby='verrous-titre'
+            tabIndex={0}
+            className='carte mt-4 overflow-x-auto !p-0'
+          >
+            <table className='w-full min-w-[640px] text-petit'>
+              <thead className='border-b border-trait'>
+                <tr>
+                  <th scope='col' className={th}>
+                    {t('locked.colAccount')}
+                  </th>
+                  <th scope='col' className={th}>
+                    {t('locked.colState')}
+                  </th>
+                  <th scope='col' className={th}>
+                    {t('locked.colUntil')}
+                  </th>
+                  <th scope='col' className={th}>
+                    {t('locked.colAction')}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className='divide-y divide-trait'>
+                {locked.map((account) => {
+                  const compte = account.email ?? account.nom ?? '';
+                  return (
+                    <tr key={account.utilisateur}>
+                      <th
+                        scope='row'
+                        className={`${td} break-all text-start font-semibold`}
+                      >
+                        {account.nom && (
+                          <span className='block'>{account.nom}</span>
+                        )}
+                        <bdi dir='ltr'>{account.email ?? '-'}</bdi>
+                      </th>
+                      <td className={td}>
+                        {account.etat === 'definitif'
+                          ? t('locked.stateDefinitif')
+                          : t('locked.stateTemporaire')}
+                      </td>
+                      <td className={`${td} chiffres whitespace-nowrap`}>
+                        {account.etat === 'temporaire' && account.jusqu
+                          ? // Heure de fin du blocage, lue au Maroc.
+                            formatDateHeure(account.jusqu, locale, TIME_ZONE)
+                          : '-'}
+                      </td>
+                      <td className={td}>
+                        <UnlockButton
+                          locale={locale}
+                          userId={account.utilisateur}
+                          label={t('locked.unlock')}
+                          ariaLabel={t('locked.unlockAria', { compte })}
+                          done={t('locked.unlocked')}
+                          error={t('locked.error')}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </section>
 

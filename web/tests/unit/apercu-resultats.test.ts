@@ -194,6 +194,8 @@ describe('l’option de simulation traverse les vrais composants', () => {
       (tout, nom: string) => valeurs?.[nom] ?? tout
     );
   };
+  const flow = (cle: string): string =>
+    (fr.flow as Record<string, string>)[cle] ?? cle;
   const profil = profilDepuisScores(scoresApercu('AM'));
   const html = (afficherNonRelus?: boolean): string =>
     renderToStaticMarkup(
@@ -201,7 +203,7 @@ describe('l’option de simulation traverse les vrais composants', () => {
         profil,
         locale: 'fr',
         audience: 'personne',
-        libelles: libellesResultView(mes, niv),
+        libelles: libellesResultView(mes, niv, flow),
         date: null,
         afficherNonRelus
       })

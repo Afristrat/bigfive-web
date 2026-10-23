@@ -3,64 +3,99 @@
 @tailwind utilities;
 
 @layer base {
-  /* Direction « règle graduée » (docs/design/direction.md, § 3) : fond pierre,
-     un seul accent vert cèdre, une famille de gris légèrement chaude. Valeurs en
-     triplets RVB pour l'opacité des utilitaires Tailwind. */
+  /* Identité « encre et safran » : papier de relevé gris bleuté, encre bleu de
+     nuit pour le texte et les actions, safran réservé au tracé des profils
+     (jamais pour du texte sur fond clair). Triplets RVB pour l'opacité des
+     utilitaires Tailwind. */
   :root {
-    --c-fond: 247 246 243;
-    --c-surface: 255 255 255;
-    --c-creux: 239 237 232;
-    --c-trait: 218 215 208;
-    --c-trait-fort: 126 131 127;
-    --c-encre: 26 28 27;
-    --c-texte-2: 77 83 80;
-    --c-texte-3: 99 105 101;
-    --c-accent: 29 84 70;
-    --c-accent-survol: 22 67 58;
-    --c-accent-doux: 227 237 233;
+    --c-fond: 238 240 243;
+    --c-surface: 250 251 252;
+    --c-creux: 227 230 235;
+    --c-trait: 205 210 219;
+    --c-trait-fort: 112 120 140;
+    --c-encre: 17 22 43;
+    --c-texte-2: 62 69 92;
+    --c-texte-3: 84 91 114;
+    --c-accent: 36 52 143;
+    --c-accent-survol: 25 35 97;
+    --c-accent-doux: 220 225 241;
     --c-sur-accent: 255 255 255;
-    --c-piste: 239 237 232;
-    --c-grille: 207 204 196;
-    --c-anneau: 29 84 70;
+    --c-piste: 227 230 235;
+    --c-grille: 190 196 209;
+    --c-anneau: 36 52 143;
+    --c-safran: 214 150 36;
     --c-erreur: 168 38 27;
     --c-erreur-doux: 251 234 231;
     --c-avis: 122 75 0;
     --c-avis-doux: 251 241 222;
-    --ombre-flottante: 0 8px 24px -12px rgb(26 28 27 / 0.18),
-      0 0 0 1px rgb(26 28 27 / 0.06);
+    --ombre-flottante: 0 10px 30px -14px rgb(17 22 43 / 0.28),
+      0 0 0 1px rgb(17 22 43 / 0.07);
     --courbe: cubic-bezier(0.23, 1, 0.32, 1);
+    --courbe-glisse: cubic-bezier(0.77, 0, 0.175, 1);
+    --ressort: linear(
+      0,
+      0.009,
+      0.035 2.1%,
+      0.141,
+      0.281 6.7%,
+      0.723 12.9%,
+      0.938 16.7%,
+      1.017,
+      1.077,
+      1.121,
+      1.149 24.3%,
+      1.159,
+      1.163,
+      1.161,
+      1.154 29.9%,
+      1.129 32.8%,
+      1.051 39.6%,
+      1.017 43.1%,
+      0.991,
+      0.977 51%,
+      0.974 53.8%,
+      0.975 57.1%,
+      0.997 69.8%,
+      1.003 76.9%,
+      1.004 83.8%,
+      1
+    );
     --font-texte: var(--font-latin), system-ui, sans-serif;
+    --font-titre: var(--font-display-latin), var(--font-latin), system-ui,
+      sans-serif;
     color-scheme: light;
   }
 
-  /* Thème sombre : fond teinté, jamais noir pur ; l'accent s'éclaircit. */
+  /* Thème sombre : nuit bleue, jamais noir pur ; le safran devient l'accent. */
   .dark {
-    --c-fond: 17 20 19;
-    --c-surface: 24 28 27;
-    --c-creux: 32 37 35;
-    --c-trait: 44 50 48;
-    --c-trait-fort: 110 117 113;
-    --c-encre: 236 237 233;
-    --c-texte-2: 183 189 185;
-    --c-texte-3: 148 154 150;
-    --c-accent: 124 194 173;
-    --c-accent-survol: 154 211 193;
-    --c-accent-doux: 27 46 40;
-    --c-sur-accent: 15 31 26;
-    --c-piste: 32 37 35;
-    --c-grille: 58 64 61;
-    --c-anneau: 124 194 173;
+    --c-fond: 13 17 33;
+    --c-surface: 20 26 46;
+    --c-creux: 27 34 56;
+    --c-trait: 40 48 75;
+    --c-trait-fort: 112 121 150;
+    --c-encre: 236 237 243;
+    --c-texte-2: 186 191 208;
+    --c-texte-3: 152 159 182;
+    --c-accent: 242 181 68;
+    --c-accent-survol: 247 201 116;
+    --c-accent-doux: 46 41 32;
+    --c-sur-accent: 20 24 43;
+    --c-piste: 27 34 56;
+    --c-grille: 52 61 92;
+    --c-anneau: 242 181 68;
+    --c-safran: 242 181 68;
     --c-erreur: 242 151 140;
     --c-erreur-doux: 58 30 26;
     --c-avis: 240 201 135;
     --c-avis-doux: 42 34 20;
-    --ombre-flottante: 0 8px 24px -12px rgb(0 0 0 / 0.5),
-      0 0 0 1px rgb(236 237 233 / 0.08);
+    --ombre-flottante: 0 10px 30px -14px rgb(0 0 0 / 0.6),
+      0 0 0 1px rgb(236 237 243 / 0.08);
     color-scheme: dark;
   }
 
   :root:lang(ar) {
     --font-texte: var(--font-arabe), var(--font-latin), system-ui, sans-serif;
+    --font-titre: var(--font-arabe), var(--font-latin), system-ui, sans-serif;
   }
 
   html {
@@ -89,6 +124,14 @@
     text-wrap: balance;
   }
 
+  /* Titres : la face de titrage, taille optique automatique. */
+  h1,
+  h2,
+  .font-display {
+    font-family: var(--font-titre);
+    font-optical-sizing: auto;
+  }
+
   p,
   li,
   dd {
@@ -107,6 +150,7 @@
   :lang(ar) .texte-riche h2,
   :lang(ar) .texte-riche h3,
   :lang(ar) .text-display,
+  :lang(ar) .text-geant,
   :lang(ar) .text-titre-1,
   :lang(ar) .text-titre-2,
   :lang(ar) .text-titre-section,
@@ -350,5 +394,236 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Mouvement. Courbes : --courbe (entrées, appui), --courbe-glisse (tracés
+   longs), --ressort (ouverture du profil). Propriétés animées : transform,
+   opacity, clip-path, stroke-dashoffset, translate. Rien n'est masqué par le
+   CSS seul : l'état de départ n'existe que si le script a posé data-pret sur un
+   élément hors écran, jamais sous « réduire les animations ».
+   --------------------------------------------------------------------------- */
+
+[data-reveal] {
+  transition:
+    opacity 700ms var(--courbe),
+    transform 700ms var(--courbe),
+    clip-path 800ms var(--courbe);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+[data-reveal='monte'][data-pret] {
+  opacity: 0;
+  transform: translateY(28px);
+}
+[data-reveal='masque'][data-pret] {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(0.6em);
+}
+[data-reveal='volet'][data-pret] {
+  clip-path: inset(0 100% 0 0);
+}
+[dir='rtl'] [data-reveal='volet'][data-pret] {
+  clip-path: inset(0 0 0 100%);
+}
+
+/* Tracés qui se dessinent (fil des étapes, pentagone final, barres). */
+.trace-svg {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1600ms var(--courbe-glisse) 150ms;
+}
+[data-pret] .trace-svg {
+  stroke-dashoffset: 1;
+}
+.barre-reglee {
+  transform-origin: 0 50%;
+  transition: transform 900ms var(--courbe) calc(250ms + var(--i, 0) * 90ms);
+}
+[dir='rtl'] .barre-reglee {
+  transform-origin: 100% 50%;
+}
+[data-pret] .barre-reglee {
+  transform: scaleX(0);
+}
+.barre-verticale {
+  transform-origin: 50% 0;
+  transition: transform 1400ms var(--courbe-glisse) 200ms;
+}
+[data-pret] .barre-verticale {
+  transform: scaleY(0);
+}
+
+/* Titre cinétique : chaque mot monte derrière son propre masque. */
+.mot {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0.14em 0.02em 0.1em;
+  margin: -0.14em -0.02em -0.1em;
+}
+.mot > span {
+  display: inline-block;
+  animation: mot-monte 900ms var(--courbe) both;
+  animation-delay: calc(80ms + var(--i, 0) * 60ms);
+}
+@keyframes mot-monte {
+  from {
+    transform: translateY(112%) rotate(3deg);
+  }
+  to {
+    transform: none;
+  }
+}
+.apparait-tard {
+  animation: monte-doux 700ms var(--courbe) both;
+  animation-delay: calc(500ms + var(--i, 0) * 90ms);
+}
+@keyframes monte-doux {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Radar du héros : axes gradués tracés, forme qui s'ouvre au ressort. */
+.axe-trace {
+  stroke-dasharray: 1;
+  animation: tracer-axe 1000ms var(--courbe) both;
+  animation-delay: calc(250ms + var(--i, 0) * 90ms);
+}
+@keyframes tracer-axe {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.forme-ouvre {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: ouvrir 1100ms var(--ressort) 750ms both;
+}
+.fondu-tard {
+  animation: fondu 600ms var(--courbe) both;
+  animation-delay: calc(900ms + var(--i, 0) * 70ms);
+}
+
+/* Profondeur au défilement : plans qui dérivent à des vitesses différentes. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .derive {
+      animation: derive linear both;
+      animation-timeline: view();
+      animation-range: cover 50% cover 100%;
+    }
+  }
+}
+@keyframes derive {
+  to {
+    transform: translate3d(0, var(--derive, -60px), 0);
+  }
+}
+
+/* Rail de progression et marque pentagonale de l'en-tête : le fil conducteur.
+   Sans minuterie de défilement, le rail n'existe pas et la marque reste pleine. */
+.rail {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .rail {
+      display: block;
+      transform-origin: 0 50%;
+      animation: rail linear both;
+      animation-timeline: scroll(root);
+    }
+    [dir='rtl'] .rail {
+      transform-origin: 100% 50%;
+    }
+    .marque-trace {
+      stroke-dasharray: 1;
+      animation: marque linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+@keyframes rail {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes marque {
+  from {
+    stroke-dashoffset: 0.94;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Pic : les étapes du profil qui se forme. */
+.pic-repere {
+  transform: scale(1);
+  transition:
+    transform 500ms var(--ressort),
+    opacity 300ms var(--courbe);
+}
+.pic-titre {
+  transition: color 300ms var(--courbe);
+}
+[data-anime] .pic-etape:not([data-actif]) .pic-titre {
+  color: rgb(var(--c-texte-3));
+}
+[data-anime] .pic-etape:not([data-actif]) .pic-repere {
+  transform: scale(0.4);
+  opacity: 0.35;
+}
+
+/* Bouton aimanté : le décalage passe par la propriété translate, l'appui par
+   transform ; les deux se composent. */
+.appui {
+  transition:
+    transform 160ms var(--courbe),
+    translate 380ms var(--courbe),
+    background-color 160ms var(--courbe),
+    border-color 160ms var(--courbe),
+    color 160ms var(--courbe);
+}
+
+/* Transition de page : le contenu entre en douceur à chaque navigation. */
+.entree-page {
+  animation: monte-doux 420ms var(--courbe) both;
+}
+
+/* Survols réservés aux pointeurs fins. */
+@media (hover: hover) and (pointer: fine) {
+  .lien-fleche svg {
+    transition: transform 200ms var(--courbe);
+  }
+  .lien-fleche:hover svg {
+    transform: translateX(4px);
+  }
+  [dir='rtl'] .lien-fleche:hover svg {
+    transform: translateX(-4px) scaleX(-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mot > span,
+  .apparait-tard,
+  .axe-trace,
+  .forme-ouvre,
+  .fondu-tard,
+  .entree-page {
+    animation: none;
   }
 }

@@ -81,6 +81,9 @@ const document = (answers = reponses(() => 3)) => ({
   dateStamp: new Date('2026-10-20T09:00:00Z')
 });
 
+const nbOccurrences = (texte: string, motif: string): number =>
+  texte.split(motif).length - 1;
+
 const esc = (texte: string): string =>
   texte
     .replace(/&/g, '&amp;')
@@ -280,6 +283,51 @@ describe('page publique /result/[id]', () => {
     expect(html).toContain(ID);
     expect(html).toContain(esc('Imprimer ou enregistrer en PDF'));
     expect(html).toContain('href="/"');
+  });
+
+  it('garde la présentation animée : sommaire à quatre ancres, compteurs, règles graduées', async () => {
+    findOne.mockResolvedValue(document());
+    const html = await rendre();
+    expect(html).toContain('aria-label="Sommaire du résultat"');
+    for (const ancre of ['profil', 'scores', 'facettes', 'identifiant']) {
+      expect(html, ancre).toContain(`href="#${ancre}"`);
+      expect(html, ancre).toMatch(new RegExp(`<[a-z]+[^>]* id="${ancre}"`));
+    }
+    expect(html).toContain('data-compte="72"');
+    expect(nbOccurrences(html, 'animate-tracer')).toBe(35);
+  });
+
+  it('en-tête : titre, date de passation puis introduction, dans cet ordre', async () => {
+    findOne.mockResolvedValue(document());
+    const html = await rendre();
+    const rang = ['<h1', 'Passé le 20 octobre 2026', 'Voici votre profil'].map(
+      (m) => html.indexOf(m)
+    );
+    expect(rang.every((i) => i >= 0)).toBe(true);
+    expect([...rang].sort((a, b) => a - b)).toEqual(rang);
+  });
+
+  it('arabe : même présentation animée (sommaire à quatre ancres, compteurs)', async () => {
+    findOne.mockResolvedValue(document());
+    const html = await rendre('ar');
+    expect(html).toContain('href="#identifiant"');
+    expect(html).toContain('data-compte="72"');
+    expect(nbOccurrences(html, 'animate-tracer')).toBe(35);
+  });
+
+  it('audience « personne » : aucun bloc non relu, trente mentions « texte en relecture »', async () => {
+    findOne.mockResolvedValue(document());
+    const html = await rendre();
+    expect(nbOccurrences(html, 'Texte en relecture')).toBe(30);
+    expect(html).not.toContain('Texte non relu');
+  });
+
+  it('un seul h1 et aucun identifiant en double', async () => {
+    findOne.mockResolvedValue(document());
+    const html = await rendre();
+    expect(nbOccurrences(html, '<h1')).toBe(1);
+    const ids = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
   it('identifiant inconnu : 404', async () => {

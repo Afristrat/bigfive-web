@@ -23,6 +23,7 @@ const mesResultatsFr = {
   vue: {
     radarTitle: 'Vos cinq domaines',
     radarSummary: 'Graphique en radar à cinq axes, de 24 à 120.',
+    scoresTitre: 'Vos scores par domaine',
     columnDomain: 'Domaine',
     columnScore: 'Score',
     domainOutOf: 'sur 120',

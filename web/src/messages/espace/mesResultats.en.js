@@ -23,6 +23,7 @@ const mesResultatsEn = {
   vue: {
     radarTitle: 'Your five domains',
     radarSummary: 'Radar chart with five axes, from 24 to 120.',
+    scoresTitre: 'Your scores by domain',
     columnDomain: 'Domain',
     columnScore: 'Score',
     domainOutOf: 'out of 120',

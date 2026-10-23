@@ -1,64 +1,64 @@
 import { nextui } from '@nextui-org/theme';
 
-// Direction « règle graduée » (docs/design/direction.md) : fond pierre presque
-// neutre, un seul accent vert cèdre, une famille sans empattement. Les échelles
-// alimentent les composants NextUI (default, primary) ; les classes du site
-// passent par les jetons CSS de globals.css.
-const pierreClair = {
-  50: '#F7F6F3',
-  100: '#EFEDE8',
-  200: '#E4E2DC',
-  300: '#CFCCC4',
-  400: '#7E837F',
-  500: '#636965',
-  600: '#4D5350',
-  700: '#3B403D',
-  800: '#2A2E2C',
-  900: '#1A1C1B',
-  DEFAULT: '#E4E2DC',
-  foreground: '#1A1C1B'
+// Identité « encre et safran » : papier de relevé gris bleuté, encre bleu de
+// nuit, safran réservé au tracé du profil. Les échelles alimentent les
+// composants NextUI (default, primary) ; les classes du site passent par les
+// jetons CSS de globals.css.
+const papierClair = {
+  50: '#EEF0F3',
+  100: '#E3E6EB',
+  200: '#D3D8E0',
+  300: '#BEC4CF',
+  400: '#7A8197',
+  500: '#5C637B',
+  600: '#454C66',
+  700: '#323952',
+  800: '#222840',
+  900: '#11162B',
+  DEFAULT: '#D3D8E0',
+  foreground: '#11162B'
 };
-const pierreSombre = {
-  50: '#181C1B',
-  100: '#202523',
-  200: '#2C3230',
-  300: '#3A403D',
-  400: '#6E7571',
-  500: '#949A96',
-  600: '#B7BDB9',
-  700: '#CDD2CE',
-  800: '#E0E3DF',
-  900: '#ECEDE9',
-  DEFAULT: '#2C3230',
-  foreground: '#ECEDE9'
+const papierSombre = {
+  50: '#141A2E',
+  100: '#1B2238',
+  200: '#262E4A',
+  300: '#343D5C',
+  400: '#6B7494',
+  500: '#9299B4',
+  600: '#B8BDCF',
+  700: '#CED2DF',
+  800: '#E1E3EB',
+  900: '#EDEEF3',
+  DEFAULT: '#262E4A',
+  foreground: '#EDEEF3'
 };
-const cedreClair = {
-  50: '#EFF3F2',
-  100: '#DDE5E3',
-  200: '#BBCCC8',
-  300: '#93ADA6',
-  400: '#61877E',
-  500: '#38695C',
-  600: '#1D5446',
-  700: '#19473C',
-  800: '#163B31',
-  900: '#122E27',
-  DEFAULT: '#1D5446',
+const encreClair = {
+  50: '#EEF0F8',
+  100: '#DCE1F1',
+  200: '#B9C2E3',
+  300: '#8E9CD0',
+  400: '#5D6FB7',
+  500: '#3A4C9E',
+  600: '#24348F',
+  700: '#1E2B78',
+  800: '#192361',
+  900: '#131B4A',
+  DEFAULT: '#24348F',
   foreground: '#FFFFFF'
 };
-const cedreSombre = {
-  50: '#13241F',
-  100: '#1B2E28',
-  200: '#244239',
-  300: '#2F5A4D',
-  400: '#4B8574',
-  500: '#66A894',
-  600: '#7CC2AD',
-  700: '#9AD3C1',
-  800: '#BDE3D7',
-  900: '#DFF1EB',
-  DEFAULT: '#7CC2AD',
-  foreground: '#0F1F1A'
+const safranSombre = {
+  50: '#2A2416',
+  100: '#3A311A',
+  200: '#57451F',
+  300: '#7A5F25',
+  400: '#A9822F',
+  500: '#D49E3A',
+  600: '#F2B544',
+  700: '#F6C76E',
+  800: '#F9DA9C',
+  900: '#FCEDCF',
+  DEFAULT: '#F2B544',
+  foreground: '#14182B'
 };
 
 const jeton = (nom) => `rgb(var(--c-${nom}) / <alpha-value>)`;
@@ -76,7 +76,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-texte)']
+        sans: ['var(--font-texte)'],
+        display: ['var(--font-titre)']
       },
       // Trois graisses seulement (400, 500, 600) : les classes plus grasses
       // héritées se ramènent à 600, y compris en arabe.
@@ -99,6 +100,7 @@ module.exports = {
         'accent-doux': jeton('accent-doux'),
         'sur-accent': jeton('sur-accent'),
         piste: jeton('piste'),
+        safran: jeton('safran'),
         grille: jeton('grille'),
         anneau: jeton('anneau'),
         erreur: jeton('erreur'),
@@ -124,13 +126,17 @@ module.exports = {
           '1.5rem',
           { lineHeight: '1.25', fontWeight: '600', letterSpacing: '-0.01em' }
         ],
+        geant: [
+          'clamp(1.875rem, 1rem + 3.4vw, 3.75rem)',
+          { lineHeight: '1.04', fontWeight: '600', letterSpacing: '-0.03em' }
+        ],
         'titre-1': [
           'clamp(1.875rem, 1.6rem + 1vw, 2.25rem)',
           { lineHeight: '1.15', fontWeight: '600', letterSpacing: '-0.015em' }
         ],
         display: [
-          'clamp(2.25rem, 1.7rem + 2.2vw, 3rem)',
-          { lineHeight: '1.05', fontWeight: '600', letterSpacing: '-0.02em' }
+          'clamp(2.5rem, 1.4rem + 4.6vw, 5.25rem)',
+          { lineHeight: '0.98', fontWeight: '700', letterSpacing: '-0.035em' }
         ]
       },
       borderRadius: {
@@ -191,46 +197,46 @@ module.exports = {
       themes: {
         light: {
           colors: {
-            background: '#F7F6F3',
-            foreground: '#1A1C1B',
-            divider: '#DAD7D0',
-            focus: '#1D5446',
-            overlay: '#1A1C1B',
-            content1: { DEFAULT: '#FFFFFF', foreground: '#1A1C1B' },
-            content2: { DEFAULT: '#EFEDE8', foreground: '#1A1C1B' },
-            content3: { DEFAULT: '#E4E2DC', foreground: '#1A1C1B' },
-            content4: { DEFAULT: '#DAD7D0', foreground: '#1A1C1B' },
-            default: pierreClair,
-            primary: cedreClair,
+            background: '#EEF0F3',
+            foreground: '#11162B',
+            divider: '#CDD2DB',
+            focus: '#24348F',
+            overlay: '#11162B',
+            content1: { DEFAULT: '#FFFFFF', foreground: '#11162B' },
+            content2: { DEFAULT: '#E3E6EB', foreground: '#11162B' },
+            content3: { DEFAULT: '#D3D8E0', foreground: '#11162B' },
+            content4: { DEFAULT: '#CDD2DB', foreground: '#11162B' },
+            default: papierClair,
+            primary: encreClair,
             secondary: {
-              ...pierreClair,
-              DEFAULT: '#1A1C1B',
+              ...papierClair,
+              DEFAULT: '#11162B',
               foreground: '#FFFFFF'
             },
-            success: cedreClair,
+            success: encreClair,
             warning: { DEFAULT: '#7A4B00', foreground: '#FFFFFF' },
             danger: { DEFAULT: '#A8261B', foreground: '#FFFFFF' }
           }
         },
         dark: {
           colors: {
-            background: '#111413',
-            foreground: '#ECEDE9',
-            divider: '#2C3230',
-            focus: '#7CC2AD',
+            background: '#0D1121',
+            foreground: '#EDEEF3',
+            divider: '#262E4A',
+            focus: '#F2B544',
             overlay: '#000000',
-            content1: { DEFAULT: '#181C1B', foreground: '#ECEDE9' },
-            content2: { DEFAULT: '#202523', foreground: '#ECEDE9' },
-            content3: { DEFAULT: '#2C3230', foreground: '#ECEDE9' },
-            content4: { DEFAULT: '#3A403D', foreground: '#ECEDE9' },
-            default: pierreSombre,
-            primary: cedreSombre,
+            content1: { DEFAULT: '#141A2E', foreground: '#EDEEF3' },
+            content2: { DEFAULT: '#1B2238', foreground: '#EDEEF3' },
+            content3: { DEFAULT: '#262E4A', foreground: '#EDEEF3' },
+            content4: { DEFAULT: '#343D5C', foreground: '#EDEEF3' },
+            default: papierSombre,
+            primary: safranSombre,
             secondary: {
-              ...pierreSombre,
-              DEFAULT: '#ECEDE9',
-              foreground: '#111413'
+              ...papierSombre,
+              DEFAULT: '#EDEEF3',
+              foreground: '#0D1121'
             },
-            success: cedreSombre,
+            success: safranSombre,
             warning: { DEFAULT: '#F0C987', foreground: '#2A2214' },
             danger: { DEFAULT: '#F2978C', foreground: '#2A0E0B' }
           }

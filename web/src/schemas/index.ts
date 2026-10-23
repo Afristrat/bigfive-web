@@ -59,6 +59,30 @@ export const loginCodeSchema = z.object({
   locale
 });
 
+export const passwordLoginSchema = z.object({
+  email,
+  // Pas de contrôle de politique à la connexion : seule la taille est bornée.
+  password: z.string().min(1).max(200),
+  locale,
+  next: z.string().max(500).optional()
+});
+
+export const totpCodeSchema = z.object({
+  code: z.string().regex(/^[0-9]{6}$/),
+  locale
+});
+
+export const passwordChangeSchema = z
+  .object({
+    password: z.string().min(1).max(200),
+    confirmation: z.string().max(200),
+    code: z.string().regex(/^[0-9]{6}$/),
+    locale
+  })
+  .refine((v) => v.password === v.confirmation, {
+    path: ['confirmation']
+  });
+
 export const profileSchema = z.object({
   nom: z.string().trim().max(120),
   langue: z.enum(['fr', 'ar', 'en'])

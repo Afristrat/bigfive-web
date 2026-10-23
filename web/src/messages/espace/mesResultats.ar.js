@@ -21,6 +21,7 @@ const mesResultatsAr = {
   vue: {
     radarTitle: 'مجالاتك الخمسة',
     radarSummary: 'رسم راداري بخمسة محاور، من 24 إلى 120.',
+    scoresTitre: 'درجاتك حسب المجال',
     columnDomain: 'المجال',
     columnScore: 'الدرجة',
     domainOutOf: 'من 120',

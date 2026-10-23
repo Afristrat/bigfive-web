@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 import { Metadata, Viewport } from 'next';
-import { fontArabe, fontLatin } from '@/config/fonts';
+import { fontArabe, fontDisplay, fontLatin } from '@/config/fonts';
+import { MotionRuntime } from '@/components/home/motion-runtime';
 import { Providers } from '../providers';
 import { Navbar } from '@/components/navbar';
 import clsx from 'clsx';
@@ -71,8 +72,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F7F6F3' },
-    { media: '(prefers-color-scheme: dark)', color: '#111413' }
+    { media: '(prefers-color-scheme: light)', color: '#EEF0F3' },
+    { media: '(prefers-color-scheme: dark)', color: '#0D1121' }
   ]
 };
 
@@ -103,7 +104,11 @@ export default async function RootLayout({
     <html
       lang={locale}
       dir={direction}
-      className={clsx(fontLatin.variable, fontArabe.variable)}
+      className={clsx(
+        fontLatin.variable,
+        fontDisplay.variable,
+        fontArabe.variable
+      )}
       suppressHydrationWarning
     >
       <head />
@@ -141,6 +146,7 @@ export default async function RootLayout({
               >
                 {children}
               </main>
+              <MotionRuntime />
               <Footer
                 footerLinks={footerLinks}
                 labels={{ nav: t('a11y.footerNav') }}

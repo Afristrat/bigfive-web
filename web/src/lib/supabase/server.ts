@@ -1,4 +1,5 @@
 import 'server-only';
+import { hkdfSync } from 'node:crypto';
 import { z } from 'zod';
 import type { GateSession } from '@/lib/session-cookies';
 
@@ -64,6 +65,19 @@ function readConfig(): Config {
   };
 }
 
+/**
+ * Clé de 32 octets dérivée (HKDF-SHA256) de la clé de service, propre à un
+ * usage (`purpose`) : la clé de service elle-même ne sort jamais de ce module.
+ * Clé absente ou invalide : lève (aucun scellement sans secret serveur).
+ */
+export function derivedServerKey(purpose: string): Buffer {
+  const key = process.env.SUPABASE_SECRET_KEY ?? '';
+  if (!key.startsWith(SECRET_PREFIX)) {
+    throw new Error('SUPABASE_SECRET_KEY est absente ou invalide.');
+  }
+  return Buffer.from(hkdfSync('sha256', key, 'tenga', purpose, 32));
+}
+
 /** Réponse en erreur de la passerelle : jamais le corps, il pourrait citer une adresse. */
 export class GatewayError extends Error {
   readonly status: number;
@@ -85,7 +99,7 @@ const errorBody = z
   .passthrough();
 
 type CallInit = {
-  method: 'GET' | 'POST' | 'DELETE';
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   bearer?: string;
   /** Requête PostgREST : sélectionne le schéma exposé. */
   postgrest?: boolean;
@@ -143,6 +157,10 @@ const toSession = (raw: unknown): GateSession => {
   };
 };
 
+const passwordGrantSchema = sessionSchema.extend({
+  user: z.object({ id: z.string().uuid() })
+});
+
 export type SessionUser = { id: string; email: string };
 
 const userSchema = z.object({
@@ -197,6 +215,14 @@ export type ServiceClient = {
   refreshSession: (refreshToken: string) => Promise<GateSession>;
   /** Crée un compte confirmé (inscription fermée : seule voie de naissance). */
   createUser: (email: string, langue: string) => Promise<string>;
+  /**
+   * Échange adresse et mot de passe contre une session (niveau d'assurance 1).
+   * Identifiants refusés : null. Toute autre erreur (limite, passerelle) lève.
+   */
+  passwordGrant: (
+    email: string,
+    password: string
+  ) => Promise<{ session: GateSession; userId: string } | null>;
 };
 
 const generatedLink = z.object({
@@ -237,6 +263,20 @@ export function serviceClient(): ServiceClient {
         })
       );
     },
+    async passwordGrant(email, password) {
+      try {
+        const raw = passwordGrantSchema.parse(
+          await call('/auth/v1/token?grant_type=password', {
+            method: 'POST',
+            body: { email: email.trim().toLowerCase(), password }
+          })
+        );
+        return { session: toSession(raw), userId: raw.user.id };
+      } catch (error) {
+        if (error instanceof GatewayError && error.status === 400) return null;
+        throw error;
+      }
+    },
     async createUser(email, langue) {
       const created = z.object({ id: z.string().uuid() }).parse(
         await call('/auth/v1/admin/users', {
@@ -261,7 +301,42 @@ export type UserClient = {
   /** Vérifie le jeton auprès de GoTrue (révocation comprise) ; null s'il est refusé. */
   getUser: () => Promise<SessionUser | null>;
   signOut: () => Promise<void>;
+  /** Identifiant du facteur TOTP vérifié de la personne, ou null. */
+  verifiedTotpFactor: () => Promise<string | null>;
+  /** Commence l'inscription d'un TOTP (les inscriptions abandonnées sont retirées). */
+  enrollTotp: () => Promise<TotpEnrollment>;
+  /**
+   * Défi puis vérification du code : renvoie la session de niveau 2. Code
+   * refusé : null. Toute autre erreur lève.
+   */
+  verifyTotp: (factorId: string, code: string) => Promise<GateSession | null>;
+  /** Définit le mot de passe (session de niveau 2 exigée par GoTrue si un TOTP est vérifié). */
+  setPassword: (password: string) => Promise<void>;
 };
+
+export type TotpEnrollment = {
+  factorId: string;
+  secret: string;
+  /** Image du QR code en data URI SVG, produite par GoTrue. */
+  qrCode: string;
+};
+
+const factorsSchema = z.object({
+  factors: z
+    .array(
+      z.object({
+        id: z.string().uuid(),
+        factor_type: z.string(),
+        status: z.string()
+      })
+    )
+    .nullish()
+});
+const enrollSchema = z.object({
+  id: z.string().uuid(),
+  totp: z.object({ qr_code: z.string(), secret: z.string() })
+});
+const challengeSchema = z.object({ id: z.string().uuid() });
 
 // Un jeton de session GoTrue est un JWT (trois segments base64url). Tout autre
 // contenu (chaîne vide, clé « sb_… ») ferait retomber l'appel sur la clé de
@@ -292,6 +367,78 @@ export function userClient(accessToken: string): UserClient {
     },
     async signOut() {
       await call('/auth/v1/logout', { method: 'POST', bearer: accessToken });
+    },
+    async verifiedTotpFactor() {
+      const { factors } = factorsSchema.parse(
+        await call('/auth/v1/user', { method: 'GET', bearer: accessToken })
+      );
+      const verified = (factors ?? []).find(
+        (f) => f.factor_type === 'totp' && f.status === 'verified'
+      );
+      return verified?.id ?? null;
+    },
+    async enrollTotp() {
+      const { factors } = factorsSchema.parse(
+        await call('/auth/v1/user', { method: 'GET', bearer: accessToken })
+      );
+      for (const factor of factors ?? []) {
+        if (factor.factor_type === 'totp' && factor.status !== 'verified') {
+          await call(`/auth/v1/factors/${factor.id}`, {
+            method: 'DELETE',
+            bearer: accessToken
+          });
+        }
+      }
+      const created = enrollSchema.parse(
+        await call('/auth/v1/factors', {
+          method: 'POST',
+          bearer: accessToken,
+          body: {
+            factor_type: 'totp',
+            issuer: 'Tenga',
+            friendly_name: `Tenga ${Date.now()}`
+          }
+        })
+      );
+      return {
+        factorId: created.id,
+        secret: created.totp.secret,
+        qrCode: created.totp.qr_code
+      };
+    },
+    async verifyTotp(factorId, code) {
+      const challenge = challengeSchema.parse(
+        await call(
+          `/auth/v1/factors/${encodeURIComponent(factorId)}/challenge`,
+          {
+            method: 'POST',
+            bearer: accessToken,
+            body: {}
+          }
+        )
+      );
+      try {
+        return toSession(
+          await call(
+            `/auth/v1/factors/${encodeURIComponent(factorId)}/verify`,
+            {
+              method: 'POST',
+              bearer: accessToken,
+              body: { challenge_id: challenge.id, code }
+            }
+          )
+        );
+      } catch (error) {
+        if (error instanceof GatewayError && error.status === 400) return null;
+        throw error;
+      }
+    },
+    async setPassword(password) {
+      await call('/auth/v1/user', {
+        method: 'PUT',
+        bearer: accessToken,
+        body: { password }
+      });
     }
   };
 }

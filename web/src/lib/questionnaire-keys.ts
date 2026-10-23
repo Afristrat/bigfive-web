@@ -38,3 +38,31 @@ export function progressPercent(current: number, total: number): number {
   if (total <= 0) return 0;
   return Math.min(100, Math.max(0, (current / total) * 100));
 }
+
+export type DomainProgress = { code: string; fait: number; total: number };
+
+/**
+ * Avancement par facteur, dans l'ordre des codes donnés : nombre de réponses
+ * données et nombre d'affirmations du facteur. Ne lit que le domaine des
+ * réponses, jamais leur score : l'avancement ne dévoile aucun résultat.
+ */
+export function progressByDomain(
+  questions: readonly { id: string; domain: string }[],
+  answers: readonly { id: string; domain: string }[],
+  codes: readonly string[]
+): DomainProgress[] {
+  const known = new Set(questions.map((question) => question.id));
+  return codes.map((code) => ({
+    code,
+    fait: answers.filter(
+      (answer) => answer.domain === code && known.has(answer.id)
+    ).length,
+    total: questions.filter((question) => question.domain === code).length
+  }));
+}
+
+/** Quart du parcours atteint (0 à 4), pour marquer chaque palier franchi. */
+export function progressQuarter(answered: number, total: number): number {
+  if (total <= 0) return 0;
+  return Math.min(4, Math.max(0, Math.floor((answered / total) * 4)));
+}

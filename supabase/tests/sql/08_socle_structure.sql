@@ -74,6 +74,13 @@ private.echecs_code|echecs_insertion_owner|INSERT|tenga_owner
 private.echecs_code|echecs_lecture_owner|SELECT|tenga_owner
 private.echecs_code|echecs_modification_owner|UPDATE|tenga_owner
 private.echecs_code|echecs_suppression_owner|DELETE|tenga_owner
+private.echecs_mdp|echecs_mdp_insertion_owner|INSERT|tenga_owner
+private.echecs_mdp|echecs_mdp_lecture_owner|SELECT|tenga_owner
+private.echecs_mdp|echecs_mdp_suppression_owner|DELETE|tenga_owner
+private.etat_mdp|etat_mdp_insertion_owner|INSERT|tenga_owner
+private.etat_mdp|etat_mdp_lecture_owner|SELECT|tenga_owner
+private.etat_mdp|etat_mdp_modification_owner|UPDATE|tenga_owner
+private.etat_mdp|etat_mdp_suppression_owner|DELETE|tenga_owner
 private.leurre_connexion|leurre_insertion_owner|INSERT|tenga_owner
 private.leurre_connexion|leurre_lecture_owner|SELECT|tenga_owner
 private.leurre_connexion|leurre_suppression_owner|DELETE|tenga_owner
@@ -140,6 +147,7 @@ app.creer_groupe>authenticated
 app.creer_organisation>authenticated
 app.demander_lien_connexion>service_role
 app.derniere_purge>service_role
+app.deverrouiller_mot_de_passe>authenticated
 app.effacer_compte>service_role
 app.enregistrer_progression>authenticated
 app.exporter_mes_donnees>authenticated
@@ -150,6 +158,10 @@ app.lire_journal>authenticated
 app.lire_resultat_individuel>authenticated
 app.lister_administrateurs_tenga>authenticated
 app.lister_resultats_campagne>authenticated
+app.mdp_comptes_a_surveiller>authenticated
+app.mdp_rembourser>service_role
+app.mdp_succes>service_role
+app.mdp_tentative>service_role
 app.mes_binomes>authenticated
 app.mes_resultats>authenticated
 app.mettre_a_jour_profil>authenticated

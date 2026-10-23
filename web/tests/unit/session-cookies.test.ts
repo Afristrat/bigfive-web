@@ -2,11 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   ACCESS_COOKIE,
   NEXT_COOKIE,
+  PENDING_COOKIE,
   REFRESH_COOKIE,
   SESSION_IDLE_SECONDS,
   clearedNextCookie,
+  clearedPendingCookie,
   clearedSessionCookies,
   nextCookie,
+  pendingCookie,
   resolveNext,
   sessionCookies
 } from '@/lib/session-cookies';
@@ -96,5 +99,32 @@ describe('destination après connexion', () => {
 
   it('expire le cookie de destination', () => {
     expect(clearedNextCookie().options.maxAge).toBe(0);
+  });
+});
+
+describe('cookie de l’étape TOTP (revue B1)', () => {
+  it('httpOnly, Secure, SameSite=Lax, Path=/, sans Domain, préfixe __Host-, 5 minutes', () => {
+    const cookie = pendingCookie('paquet-scelle');
+    expect(PENDING_COOKIE).toBe('__Host-tenga_mfa');
+    expect(cookie).toEqual({
+      name: PENDING_COOKIE,
+      value: 'paquet-scelle',
+      options: {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 300
+      }
+    });
+    expect(cookie.options).not.toHaveProperty('domain');
+  });
+
+  it('s’efface avec les mêmes attributs', () => {
+    expect(clearedPendingCookie()).toMatchObject({
+      name: PENDING_COOKIE,
+      value: '',
+      options: { httpOnly: true, secure: true, path: '/', maxAge: 0 }
+    });
   });
 });
