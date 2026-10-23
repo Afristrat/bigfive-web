@@ -356,6 +356,16 @@ describe('vue réseau', () => {
     expect(nbOccurrences(html, 'aria-current="page"')).toBe(4);
   });
 
+  it('campagne en préparation : bandeau propre', async () => {
+    const html = await rendre({
+      vue: 'reseau',
+      etape: 'consentement',
+      campagne: 'brouillon'
+    });
+    expect(html).toContain(echappe(fr.reseau.brouillon.texte));
+    expect(html).not.toContain(echappe(fr.reseau.close.texte));
+  });
+
   it('aucun identifiant en double', async () => {
     const html = await rendre({ vue: 'reseau', etape: 'repondu' });
     const ids = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);

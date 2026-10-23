@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import {
   useEffect,
   useId,
+  useReducer,
   useRef,
   useState,
   useTransition,
@@ -13,11 +14,19 @@ import {
 } from 'react';
 import { secondaryButtonClass } from '@/components/form-styles';
 import styles from '@/components/formulaires.module.css';
-import { LiveMessage, type MessageTon } from '@/components/live-message';
+import { LiveMessage } from '@/components/live-message';
 import { PendingButton } from '@/components/pending-button';
-import { boutonPrincipal } from '@/components/primitives';
 import type { LibellesReseau } from '@/components/reseau/libelles';
 import { formatNombre, remplir } from '@/lib/format';
+import {
+  INTERACTION_INITIALE,
+  cleAccords,
+  doitConfirmerRefus,
+  messageReseau,
+  reduireInteraction,
+  type EvenementInteraction,
+  type Panneau
+} from '@/lib/reseau-interaction';
 import {
   LIENS,
   SUCCES_RESEAU,
@@ -34,9 +43,10 @@ import {
   type Lien,
   type MembreReseau,
   type ReleveReseau,
+  type ReponseLien,
   type ResultatReseau
 } from '@/lib/reseau-releve';
-import { useRouter } from '@/navigation';
+import { Link, useRouter } from '@/navigation';
 
 // Écran du relevé du réseau réel, en trois temps : (1) information des
 // personnes citées, avec opposition possible ; (2) consentement, deux cases
@@ -45,18 +55,25 @@ import { useRouter } from '@/navigation';
 // ensuite, campagne close comprise. La base décide de tout : l'écran envoie
 // l'action reçue en props (réelle, ou neutre dans l'aperçu), dit ce qui s'est
 // passé dans une région vivante persistante, puis rafraîchit la page pour
-// suivre l'état réel. Mouvement : la nouvelle étape monte à sa place (courbe
-// de la marque) ; sous « réduire les animations », tout est posé d'emblée.
+// suivre l'état réel. Panneaux, focus et messages suivent la logique pure de
+// lib/reseau-interaction (testée sans DOM). Mouvement : la nouvelle étape
+// monte à sa place (courbe de la marque) ; sous « réduire les animations »,
+// tout est posé d'emblée.
 
 type Props = {
   participationId: string;
   releve: ReleveReseau;
+  /** Statut réel de la campagne, pour dire « pas encore ouvert » plutôt que « close ». */
+  statutCampagne: 'brouillon' | 'ouverte' | 'close';
   actions: ActionsReseau;
   libelles: LibellesReseau;
   locale: string;
+  /** Lien de connexion qui ramène à cette page (session expirée). */
+  reconnexion: string;
 };
 
-type Confirmation = 'retrait' | 'opposition' | null;
+type Enregistrer = (cle: string) => (noeud: HTMLElement | null) => void;
+type Envoyer = (evenement: EvenementInteraction) => void;
 
 const ETAPES = ['information', 'consentement', 'releve'] as const;
 
@@ -66,41 +83,68 @@ const texteClass = 'colonne-lecture text-corps text-texte-2';
 export function EcranReseau({
   participationId,
   releve,
+  statutCampagne,
   actions,
   libelles,
-  locale
+  locale,
+  reconnexion
 }: Props) {
   const base = useId();
   const router = useRouter();
   const [pending, demarrer] = useTransition();
   const [statut, setStatut] = useState<ResultatReseau['status'] | null>(null);
-  const [manque, setManque] = useState<number | null>(null);
-  const [confirmation, setConfirmation] = useState<Confirmation>(null);
-  const [modifierAccords, setModifierAccords] = useState(false);
+  const [incomplet, setIncomplet] = useState(false);
+  const [interaction, dispatch] = useReducer(
+    reduireInteraction,
+    INTERACTION_INITIALE
+  );
 
   const etape = etapeReseau(releve.moi);
   const ouverte = releve.campagneOuverte;
-  const titre = useRef<HTMLHeadingElement>(null);
-  const premierRendu = useRef(true);
+  const [brouillon, setBrouillon] = useState<Brouillon>(() =>
+    brouillonDepuis(releve)
+  );
 
-  // À chaque changement d'étape, le focus va au titre de la nouvelle étape.
+  // Éléments à qui donner le focus : titre de l'étape, déclencheurs, boutons
+  // de confirmation et premier champ des panneaux, enregistrés par clé.
+  const titre = useRef<HTMLHeadingElement>(null);
+  const noeuds = useRef(new Map<string, HTMLElement>());
+  const enregistrer: Enregistrer = (cle) => (noeud) => {
+    if (noeud) noeuds.current.set(cle, noeud);
+    else noeuds.current.delete(cle);
+  };
+
+  // À chaque changement d'étape : focus au titre de la nouvelle étape, et le
+  // brouillon repart des réponses enregistrées.
+  const etapeAffichee = useRef(etape);
   useEffect(() => {
-    if (premierRendu.current) {
-      premierRendu.current = false;
-      return;
-    }
+    if (etapeAffichee.current === etape) return;
+    etapeAffichee.current = etape;
+    setBrouillon(brouillonDepuis(releve));
+    setIncomplet(false);
     titre.current?.focus();
-  }, [etape]);
+  }, [etape, releve]);
+
+  // Focus décidé par la logique d'interaction, posé une fois puis consommé.
+  useEffect(() => {
+    const cible = interaction.focus;
+    if (!cible) return;
+    const noeud =
+      cible.cible === 'titre'
+        ? titre.current
+        : noeuds.current.get(`${cible.cible}:${cible.panneau}`);
+    noeud?.focus();
+    dispatch({ type: 'focusApplique' });
+  }, [interaction.focus]);
 
   const envoyer = (action: () => Promise<ResultatReseau>): void => {
     if (pending) return;
-    setManque(null);
+    setIncomplet(false);
     demarrer(async () => {
       const retour = await action();
       setStatut(retour.status);
       if (SUCCES_RESEAU.includes(retour.status)) {
-        setConfirmation(null);
-        setModifierAccords(false);
+        dispatch({ type: 'succes' });
         router.refresh();
       } else if (retour.status === 'closed' || retour.status === 'invalid') {
         // L'état a changé ailleurs (clôture, liste de l'équipe) : la page le montre.
@@ -109,24 +153,31 @@ export function EcranReseau({
     });
   };
 
-  const message = pending
-    ? libelles.working
-    : manque !== null
-      ? remplir(libelles.releve.manque, {
-          nombre: formatNombre(manque, locale)
-        })
-      : statut === null
-        ? null
-        : libelles.messages[statut];
-  const ton: MessageTon =
-    pending ||
-    (manque === null &&
-      statut !== null &&
-      (SUCCES_RESEAU.includes(statut) || statut === 'apercu'))
-      ? 'info'
-      : 'erreur';
+  const restantes = manquantes(releve.membres, brouillon);
+  const message = messageReseau(
+    {
+      pending,
+      incomplet,
+      restantes,
+      statut,
+      campagneOuverte: ouverte,
+      locale
+    },
+    {
+      working: libelles.working,
+      manque: libelles.releve.manque,
+      messages: libelles.messages
+    }
+  );
 
   const numeroEtape = ETAPES.indexOf(etape as (typeof ETAPES)[number]);
+  const bandeau = ouverte
+    ? null
+    : statutCampagne === 'brouillon'
+      ? libelles.brouillon
+      : libelles.close;
+  const accordsOuverts =
+    interaction.panneau === 'accords' || interaction.panneau === 'refus';
 
   return (
     <div data-etape={etape} className='flex flex-col gap-10'>
@@ -141,13 +192,13 @@ export function EcranReseau({
         />
       )}
 
-      {!ouverte && (
+      {bandeau && (
         <div
           role='note'
           className='colonne-lecture border-s-2 border-safran bg-surface px-5 py-4'
         >
-          <p className='font-semibold text-encre'>{libelles.close.titre}</p>
-          <p className='mt-1 text-petit text-texte-2'>{libelles.close.texte}</p>
+          <p className='font-semibold text-encre'>{bandeau.titre}</p>
+          <p className='mt-1 text-petit text-texte-2'>{bandeau.texte}</p>
         </div>
       )}
 
@@ -182,11 +233,15 @@ export function EcranReseau({
             <Mentions libelles={libelles} />
             {ouverte && (
               <FormulaireAccords
+                key={`accords-${cleAccords(releve.moi)}`}
                 base={`${base}-accords`}
                 libelles={libelles}
                 pending={pending}
-                repondreInitial={false}
-                carteInitial={releve.moi?.accordCarteLe != null}
+                repondreAccorde={releve.moi?.accordRepondreLe != null}
+                carteAccordee={releve.moi?.accordCarteLe != null}
+                panneau={interaction.panneau}
+                dispatch={dispatch}
+                enregistrer={enregistrer}
                 onEnvoyer={(repondre, carte) =>
                   envoyer(() =>
                     actions.consentir(participationId, repondre, carte)
@@ -209,31 +264,44 @@ export function EcranReseau({
             </h2>
             {ouverte && <p className={texteClass}>{libelles.releve.intro}</p>}
             <ResumeAccords
+              base={`${base}-modifier`}
               releve={releve}
               libelles={libelles}
-              modifiable={ouverte && !modifierAccords}
-              onModifier={() => setModifierAccords(true)}
+              modifiable={ouverte}
+              ouvert={accordsOuverts}
+              enregistrer={enregistrer}
+              onBasculer={() =>
+                dispatch({ type: 'ouvrir', panneau: 'accords' })
+              }
             />
-            {ouverte && modifierAccords && (
-              <div className='carte flex flex-col gap-5'>
+            {ouverte && accordsOuverts && (
+              <div
+                id={`${base}-modifier-panneau`}
+                className='carte flex flex-col gap-5'
+              >
                 <Mentions libelles={libelles} />
                 <FormulaireAccords
+                  key={`accords-${cleAccords(releve.moi)}`}
                   base={`${base}-modifier`}
                   libelles={libelles}
                   pending={pending}
-                  repondreInitial
-                  carteInitial={releve.moi?.accordCarteLe != null}
+                  repondreAccorde={releve.moi?.accordRepondreLe != null}
+                  carteAccordee={releve.moi?.accordCarteLe != null}
+                  panneau={interaction.panneau}
+                  dispatch={dispatch}
+                  enregistrer={enregistrer}
+                  premierChamp
                   onEnvoyer={(repondre, carte) =>
                     envoyer(() =>
                       actions.consentir(participationId, repondre, carte)
                     )
                   }
-                  onAnnuler={() => setModifierAccords(false)}
+                  onAnnuler={() => dispatch({ type: 'fermer' })}
                 />
               </div>
             )}
             {releve.membres.length === 0 ? (
-              // Campagne close sans membre listé : rien à lire ni à attendre.
+              // Campagne fermée aux réponses sans membre listé : rien à lire ni à attendre.
               ouverte && (
                 <p className='colonne-lecture border-t-2 border-encre pt-6 text-chapo text-texte-2'>
                   {libelles.releve.vide}
@@ -242,13 +310,15 @@ export function EcranReseau({
             ) : ouverte ? (
               <ListeFermee
                 base={base}
-                releve={releve}
+                membres={releve.membres}
+                brouillon={brouillon}
+                setBrouillon={setBrouillon}
                 libelles={libelles}
                 locale={locale}
                 pending={pending}
-                onIncomplet={(nombre) => {
+                onIncomplet={() => {
                   setStatut(null);
-                  setManque(nombre);
+                  setIncomplet(true);
                 }}
                 onEnvoyer={(reponses) =>
                   envoyer(() => actions.repondre(participationId, reponses))
@@ -291,8 +361,20 @@ export function EcranReseau({
         )}
       </section>
 
-      <LiveMessage ton={ton} className='colonne-lecture'>
-        {message ? <p>{message}</p> : null}
+      <LiveMessage ton={message?.ton ?? 'info'} className='colonne-lecture'>
+        {message ? (
+          <>
+            <p>{message.texte}</p>
+            {message.reconnexion && (
+              <Link
+                href={reconnexion}
+                className='font-semibold text-accent underline underline-offset-2'
+              >
+                {libelles.reconnexionLien}
+              </Link>
+            )}
+          </>
+        ) : null}
       </LiveMessage>
 
       {(etape === 'consentement' || etape === 'releve') && (
@@ -300,7 +382,8 @@ export function EcranReseau({
           {peutRetirer(releve) && (
             <ActionConfirmee
               base={`${base}-retrait`}
-              ouverte={confirmation === 'retrait'}
+              panneau='retrait'
+              ouverte={interaction.panneau === 'retrait'}
               bouton={libelles.retrait.bouton}
               aide={
                 ouverte ? libelles.retrait.aideOuverte : libelles.retrait.aide
@@ -309,8 +392,8 @@ export function EcranReseau({
               annuler={libelles.retrait.annuler}
               working={libelles.working}
               pending={pending}
-              onOuvrir={() => setConfirmation('retrait')}
-              onAnnuler={() => setConfirmation(null)}
+              enregistrer={enregistrer}
+              dispatch={dispatch}
               onConfirmer={() =>
                 envoyer(() => actions.retirer(participationId))
               }
@@ -318,15 +401,16 @@ export function EcranReseau({
           )}
           <ActionConfirmee
             base={`${base}-opposition`}
-            ouverte={confirmation === 'opposition'}
+            panneau='opposition'
+            ouverte={interaction.panneau === 'opposition'}
             bouton={libelles.opposer.bouton}
             aide={libelles.opposer.aide}
             confirmer={libelles.opposer.confirmer}
             annuler={libelles.opposer.annuler}
             working={libelles.working}
             pending={pending}
-            onOuvrir={() => setConfirmation('opposition')}
-            onAnnuler={() => setConfirmation(null)}
+            enregistrer={enregistrer}
+            dispatch={dispatch}
             onConfirmer={() =>
               envoyer(() => actions.informer(participationId, true))
             }
@@ -338,8 +422,9 @@ export function EcranReseau({
 }
 
 // ---------------------------------------------------------------------------
-// Avancement : trois segments, l'étape courante marquée par aria-current, par
-// un trait plein et par la graisse (jamais par la couleur seule).
+// Avancement : trois segments dans une liste nommée, l'étape courante marquée
+// par aria-current, par un trait plein et par la graisse (jamais par la
+// couleur seule).
 
 function Avancement({
   etape,
@@ -352,9 +437,12 @@ function Avancement({
 }) {
   const rang = ETAPES.indexOf(etape as (typeof ETAPES)[number]);
   return (
-    <nav aria-label={libelles.etapes.legende}>
+    <div>
       <p className='chiffres text-petit font-medium text-texte-3'>{position}</p>
-      <ol className='mt-3 grid grid-cols-3 gap-2'>
+      <ol
+        aria-label={libelles.etapes.legende}
+        className='mt-3 grid grid-cols-3 gap-2'
+      >
         {ETAPES.map((e, i) => (
           <li
             key={e}
@@ -377,7 +465,7 @@ function Avancement({
           </li>
         ))}
       </ol>
-    </nav>
+    </div>
   );
 }
 
@@ -426,7 +514,8 @@ function Case({
   checked,
   onChange,
   libelle,
-  aide
+  aide,
+  refEntree
 }: {
   id: string;
   name: string;
@@ -434,6 +523,7 @@ function Case({
   onChange: (valeur: boolean) => void;
   libelle: string;
   aide?: string;
+  refEntree?: (noeud: HTMLElement | null) => void;
 }) {
   return (
     <div className='colonne-lecture'>
@@ -447,6 +537,7 @@ function Case({
         )}
       >
         <input
+          ref={refEntree}
           id={id}
           type='checkbox'
           name={name}
@@ -517,30 +608,49 @@ function EtapeInformation({
 }
 
 // ---------------------------------------------------------------------------
-// Deuxième temps : deux accords distincts.
+// Deuxième temps : deux accords distincts. Retirer l'accord de répondre
+// supprime les réponses : ce geste passe par une confirmation.
 
 function FormulaireAccords({
   base,
   libelles,
   pending,
-  repondreInitial,
-  carteInitial,
+  repondreAccorde,
+  carteAccordee,
+  panneau,
+  dispatch,
+  enregistrer,
+  premierChamp = false,
   onEnvoyer,
   onAnnuler
 }: {
   base: string;
   libelles: LibellesReseau;
   pending: boolean;
-  repondreInitial: boolean;
-  carteInitial: boolean;
+  repondreAccorde: boolean;
+  carteAccordee: boolean;
+  panneau: Panneau | null;
+  dispatch: Envoyer;
+  enregistrer: Enregistrer;
+  /** Vrai quand le formulaire est le contenu du panneau « Modifier mes accords ». */
+  premierChamp?: boolean;
   onEnvoyer: (repondre: boolean, carte: boolean) => void;
   onAnnuler?: () => void;
 }) {
-  const [repondre, setRepondre] = useState(repondreInitial);
-  const [carte, setCarte] = useState(carteInitial);
+  const [repondre, setRepondre] = useState(repondreAccorde);
+  const [carte, setCarte] = useState(carteAccordee);
   const soumettre = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+    if (pending) return;
+    if (doitConfirmerRefus(repondreAccorde, repondre)) {
+      dispatch({ type: 'ouvrir', panneau: 'refus' });
+      return;
+    }
     onEnvoyer(repondre, carte);
+  };
+  const caseRepondre = (noeud: HTMLElement | null): void => {
+    enregistrer('declencheur:refus')(noeud);
+    if (premierChamp) enregistrer('premierChamp:accords')(noeud);
   };
   return (
     <form onSubmit={soumettre} noValidate className='flex flex-col gap-4'>
@@ -550,6 +660,8 @@ function FormulaireAccords({
         checked={repondre}
         onChange={setRepondre}
         libelle={libelles.consentement.repondre}
+        aide={libelles.consentement.refusAide}
+        refEntree={caseRepondre}
       />
       <Case
         id={`${base}-carte`}
@@ -559,38 +671,58 @@ function FormulaireAccords({
         libelle={libelles.consentement.carte}
         aide={libelles.consentement.carteAide}
       />
-      <p className='colonne-lecture text-petit text-texte-2'>
-        {libelles.consentement.refusAide}
-      </p>
-      <div className='flex flex-wrap gap-3'>
-        <PendingButton
+      {panneau === 'refus' ? (
+        <PanneauConfirmation
+          id={`${base}-refus`}
+          panneau='refus'
+          aide={libelles.consentement.refusAide}
+          confirmer={libelles.consentement.enregistrer}
+          annuler={libelles.accords.annuler}
+          working={libelles.working}
           pending={pending}
-          label={pending ? libelles.working : libelles.consentement.enregistrer}
+          enregistrer={enregistrer}
+          onConfirmer={() => onEnvoyer(false, carte)}
+          onAnnuler={() => dispatch({ type: 'fermer' })}
         />
-        {onAnnuler && (
-          <button
-            type='button'
-            className={secondaryButtonClass}
-            onClick={onAnnuler}
-          >
-            {libelles.accords.annuler}
-          </button>
-        )}
-      </div>
+      ) : (
+        <div className='flex flex-wrap gap-3'>
+          <PendingButton
+            pending={pending}
+            label={
+              pending ? libelles.working : libelles.consentement.enregistrer
+            }
+          />
+          {onAnnuler && (
+            <button
+              type='button'
+              className={secondaryButtonClass}
+              onClick={onAnnuler}
+            >
+              {libelles.accords.annuler}
+            </button>
+          )}
+        </div>
+      )}
     </form>
   );
 }
 
 function ResumeAccords({
+  base,
   releve,
   libelles,
   modifiable,
-  onModifier
+  ouvert,
+  enregistrer,
+  onBasculer
 }: {
+  base: string;
   releve: ReleveReseau;
   libelles: LibellesReseau;
   modifiable: boolean;
-  onModifier: () => void;
+  ouvert: boolean;
+  enregistrer: Enregistrer;
+  onBasculer: () => void;
 }) {
   const carte = releve.moi?.accordCarteLe != null;
   return (
@@ -602,9 +734,12 @@ function ResumeAccords({
       </div>
       {modifiable && (
         <button
+          ref={enregistrer('declencheur:accords')}
           type='button'
           className={clsx(secondaryButtonClass, 'shrink-0')}
-          onClick={onModifier}
+          aria-expanded={ouvert}
+          aria-controls={ouvert ? `${base}-panneau` : undefined}
+          onClick={onBasculer}
         >
           {libelles.accords.modifier}
         </button>
@@ -630,7 +765,9 @@ const nomAffiche = (
 
 function ListeFermee({
   base,
-  releve,
+  membres,
+  brouillon,
+  setBrouillon,
   libelles,
   locale,
   pending,
@@ -638,17 +775,15 @@ function ListeFermee({
   onEnvoyer
 }: {
   base: string;
-  releve: ReleveReseau;
+  membres: MembreReseau[];
+  brouillon: Brouillon;
+  setBrouillon: (modifier: (avant: Brouillon) => Brouillon) => void;
   libelles: LibellesReseau;
   locale: string;
   pending: boolean;
-  onIncomplet: (nombre: number) => void;
-  onEnvoyer: (reponses: ReturnType<typeof reponsesDepuis>) => void;
+  onIncomplet: () => void;
+  onEnvoyer: (reponses: ReponseLien[]) => void;
 }) {
-  const [brouillon, setBrouillon] = useState<Brouillon>(() =>
-    brouillonDepuis(releve)
-  );
-  const { membres } = releve;
   const total = membres.length * LIENS.length;
   const restantes = manquantes(membres, brouillon);
   const faites = total - restantes;
@@ -660,7 +795,7 @@ function ListeFermee({
     event.preventDefault();
     if (pending) return;
     if (restantes > 0) {
-      onIncomplet(restantes);
+      onIncomplet();
       const premier = membres.findIndex((m) =>
         LIENS.some(
           (lien) => brouillon[cleReponse(m.participationId, lien)] === undefined
@@ -835,7 +970,7 @@ function Question({
   );
 }
 
-// Campagne close : mes réponses, en lecture seule.
+// Campagne fermée aux réponses : mes réponses, en lecture seule.
 function LectureSeule({
   releve,
   libelles,
@@ -879,73 +1014,56 @@ function LectureSeule({
   );
 }
 
-// Action à confirmer (retrait, opposition) : un premier bouton ouvre la
-// confirmation, qui dit ce qui sera supprimé ; le focus va au bouton de
-// confirmation.
-function ActionConfirmee({
-  base,
-  ouverte,
-  bouton,
+// ---------------------------------------------------------------------------
+// Confirmations. Le déclencheur reste monté (aria-expanded réel, aria-controls
+// seulement quand le panneau existe) ; le panneau dit ce qui sera supprimé.
+// Les focus (bouton de confirmation à l'ouverture, déclencheur à la fermeture)
+// sont décidés par reduireInteraction.
+
+function PanneauConfirmation({
+  id,
+  panneau,
   aide,
   confirmer,
   annuler,
   working,
   pending,
-  onOuvrir,
-  onAnnuler,
-  onConfirmer
+  enregistrer,
+  onConfirmer,
+  onAnnuler
 }: {
-  base: string;
-  ouverte: boolean;
-  bouton: string;
+  id: string;
+  panneau: Panneau;
   aide: string;
   confirmer: string;
   annuler: string;
   working: string;
   pending: boolean;
-  onOuvrir: () => void;
-  onAnnuler: () => void;
+  enregistrer: Enregistrer;
   onConfirmer: () => void;
+  onAnnuler: () => void;
 }) {
-  const confirmation = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    if (ouverte) confirmation.current?.focus();
-  }, [ouverte]);
-
-  if (!ouverte) {
-    return (
-      <p>
-        <button
-          type='button'
-          className={secondaryButtonClass}
-          aria-expanded={false}
-          aria-controls={`${base}-panneau`}
-          onClick={onOuvrir}
-        >
-          {bouton}
-        </button>
-      </p>
-    );
-  }
   return (
     <div
-      id={`${base}-panneau`}
+      id={id}
       className={clsx(
         'colonne-lecture flex flex-col gap-4 rounded-panneau border border-erreur/40 bg-erreur-doux px-5 py-4',
         styles.message
       )}
     >
-      <p id={`${base}-aide`} className='text-petit text-encre'>
+      <p id={`${id}-aide`} className='text-petit text-encre'>
         {aide}
       </p>
       <div className='flex flex-wrap gap-3'>
         <button
-          ref={confirmation}
+          ref={enregistrer(`confirmation:${panneau}`)}
           type='button'
-          aria-describedby={`${base}-aide`}
+          aria-describedby={`${id}-aide`}
           aria-disabled={pending ? true : undefined}
           className='appui inline-flex min-h-11 items-center justify-center rounded-controle border border-transparent bg-erreur px-5 font-medium leading-tight text-surface'
-          onClick={onConfirmer}
+          onClick={() => {
+            if (!pending) onConfirmer();
+          }}
         >
           {pending ? working : confirmer}
         </button>
@@ -957,6 +1075,66 @@ function ActionConfirmee({
           {annuler}
         </button>
       </div>
+    </div>
+  );
+}
+
+function ActionConfirmee({
+  base,
+  panneau,
+  ouverte,
+  bouton,
+  aide,
+  confirmer,
+  annuler,
+  working,
+  pending,
+  enregistrer,
+  dispatch,
+  onConfirmer
+}: {
+  base: string;
+  panneau: Panneau;
+  ouverte: boolean;
+  bouton: string;
+  aide: string;
+  confirmer: string;
+  annuler: string;
+  working: string;
+  pending: boolean;
+  enregistrer: Enregistrer;
+  dispatch: Envoyer;
+  onConfirmer: () => void;
+}) {
+  const panneauId = `${base}-panneau`;
+  return (
+    <div className='flex flex-col gap-3'>
+      <p>
+        <button
+          ref={enregistrer(`declencheur:${panneau}`)}
+          type='button'
+          className={secondaryButtonClass}
+          aria-expanded={ouverte}
+          aria-controls={ouverte ? panneauId : undefined}
+          onClick={() => dispatch({ type: 'ouvrir', panneau })}
+        >
+          {bouton}
+        </button>
+      </p>
+      {ouverte && (
+        <PanneauConfirmation
+          id={panneauId}
+          panneau={panneau}
+          aide={aide}
+          confirmer={confirmer}
+          annuler={annuler}
+          working={working}
+          pending={pending}
+          enregistrer={enregistrer}
+          onConfirmer={onConfirmer}
+          onAnnuler={() => dispatch({ type: 'fermer' })}
+        />
+      )}
     </div>
   );
 }

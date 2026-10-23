@@ -57,6 +57,7 @@ const apercuEn = {
   },
   campagneLegende: 'Campaign',
   campagnes: {
+    brouillon: 'In preparation',
     ouverte: 'Open',
     close: 'Closed'
   }

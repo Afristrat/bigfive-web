@@ -67,6 +67,22 @@ export async function loadMesRelevesReseau(
   }));
 }
 
+/**
+ * Mes relevés, pour un bloc secondaire de page : si la liste est indisponible
+ * (passerelle, fonction pas encore déployée), la page reste complète, sans
+ * lien ni situation, et une trace sans identifiant est écrite.
+ */
+export async function loadMesRelevesReseauOuVide(
+  viewer: Viewer
+): Promise<MonReleveReseau[]> {
+  try {
+    return await loadMesRelevesReseau(viewer);
+  } catch {
+    console.warn(JSON.stringify({ event: 'reseau.liste_indisponible' }));
+    return [];
+  }
+}
+
 const date = z.string().min(1);
 
 const releveFerme = z.object({ ouvert: z.literal(false) }).strict();

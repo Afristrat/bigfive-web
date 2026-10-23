@@ -13,7 +13,7 @@ import { ResultHeader } from '@/components/resultats/result-header';
 import { supportEmail } from '@/config/site';
 import { isolerEnArabe } from '@/lib/format';
 import {
-  loadMesRelevesReseau,
+  loadMesRelevesReseauOuVide,
   loadReleveReseau,
   parseParticipationReseau
 } from '@/lib/reseau-data';
@@ -55,11 +55,15 @@ export default async function ReleveReseauPage({ params }: Props) {
   );
   const [releve, mesReleves] = await Promise.all([
     loadReleveReseau(viewer, participationId),
-    loadMesRelevesReseau(viewer)
+    loadMesRelevesReseauOuVide(viewer)
   ]);
   if (!releve) notFound();
-  // Organisation et campagne, pour situer le relevé ; absentes, l'écran reste complet.
+  // Organisation, campagne et statut réel, pour situer le relevé ; absents,
+  // l'écran reste complet (statut déduit de l'ouverture aux réponses).
   const ligne = mesReleves.find((r) => r.participationId === participationId);
+  const statutCampagne =
+    ligne?.campagneStatut ?? (releve.campagneOuverte ? 'ouverte' : 'close');
+  const chemin = `/mes-resultats/reseau/${participationId}`;
 
   const t = await getTranslations('reseau');
 
@@ -77,9 +81,11 @@ export default async function ReleveReseauPage({ params }: Props) {
         <EcranReseau
           participationId={participationId}
           releve={releve}
+          statutCampagne={statutCampagne}
           actions={actions}
           libelles={libellesReseau(t, supportEmail)}
           locale={locale}
+          reconnexion={`/connexion?next=${encodeURIComponent(chemin)}`}
         />
       </div>
     </div>

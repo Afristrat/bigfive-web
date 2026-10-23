@@ -11,8 +11,7 @@ import {
   loadMesParticipations,
   type MaParticipation
 } from '@/lib/mes-resultats-data';
-import { loadMesRelevesReseau } from '@/lib/reseau-data';
-import type { MonReleveReseau } from '@/lib/reseau-releve';
+import { loadMesRelevesReseauOuVide } from '@/lib/reseau-data';
 import { requireViewer } from '@/lib/session';
 import { Link } from '@/navigation';
 
@@ -33,27 +32,16 @@ export async function generateMetadata({ params }: Props) {
 const peutPasser = (p: MaParticipation): boolean =>
   p.statut !== 'terminee' && p.campagneStatut === 'ouverte';
 
-// Relevés du réseau ouverts à la personne. Aucune ligne tant que l'interrupteur
-// de production est fermé. Le bloc est secondaire : s'il est indisponible
-// (passerelle, fonction pas encore déployée), la page reste complète, sans lien.
-async function relevesOuVide(
-  viewer: Parameters<typeof loadMesRelevesReseau>[0]
-): Promise<MonReleveReseau[]> {
-  try {
-    return await loadMesRelevesReseau(viewer);
-  } catch {
-    console.warn(JSON.stringify({ event: 'reseau.liste_indisponible' }));
-    return [];
-  }
-}
-
 export default async function MesResultatsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const viewer = await requireViewer(locale, '/mes-resultats');
+  // Relevés du réseau ouverts à la personne : aucune ligne tant que
+  // l'interrupteur de production est fermé. Bloc secondaire : indisponible, il
+  // disparaît sans rendre la page illisible.
   const [participations, releves] = await Promise.all([
     loadMesParticipations(viewer),
-    relevesOuVide(viewer)
+    loadMesRelevesReseauOuVide(viewer)
   ]);
   const t = await getTranslations('mesResultats');
   const binome = await getTranslations('binome');

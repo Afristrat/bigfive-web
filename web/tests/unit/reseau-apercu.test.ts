@@ -29,6 +29,9 @@ describe('réglages d’URL de la vue réseau', () => {
       expect(lireReglagesReseau({ etape }).etape).toBe(etape);
     }
     expect(lireReglagesReseau({ campagne: 'close' }).campagne).toBe('close');
+    expect(lireReglagesReseau({ campagne: 'brouillon' }).campagne).toBe(
+      'brouillon'
+    );
   });
 
   it('valeur inconnue ou multiple : défaut', () => {
@@ -98,6 +101,9 @@ describe('relevé fictif', () => {
   it('campagne close', () => {
     expect(releveApercu('AM', 'repondu', 'close').campagneOuverte).toBe(false);
     expect(releveApercu('AM', 'repondu', 'ouverte').campagneOuverte).toBe(true);
+    expect(
+      releveApercu('AM', 'consentement', 'brouillon').campagneOuverte
+    ).toBe(false);
   });
 });
 

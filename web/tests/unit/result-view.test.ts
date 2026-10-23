@@ -73,7 +73,7 @@ vi.mock('@/lib/mes-resultats-data', async (importOriginal) => ({
 
 // Relevé du réseau : fermé (aucune ligne), comme en production aujourd'hui.
 vi.mock('@/lib/reseau-data', () => ({
-  loadMesRelevesReseau: async () => []
+  loadMesRelevesReseauOuVide: async () => []
 }));
 
 vi.mock('@/lib/account-data', () => ({

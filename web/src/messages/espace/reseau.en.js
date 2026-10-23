@@ -32,17 +32,17 @@ const reseauEn = {
   information: {
     titre: 'You may be named',
     texte:
-      'The members of your team will be asked to describe how they work with you and with their other colleagues: advice, information, trust and dependence. You may therefore be named in their answers. These answers are used only for a feedback workshop with the team; none of them is shared with management or used for any decision about you. You may object to being named: your links will then be removed from the map, with no other consequence.',
+      'The members of your team will be asked to describe how they work with you and with their other colleagues: advice, information, trust and dependence. You may therefore be named in their answers. These answers are used only for a feedback workshop with the team; none of them is shared with management or used for any decision about you. You may object to being named: your links are then removed from the map and you do not answer the survey; there is no other consequence.',
     opposition: 'I object to being named in this survey.',
     oppositionAide:
-      'If you object, you will not answer the survey either, and any answers that name you are deleted. You can withdraw your objection later.',
+      'Any answers that name you are then deleted. You can withdraw your objection later.',
     lu: 'I have read this'
   },
   // À relire par Amine (relecteur juridique) : texte non validé.
   consentement: {
     titre: 'Your consent',
     texte:
-      'Tenga Conseil invites you to answer four questions about how you work with the members of your team: advice, information, trust and dependence. Your answers name colleagues. They are used only to describe how the team actually works, during a feedback workshop. Only Tenga Conseil reads your answers one by one, to prepare that workshop: the consultant in charge of the assignment and the platform’s administrators. Your individual answers will never be shared with your management and will not be used for any decision about you or your colleagues. Taking part is optional: declining has no consequence, and your employer will not know whether you answered. You can change your answers until the campaign closes, and withdraw them at any time.',
+      'Tenga Conseil invites you to answer four questions about how you work with the members of your team: advice, information, trust and dependence. Your answers name colleagues. They are used only to describe how the team actually works, during a feedback workshop. Only the consultant in charge of the assignment and the platform’s administrators can read your answers one by one. They will never be shared with your management and will not be used for any decision about you or your colleagues. Taking part is optional: declining has no consequence, and your employer will not know whether you answered. You can change your answers until the campaign closes, and withdraw them at any time.',
     repondre: 'I agree to answer.',
     carte:
       'I agree that the team map, showing first names or codes, may be shown to the members of the team during the workshop.',
@@ -61,7 +61,7 @@ const reseauEn = {
     contactSansAdresse:
       'Rights of access, rectification and objection: contact Tenga Conseil.',
     conservation:
-      'Answers are deleted automatically three years after they are saved.',
+      'Your answers and your recorded choices (notice, objection, consents) are deleted automatically three years after they were last saved.',
     cndp: 'Declaration to the CNDP: in progress.'
   },
   releve: {
@@ -114,6 +114,10 @@ const reseauEn = {
     texte:
       'The survey no longer accepts answers or changes. You can still withdraw your answers and object to being named.'
   },
+  brouillon: {
+    titre: 'Survey not open yet',
+    texte: 'The survey is not open to answers yet.'
+  },
   oppose: {
     titre: 'Your objection has been recorded',
     texte:
@@ -137,19 +141,22 @@ const reseauEn = {
   working: 'Sending…',
   messages: {
     informe: 'Noted. You can now give your consent, or not.',
+    informeSansReponse:
+      'Noted. The survey is not accepting answers at the moment.',
     oppose:
       'Your objection has been recorded. Your links are removed from the survey.',
     enregistre: 'Your choice has been saved.',
     repondu:
       'Your answers have been saved. You can change them until the campaign closes.',
     retire: 'Your answers and your consents have been deleted.',
-    closed:
-      'This action is no longer possible: the campaign is closed or the survey is not open.',
+    closed: 'Your situation has changed; the page is being updated.',
     forbidden: 'You cannot perform this action.',
     notfound: 'Survey not found.',
     invalid:
-      'Answers rejected: the team list may have changed. Please reload the page.',
+      'The team list has changed and has just been updated; check it, then save again.',
     failed: 'Sending failed. Please try again in a moment.',
+    reconnexion: 'Your session has expired: sign in again to continue.',
+    reconnexionLien: 'Sign in again',
     apercu: 'Preview: nothing is saved.'
   },
   consultant: {

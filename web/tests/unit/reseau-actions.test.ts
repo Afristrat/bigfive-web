@@ -44,6 +44,7 @@ import {
 } from '@/actions/reseau';
 import {
   loadMesRelevesReseau,
+  loadMesRelevesReseauOuVide,
   loadReleveReseau,
   loadReseauCampagne,
   parseParticipationReseau
@@ -71,12 +72,24 @@ const ERREURS: [string, string][] = [
 // Actions.
 
 describe('informerReseau : information préalable et opposition', () => {
-  it('sans session : forbidden, aucun appel', async () => {
+  it('session absente ou expirée : reconnexion, aucun appel', async () => {
     currentViewer.mockResolvedValue({ status: 'anonymous' });
-    expect(await informerReseau(PART, false)).toEqual({ status: 'forbidden' });
+    expect(await informerReseau(PART, false)).toEqual({
+      status: 'reconnexion'
+    });
     currentViewer.mockResolvedValue({ status: 'refresh' });
-    expect(await informerReseau(PART, true)).toEqual({ status: 'forbidden' });
+    expect(await informerReseau(PART, true)).toEqual({
+      status: 'reconnexion'
+    });
     expect(rpc).not.toHaveBeenCalled();
+  });
+
+  it('jeton refusé en cours d’action (401) : reconnexion, pas un échec', async () => {
+    rpc.mockRejectedValue(new GatewayError(401, null));
+    expect(await informerReseau(PART, false)).toEqual({
+      status: 'reconnexion'
+    });
+    expect(warn).not.toHaveBeenCalled();
   });
 
   it('participation hors format ou opposition non booléenne : invalid, aucun appel', async () => {
@@ -123,10 +136,10 @@ describe('informerReseau : information préalable et opposition', () => {
 });
 
 describe('consentirReseau : deux accords distincts', () => {
-  it('sans session : forbidden, aucun appel', async () => {
+  it('sans session : reconnexion, aucun appel', async () => {
     currentViewer.mockResolvedValue({ status: 'anonymous' });
     expect(await consentirReseau(PART, true, false)).toEqual({
-      status: 'forbidden'
+      status: 'reconnexion'
     });
     expect(rpc).not.toHaveBeenCalled();
   });
@@ -243,7 +256,7 @@ describe('retirerReseau : retrait à tout moment', () => {
   it('sans session ou hors format : aucun appel', async () => {
     expect(await retirerReseau('x')).toEqual({ status: 'invalid' });
     currentViewer.mockResolvedValue({ status: 'anonymous' });
-    expect(await retirerReseau(PART)).toEqual({ status: 'forbidden' });
+    expect(await retirerReseau(PART)).toEqual({ status: 'reconnexion' });
     expect(rpc).not.toHaveBeenCalled();
   });
 
@@ -296,6 +309,21 @@ describe('loadMesRelevesReseau : app.mes_releves_reseau', () => {
     await expect(loadMesRelevesReseau(VIEWER)).rejects.toThrow();
     rpc.mockResolvedValue([ligneMes({ email: 'x@y.z' })]);
     await expect(loadMesRelevesReseau(VIEWER)).rejects.toThrow();
+  });
+});
+
+describe('loadMesRelevesReseauOuVide : bloc secondaire, jamais bloquant', () => {
+  it('rend les lignes quand la base répond', async () => {
+    rpc.mockResolvedValue([ligneMes()]);
+    expect(await loadMesRelevesReseauOuVide(VIEWER)).toHaveLength(1);
+  });
+
+  it('panne ou fonction absente : liste vide et trace sans identifiant', async () => {
+    rpc.mockRejectedValue(new GatewayError(404, 'PGRST202'));
+    expect(await loadMesRelevesReseauOuVide(VIEWER)).toEqual([]);
+    expect(warn).toHaveBeenCalledWith(
+      JSON.stringify({ event: 'reseau.liste_indisponible' })
+    );
   });
 });
 
@@ -557,6 +585,26 @@ describe('contrats de source', () => {
       expect(s).not.toContain('supabase');
       expect(s).not.toContain('reseau-data');
       expect(s).not.toMatch(/from '@\/actions\/reseau'/);
+    }
+  });
+
+  it('l’écran applique la logique d’interaction testée (sans DOM)', () => {
+    const s = source('components/reseau/ecran-reseau.tsx');
+    expect(s).toContain('reduireInteraction');
+    expect(s).toContain('messageReseau(');
+    expect(s).toContain('doitConfirmerRefus(');
+    // Clé de remontage aux deux points de montage du formulaire d’accords.
+    expect(
+      s.match(/key=\{`accords-\$\{cleAccords\(releve\.moi\)\}`\}/g)
+    ).toHaveLength(2);
+  });
+
+  it('les deux pages utilisent l’enveloppe tolérante aux pannes', () => {
+    for (const page of [
+      'app/[locale]/mes-resultats/page.tsx',
+      'app/[locale]/mes-resultats/reseau/[participation]/page.tsx'
+    ]) {
+      expect(source(page)).toContain('loadMesRelevesReseauOuVide(');
     }
   });
 

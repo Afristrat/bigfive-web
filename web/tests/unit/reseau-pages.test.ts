@@ -69,6 +69,8 @@ const loadReseauCampagne = vi.fn();
 vi.mock('@/lib/reseau-data', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/reseau-data')>()),
   loadMesRelevesReseau: (viewer: unknown) => loadMesRelevesReseau(viewer),
+  // Enveloppe tolérante aux pannes : testée seule (reseau-actions.test.ts).
+  loadMesRelevesReseauOuVide: (viewer: unknown) => loadMesRelevesReseau(viewer),
   loadReleveReseau: (viewer: unknown, id: string) =>
     loadReleveReseau(viewer, id),
   loadReseauCampagne: (viewer: unknown, id: string) =>
@@ -181,6 +183,27 @@ describe('page du relevé : /mes-resultats/reseau/[participation]', () => {
     expect(html).toContain('Cohorte 1');
   });
 
+  it('campagne en préparation : le statut réel atteint l’écran', async () => {
+    loadReleveReseau.mockResolvedValue({ ...releve, campagneOuverte: false });
+    loadMesRelevesReseau.mockResolvedValue([
+      {
+        participationId: PART,
+        organisationNom: 'Acme',
+        campagneTitre: 'Cohorte 1',
+        campagneStatut: 'brouillon'
+      }
+    ]);
+    const html = await rendreReleve();
+    expect(html).toContain(fr.reseau.brouillon.texte);
+    expect(html).not.toContain(fr.reseau.close.titre);
+  });
+
+  it('lien de reconnexion qui ramène au relevé', () => {
+    expect(
+      lire('src/app/[locale]/mes-resultats/reseau/[participation]/page.tsx')
+    ).toContain('/connexion?next=${encodeURIComponent(chemin)}');
+  });
+
   it('noindex et rendu dynamique', async () => {
     const meta = await metaReleve({
       params: Promise.resolve({ locale: 'fr', participation: PART })
@@ -224,15 +247,10 @@ describe('« Mes résultats » : lien vers le relevé', () => {
     expect(html).toContain(fr.reseau.liste.titre);
   });
 
-  it('relevés indisponibles (fonction absente, panne) : la page reste lisible, sans lien', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-    loadMesRelevesReseau.mockRejectedValue(new Error('panne'));
-    const html = await rendreMesResultats();
-    expect(html).not.toContain('/mes-resultats/reseau/');
-    expect(warn).toHaveBeenCalledWith(
-      JSON.stringify({ event: 'reseau.liste_indisponible' })
+  it('passe par l’enveloppe tolérante aux pannes', () => {
+    expect(lire('src/app/[locale]/mes-resultats/page.tsx')).toContain(
+      'loadMesRelevesReseauOuVide(viewer)'
     );
-    warn.mockRestore();
   });
 });
 

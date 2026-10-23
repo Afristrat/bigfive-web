@@ -59,8 +59,10 @@ export type MonReleveReseau = {
 };
 
 /**
- * Issue d'une action du relevé. `apercu` n'est rendu que par les actions
- * neutralisées de l'aperçu administrateur : rien n'est enregistré.
+ * Issue d'une action du relevé. `reconnexion` : session absente, expirée ou
+ * jeton refusé (401) ; l'écran propose de se reconnecter. `apercu` n'est rendu
+ * que par les actions neutralisées de l'aperçu administrateur : rien n'est
+ * enregistré.
  */
 export type ResultatReseau = {
   status:
@@ -74,6 +76,7 @@ export type ResultatReseau = {
     | 'notfound'
     | 'invalid'
     | 'failed'
+    | 'reconnexion'
     | 'apercu';
 };
 

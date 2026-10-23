@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import ar from '@/messages/ar.js';
@@ -267,6 +267,39 @@ describe('parité des messages fr / en / ar', () => {
           expect(texte, `${lang} ${cle}`).not.toContain("'");
         }
       }
+    });
+
+    // Le texte dit « trois ans » : il ne doit pas diverger en silence de la
+    // durée par défaut de la base (private.settings.conservation_reseau_mois).
+    // La migration vient du lot SQL ; tant qu'aucune migration ne définit la
+    // colonne (lot pas encore fusionné), le contrôle est sauté et le dit.
+    const migrations = fileURLToPath(
+      new URL('../../../supabase/migrations/', import.meta.url)
+    );
+    const definitions = readdirSync(migrations)
+      .filter((f) => f.endsWith('.sql'))
+      .map((f) => readFileSync(`${migrations}${f}`, 'utf8'))
+      .flatMap((sql) => [
+        ...sql.matchAll(
+          /ADD COLUMN conservation_reseau_mois\s+integer\s+NOT NULL\s+DEFAULT\s+(\d+)/g
+        )
+      ])
+      .map((m) => Number(m[1]));
+
+    it.skipIf(definitions.length === 0)(
+      'conservation : « trois ans » = défaut de 36 mois en base (migration du lot SQL, quel que soit son numéro)',
+      () => {
+        expect(definitions.at(-1)).toBe(36);
+        expect(String(fr.reseau.mentions.conservation)).toMatch(/trois ans/);
+        const en = (reseau('en').mentions as Tree).conservation;
+        expect(String(en)).toMatch(/three years/);
+      }
+    );
+
+    it('conservation : les réponses et les choix enregistrés sont nommés', () => {
+      expect(String(fr.reseau.mentions.conservation)).toMatch(
+        /réponses et vos choix/
+      );
     });
 
     it('la question « qui vous bloque » n’existe pas', () => {

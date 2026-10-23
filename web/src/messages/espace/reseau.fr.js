@@ -33,17 +33,17 @@ const reseauFr = {
   information: {
     titre: 'Vous pouvez être cité',
     texte:
-      'Les membres de votre équipe vont être invités à décrire leurs échanges de travail avec vous et avec leurs autres collègues : conseil, information, confiance, dépendance. Vous pouvez donc être cité dans leurs réponses. Ces réponses servent uniquement à un atelier de restitution de l’équipe ; aucune n’est communiquée à la hiérarchie ni utilisée pour une décision vous concernant. Vous pouvez vous opposer à être cité : vos liens seront alors retirés de la carte, sans autre conséquence.',
+      'Les membres de votre équipe vont être invités à décrire leurs échanges de travail avec vous et avec leurs autres collègues : conseil, information, confiance, dépendance. Vous pouvez donc être cité dans leurs réponses. Ces réponses servent uniquement à un atelier de restitution de l’équipe ; aucune n’est communiquée à la hiérarchie ni utilisée pour une décision vous concernant. Vous pouvez vous opposer à être cité : vos liens sont alors retirés de la carte et vous ne répondez pas au relevé ; aucune autre conséquence.',
     opposition: 'Je m’oppose à être cité dans ce relevé.',
     oppositionAide:
-      'Si vous vous opposez, vous ne répondez pas non plus au relevé, et les réponses qui vous citent sont supprimées. Vous pourrez lever votre opposition plus tard.',
+      'Les réponses qui vous citent sont alors supprimées. Vous pourrez lever votre opposition plus tard.',
     lu: 'J’ai lu'
   },
   // À relire par Amine (relecteur juridique) : texte non validé.
   consentement: {
     titre: 'Votre accord',
     texte:
-      'Tenga Conseil vous propose de répondre à quatre questions sur vos échanges de travail avec les membres de votre équipe : conseil, information, confiance, dépendance. Vos réponses nomment des collègues. Elles servent uniquement à décrire la façon dont l’équipe travaille réellement, lors d’un atelier de restitution. Seul Tenga Conseil lit vos réponses une à une, pour préparer cet atelier : le consultant de la mission et les administrateurs de la plateforme. Vos réponses individuelles ne seront jamais communiquées à votre hiérarchie et ne serviront à aucune décision vous concernant ou concernant vos collègues. Répondre est facultatif : refuser n’a aucune conséquence, et votre employeur ne saura pas si vous avez répondu. Vous pouvez modifier vos réponses jusqu’à la clôture, puis les retirer à tout moment.',
+      'Tenga Conseil vous propose de répondre à quatre questions sur vos échanges de travail avec les membres de votre équipe : conseil, information, confiance, dépendance. Vos réponses nomment des collègues. Elles servent uniquement à décrire la façon dont l’équipe travaille réellement, lors d’un atelier de restitution. Seuls le consultant chargé de la mission et les administrateurs de la plateforme peuvent lire vos réponses une à une. Elles ne seront jamais communiquées à votre hiérarchie et ne serviront à aucune décision vous concernant ou concernant vos collègues. Répondre est facultatif : refuser n’a aucune conséquence, et votre employeur ne saura pas si vous avez répondu. Vous pouvez modifier vos réponses jusqu’à la clôture, puis les retirer à tout moment.',
     repondre: 'J’accepte de répondre.',
     carte:
       'J’accepte que la carte de l’équipe, avec les prénoms ou les codes, soit montrée aux membres de l’équipe lors de l’atelier.',
@@ -62,7 +62,7 @@ const reseauFr = {
     contactSansAdresse:
       'Droits d’accès, de rectification et d’opposition : adressez-vous à Tenga Conseil.',
     conservation:
-      'Les réponses sont supprimées automatiquement trois ans après leur enregistrement.',
+      'Vos réponses et vos choix enregistrés (information, opposition, accords) sont supprimés automatiquement trois ans après leur dernier enregistrement.',
     cndp: 'Déclaration à la CNDP : en cours.'
   },
   releve: {
@@ -116,6 +116,10 @@ const reseauFr = {
     texte:
       'Le relevé n’accepte plus de réponses ni de modifications. Vous pouvez encore retirer vos réponses et vous opposer à être cité.'
   },
+  brouillon: {
+    titre: 'Relevé pas encore ouvert',
+    texte: 'Le relevé n’est pas encore ouvert aux réponses.'
+  },
   oppose: {
     titre: 'Votre opposition est enregistrée',
     texte:
@@ -139,19 +143,22 @@ const reseauFr = {
   working: 'Envoi en cours…',
   messages: {
     informe: 'C’est noté. Vous pouvez maintenant donner votre accord, ou non.',
+    informeSansReponse:
+      'C’est noté. Le relevé n’accepte pas de réponses pour le moment.',
     oppose:
       'Votre opposition est enregistrée. Vos liens sont retirés du relevé.',
     enregistre: 'Votre choix est enregistré.',
     repondu:
       'Vos réponses sont enregistrées. Vous pouvez les modifier jusqu’à la clôture.',
     retire: 'Vos réponses et vos accords sont supprimés.',
-    closed:
-      'Cette action n’est plus possible : la campagne est close ou le relevé est fermé.',
+    closed: 'Votre situation a changé ; la page est mise à jour.',
     forbidden: 'Vous ne pouvez pas effectuer cette action.',
     notfound: 'Relevé introuvable.',
     invalid:
-      'Réponses refusées : la liste de l’équipe a peut-être changé. Rechargez la page.',
+      'La liste de l’équipe a changé et vient d’être mise à jour ; vérifiez puis enregistrez de nouveau.',
     failed: 'L’envoi a échoué. Réessayez dans un instant.',
+    reconnexion: 'Votre session a expiré : reconnectez-vous pour continuer.',
+    reconnexionLien: 'Se reconnecter',
     apercu: 'Aperçu : rien n’est enregistré.'
   },
   consultant: {

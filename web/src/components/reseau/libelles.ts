@@ -66,6 +66,7 @@ export type LibellesReseau = {
     annuler: string;
   };
   close: { titre: string; texte: string };
+  brouillon: { titre: string; texte: string };
   oppose: { titre: string; texte: string; lever: string };
   opposer: { bouton: string; aide: string; confirmer: string; annuler: string };
   retrait: {
@@ -76,8 +77,10 @@ export type LibellesReseau = {
     annuler: string;
   };
   working: string;
+  reconnexionLien: string;
   messages: Record<
     | 'informe'
+    | 'informeSansReponse'
     | 'oppose'
     | 'enregistre'
     | 'repondu'
@@ -87,6 +90,7 @@ export type LibellesReseau = {
     | 'notfound'
     | 'invalid'
     | 'failed'
+    | 'reconnexion'
     | 'apercu',
     string
   >;
@@ -178,6 +182,7 @@ export function libellesReseau(t: Traducteur, contact: string): LibellesReseau {
       annuler: t('accords.annuler')
     },
     close: { titre: t('close.titre'), texte: t('close.texte') },
+    brouillon: { titre: t('brouillon.titre'), texte: t('brouillon.texte') },
     oppose: {
       titre: t('oppose.titre'),
       texte: t('oppose.texte'),
@@ -197,8 +202,10 @@ export function libellesReseau(t: Traducteur, contact: string): LibellesReseau {
       annuler: t('retrait.annuler')
     },
     working: t('working'),
+    reconnexionLien: t('messages.reconnexionLien'),
     messages: {
       informe: t('messages.informe'),
+      informeSansReponse: t('messages.informeSansReponse'),
       oppose: t('messages.oppose'),
       enregistre: t('messages.enregistre'),
       repondu: t('messages.repondu'),
@@ -208,6 +215,7 @@ export function libellesReseau(t: Traducteur, contact: string): LibellesReseau {
       notfound: t('messages.notfound'),
       invalid: t('messages.invalid'),
       failed: t('messages.failed'),
+      reconnexion: t('messages.reconnexion'),
       apercu: t('messages.apercu')
     }
   };

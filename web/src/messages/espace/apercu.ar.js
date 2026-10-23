@@ -56,6 +56,7 @@ const apercuAr = {
   },
   campagneLegende: 'الحملة',
   campagnes: {
+    brouillon: 'قيد الإعداد',
     ouverte: 'مفتوحة',
     close: 'مغلقة'
   }

@@ -8,7 +8,9 @@ import fr from '@/messages/fr.js';
 // Le composant reçoit données et actions en props ; rendu statique ici.
 
 vi.mock('@/navigation', () => ({
-  useRouter: () => ({ refresh: vi.fn(), push: vi.fn() })
+  useRouter: () => ({ refresh: vi.fn(), push: vi.fn() }),
+  Link: (props: { href: string; children?: unknown }) =>
+    createElement('a', { href: props.href }, props.children as never)
 }));
 
 import { EcranReseau } from '@/components/reseau/ecran-reseau';
@@ -68,7 +70,11 @@ const actions = {
 
 const rendre = (
   r: ReleveReseau,
-  { locale = 'fr', contact = 'contact@tenga.test' } = {}
+  {
+    locale = 'fr',
+    contact = 'contact@tenga.test',
+    statutCampagne = undefined as 'brouillon' | 'ouverte' | 'close' | undefined
+  } = {}
 ): string =>
   renderToStaticMarkup(
     createElement(EcranReseau, {
@@ -76,6 +82,9 @@ const rendre = (
       releve: r,
       actions,
       locale,
+      statutCampagne:
+        statutCampagne ?? (r.campagneOuverte ? 'ouverte' : 'close'),
+      reconnexion: `/connexion?next=/mes-resultats/reseau/${PART}`,
       libelles: libellesReseau(
         locale === 'ar' ? traducteur(ar.reseau as Tree) : t,
         contact
@@ -287,6 +296,63 @@ describe('campagne close : lecture seule et retrait', () => {
     );
     expect(sans).not.toContain(echappe(fr.reseau.consentement.repondre));
     expect(sans).toContain(echappe(fr.reseau.close.texte));
+  });
+});
+
+describe('campagne en préparation (brouillon)', () => {
+  it('bandeau propre, jamais « campagne close »', () => {
+    const html = rendre(releve({ campagneOuverte: false, moi: moi() }), {
+      statutCampagne: 'brouillon'
+    });
+    expect(html).toContain(echappe(fr.reseau.brouillon.texte));
+    expect(html).not.toContain(echappe(fr.reseau.close.texte));
+  });
+});
+
+describe('déclencheurs, confirmations et accords', () => {
+  const accord = moi({ accordRepondreLe: '2026-10-23T09:05:00Z' });
+  const html = rendre(
+    releve({
+      moi: accord,
+      membres,
+      reponses: [{ cite: M1, lien: 'conseil', valeur: 4 }]
+    })
+  );
+  const bouton = (texte: string): string =>
+    new RegExp(`<button[^>]*>${echappe(texte)}</button>`).exec(html)?.[0] ?? '';
+
+  it('déclencheurs montés, fermés : aria-expanded="false", sans aria-controls orphelin', () => {
+    for (const texte of [
+      fr.reseau.retrait.bouton,
+      fr.reseau.opposer.bouton,
+      fr.reseau.accords.modifier
+    ]) {
+      const b = bouton(texte);
+      expect(b, texte).toContain('aria-expanded="false"');
+      expect(b, texte).not.toContain('aria-controls');
+    }
+  });
+
+  it('consentement : la case « répondre » est décrite par l’aide de refus', () => {
+    const consent = rendre(releve({ moi: moi(), membres }));
+    const id = /<input[^>]*id="([^"]+)"[^>]*name="repondre"/.exec(consent)?.[1];
+    expect(id).toBeTruthy();
+    expect(consent).toMatch(
+      new RegExp(
+        `name="repondre"[^>]*aria-describedby="${id}-aide"|aria-describedby="${id}-aide"[^>]*name="repondre"`
+      )
+    );
+    expect(consent).toContain(
+      `id="${id}-aide" class="mt-2 ps-4 text-petit text-texte-2">${echappe(fr.reseau.consentement.refusAide)}`
+    );
+  });
+
+  it('l’avancement est une liste nommée, pas un repère de navigation', () => {
+    const debut = rendre(releve());
+    expect(debut).not.toContain('<nav');
+    expect(debut).toContain(
+      `<ol aria-label="${echappe(fr.reseau.etapes.legende)}"`
+    );
   });
 });
 

@@ -35,7 +35,11 @@ export const ETAPES_APERCU_RESEAU = [
 ] as const;
 export type EtapeApercuReseau = (typeof ETAPES_APERCU_RESEAU)[number];
 
-export const CAMPAGNES_APERCU_RESEAU = ['ouverte', 'close'] as const;
+export const CAMPAGNES_APERCU_RESEAU = [
+  'ouverte',
+  'close',
+  'brouillon'
+] as const;
 export type CampagneApercuReseau = (typeof CAMPAGNES_APERCU_RESEAU)[number];
 
 export type ReglagesReseau = {
@@ -53,7 +57,8 @@ export function lireReglagesReseau(
   const { etape, campagne } = recherche;
   return {
     etape: estEtape(etape) ? etape : 'information',
-    campagne: campagne === 'close' ? 'close' : 'ouverte'
+    campagne:
+      campagne === 'close' || campagne === 'brouillon' ? campagne : 'ouverte'
   };
 }
 

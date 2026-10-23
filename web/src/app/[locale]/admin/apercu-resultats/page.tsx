@@ -314,9 +314,11 @@ export default async function ApercuResultatsPage({
               key={`${profil}-${reseau.etape}-${reseau.campagne}`}
               participationId={participationApercu(profil)}
               releve={releveApercu(profil, reseau.etape, reseau.campagne)}
+              statutCampagne={reseau.campagne}
               actions={actionsApercuReseau}
               libelles={libellesReseau(reseauT, supportEmail)}
               locale={locale}
+              reconnexion={`/connexion?next=${encodeURIComponent(lienApercuReseau(profil, reseau))}`}
             />
           </div>
         </section>

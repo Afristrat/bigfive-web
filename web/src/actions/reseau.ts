@@ -70,6 +70,10 @@ async function appeler<S extends z.ZodTypeAny>(
     const valeur = await userClient(accessToken).rpc(fn, args, schema);
     return { status: succes(valeur) };
   } catch (error) {
+    // Jeton refusé en cours d'action (expiré ou révoqué) : se reconnecter.
+    if (error instanceof GatewayError && error.status === 401) {
+      return { status: 'reconnexion' };
+    }
     switch (sqlOutcome(error)) {
       case 'conflict':
         return { status: 'closed' };
@@ -86,7 +90,11 @@ async function appeler<S extends z.ZodTypeAny>(
   }
 }
 
-/** Jeton de la personne connectée, ou null (session absente ou à renouveler). */
+/**
+ * Jeton de la personne connectée, ou null : session absente ou à renouveler.
+ * Dans les deux cas l'écran propose de se reconnecter (statut « reconnexion »),
+ * la personne étant déjà sur sa page de relevé.
+ */
 const jeton = async (): Promise<string | null> => {
   const state = await currentViewer();
   return state.status === 'ok' ? state.viewer.accessToken : null;
@@ -103,7 +111,7 @@ export async function informerReseau(
   opposition: boolean
 ): Promise<ResultatReseau> {
   const accessToken = await jeton();
-  if (!accessToken) return { status: 'forbidden' };
+  if (!accessToken) return { status: 'reconnexion' };
   const id = uuid.safeParse(participation);
   const choix = booleen.safeParse(opposition);
   if (!id.success || !choix.success) return { status: 'invalid' };
@@ -127,7 +135,7 @@ export async function consentirReseau(
   carte: boolean
 ): Promise<ResultatReseau> {
   const accessToken = await jeton();
-  if (!accessToken) return { status: 'forbidden' };
+  if (!accessToken) return { status: 'reconnexion' };
   const id = uuid.safeParse(participation);
   const r = booleen.safeParse(repondre);
   const c = booleen.safeParse(carte);
@@ -148,7 +156,7 @@ export async function repondreReseau(
   reponses: ReponseLien[]
 ): Promise<ResultatReseau> {
   const accessToken = await jeton();
-  if (!accessToken) return { status: 'forbidden' };
+  if (!accessToken) return { status: 'reconnexion' };
   const id = uuid.safeParse(participation);
   if (!id.success) return { status: 'invalid' };
   const liste = reponsesSchema(id.data).safeParse(reponses);
@@ -168,7 +176,7 @@ export async function retirerReseau(
   participation: string
 ): Promise<ResultatReseau> {
   const accessToken = await jeton();
-  if (!accessToken) return { status: 'forbidden' };
+  if (!accessToken) return { status: 'reconnexion' };
   const id = uuid.safeParse(participation);
   if (!id.success) return { status: 'invalid' };
   return appeler(
