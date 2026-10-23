@@ -38,6 +38,7 @@ export type RelecteursLabels = {
   deja: string;
   inconnu: string;
   invalide: string;
+  plafond: string;
   erreur: string;
   legende: string;
   colAdresse: string;
@@ -123,12 +124,15 @@ export function RelecteursPanel({
         deja: labels.deja,
         inconnu: labels.inconnu,
         invalide: labels.invalide,
+        plafond: labels.plafond,
         erreur: labels.erreur
       }[etatAjout];
   const tonAjout: MessageTon =
     ajoutEnCours || etatAjout === 'ajoute' || etatAjout === 'deja'
       ? 'info'
-      : 'erreur';
+      : etatAjout === 'plafond'
+        ? 'avis'
+        : 'erreur';
   const adresseInvalide = etatAjout === 'invalide' || etatAjout === 'inconnu';
 
   const etatRetrait = retraitEnCours ? 'idle' : retrait.status;

@@ -59,6 +59,7 @@ vi.mock('@/actions/relecture', () => ({
 
 const requireRelecteur = vi.fn();
 const loadHistorique = vi.fn();
+const loadEtat = vi.fn();
 const loadFrequences = vi.fn();
 const loadRelecteurs = vi.fn();
 const estAdministrateur = vi.fn();
@@ -66,6 +67,7 @@ vi.mock('@/lib/relecture-data', () => ({
   requireRelecteur: (locale: string, path: string) =>
     requireRelecteur(locale, path),
   loadHistorique: (...args: unknown[]) => loadHistorique(...args),
+  loadEtat: (...args: unknown[]) => loadEtat(...args),
   loadFrequences: (...args: unknown[]) => loadFrequences(...args),
   loadRelecteurs: (...args: unknown[]) => loadRelecteurs(...args),
   estAdministrateur: (...args: unknown[]) => estAdministrateur(...args)
@@ -101,11 +103,19 @@ const evenement = (
   creeLe
 });
 
+const etatDe = (evenements: readonly EvenementRelecture[]) =>
+  evenements.map((e) => ({
+    bloc: e.bloc,
+    empreinte: e.empreinte,
+    verdict: e.verdict
+  }));
+
 const nbBlocs = (html: string): number => html.split('data-bloc="').length - 1;
 
 beforeEach(() => {
   requireRelecteur.mockReset().mockResolvedValue(RELECTRICE);
   loadHistorique.mockReset().mockResolvedValue([]);
+  loadEtat.mockReset().mockResolvedValue([]);
   loadFrequences.mockReset().mockResolvedValue([]);
   loadRelecteurs.mockReset().mockResolvedValue([]);
   estAdministrateur.mockReset().mockResolvedValue(false);
@@ -152,10 +162,12 @@ describe('blocs et filtres', { timeout: 30_000 }, () => {
   });
 
   it('filtre « relu » : seuls les blocs relus sur leur texte actuel', async () => {
-    loadHistorique.mockResolvedValue([
+    const evenements = [
       evenement('N1/bas', 'relu'),
       evenement('E3/haut', 'a_corriger')
-    ]);
+    ];
+    loadHistorique.mockResolvedValue(evenements);
+    loadEtat.mockResolvedValue(etatDe(evenements));
     const relus = await rendre({ statut: 'relu' });
     expect(nbBlocs(relus)).toBe(1);
     expect(relus).toContain('data-bloc="N1/bas"');
@@ -167,7 +179,7 @@ describe('blocs et filtres', { timeout: 30_000 }, () => {
   });
 
   it('avancement : relus sur 150, liens de filtre et d’ordre, sélection courante marquée', async () => {
-    loadHistorique.mockResolvedValue([evenement('N1/bas', 'relu')]);
+    loadEtat.mockResolvedValue(etatDe([evenement('N1/bas', 'relu')]));
     const html = await rendre({ statut: 'tous', tri: 'catalogue' });
     expect(html).toContain('Blocs relus : 1 sur 150');
     expect(html).toContain(
@@ -204,12 +216,79 @@ describe('blocs et filtres', { timeout: 30_000 }, () => {
     expect(html).not.toContain('name="verdict"');
   });
 
+  it('état servi indisponible : même message, aucun formulaire de verdict', async () => {
+    loadEtat.mockResolvedValue(null);
+    const html = await rendre();
+    expect(html).toContain(fr.relecture.indisponible);
+    expect(nbBlocs(html)).toBe(0);
+    expect(html).not.toContain('name="verdict"');
+  });
+
   it('un formulaire de verdict par bloc, avec l’empreinte du texte affiché', async () => {
     const html = await rendre({ statut: 'tous', tri: 'catalogue' });
     expect(html.split('name="verdict"').length - 1).toBe(300);
     expect(html).toContain(`value="${empreinteBloc('N1/bas')}"`);
   });
 });
+
+describe(
+  'vue d’un relecteur désigné (historique réservé aux super administrateurs)',
+  {
+    timeout: 30_000
+  },
+  () => {
+    it('l’état de chaque bloc vient de l’état servi, sans le verdict ni le commentaire des autres', async () => {
+      loadEtat.mockResolvedValue([
+        {
+          bloc: 'N1/bas',
+          empreinte: empreinteBloc('N1/bas') ?? '',
+          verdict: 'a_corriger'
+        }
+      ]);
+      const html = await rendre({ statut: 'a_corriger' });
+      expect(nbBlocs(html)).toBe(1);
+      expect(html).toContain('data-bloc="N1/bas"');
+      expect(html).not.toContain('Accord à revoir');
+      expect(html).toContain('Vos verdicts (0)');
+      expect(html).toContain(fr.relecture.bloc.mesVerdictsVide);
+    });
+
+    it('mention de l’historique réservé et de la conservation ; ses propres verdicts sous « Vos verdicts »', async () => {
+      const mien = evenement('N1/bas', 'a_corriger');
+      loadHistorique.mockResolvedValue([
+        { ...mien, relecteurNom: null, relecteurAdresse: null }
+      ]);
+      loadEtat.mockResolvedValue(etatDe([mien]));
+      const html = await rendre({ statut: 'a_corriger' });
+      expect(html).toContain(fr.relecture.historiqueReserve);
+      expect(html).toContain(
+        fr.relecture.conservation.replace('{jours}', '30')
+      );
+      expect(html).toContain('Vos verdicts (1)');
+      expect(html).toContain('par vous');
+      expect(html).toContain('Accord à revoir');
+    });
+
+    it('super administrateur : historique complet, pas de mention réservée ; auteur non conservé signalé', async () => {
+      estAdministrateur.mockResolvedValue(true);
+      const anonyme = {
+        ...evenement('N1/bas', 'relu'),
+        relecteurNom: null,
+        relecteurAdresse: null,
+        estMoi: false
+      };
+      loadHistorique.mockResolvedValue([anonyme]);
+      loadEtat.mockResolvedValue(etatDe([anonyme]));
+      const html = await rendre({ statut: 'relu' });
+      expect(html).not.toContain(fr.relecture.historiqueReserve);
+      expect(html).toContain(
+        fr.relecture.conservation.replace('{jours}', '30')
+      );
+      expect(html).toContain('Historique des verdicts (1)');
+      expect(html).toContain(`par ${fr.relecture.bloc.auteurEfface}`);
+    });
+  }
+);
 
 describe('relecteurs désignés', () => {
   it('absents pour une relectrice désignée', async () => {

@@ -4,6 +4,10 @@ const relectureEn = {
   intro:
     'Each interpretation block is shown in context: facet, domain, level and the fictitious profiles in which it would appear. An unreviewed block stays hidden from the person; it becomes visible as soon as it is marked “reviewed”. If its text changes, it goes back to “to review”.',
   acces: 'Restricted to super administrators and designated reviewers.',
+  historiqueReserve:
+    'The full verdict history (authors, dates, comments) is reserved for super administrators: you see the state of each block and your own verdicts.',
+  conservation:
+    'Earlier verdicts and their comments are erased after {jours} days; the latest verdict on each text is kept, without its author or comment.',
   avancementTitre: 'Progress',
   avancement: 'Blocks reviewed: {relus} of {total}',
   statuts: {
@@ -40,9 +44,11 @@ const relectureEn = {
     feminin: 'Feminine agreement',
     historique: 'Verdict history ({n})',
     historiqueVide: 'No verdict yet.',
+    mesVerdicts: 'Your verdicts ({n})',
+    mesVerdictsVide: 'You have not given a verdict on this block yet.',
     ancienTexte: 'on an earlier text',
     vous: 'you',
-    compteEfface: 'deleted account',
+    auteurEfface: 'author not kept',
     par: 'by {qui}'
   },
   formulaire: {
@@ -55,6 +61,8 @@ const relectureEn = {
     envoi: 'Saving',
     reluFait: 'Block marked as reviewed.',
     corrigerFait: 'Correction requested.',
+    plafond:
+      'Too many verdicts within an hour: please try again a little later.',
     perime:
       'This text has changed since the page was opened. Reload it to review the new version.',
     invalide: 'Verdict refused: the request is not valid.',
@@ -76,13 +84,15 @@ const relectureEn = {
     adresse: 'Email address',
     designer: 'Designate',
     designerAide:
-      'The account is created if it does not exist yet; the person then signs in with this address.',
+      'The account is created if it does not exist yet; the person receives a notice by e-mail, then signs in with this address.',
     envoi: 'Saving',
     ajoute: 'Address designated.',
     deja: 'This address is already designated.',
     inconnu: 'Suspended account: designation refused.',
     invalide: 'Invalid address.',
     erreur: 'The designation could not be saved. Please try again.',
+    plafond:
+      'Too many designations within an hour: please try again a little later.',
     retirer: 'Remove',
     retirerAria: 'Remove {adresse} from the reviewers',
     confirmer: 'I confirm the removal of {adresse}',

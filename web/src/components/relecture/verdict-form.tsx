@@ -27,6 +27,7 @@ export type VerdictFormLabels = {
   invalide: string;
   commentaireRequis: string;
   interdit: string;
+  plafond: string;
   erreur: string;
 };
 
@@ -88,13 +89,14 @@ export function VerdictForm({
         a_corriger: labels.corrigerFait,
         perime: labels.perime,
         interdit: labels.interdit,
+        plafond: labels.plafond,
         erreur: labels.erreur,
         invalide: champInvalide ? labels.commentaireRequis : labels.invalide
       }[etat];
   const ton: MessageTon =
     pending || etat === 'relu' || etat === 'a_corriger'
       ? 'info'
-      : etat === 'perime'
+      : etat === 'perime' || etat === 'plafond'
         ? 'avis'
         : 'erreur';
 

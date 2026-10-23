@@ -6,7 +6,7 @@ DECLARE
 BEGIN
   n := replace(n, $a$IF FOUND THEN
     RETURN v_id;
-  END IF;$a$, $b$$b$);
+  END IF;$a$, '');
   IF n = d THEN
     RAISE EXCEPTION 'mutation sans effet';
   END IF;

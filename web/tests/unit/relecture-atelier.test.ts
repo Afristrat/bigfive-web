@@ -1,7 +1,14 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { blocsBibliotheque, empreinteBloc } from '@/lib/bibliotheque';
+import {
+  blocsBibliotheque,
+  empreinteBloc,
+  type LigneEtatRelecture
+} from '@/lib/bibliotheque';
 import {
   assemblerAtelier,
+  CONSERVATION_RELECTURE_JOURS,
   compterStatuts,
   effectifsParBloc,
   lienAtelier,
@@ -35,9 +42,33 @@ const evenement = (
   };
 };
 
+// État servi (app.etat_relecture_blocs) déduit d'un historique complet : le
+// dernier verdict de chaque couple (bloc, empreinte).
+const etatDe = (
+  evenements: readonly EvenementRelecture[]
+): LigneEtatRelecture[] => {
+  const dernier = new Map<string, EvenementRelecture>();
+  for (const e of evenements) {
+    const cle = `${e.bloc}|${e.empreinte}`;
+    const connu = dernier.get(cle);
+    if (!connu || Date.parse(e.creeLe) > Date.parse(connu.creeLe)) {
+      dernier.set(cle, e);
+    }
+  }
+  return [...dernier.values()].map((e) => ({
+    bloc: e.bloc,
+    empreinte: e.empreinte,
+    verdict: e.verdict
+  }));
+};
+const assembler = (
+  evenements: readonly EvenementRelecture[],
+  frequences: Parameters<typeof assemblerAtelier>[3] = []
+) => assemblerAtelier(blocs, etatDe(evenements), evenements, frequences);
+
 describe('statut de chaque bloc', () => {
   it('sans verdict : à relire, texte non modifié', () => {
-    const atelier = assemblerAtelier(blocs, [], []);
+    const atelier = assemblerAtelier(blocs, [], [], []);
     expect(atelier).toHaveLength(150);
     expect(atelier.every((b) => b.statut === 'a_relire')).toBe(true);
     expect(atelier.every((b) => !b.texteModifie)).toBe(true);
@@ -46,7 +77,7 @@ describe('statut de chaque bloc', () => {
   it('le dernier verdict sur le texte servi fait foi (historique du plus récent au plus ancien)', () => {
     const ancien = evenement('N1/bas', 'a_corriger');
     const recent = evenement('N1/bas', 'relu');
-    const atelier = assemblerAtelier(blocs, [recent, ancien], []);
+    const atelier = assembler([recent, ancien]);
     const n1 = atelier.find((b) => b.bloc.id === 'N1/bas');
     expect(n1?.statut).toBe('relu');
     expect(n1?.dernier?.id).toBe(recent.id);
@@ -56,18 +87,14 @@ describe('statut de chaque bloc', () => {
   it('l’ordre reçu n’importe pas : la date la plus récente l’emporte', () => {
     const ancien = evenement('N1/bas', 'relu');
     const recent = evenement('N1/bas', 'a_corriger');
-    const n1 = assemblerAtelier(blocs, [ancien, recent], []).find(
-      (b) => b.bloc.id === 'N1/bas'
-    );
+    const n1 = assembler([ancien, recent]).find((b) => b.bloc.id === 'N1/bas');
     expect(n1?.statut).toBe('a_corriger');
     expect(n1?.historique[0]?.id).toBe(recent.id);
   });
 
   it('un verdict sur un autre texte : à relire, marqué « texte modifié », historique conservé', () => {
     const vieux = evenement('E3/haut', 'relu', { empreinte: 'b'.repeat(64) });
-    const e3 = assemblerAtelier(blocs, [vieux], []).find(
-      (b) => b.bloc.id === 'E3/haut'
-    );
+    const e3 = assembler([vieux]).find((b) => b.bloc.id === 'E3/haut');
     expect(e3?.statut).toBe('a_relire');
     expect(e3?.texteModifie).toBe(true);
     expect(e3?.dernier).toBeNull();
@@ -75,16 +102,54 @@ describe('statut de chaque bloc', () => {
   });
 
   it('les verdicts sur un bloc inconnu sont ignorés', () => {
-    const atelier = assemblerAtelier(blocs, [evenement('Z9/bas', 'relu')], []);
+    const atelier = assembler([evenement('Z9/bas', 'relu')]);
     expect(atelier.every((b) => b.historique.length === 0)).toBe(true);
+    expect(atelier.every((b) => b.statut === 'a_relire')).toBe(true);
+  });
+
+  it('relecteur désigné : le statut vient de l’état servi, l’historique ne montre que ses verdicts', () => {
+    const autre: LigneEtatRelecture = {
+      bloc: 'N1/bas',
+      empreinte: empreinteBloc('N1/bas') ?? '',
+      verdict: 'a_corriger'
+    };
+    const n1 = assemblerAtelier(blocs, [autre], [], []).find(
+      (b) => b.bloc.id === 'N1/bas'
+    );
+    expect(n1?.statut).toBe('a_corriger');
+    expect(n1?.historique).toEqual([]);
+    expect(n1?.dernier).toBeNull();
+    expect(n1?.texteModifie).toBe(false);
+  });
+
+  it('l’état servi fait foi sur le dernier verdict visible (verdict plus récent d’un autre relecteur)', () => {
+    const mien = evenement('N1/bas', 'relu');
+    const n1 = assemblerAtelier(
+      blocs,
+      [{ bloc: 'N1/bas', empreinte: mien.empreinte, verdict: 'a_corriger' }],
+      [mien],
+      []
+    ).find((b) => b.bloc.id === 'N1/bas');
+    expect(n1?.statut).toBe('a_corriger');
+    expect(n1?.historique.map((e) => e.id)).toEqual([mien.id]);
+  });
+
+  it('texte modifié lu dans l’état servi, même sans aucun verdict visible', () => {
+    const e3 = assemblerAtelier(
+      blocs,
+      [{ bloc: 'E3/haut', empreinte: 'c'.repeat(64), verdict: 'relu' }],
+      [],
+      []
+    ).find((b) => b.bloc.id === 'E3/haut');
+    expect(e3?.statut).toBe('a_relire');
+    expect(e3?.texteModifie).toBe(true);
   });
 
   it('compte les statuts', () => {
-    const atelier = assemblerAtelier(
-      blocs,
-      [evenement('N1/bas', 'relu'), evenement('N2/bas', 'a_corriger')],
-      []
-    );
+    const atelier = assembler([
+      evenement('N1/bas', 'relu'),
+      evenement('N2/bas', 'a_corriger')
+    ]);
     expect(compterStatuts(atelier)).toEqual({
       a_relire: 148,
       a_corriger: 1,
@@ -97,7 +162,7 @@ describe('fréquence d’affichage', () => {
   it('histogramme vide : fréquence inconnue', () => {
     expect(effectifsParBloc([])).toBeNull();
     expect(
-      assemblerAtelier(blocs, [], []).every((b) => b.effectif === null)
+      assemblerAtelier(blocs, [], [], []).every((b) => b.effectif === null)
     ).toBe(true);
   });
 
@@ -121,11 +186,7 @@ describe('fréquence d’affichage', () => {
   });
 
   it('avec un histogramme, un bloc jamais atteint a un effectif nul', () => {
-    const atelier = assemblerAtelier(
-      blocs,
-      [],
-      [{ facette: 'N1', score: 13, effectif: 5 }]
-    );
+    const atelier = assembler([], [{ facette: 'N1', score: 13, effectif: 5 }]);
     expect(atelier.find((b) => b.bloc.id === 'N1/milieu')?.effectif).toBe(5);
     expect(atelier.find((b) => b.bloc.id === 'N1/bas')?.effectif).toBe(0);
   });
@@ -174,11 +235,10 @@ describe('filtres et tri', () => {
   });
 
   it('filtre par statut', () => {
-    const atelier = assemblerAtelier(
-      blocs,
-      [evenement('N1/bas', 'relu'), evenement('N2/bas', 'a_corriger')],
-      []
-    );
+    const atelier = assembler([
+      evenement('N1/bas', 'relu'),
+      evenement('N2/bas', 'a_corriger')
+    ]);
     const ids = (statut: 'relu' | 'a_corriger' | 'a_relire' | 'tous') =>
       selectionner(atelier, { statut, tri: 'catalogue' }).map((b) => b.bloc.id);
     expect(ids('relu')).toEqual(['N1/bas']);
@@ -188,8 +248,7 @@ describe('filtres et tri', () => {
   });
 
   it('tri par fréquence : effectif, puis nombre de profils fictifs, puis ordre de la bibliothèque', () => {
-    const atelier = assemblerAtelier(
-      blocs,
+    const atelier = assembler(
       [],
       [
         { facette: 'C6', score: 20, effectif: 9 }, // C6/haut : 9
@@ -210,7 +269,7 @@ describe('filtres et tri', () => {
   });
 
   it('sans histogramme, le tri par fréquence se rabat sur les profils fictifs', () => {
-    const ordre = selectionner(assemblerAtelier(blocs, [], []), {
+    const ordre = selectionner(assembler([]), {
       statut: 'tous',
       tri: 'frequence'
     });
@@ -220,10 +279,26 @@ describe('filtres et tri', () => {
   });
 
   it('tri du catalogue : ordre de la bibliothèque', () => {
-    const ordre = selectionner(assemblerAtelier(blocs, [], []), {
+    const ordre = selectionner(assembler([]), {
       statut: 'tous',
       tri: 'catalogue'
     }).map((b) => b.bloc.id);
     expect(ordre).toEqual(blocs.map((b) => b.id));
+  });
+});
+
+describe('conservation affichée', () => {
+  it('la durée affichée est celle que la base applique (private.duree_historique_relecture, 0022)', () => {
+    const sql = readFileSync(
+      resolve(
+        __dirname,
+        '../../../supabase/migrations/0022_relecture_bibliotheque.sql'
+      ),
+      'utf8'
+    );
+    const duree = sql.match(
+      /FUNCTION private\.duree_historique_relecture\(\)[\s\S]*?SELECT interval '(\d+) days'/
+    );
+    expect(Number(duree?.[1])).toBe(CONSERVATION_RELECTURE_JOURS);
   });
 });

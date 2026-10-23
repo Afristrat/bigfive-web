@@ -20,6 +20,7 @@ import {
 } from '@/lib/format';
 import {
   assemblerAtelier,
+  CONSERVATION_RELECTURE_JOURS,
   compterStatuts,
   lienAtelier,
   lireFiltresAtelier,
@@ -31,6 +32,7 @@ import {
 } from '@/lib/relecture-atelier';
 import {
   estAdministrateur,
+  loadEtat,
   loadFrequences,
   loadHistorique,
   loadRelecteurs,
@@ -63,14 +65,17 @@ const segment = (actif: boolean): string =>
 // en grand, posé sur un filet d'encre ; la sélection (statut, ordre) en
 // segments ; puis chaque bloc en registre (contexte en marge, texte en colonne
 // de lecture), révélé au défilement ; enfin, pour les super administrateurs,
-// les relecteurs désignés.
+// les relecteurs désignés. Le statut de chaque bloc vient de l'état servi ;
+// l'historique montré est celui que la base filtre pour la personne (complet
+// pour un super administrateur, ses seuls verdicts pour un relecteur désigné).
 export default async function RelecturePage({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   // 404 pour quiconque n'est ni super administrateur ni relecteur désigné (lu en base).
   const viewer = await requireRelecteur(locale, CHEMIN);
-  const [historique, frequences, admin] = await Promise.all([
+  const [historique, etat, frequences, admin] = await Promise.all([
     loadHistorique(viewer),
+    loadEtat(),
     loadFrequences(viewer),
     estAdministrateur(viewer)
   ]);
@@ -82,9 +87,11 @@ export default async function RelecturePage({ params, searchParams }: Props) {
   const mes = await getTranslations('mesResultats');
 
   const blocs = blocsBibliotheque();
-  const atelier = historique
-    ? assemblerAtelier(blocs, historique, frequences)
-    : [];
+  const disponible = historique !== null && etat !== null;
+  const atelier =
+    historique !== null && etat !== null
+      ? assemblerAtelier(blocs, etat, historique, frequences)
+      : [];
   const comptes = compterStatuts(atelier);
   const retenus = selectionner(atelier, filtres);
   const frequenceConnue = atelier.some((b) => b.effectif !== null);
@@ -108,6 +115,7 @@ export default async function RelecturePage({ params, searchParams }: Props) {
     invalide: t('formulaire.invalide'),
     commentaireRequis: t('formulaire.commentaireRequis'),
     interdit: t('formulaire.interdit'),
+    plafond: t('formulaire.plafond'),
     erreur: t('formulaire.erreur')
   };
   const sections = {
@@ -135,10 +143,10 @@ export default async function RelecturePage({ params, searchParams }: Props) {
       formesAccordees: t('bloc.formesAccordees'),
       masculin: t('bloc.masculin'),
       feminin: t('bloc.feminin'),
-      historique: t('bloc.historique', {
+      historique: t(admin ? 'bloc.historique' : 'bloc.mesVerdicts', {
         n: formatNombre(b.historique.length, locale)
       }),
-      historiqueVide: t('bloc.historiqueVide'),
+      historiqueVide: t(admin ? 'bloc.historiqueVide' : 'bloc.mesVerdictsVide'),
       verdict: {
         ...verdict,
         groupe: t('formulaire.groupe', { bloc: b.bloc.id })
@@ -157,7 +165,7 @@ export default async function RelecturePage({ params, searchParams }: Props) {
           : e.relecteurNom ??
             (e.relecteurAdresse
               ? isolerEnArabe(e.relecteurAdresse, locale)
-              : t('bloc.compteEfface'))
+              : t('bloc.auteurEfface'))
       }),
       commentaire: e.commentaire,
       ancienTexte:
@@ -183,9 +191,19 @@ export default async function RelecturePage({ params, searchParams }: Props) {
         <p className='apparait-tard mt-3 text-petit text-texte-3'>
           {t('acces')}
         </p>
+        {!admin && (
+          <p className='apparait-tard mt-2 max-w-[40em] text-petit text-texte-3'>
+            {t('historiqueReserve')}
+          </p>
+        )}
+        <p className='apparait-tard mt-2 max-w-[40em] text-petit text-texte-3'>
+          {t('conservation', {
+            jours: formatNombre(CONSERVATION_RELECTURE_JOURS, locale)
+          })}
+        </p>
       </header>
 
-      {historique === null ? (
+      {!disponible ? (
         <p
           role='status'
           className='rounded-controle bg-avis-doux p-4 text-avis colonne-lecture'
@@ -372,6 +390,7 @@ export default async function RelecturePage({ params, searchParams }: Props) {
               deja: t('relecteurs.deja'),
               inconnu: t('relecteurs.inconnu'),
               invalide: t('relecteurs.invalide'),
+              plafond: t('relecteurs.plafond'),
               erreur: t('relecteurs.erreur'),
               legende: t('relecteurs.legende'),
               colAdresse: t('relecteurs.colAdresse'),

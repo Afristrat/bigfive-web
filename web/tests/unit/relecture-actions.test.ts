@@ -48,6 +48,17 @@ vi.mock('@/lib/rate-limit', () => ({
   getClientIp: async () => '203.0.113.1'
 }));
 
+const sendMail = vi.fn();
+vi.mock('@/lib/mailer', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/mailer')>()),
+  sendMail: (mail: unknown) => sendMail(mail)
+}));
+
+const logSecurityEvent = vi.fn();
+vi.mock('@/lib/security-log', () => ({
+  logSecurityEvent: (...args: unknown[]) => logSecurityEvent(...args)
+}));
+
 const rafraichirEtatRelecture = vi.fn();
 vi.mock('@/lib/bibliotheque', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/bibliotheque')>()),
@@ -79,6 +90,8 @@ beforeEach(() => {
   isRateLimited.mockReset().mockResolvedValue(false);
   rafraichirEtatRelecture.mockReset().mockResolvedValue(true);
   revalidatePath.mockReset();
+  sendMail.mockReset().mockResolvedValue(true);
+  logSecurityEvent.mockReset();
 });
 
 const formulaire = (champs: Record<string, string>): FormData => {
@@ -165,12 +178,31 @@ describe('relireBloc', () => {
     expect(rpc).not.toHaveBeenCalled();
   });
 
-  it('plafond atteint : erreur, sans appel', async () => {
+  it('200 verdicts par heure et par personne, contrôlés avant l’appel', async () => {
+    rpc.mockResolvedValue(VERDICT);
+    await relireBloc(idle, verdict());
+    expect(isRateLimited).toHaveBeenCalledWith(
+      'relireBloc',
+      { max: 200, windowMs: 3_600_000 },
+      VIEWER.id
+    );
+  });
+
+  it('plafond atteint dans l’application : « plafond », sans appel', async () => {
     isRateLimited.mockResolvedValue(true);
     await expect(relireBloc(idle, verdict())).resolves.toEqual({
-      status: 'erreur'
+      status: 'plafond'
     });
     expect(rpc).not.toHaveBeenCalled();
+  });
+
+  it('plafond atteint en base (PT429) : « plafond », sans rafraîchir', async () => {
+    rpc.mockRejectedValue(new GatewayError(429, 'PT429'));
+    await expect(relireBloc(idle, verdict())).resolves.toEqual({
+      status: 'plafond'
+    });
+    expect(rafraichirEtatRelecture).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
   });
 
   it.each([
@@ -196,16 +228,19 @@ describe('designerRelecteur', () => {
   const designation = (champs: Record<string, string> = {}): FormData =>
     formulaire({ locale: 'fr', email: ' Nezha@Tenga.test ', ...champs });
 
+  const ajoute = (langue = 'fr') => [{ ajoute: true, langue }];
+  const deja = [{ ajoute: false, langue: 'fr' }];
+
   it('vérifie le super administrateur sur le chemin de l’atelier', async () => {
     findOrCreateUser.mockResolvedValue({ id: CIBLE, created: false });
-    rpc.mockResolvedValue(true);
+    rpc.mockResolvedValue(ajoute());
     await designerRelecteur(idle, designation());
     expect(requireAdmin).toHaveBeenCalledWith('fr', '/admin/relecture');
   });
 
   it('retrouve ou crée le compte (adresse normalisée, langue de la page), puis désigne', async () => {
     findOrCreateUser.mockResolvedValue({ id: CIBLE, created: true });
-    rpc.mockResolvedValue(true);
+    rpc.mockResolvedValue(ajoute());
     await expect(designerRelecteur(idle, designation())).resolves.toEqual({
       status: 'ajoute'
     });
@@ -220,12 +255,86 @@ describe('designerRelecteur', () => {
     expect(revalidatePath).toHaveBeenCalledWith('/fr/admin/relecture');
   });
 
-  it('déjà relecteur : « déjà », sans erreur', async () => {
+  it('déjà relecteur : « déjà », sans erreur et sans avis', async () => {
     findOrCreateUser.mockResolvedValue({ id: CIBLE, created: false });
-    rpc.mockResolvedValue(false);
+    rpc.mockResolvedValue(deja);
     await expect(designerRelecteur(idle, designation())).resolves.toEqual({
       status: 'deja'
     });
+    expect(sendMail).not.toHaveBeenCalled();
+  });
+
+  it('désignation : un seul avis, à la personne désignée, dans la langue de son compte, après la base', async () => {
+    findOrCreateUser.mockResolvedValue({ id: CIBLE, created: false });
+    rpc.mockResolvedValue(ajoute('ar'));
+    await expect(designerRelecteur(idle, designation())).resolves.toEqual({
+      status: 'ajoute'
+    });
+    expect(sendMail).toHaveBeenCalledTimes(1);
+    const mail = sendMail.mock.calls[0]?.[0] as {
+      to: string;
+      subject: string;
+      text: string;
+      html: string;
+    };
+    expect(mail.to).toBe('nezha@tenga.test');
+    expect(mail.html).toContain('dir="rtl"');
+    expect(mail.text).toContain('/ar/connexion?next=%2Fadmin%2Frelecture');
+    expect(mail.text).not.toContain(VIEWER.email);
+    expect(rpc.mock.invocationCallOrder[0]).toBeLessThan(
+      sendMail.mock.invocationCallOrder[0] ?? 0
+    );
+  });
+
+  it('la langue de l’avis est celle du compte, pas celle de la page', async () => {
+    findOrCreateUser.mockResolvedValue({ id: CIBLE, created: false });
+    rpc.mockResolvedValue(ajoute('en'));
+    await designerRelecteur(idle, designation({ locale: 'ar' }));
+    const mail = sendMail.mock.calls[0]?.[0] as { html: string; text: string };
+    expect(mail.html).toContain('dir="ltr"');
+    expect(mail.text).toContain('Open the review workshop');
+    expect(mail.text).not.toContain('/ar/');
+  });
+
+  it('un envoi qui lève n’annule pas la désignation : erreur journalisée sans adresse', async () => {
+    findOrCreateUser.mockResolvedValue({ id: CIBLE, created: true });
+    rpc.mockResolvedValue(ajoute());
+    sendMail.mockRejectedValue(new TypeError('boom nezha@tenga.test'));
+    const avertir = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await expect(designerRelecteur(idle, designation())).resolves.toEqual({
+      status: 'ajoute'
+    });
+    expect(discardCreatedAccount).not.toHaveBeenCalled();
+    expect(logSecurityEvent).toHaveBeenCalledWith(
+      'relecture.designation_notice_failed',
+      { ip: '203.0.113.1', reason: 'TypeError' }
+    );
+    expect(JSON.stringify(logSecurityEvent.mock.calls)).not.toMatch(/@/);
+    expect(JSON.stringify(avertir.mock.calls)).not.toMatch(/@/);
+    expect(revalidatePath).toHaveBeenCalledWith('/fr/admin/relecture');
+    avertir.mockRestore();
+  });
+
+  it('un envoi refusé (false) n’annule pas la désignation et est journalisé', async () => {
+    findOrCreateUser.mockResolvedValue({ id: CIBLE, created: false });
+    rpc.mockResolvedValue(ajoute());
+    sendMail.mockResolvedValue(false);
+    await expect(designerRelecteur(idle, designation())).resolves.toEqual({
+      status: 'ajoute'
+    });
+    expect(logSecurityEvent).toHaveBeenCalledWith(
+      'relecture.designation_notice_failed',
+      { ip: '203.0.113.1', reason: 'refused' }
+    );
+  });
+
+  it('n’envoie rien si la base refuse', async () => {
+    findOrCreateUser.mockResolvedValue({ id: CIBLE, created: false });
+    rpc.mockRejectedValue(new GatewayError(403, '42501'));
+    const avertir = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await designerRelecteur(idle, designation());
+    expect(sendMail).not.toHaveBeenCalled();
+    avertir.mockRestore();
   });
 
   it('adresse invalide : refusée sans appel', async () => {
@@ -247,12 +356,37 @@ describe('designerRelecteur', () => {
     );
   });
 
-  it('plafond atteint : erreur, sans appel', async () => {
+  it('5 désignations par heure et par personne, contrôlées avant GoTrue', async () => {
+    findOrCreateUser.mockResolvedValue({ id: CIBLE, created: false });
+    rpc.mockResolvedValue(ajoute());
+    await designerRelecteur(idle, designation());
+    expect(isRateLimited).toHaveBeenCalledWith(
+      'designerRelecteur',
+      { max: 5, windowMs: 3_600_000 },
+      VIEWER.id
+    );
+  });
+
+  it('plafond atteint dans l’application : « plafond », sans appel ni avis', async () => {
     isRateLimited.mockResolvedValue(true);
     await expect(designerRelecteur(idle, designation())).resolves.toEqual({
-      status: 'erreur'
+      status: 'plafond'
     });
     expect(findOrCreateUser).not.toHaveBeenCalled();
+    expect(sendMail).not.toHaveBeenCalled();
+  });
+
+  it('plafond atteint en base (PT429) : « plafond », compte créé par l’appel retiré, aucun avis', async () => {
+    findOrCreateUser.mockResolvedValue({ id: CIBLE, created: true });
+    rpc.mockRejectedValue(new GatewayError(429, 'PT429'));
+    await expect(designerRelecteur(idle, designation())).resolves.toEqual({
+      status: 'plafond'
+    });
+    expect(discardCreatedAccount).toHaveBeenCalledWith(
+      expect.anything(),
+      CIBLE
+    );
+    expect(sendMail).not.toHaveBeenCalled();
   });
 });
 

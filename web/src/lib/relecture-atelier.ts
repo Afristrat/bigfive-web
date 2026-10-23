@@ -4,13 +4,28 @@ import {
   scoresApercu,
   type ProfilApercu
 } from '@/lib/apercu-resultats';
-import type { BlocBibliotheque } from '@/lib/bibliotheque';
+import type {
+  BlocBibliotheque,
+  LigneEtatRelecture,
+  VerdictRelecture
+} from '@/lib/bibliotheque';
 import { FACETTES, niveau, profilDepuisScores } from '@/lib/moteur';
 
 // Atelier de relecture (/admin/relecture) : assemble les 150 blocs de la
-// bibliothèque, l'historique des verdicts (app.historique_relecture), la
-// fréquence observée (app.frequence_facettes) et les profils fictifs de
-// l'aperçu. Aucun accès à la base ici : fonctions pures, testées seules.
+// bibliothèque, l'état servi (app.etat_relecture_blocs : dernier verdict de
+// chaque texte, sans identité), l'historique visible par l'appelant
+// (app.historique_relecture : tout pour un super administrateur, ses seuls
+// verdicts pour un relecteur désigné), la fréquence observée
+// (app.frequence_facettes) et les profils fictifs de l'aperçu. Le statut d'un
+// bloc vient de l'état servi, jamais de l'historique visible (qui peut être
+// partiel). Aucun accès à la base ici : fonctions pures, testées seules.
+
+/**
+ * Durée de conservation de l'historique, en jours, affichée dans l'atelier.
+ * Même valeur que private.duree_historique_relecture() (migration 0022) : un
+ * test compare les deux.
+ */
+export const CONSERVATION_RELECTURE_JOURS = 30;
 
 export type EvenementRelecture = {
   id: string;
@@ -44,9 +59,9 @@ export type BlocAtelier = {
   statut: StatutAtelier;
   /** Des verdicts existent, mais aucun sur le texte servi aujourd'hui. */
   texteModifie: boolean;
-  /** Dernier verdict sur le texte servi. */
+  /** Dernier verdict VISIBLE sur le texte servi (historique de l'appelant). */
   dernier: EvenementRelecture | null;
-  /** Tous les verdicts du bloc, du plus récent au plus ancien. */
+  /** Verdicts visibles du bloc, du plus récent au plus ancien. */
   historique: EvenementRelecture[];
   /** Résultats dont la facette tombe à ce niveau ; null si inconnu. */
   effectif: number | null;
@@ -92,11 +107,18 @@ const plusRecentDabord = (
 
 export function assemblerAtelier(
   blocs: readonly BlocBibliotheque[],
+  etat: readonly LigneEtatRelecture[],
   evenements: readonly EvenementRelecture[],
   frequences: readonly LigneFrequence[]
 ): BlocAtelier[] {
   const effectifs = effectifsParBloc(frequences);
   const profils = profilsParBloc();
+  const servi = new Map<string, VerdictRelecture>();
+  const juges = new Set<string>();
+  for (const l of etat) {
+    servi.set(`${l.bloc}|${l.empreinte}`, l.verdict);
+    juges.add(l.bloc);
+  }
   const parBloc = new Map<string, EvenementRelecture[]>();
   // Tri stable : à date égale, l'ordre reçu (le plus récent d'abord) tient.
   for (const e of [...evenements].sort(plusRecentDabord)) {
@@ -106,17 +128,19 @@ export function assemblerAtelier(
     const historique = parBloc.get(bloc.id) ?? [];
     const dernier =
       historique.find((e) => e.empreinte === bloc.empreinte) ?? null;
-    const statut: StatutAtelier = dernier
-      ? dernier.verdict === 'relu'
-        ? 'relu'
-        : 'a_corriger'
-      : bloc.reluDansLeFichier
-        ? 'relu'
-        : 'a_relire';
+    const verdict = servi.get(`${bloc.id}|${bloc.empreinte}`);
+    const statut: StatutAtelier =
+      verdict === undefined
+        ? bloc.reluDansLeFichier
+          ? 'relu'
+          : 'a_relire'
+        : verdict === 'relu'
+          ? 'relu'
+          : 'a_corriger';
     return {
       bloc,
       statut,
-      texteModifie: dernier === null && historique.length > 0,
+      texteModifie: verdict === undefined && juges.has(bloc.id),
       dernier,
       historique,
       effectif: effectifs === null ? null : effectifs.get(bloc.id) ?? 0,

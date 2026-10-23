@@ -4,6 +4,10 @@ const relectureFr = {
   intro:
     'Chaque bloc d’interprétation est montré dans son contexte : facette, domaine, niveau et profils fictifs où il s’afficherait. Un bloc non relu reste masqué à la personne ; il lui devient visible dès qu’il est marqué « relu ». Si son texte change, il redevient « à relire ».',
   acces: 'Réservé aux super administrateurs et aux relecteurs désignés.',
+  historiqueReserve:
+    'L’historique complet des verdicts (auteurs, dates, commentaires) est réservé aux super administrateurs : vous voyez l’état de chaque bloc et vos propres verdicts.',
+  conservation:
+    'Les verdicts antérieurs et leurs commentaires sont effacés après {jours} jours ; le dernier verdict de chaque texte est conservé, sans son auteur ni son commentaire.',
   avancementTitre: 'Avancement',
   avancement: 'Blocs relus : {relus} sur {total}',
   statuts: {
@@ -40,9 +44,11 @@ const relectureFr = {
     feminin: 'Accord au féminin',
     historique: 'Historique des verdicts ({n})',
     historiqueVide: 'Aucun verdict pour l’instant.',
+    mesVerdicts: 'Vos verdicts ({n})',
+    mesVerdictsVide: 'Vous n’avez rendu aucun verdict sur ce bloc.',
     ancienTexte: 'sur un texte antérieur',
     vous: 'vous',
-    compteEfface: 'compte effacé',
+    auteurEfface: 'auteur non conservé',
     par: 'par {qui}'
   },
   formulaire: {
@@ -55,6 +61,7 @@ const relectureFr = {
     envoi: 'Enregistrement en cours',
     reluFait: 'Bloc marqué relu.',
     corrigerFait: 'Correction demandée.',
+    plafond: 'Trop de verdicts en une heure : réessayez un peu plus tard.',
     perime:
       'Ce texte a changé depuis l’ouverture de la page. Rechargez-la pour relire la nouvelle version.',
     invalide: 'Verdict refusé : la demande n’est pas valide.',
@@ -76,13 +83,14 @@ const relectureFr = {
     adresse: 'Adresse e-mail',
     designer: 'Désigner',
     designerAide:
-      'Le compte est créé s’il n’existe pas encore ; la personne se connecte ensuite avec cette adresse.',
+      'Le compte est créé s’il n’existe pas encore ; la personne reçoit un e-mail d’avis, puis se connecte avec cette adresse.',
     envoi: 'Enregistrement en cours',
     ajoute: 'Adresse désignée.',
     deja: 'Cette adresse est déjà désignée.',
     inconnu: 'Compte suspendu : désignation refusée.',
     invalide: 'Adresse invalide.',
     erreur: 'La désignation n’a pas pu être enregistrée. Réessayez.',
+    plafond: 'Trop de désignations en une heure : réessayez un peu plus tard.',
     retirer: 'Retirer',
     retirerAria: 'Retirer {adresse} des relecteurs',
     confirmer: 'Je confirme le retrait de {adresse}',

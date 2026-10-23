@@ -1,8 +1,12 @@
 -- Épreuve de la migration 0022 (atelier de relecture de la bibliothèque :
 -- private.relecteurs_bibliotheque, app.relectures_blocs, app.suis_relecteur, app.relire_bloc,
 -- app.historique_relecture, app.etat_relecture_blocs, app.frequence_facettes,
--- app.designer_relecteur, app.retirer_relecteur, app.lister_relecteurs) sur la base de
--- production, AVANT puis APRÈS l'application de la migration. Avant : elle doit sortir ROUGE
+-- app.designer_relecteur, app.retirer_relecteur, app.lister_relecteurs, conservation par
+-- private.purger_historique_relecture appelée par private.purger_quotidien) sur la base de
+-- production, AVANT puis APRÈS l'application de la migration. Décisions d'Amine éprouvées :
+-- historique filtré en base (un relecteur désigné ne lit que ses verdicts, sans identité),
+-- conservation de 30 jours (verdict courant conservé et anonymisé, le reste effacé, déclencheur
+-- qui ne laisse passer que la purge), plafonds de 200 verdicts et de 5 désignations par heure. Avant : elle doit sortir ROUGE
 -- avec « migration 0022 non appliquée ». Après : « EPREUVE VERTE ».
 -- Tout est annulé : aucune ligne n'est conservée (ROLLBACK final), hormis l'avance des
 -- compteurs d'identité (journal, ordre des verdicts), que PostgreSQL ne restitue jamais.
@@ -64,6 +68,11 @@ DECLARE
   v_camp  uuid := 'e9220000-0000-4000-8000-0000000000c1';
   v_e1    constant text := repeat('e9', 31) || 'e1';
   v_e2    constant text := repeat('e9', 31) || 'e2';
+  v_e3    constant text := repeat('e9', 31) || 'e3';
+  v_q     uuid[] := ARRAY['e9220000-0000-4000-8000-000000000031', 'e9220000-0000-4000-8000-000000000032',
+                          'e9220000-0000-4000-8000-000000000033', 'e9220000-0000-4000-8000-000000000034']::uuid[];
+  v_plafond_v   constant text := 'ERR:PT429:Plafond de verdicts atteint';
+  v_plafond_d   constant text := 'ERR:PT429:Plafond de désignations atteint';
   v_refus_rel   constant text := 'ERR:42501:Réservé aux relecteurs de la bibliothèque';
   v_refus_admin constant text := 'ERR:42501:Réservé aux administrateurs Tenga';
   v_invalide    constant text := 'ERR:22023:Relecture invalide : bloc, empreinte, verdict ou commentaire';
@@ -89,6 +98,10 @@ BEGIN
      OR to_regprocedure('app.retirer_relecteur(uuid)') IS NULL OR to_regprocedure('app.lister_relecteurs()') IS NULL THEN
     RAISE EXCEPTION 'migration 0022 non appliquée : une des huit fonctions de relecture manque';
   END IF;
+  IF to_regprocedure('private.purger_historique_relecture()') IS NULL OR to_regprocedure('private.duree_historique_relecture()') IS NULL
+     OR position('PERFORM private.purger_historique_relecture();' IN pg_get_functiondef('private.purger_quotidien()'::regprocedure)) = 0 THEN
+    RAISE EXCEPTION 'migration 0022 non appliquée : purge de l''historique de relecture absente ou non appelée par la purge quotidienne';
+  END IF;
 
   -- 2. Structure et droits, lus dans le catalogue.
   IF NOT (SELECT bool_and(c.relrowsecurity AND c.relforcerowsecurity AND c.relowner = 'tenga_owner'::regrole AND c.relkind = 'r')
@@ -104,7 +117,7 @@ BEGIN
   END IF;
   SELECT string_agg(tablename || '|' || policyname || '|' || cmd || '|' || array_to_string(roles, ','), E'\n' ORDER BY tablename, policyname) INTO v_r
     FROM pg_policies WHERE tablename IN ('relectures_blocs', 'relecteurs_bibliotheque');
-  IF v_r IS DISTINCT FROM E'relecteurs_bibliotheque|relecteurs_insertion_owner|INSERT|tenga_owner\nrelecteurs_bibliotheque|relecteurs_lecture_owner|SELECT|tenga_owner\nrelecteurs_bibliotheque|relecteurs_suppression_owner|DELETE|tenga_owner\nrelectures_blocs|relectures_blocs_insertion_owner|INSERT|tenga_owner\nrelectures_blocs|relectures_blocs_lecture_owner|SELECT|tenga_owner\nrelectures_blocs|relectures_blocs_modification_owner|UPDATE|tenga_owner' THEN
+  IF v_r IS DISTINCT FROM E'relecteurs_bibliotheque|relecteurs_insertion_owner|INSERT|tenga_owner\nrelecteurs_bibliotheque|relecteurs_lecture_owner|SELECT|tenga_owner\nrelecteurs_bibliotheque|relecteurs_suppression_owner|DELETE|tenga_owner\nrelectures_blocs|relectures_blocs_insertion_owner|INSERT|tenga_owner\nrelectures_blocs|relectures_blocs_lecture_owner|SELECT|tenga_owner\nrelectures_blocs|relectures_blocs_modification_owner|UPDATE|tenga_owner\nrelectures_blocs|relectures_blocs_suppression_owner|DELETE|tenga_owner' THEN
     RAISE EXCEPTION 'règles inattendues sur les tables de relecture : %', v_r;
   END IF;
   SELECT count(*) INTO v_n FROM pg_trigger t
@@ -112,9 +125,21 @@ BEGIN
      AND t.tgfoid = 'private.refuser_ecriture_api'::regproc AND t.tgenabled = 'O'
      AND (((t.tgtype & 1) = 1 AND (t.tgtype & 28) <> 0) OR (t.tgtype & 32) = 32);
   IF v_n <> 4 THEN RAISE EXCEPTION 'refuser_ecriture_api actif % fois au lieu de 4 (deux tables, ligne et vidage)', v_n; END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_trigger t WHERE t.tgrelid = 'app.relectures_blocs'::regclass
-                    AND t.tgname = 'relectures_blocs_transition' AND t.tgenabled = 'O') THEN
-    RAISE EXCEPTION 'déclencheur relectures_blocs_transition absent ou inactif';
+  SELECT count(*) INTO v_n FROM pg_trigger t WHERE t.tgrelid = 'app.relectures_blocs'::regclass
+     AND t.tgname IN ('relectures_blocs_transition', 'relectures_blocs_vidage_interdit') AND t.tgenabled = 'O';
+  IF v_n <> 2 THEN
+    RAISE EXCEPTION 'déclencheur relectures_blocs_transition ou relectures_blocs_vidage_interdit absent ou inactif';
+  END IF;
+  IF pg_get_function_result('app.designer_relecteur(uuid)'::regprocedure) IS DISTINCT FROM 'TABLE(ajoute boolean, langue text)'
+     OR (SELECT p.prosecdef AND p.proconfig = ARRAY['search_path=""']::text[] AND p.proowner = 'tenga_owner'::regrole
+                AND NOT has_function_privilege('authenticated', p.oid, 'EXECUTE')
+                AND NOT has_function_privilege('service_role', p.oid, 'EXECUTE')
+                AND NOT has_function_privilege('anon', p.oid, 'EXECUTE')
+           FROM pg_proc p WHERE p.oid = 'private.purger_historique_relecture()'::regprocedure) IS DISTINCT FROM true THEN
+    RAISE EXCEPTION 'désignation sans langue rendue, ou purge de l''historique mal protégée';
+  END IF;
+  IF private.duree_historique_relecture() <> interval '30 days' THEN
+    RAISE EXCEPTION 'conservation de l''historique de relecture : % au lieu de 30 jours', private.duree_historique_relecture();
   END IF;
   SELECT string_agg(p.proname || '|' || p.prosecdef::text || '|' || p.provolatile::text || '|'
                     || (p.proconfig = ARRAY['search_path=""']::text[])::text || '|' || pg_get_userbyid(p.proowner)::text || '|'
@@ -128,7 +153,7 @@ BEGIN
   IF v_r IS DISTINCT FROM E'designer_relecteur|true|v|true|tenga_owner|false|false|false|true\netat_relecture_blocs|true|s|true|tenga_owner|false|false|true|false\nfrequence_facettes|true|s|true|tenga_owner|false|false|false|true\nhistorique_relecture|true|v|true|tenga_owner|false|false|false|true\nlister_relecteurs|true|v|true|tenga_owner|false|false|false|true\nrelire_bloc|true|v|true|tenga_owner|false|false|false|true\nretirer_relecteur|true|v|true|tenga_owner|false|false|false|true\nsuis_relecteur|true|s|true|tenga_owner|false|false|false|true' THEN
     RAISE EXCEPTION 'attributs ou droits inattendus des fonctions de relecture : %', v_r;
   END IF;
-  RAISE NOTICE 'OK : migration 0022 appliquée ; tables fermées à l''API (RLS forcée, règles tenga_owner, déclencheurs), huit fonctions SECURITY DEFINER, search_path vide, tenga_owner, authenticated seul sauf l''état servi (service_role seul)';
+  RAISE NOTICE 'OK : migration 0022 appliquée ; tables fermées à l''API (RLS forcée, règles tenga_owner, déclencheurs de ligne et de vidage), huit fonctions SECURITY DEFINER, search_path vide, tenga_owner, authenticated seul sauf l''état servi (service_role seul) ; purge de l''historique (30 jours) appelée par la purge quotidienne, fermée à l''API';
 
   -- Données jetables.
   INSERT INTO auth.users (id, email, raw_user_meta_data) VALUES
@@ -136,6 +161,9 @@ BEGIN
     (v_nx, 'epreuve-0022-nx@example.test', '{}'), (v_bn, 'epreuve-0022-bn@example.test', '{}');
   UPDATE auth.users SET banned_until = now() + interval '1 day' WHERE id = v_bn;
   INSERT INTO private.tenga_admins (user_id) VALUES (v_ad);
+  INSERT INTO auth.users (id, email, raw_user_meta_data)
+    SELECT v_q[i], 'epreuve-0022-q' || i || '@example.test', CASE WHEN i = 1 THEN '{"langue": "ar"}' ELSE '{}' END::jsonb
+      FROM generate_series(1, 4) i;
 
   -- 3. Accès direct fermé à l'API, même à l'administrateur.
   v_r := pg_temp.comme(v_ad, 'authenticated', 'select count(*)::text from app.relectures_blocs');
@@ -156,19 +184,19 @@ BEGIN
       ('compte nul', v_ad, NULL::uuid, 'ERR:22023:Compte inconnu'),
       ('compte suspendu', v_ad, v_bn, 'ERR:22023:Compte suspendu')) AS t(nom, uid, cible, attendu)
   LOOP
-    v_r := pg_temp.comme(v_cas.uid, 'authenticated', format('select app.designer_relecteur(%L)::text', v_cas.cible));
+    v_r := pg_temp.comme(v_cas.uid, 'authenticated', format('select x.ajoute::text from app.designer_relecteur(%L) x', v_cas.cible));
     IF v_r IS DISTINCT FROM v_cas.attendu THEN RAISE EXCEPTION 'désignation, cas « % » : % au lieu de %', v_cas.nom, v_r, v_cas.attendu; END IF;
   END LOOP;
-  IF pg_temp.comme(v_ad, 'anon', format('select app.designer_relecteur(%L)::text', v_rl)) NOT LIKE 'ERR:42501:%'
-     OR pg_temp.comme(v_ad, 'service_role', format('select app.designer_relecteur(%L)::text', v_rl)) NOT LIKE 'ERR:42501:%' THEN
+  IF pg_temp.comme(v_ad, 'anon', format('select x.ajoute::text from app.designer_relecteur(%L) x', v_rl)) NOT LIKE 'ERR:42501:%'
+     OR pg_temp.comme(v_ad, 'service_role', format('select x.ajoute::text from app.designer_relecteur(%L) x', v_rl)) NOT LIKE 'ERR:42501:%' THEN
     RAISE EXCEPTION 'anon ou service_role peut désigner un relecteur';
   END IF;
   IF pg_temp.comme(v_rl, 'authenticated', 'select app.suis_relecteur()::text') IS DISTINCT FROM 'false' THEN
     RAISE EXCEPTION 'un compte non désigné est relecteur';
   END IF;
-  IF pg_temp.comme(v_ad, 'authenticated', format('select app.designer_relecteur(%L)::text', v_rl)) IS DISTINCT FROM 'true'
-     OR pg_temp.comme(v_ad, 'authenticated', format('select app.designer_relecteur(%L)::text', v_rl)) IS DISTINCT FROM 'false' THEN
-    RAISE EXCEPTION 'désignation : vrai puis faux attendus';
+  IF pg_temp.comme(v_ad, 'authenticated', format('select x.ajoute::text || ''|'' || x.langue from app.designer_relecteur(%L) x', v_rl)) IS DISTINCT FROM 'true|fr'
+     OR pg_temp.comme(v_ad, 'authenticated', format('select x.ajoute::text from app.designer_relecteur(%L) x', v_rl)) IS DISTINCT FROM 'false' THEN
+    RAISE EXCEPTION 'désignation : vrai (langue du compte fr) puis faux attendus';
   END IF;
   IF pg_temp.comme(v_rl, 'authenticated', 'select app.suis_relecteur()::text') IS DISTINCT FROM 'true'
      OR pg_temp.comme(v_ad, 'authenticated', 'select app.suis_relecteur()::text') IS DISTINCT FROM 'true'
@@ -231,22 +259,27 @@ BEGIN
   END IF;
   RAISE NOTICE 'OK : verdicts écrits, rejeu sans écriture, commentaire rangé sans blancs, journal lié ; état servi : dernier verdict par texte, au serveur seul';
 
-  -- 7. Historique : relecteur seul, journalisé, sans adresse au journal.
-  v_r := pg_temp.comme(v_rl, 'authenticated', format('select count(*)::text from app.historique_relecture() x where x.empreinte in (%L, %L)', v_e1, v_e2));
-  IF v_r IS DISTINCT FROM '4' THEN RAISE EXCEPTION 'historique : % verdict(s) jetable(s) au lieu de 4', v_r; END IF;
-  v_r := pg_temp.comme(v_rl, 'authenticated', format('select string_agg(x.est_moi::text || ''|'' || coalesce(x.relecteur_nom, ''-''), '','' order by x.cree_le, x.verdict, x.est_moi) from (select distinct h.est_moi, h.relecteur_nom, h.cree_le, h.verdict from app.historique_relecture() h where h.empreinte = %L) x', v_e1));
-  IF v_r IS NULL OR v_r !~ 'true\|Relectrice d''épreuve' OR v_r !~ 'false\|-' THEN
-    RAISE EXCEPTION 'historique : nom de profil ou est_moi inattendus : %', v_r;
+  -- 7. Historique filtré en base : tout pour le super administrateur ; pour la relectrice
+  --    désignée, ses seuls verdicts, sans nom ni adresse ; journalisé, sans adresse au journal.
+  v_r := pg_temp.comme(v_rl, 'authenticated', format('select count(*)::text || ''|'' || count(*) filter (where x.est_moi)::text || ''|'' || count(*) filter (where x.relecteur_nom is not null or x.relecteur_adresse is not null)::text from app.historique_relecture() x where x.empreinte in (%L, %L)', v_e1, v_e2));
+  IF v_r IS DISTINCT FROM '3|3|0' THEN
+    RAISE EXCEPTION 'historique de la relectrice désignée : % (attendu 3|3|0 : ses trois verdicts, aucune identité)', v_r;
+  END IF;
+  v_r := pg_temp.comme(v_rl, 'authenticated', format('select count(*)::text from app.historique_relecture() x where x.empreinte = %L and x.commentaire like ''Tournure%%''', v_e1));
+  IF v_r IS DISTINCT FROM '0' THEN RAISE EXCEPTION 'la relectrice désignée lit le verdict de l''administrateur'; END IF;
+  v_r := pg_temp.comme(v_ad, 'authenticated', format('select count(*)::text || ''|'' || string_agg(distinct x.est_moi::text || ''/'' || coalesce(x.relecteur_nom, ''-''), '','') from app.historique_relecture() x where x.empreinte in (%L, %L)', v_e1, v_e2));
+  IF v_r IS DISTINCT FROM '4|false/Relectrice d''épreuve,true/-' THEN
+    RAISE EXCEPTION 'historique du super administrateur : % (attendu : quatre verdicts, nom de profil)', v_r;
   END IF;
   IF pg_temp.comme(v_nx, 'authenticated', 'select count(*)::text from app.historique_relecture()') IS DISTINCT FROM v_refus_rel
      OR pg_temp.comme(v_rl, 'service_role', 'select count(*)::text from app.historique_relecture()') NOT LIKE 'ERR:42501:%' THEN
     RAISE EXCEPTION 'historique ouvert à une personne sans rôle ou au serveur';
   END IF;
-  SELECT count(*) INTO v_n FROM private.audit_log WHERE action = 'relecture.lister' AND acteur = v_rl;
-  IF v_n <> 2 THEN RAISE EXCEPTION 'journal des lectures d''historique : % ligne(s) au lieu de 2', v_n; END IF;
+  SELECT count(*) INTO v_n FROM private.audit_log WHERE action = 'relecture.lister' AND acteur IN (v_rl, v_ad);
+  IF v_n <> 3 THEN RAISE EXCEPTION 'journal des lectures d''historique : % ligne(s) au lieu de 3', v_n; END IF;
   SELECT count(*) INTO v_n FROM private.audit_log l WHERE l.action ~ '^relecture\.' AND l.acteur IN (v_ad, v_rl, v_nx) AND to_jsonb(l)::text ~ '@';
   IF v_n <> 0 THEN RAISE EXCEPTION 'une ligne de journal de relecture contient une adresse'; END IF;
-  RAISE NOTICE 'OK : historique lisible par la relectrice (nom de profil, est_moi), refusé aux autres ; chaque lecture journalisée, sans adresse';
+  RAISE NOTICE 'OK : historique filtré en base (super administrateur : tout, avec le nom ; relectrice désignée : ses seuls verdicts, sans identité), refusé aux autres ; chaque lecture journalisée, sans adresse';
 
   -- 8. Historique en ajout seul (écritures directes du superutilisateur de l'épreuve).
   BEGIN
@@ -261,7 +294,13 @@ BEGIN
   EXCEPTION WHEN SQLSTATE '55000' THEN
     IF SQLERRM <> v_ajout_seul THEN RAISE EXCEPTION 'message inattendu : %', SQLERRM; END IF;
   END;
-  RAISE NOTICE 'OK : un verdict ne se réécrit ni ne s''efface, même par un superutilisateur';
+  BEGIN
+    TRUNCATE app.relectures_blocs;
+    RAISE EXCEPTION 'l''historique a pu être vidé';
+  EXCEPTION WHEN SQLSTATE '55000' THEN
+    IF SQLERRM <> v_ajout_seul THEN RAISE EXCEPTION 'message inattendu : %', SQLERRM; END IF;
+  END;
+  RAISE NOTICE 'OK : un verdict ne se réécrit ni ne s''efface, l''historique ne se vide pas, même par un superutilisateur';
 
   -- 9. Fréquence : relecteur seul ; rien sous le seuil d'anonymat ; effectif exact au seuil.
   IF pg_temp.comme(v_nx, 'authenticated', 'select count(*)::text from app.frequence_facettes()') IS DISTINCT FROM v_refus_rel
@@ -321,7 +360,7 @@ BEGIN
   END IF;
   SELECT count(*) INTO v_n FROM private.audit_log WHERE action = 'relecture.retirer' AND acteur = v_ad AND ressource_id = v_rl;
   IF v_n <> 1 THEN RAISE EXCEPTION 'journal du retrait : % ligne(s) au lieu de 1', v_n; END IF;
-  IF pg_temp.comme(v_ad, 'authenticated', format('select app.designer_relecteur(%L)::text', v_nx)) IS DISTINCT FROM 'true' THEN
+  IF pg_temp.comme(v_ad, 'authenticated', format('select x.ajoute::text from app.designer_relecteur(%L) x', v_nx)) IS DISTINCT FROM 'true' THEN
     RAISE EXCEPTION 'nouvelle désignation refusée';
   END IF;
   DELETE FROM auth.users WHERE id = v_nx;
@@ -334,6 +373,75 @@ BEGIN
   SELECT count(*) INTO v_n FROM app.relectures_blocs WHERE empreinte IN (v_e1, v_e2) AND relecteur IS NULL;
   IF v_n <> 3 THEN RAISE EXCEPTION '% verdict(s) sans auteur au lieu de 3', v_n; END IF;
   RAISE NOTICE 'OK : retrait réservé au super administrateur, journalisé, effectif ; effacer un compte retire sa désignation et garde ses verdicts sans auteur';
+
+  -- 11. Plafonds (défauts non validés) : 200 verdicts et 5 désignations par heure et par personne.
+  SELECT count(*) INTO v_n FROM app.relectures_blocs r WHERE r.relecteur = v_ad AND r.cree_le > now() - interval '1 hour';
+  INSERT INTO app.relectures_blocs (bloc, empreinte, verdict, relecteur, cree_le)
+    SELECT 'C6/haut', repeat('e9', 28) || lpad(to_hex(i), 8, '0'), 'relu', v_ad, now() - interval '59 minutes'
+      FROM generate_series(1, 199 - v_n) i;
+  INSERT INTO app.relectures_blocs (bloc, empreinte, verdict, relecteur, cree_le)
+    SELECT 'C6/haut', repeat('e9', 28) || lpad(to_hex(100000 + i), 8, '0'), 'relu', v_ad, now() - interval '61 minutes'
+      FROM generate_series(1, 20) i;
+  IF pg_temp.relire(v_ad, 'C6/haut', repeat('e9', 28) || 'f0000001', 'relu') !~ v_uuid_re THEN
+    RAISE EXCEPTION 'plafond des verdicts : le 200e de l''heure est refusé';
+  END IF;
+  v_r := pg_temp.relire(v_ad, 'C6/haut', repeat('e9', 28) || 'f0000002', 'relu');
+  IF v_r IS DISTINCT FROM v_plafond_v THEN RAISE EXCEPTION 'plafond des verdicts : 201e de l''heure : % au lieu du refus', v_r; END IF;
+  SELECT count(*) INTO v_n FROM private.audit_log WHERE action = 'relecture.designer' AND acteur = v_ad AND cree_le > now() - interval '1 hour';
+  IF v_n <> 2 THEN RAISE EXCEPTION 'fixture : % désignation(s) de l''administrateur d''épreuve au lieu de 2', v_n; END IF;
+  FOR v_k IN 1..3 LOOP
+    v_r := pg_temp.comme(v_ad, 'authenticated', format('select x.ajoute::text || ''|'' || x.langue from app.designer_relecteur(%L) x', v_q[v_k]));
+    IF v_r IS DISTINCT FROM (CASE WHEN v_k = 1 THEN 'true|ar' ELSE 'true|fr' END) THEN
+      RAISE EXCEPTION 'plafond des désignations : désignation n° % de l''heure : %', v_k + 2, v_r;
+    END IF;
+  END LOOP;
+  v_r := pg_temp.comme(v_ad, 'authenticated', format('select x.ajoute::text from app.designer_relecteur(%L) x', v_q[4]));
+  IF v_r IS DISTINCT FROM v_plafond_d THEN RAISE EXCEPTION 'plafond des désignations : 6e de l''heure : % au lieu du refus', v_r; END IF;
+  IF pg_temp.comme(v_ad, 'authenticated', format('select x.ajoute::text from app.designer_relecteur(%L) x', v_q[1])) IS DISTINCT FROM 'false' THEN
+    RAISE EXCEPTION 'au plafond, une désignation rejouée doit rendre faux';
+  END IF;
+  IF EXISTS (SELECT 1 FROM private.relecteurs_bibliotheque WHERE user_id = v_q[4])
+     OR EXISTS (SELECT 1 FROM app.relectures_blocs WHERE empreinte = repeat('e9', 28) || 'f0000002') THEN
+    RAISE EXCEPTION 'un refus de plafond a écrit';
+  END IF;
+  RAISE NOTICE 'OK : plafonds : 200e verdict de l''heure accepté, 201e refusé (PT429) ; 5e désignation acceptée (langue du compte rendue), 6e refusée ; rejeu sans erreur ; aucun refus n''écrit';
+
+  -- 12. Conservation : 30 jours ; verdict courant conservé et anonymisé (défaut non validé).
+  INSERT INTO app.relectures_blocs (bloc, empreinte, verdict, commentaire, relecteur, cree_le) VALUES
+    ('A2/milieu', v_e3, 'relu',       'épreuve 40 jours', v_ad, now() - interval '40 days'),
+    ('A2/milieu', v_e3, 'a_corriger', 'épreuve 31 jours', v_ad, now() - interval '31 days'),
+    ('A3/milieu', v_e3, 'a_corriger', 'épreuve 29 jours', v_ad, now() - interval '29 days'),
+    ('A3/milieu', v_e3, 'relu',       NULL,               v_ad, now() - interval '1 day');
+  BEGIN
+    DELETE FROM app.relectures_blocs WHERE empreinte = v_e3 AND cree_le < now() - interval '35 days';
+    RAISE EXCEPTION 'hors purge, un verdict échu a pu être effacé';
+  EXCEPTION WHEN SQLSTATE '55000' THEN
+    IF SQLERRM <> v_ajout_seul THEN RAISE EXCEPTION 'message inattendu : %', SQLERRM; END IF;
+  END;
+  PERFORM set_config('tenga.purge_relecture', 'on', true);
+  BEGIN
+    DELETE FROM app.relectures_blocs WHERE empreinte = v_e3 AND cree_le < now() - interval '35 days';
+    RAISE EXCEPTION 'le réglage de purge posé à la main a suffi au superutilisateur';
+  EXCEPTION WHEN SQLSTATE '55000' THEN
+    IF SQLERRM <> v_ajout_seul THEN RAISE EXCEPTION 'message inattendu : %', SQLERRM; END IF;
+  END;
+  PERFORM set_config('tenga.purge_relecture', '', true);
+  PERFORM private.purger_quotidien();
+  SELECT string_agg(r.bloc || '|' || r.verdict || '|' || coalesce(r.commentaire, '-') || '|' || coalesce((r.relecteur = v_ad)::text, '-') || '|' || r.anonymise::text,
+                    ',' ORDER BY r.ordre) INTO v_r
+    FROM app.relectures_blocs r WHERE r.empreinte = v_e3;
+  IF v_r IS DISTINCT FROM 'A2/milieu|a_corriger|-|-|true,A3/milieu|a_corriger|épreuve 29 jours|true|false,A3/milieu|relu|-|true|false' THEN
+    RAISE EXCEPTION 'conservation après la purge quotidienne : % (attendu : 40 jours effacé, courant de 31 jours anonymisé, 29 jours et moins intacts)', v_r;
+  END IF;
+  IF coalesce(current_setting('tenga.purge_relecture', true), '') <> '' THEN
+    RAISE EXCEPTION 'le réglage de purge survit à la purge';
+  END IF;
+  SELECT count(*) INTO v_n FROM private.audit_log l
+   WHERE l.action IN ('purge.relectures', 'purge.relectures_anonymisees') AND l.cree_le = now() AND l.acteur IS NULL;
+  IF v_n <> 2 THEN RAISE EXCEPTION 'traces de purge de l''historique : % au lieu de 2, sans acteur', v_n; END IF;
+  v_r := pg_temp.comme(NULL, 'service_role', 'select private.purger_historique_relecture()::text');
+  IF v_r NOT LIKE 'ERR:42501:%' THEN RAISE EXCEPTION 'la purge de l''historique est appelable par le serveur : %', v_r; END IF;
+  RAISE NOTICE 'OK : conservation : verdict antérieur de 40 jours effacé, verdict courant de 31 jours conservé et anonymisé, 29 jours et moins intacts ; hors purge, rien ne s''efface (superutilisateur, réglage posé à la main) ; traces sans acteur ; purge fermée au serveur';
   RAISE NOTICE 'EPREUVE VERTE';
 END
 $e$;

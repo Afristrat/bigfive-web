@@ -4,7 +4,7 @@ DECLARE
   d text := pg_get_functiondef('app.relire_bloc(text, text, text, text)'::regprocedure);
   n text := d;
 BEGIN
-  n := replace(n, $a$OR (p_verdict = 'a_corriger' AND v_com IS NULL)$a$, $b$$b$);
+  n := replace(n, $a$OR (p_verdict = 'a_corriger' AND v_com IS NULL)$a$, '');
   IF n = d THEN
     RAISE EXCEPTION 'mutation sans effet';
   END IF;

@@ -61,6 +61,7 @@ app.profiles|profiles_modification_owner|UPDATE|tenga_owner
 app.relectures_blocs|relectures_blocs_insertion_owner|INSERT|tenga_owner
 app.relectures_blocs|relectures_blocs_lecture_owner|SELECT|tenga_owner
 app.relectures_blocs|relectures_blocs_modification_owner|UPDATE|tenga_owner
+app.relectures_blocs|relectures_blocs_suppression_owner|DELETE|tenga_owner
 app.results|results_insertion_owner|INSERT|tenga_owner
 app.results|results_lecture_owner|SELECT|tenga_owner
 app.results|results_lecture_proprietaire|SELECT|authenticated

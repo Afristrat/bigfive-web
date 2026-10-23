@@ -1,6 +1,11 @@
 import 'server-only';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
+import {
+  appliquerEtatRelecture,
+  type LigneEtatRelecture
+} from '@/lib/bibliotheque';
+import { chargerEtatRelecture } from '@/lib/relecture-etat';
 import type {
   EvenementRelecture,
   LigneFrequence
@@ -8,10 +13,12 @@ import type {
 import { isTengaAdmin, requireViewer, type Viewer } from '@/lib/session';
 import { GatewayError, userClient } from '@/lib/supabase/server';
 
-// Lectures de l'atelier de relecture (migration 0022), toutes avec la SESSION
-// de la personne : la base décide qui est relecteur (super administrateur ou
-// relecteur désigné). Journal d'exploitation : code HTTP seul, jamais
-// d'adresse ni de texte.
+// Lectures de l'atelier de relecture (migration 0022) avec la SESSION de la
+// personne : la base décide qui est relecteur (super administrateur ou
+// relecteur désigné) et ce que l'historique lui montre. Seule exception, l'état
+// servi (dernier verdict de chaque texte, sans identité), lu par le serveur
+// comme pour l'affichage des blocs aux personnes. Journal d'exploitation : code
+// HTTP seul, jamais d'adresse ni de texte.
 
 const avertir = (event: string, error: unknown): void => {
   console.warn(
@@ -65,9 +72,11 @@ const historiqueRows = z.array(
 );
 
 /**
- * Historique des verdicts, du plus récent au plus ancien (lecture journalisée
- * par la base). null en cas d'échec : l'atelier le dit et n'offre aucun
- * verdict, plutôt qu'un état faux.
+ * Historique des verdicts visible par la personne, du plus récent au plus
+ * ancien (lecture journalisée, filtrée par la base : tout pour un super
+ * administrateur, ses seuls verdicts sans identité pour un relecteur désigné).
+ * null en cas d'échec : l'atelier le dit et n'offre aucun verdict, plutôt
+ * qu'un état faux.
  */
 export async function loadHistorique(
   viewer: Viewer
@@ -91,6 +100,22 @@ export async function loadHistorique(
     }));
   } catch (error) {
     avertir('relecture.historique_failed', error);
+    return null;
+  }
+}
+
+/**
+ * État servi (app.etat_relecture_blocs) : statut de chaque bloc, le même que
+ * celui qui décide de l'affichage aux personnes, qui est mis à jour au passage.
+ * null en cas d'échec (même conduite que pour l'historique).
+ */
+export async function loadEtat(): Promise<LigneEtatRelecture[] | null> {
+  try {
+    const lignes = await chargerEtatRelecture();
+    appliquerEtatRelecture(lignes);
+    return lignes;
+  } catch (error) {
+    avertir('relecture.etat_failed', error);
     return null;
   }
 }

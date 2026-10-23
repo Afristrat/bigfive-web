@@ -6,7 +6,7 @@ DECLARE
 BEGIN
   n := replace(n, $a$IF v_n < v_seuil THEN
     RETURN;
-  END IF;$a$, $b$$b$);
+  END IF;$a$, '');
   IF n = d THEN
     RAISE EXCEPTION 'mutation sans effet';
   END IF;

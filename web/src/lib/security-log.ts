@@ -31,7 +31,8 @@ export type SecurityEvent =
   | 'member.notice_failed'
   | 'admin.grant_rate_limited'
   | 'admin.role_rate_limited'
-  | 'admin.grant_notice_failed';
+  | 'admin.grant_notice_failed'
+  | 'relecture.designation_notice_failed';
 
 /** Les champs sont typés étroitement pour qu'aucune donnée personnelle n'y entre. */
 export function logSecurityEvent(

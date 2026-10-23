@@ -2,10 +2,15 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { basePath } from '@/config/site';
 import { empreinteBloc, rafraichirEtatRelecture } from '@/lib/bibliotheque';
 import { localeOf } from '@/lib/locale-field';
-import { isRateLimited } from '@/lib/rate-limit';
+import { toMailLocale } from '@/lib/login-mail';
+import { sendMail } from '@/lib/mailer';
+import { getClientIp, isRateLimited } from '@/lib/rate-limit';
+import { buildRelecteurMail, relecteurUrl } from '@/lib/relecture-mail';
 import { localizedPath } from '@/lib/safe-path';
+import { logSecurityEvent } from '@/lib/security-log';
 import { currentViewer, requireAdmin } from '@/lib/session';
 import type { Limit } from '@/lib/sliding-window';
 import { sqlOutcome } from '@/lib/sql-errors';
@@ -24,18 +29,36 @@ import {
 
 const CHEMIN = '/admin/relecture';
 const HOUR_MS = 60 * 60 * 1000;
-// Par personne et par heure : 150 blocs, quelques allers-retours chacun.
-// Défaut non validé par Amine.
-const verdictLimit: Limit = { max: 600, windowMs: HOUR_MS };
-const relecteurLimit: Limit = { max: 20, windowMs: HOUR_MS };
+// Par personne et par heure, mêmes valeurs que les plafonds tenus en base
+// (app.relire_bloc, app.designer_relecteur) : l'application refuse avant tout
+// appel, la base reste seule garante. Défauts non validés par Amine.
+const verdictLimit: Limit = { max: 200, windowMs: HOUR_MS };
+const relecteurLimit: Limit = { max: 5, windowMs: HOUR_MS };
+// Plafond atteint en base : PostgREST rend le code PT429 (HTTP 429).
+const PLAFOND_BASE = 'PT429';
 
 export type RelectureState =
-  | { status: 'idle' | 'relu' | 'a_corriger' | 'perime' | 'interdit' }
+  | {
+      status:
+        | 'idle'
+        | 'relu'
+        | 'a_corriger'
+        | 'perime'
+        | 'interdit'
+        | 'plafond';
+    }
   | { status: 'erreur' }
   | { status: 'invalide'; champ?: 'commentaire' };
 
 export type RelecteurState = {
-  status: 'idle' | 'ajoute' | 'deja' | 'inconnu' | 'invalide' | 'erreur';
+  status:
+    | 'idle'
+    | 'ajoute'
+    | 'deja'
+    | 'inconnu'
+    | 'invalide'
+    | 'plafond'
+    | 'erreur';
 };
 
 export type RetraitRelecteurState = {
@@ -55,6 +78,9 @@ const avertir = (action: string, error: unknown): void => {
 const plafondAtteint = (action: string): void => {
   console.warn(JSON.stringify({ event: 'relecture.rate_limited', action }));
 };
+
+const estPlafondBase = (error: unknown): boolean =>
+  error instanceof GatewayError && error.code === PLAFOND_BASE;
 
 const verdictSchema = z.object({
   bloc: z
@@ -101,7 +127,7 @@ export async function relireBloc(
   }
   if (await isRateLimited('relireBloc', verdictLimit, state.viewer.id)) {
     plafondAtteint('relire');
-    return { status: 'erreur' };
+    return { status: 'plafond' };
   }
 
   try {
@@ -116,6 +142,10 @@ export async function relireBloc(
       z.string().uuid()
     );
   } catch (error) {
+    if (estPlafondBase(error)) {
+      plafondAtteint('relire');
+      return { status: 'plafond' };
+    }
     switch (sqlOutcome(error)) {
       case 'forbidden':
         return { status: 'interdit' };
@@ -134,11 +164,44 @@ export async function relireBloc(
 const designationSchema = z.object({
   email: z.string().trim().toLowerCase().email().max(200)
 });
+// app.designer_relecteur rend une seule ligne : ajouté ou non, langue du compte.
+const designationRows = z.tuple([
+  z.object({ ajoute: z.boolean(), langue: z.string() })
+]);
+
+/**
+ * Avis à la personne désignée, après la désignation et dans la langue de son
+ * compte : un échec d'envoi ne l'annule jamais (seul le nom de l'erreur est
+ * journalisé, jamais l'adresse).
+ */
+const avertirDesigne = async (
+  address: string,
+  langue: string
+): Promise<void> => {
+  const locale = toMailLocale(langue);
+  const mail = buildRelecteurMail({
+    locale,
+    url: relecteurUrl(process.env.SITE_URL || basePath, locale)
+  });
+  let reason: string | null = null;
+  try {
+    if (!(await sendMail({ to: address, ...mail }))) reason = 'refused';
+  } catch (error) {
+    reason = error instanceof Error ? error.name : 'unknown';
+  }
+  if (reason !== null) {
+    logSecurityEvent('relecture.designation_notice_failed', {
+      ip: await getClientIp(),
+      reason
+    });
+  }
+};
 
 /**
  * Désigne un relecteur (fonction SQL designer_relecteur). Le compte est
  * retrouvé par adresse ou créé (langue : celle de la page) ; s'il a été créé
- * par cet appel et que la base refuse, il est retiré.
+ * par cet appel et que la base refuse, il est retiré. Une désignation nouvelle
+ * envoie un avis à la personne, dans la langue de son compte (lue en base).
  */
 export async function designerRelecteur(
   _previous: RelecteurState,
@@ -150,11 +213,11 @@ export async function designerRelecteur(
   if (!parsed.success) return { status: 'invalide' };
   if (await isRateLimited('designerRelecteur', relecteurLimit, viewer.id)) {
     plafondAtteint('designer');
-    return { status: 'erreur' };
+    return { status: 'plafond' };
   }
   const service = serviceClient();
   let createdId: string | null = null;
-  let ajoute: boolean;
+  let designation: z.infer<typeof designationRows>[0];
   try {
     const account = await findOrCreateUser(
       service,
@@ -162,21 +225,32 @@ export async function designerRelecteur(
       ['fr', 'ar', 'en'].includes(locale) ? locale : 'fr'
     );
     if (account.created) createdId = account.id;
-    ajoute = await userClient(viewer.accessToken).rpc(
+    [designation] = await userClient(viewer.accessToken).rpc(
       'designer_relecteur',
       { p_utilisateur: account.id },
-      z.boolean()
+      designationRows
     );
   } catch (error) {
-    if (createdId !== null && isDefiniteRefusal(error)) {
+    // Plafond en base : rien n'a été écrit (HTTP 429, hors refus définitifs).
+    if (
+      createdId !== null &&
+      (isDefiniteRefusal(error) || estPlafondBase(error))
+    ) {
       await discardCreatedAccount(service, createdId);
+    }
+    if (estPlafondBase(error)) {
+      plafondAtteint('designer');
+      return { status: 'plafond' };
     }
     if (sqlOutcome(error) === 'invalid') return { status: 'inconnu' };
     avertir('designer', error);
     return { status: 'erreur' };
   }
+  if (designation.ajoute) {
+    await avertirDesigne(parsed.data.email, designation.langue);
+  }
   revalidatePath(localizedPath(locale, CHEMIN));
-  return { status: ajoute ? 'ajoute' : 'deja' };
+  return { status: designation.ajoute ? 'ajoute' : 'deja' };
 }
 
 const retraitSchema = z.object({
