@@ -208,12 +208,12 @@ describe('page /i/{jeton}', () => {
     expect(html).toContain('&lt;b&gt;x&lt;/b&gt;');
   });
 
-  it('métadonnées : pas d’indexation, pas de Referer', async () => {
+  it('métadonnées : pas d’indexation, Referer réduit à l’origine', async () => {
     const meta = await generateMetadata({
       params: Promise.resolve({ locale: 'fr', jeton: TOKEN })
     });
     expect(meta.robots).toEqual({ index: false, follow: false });
-    expect(meta.referrer).toBe('no-referrer');
+    expect(meta.referrer).toBe('strict-origin');
     expect(JSON.stringify(meta)).not.toContain(TOKEN);
   });
 });

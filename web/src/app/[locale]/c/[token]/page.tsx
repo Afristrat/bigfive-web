@@ -13,15 +13,17 @@ interface Props {
   params: Promise<{ locale: string; token: string }>;
 }
 
-// Le jeton est dans l'adresse : aucune indexation, aucun en-tête Referer vers
-// d'autres sites. Le chargement de la page ne consomme rien.
+// Le jeton est dans l'adresse : aucune indexation, et un Referer réduit à
+// l'origine (jamais le chemin, donc jamais le jeton). Pas « no-referrer » :
+// avec lui, un envoi du formulaire avant l'hydratation part avec « Origin:
+// null », que Next ne sait pas lire (500). Le chargement ne consomme rien.
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'login' });
   return {
     title: t('connect.title'),
     robots: { index: false, follow: false },
-    referrer: 'no-referrer' as const
+    referrer: 'strict-origin' as const
   };
 }
 
