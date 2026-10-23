@@ -33,6 +33,8 @@ export type RapportLibelles = {
   retiree: string;
   /** Intitulé de la question d'une facette, côté consultant. */
   questionConsultant: string;
+  /** Glose de « Névrosisme », sous l'en-tête du domaine. */
+  gloseNevrosisme: string;
   lire: {
     titre: string;
     /** Texte adressé à la personne (« vous »). */
@@ -120,6 +122,7 @@ export function libellesRapport(
     },
     retiree: t('consultant.facetteRetiree'),
     questionConsultant: t('consultant.question'),
+    gloseNevrosisme: v('gloseNevrosisme'),
     lire: {
       titre: t('lire.titre'),
       personne: voix('personne'),
@@ -222,6 +225,11 @@ export function RapportIndividuel({
   const { niveaux, ensemble, lire, carte, tensions, fiabilite } = libelles;
   const nombre = (valeur: number): string => formatNombre(valeur, locale);
   const personne = rapport.audience === 'personne';
+  // Totaux des facettes (sur 20), pour dire l'écart des tensions dans l'unité
+  // de la carte.
+  const totaux = new Map(rapport.carte.map((l) => [l.code, l.score]));
+  const ecartTotaux = (a: FacetteCode, b: FacetteCode): number =>
+    Math.abs((totaux.get(a) ?? 0) - (totaux.get(b) ?? 0));
   const voix = personne ? lire.personne : lire.consultant;
   const labelsFacette: FacetCardLabels = personne
     ? libelles.facette
@@ -393,6 +401,11 @@ export function RapportIndividuel({
                   >
                     {domainLabel(domaine.code, locale)}
                   </h2>
+                  {domaine.code === 'N' && (
+                    <p className='mt-1 text-petit text-texte-2'>
+                      {libelles.gloseNevrosisme}
+                    </p>
+                  )}
                   <div className='mt-2'>
                     <LevelBadge
                       ton='fort'
@@ -539,7 +552,9 @@ export function RapportIndividuel({
                       {remplir(tensions.ligne, {
                         a: libelleFacette(tension.facettes[0], locale),
                         b: libelleFacette(tension.facettes[1], locale),
-                        ecart: nombre(Math.round(tension.ecart * 10) / 10)
+                        ecart: nombre(
+                          ecartTotaux(tension.facettes[0], tension.facettes[1])
+                        )
                       })}
                     </li>
                   ))}

@@ -69,7 +69,7 @@ const rapportFr = {
     ressortAucun: 'Toutes les facettes se situent au milieu de l’échelle.',
     entretienTitre: 'Questions pour l’entretien',
     entretienIntro:
-      'Trois questions ouvertes tirées des textes de la bibliothèque, à explorer ensemble.',
+      'Des questions ouvertes tirées des textes de la bibliothèque, à explorer ensemble.',
     entretienAucune:
       'Les questions seront disponibles une fois les textes relus.'
   },
@@ -88,7 +88,7 @@ const rapportFr = {
     titre: 'Tensions internes',
     intro:
       'Facettes d’un même domaine dont les niveaux s’écartent nettement. Ce sont des points à explorer, pas des contradictions.',
-    ligne: 'Entre {a} et {b} : écart de {ecart}',
+    ligne: 'Entre {a} et {b} : écart de {ecart} sur 20',
     aucune: 'Aucune tension marquée entre les facettes d’un même domaine.'
   },
   fiabilite: {

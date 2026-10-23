@@ -27,6 +27,12 @@ const binomeEn = {
       retire: 'Withdrawn'
     }
   },
+  confirmation: {
+    retrait:
+      'Your consent has been withdrawn. The report for this pair can no longer be read, and the withdrawal is final for this proposal.',
+    refus:
+      'You have declined this proposal. The report for this pair will not be readable, and the refusal is final.'
+  },
   consent: {
     explication:
       'If you accept, the two of you will be able to read a report that places your results side by side. The organisation’s consultant can read it too; the organisation’s manager has no access to it. A refusal or a withdrawal is final for this proposal.',
@@ -86,7 +92,7 @@ const binomeEn = {
     titre: 'The four domains',
     intro:
       'For each domain: each person’s total (from 24 to 120), its conventional level and the gap between the two.',
-    ecart: 'Gap: {valeur}'
+    ecart: 'Gap: {valeur} out of 120'
   },
   ouverture: {
     retiree:

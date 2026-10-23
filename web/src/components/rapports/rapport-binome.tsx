@@ -697,7 +697,7 @@ export function RapportBinome({
                   </span>
                   <span className='ms-auto flex flex-wrap items-baseline gap-3 text-petit text-texte-2'>
                     {remplir(domaines.ecart, {
-                      valeur: ecartAffiche(ligne.ecart)
+                      valeur: nombre(Math.abs(ligne.scoreA - ligne.scoreB))
                     })}
                     <PastilleClasse
                       classe={ligne.classe}

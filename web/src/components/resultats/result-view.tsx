@@ -45,6 +45,8 @@ export type ResultViewLabels = {
     domainOutOf: string;
     facettes: string;
     facettesIntro: string;
+    /** Glose de « Névrosisme », à sa première occurrence. */
+    gloseNevrosisme: string;
     tensionsTitre: string;
     tensionsIntro: string;
     /** Modèle avec {a}, {b} et {ecart}. */
@@ -97,6 +99,7 @@ export function libellesResultView(
       enRelecture: v('enRelecture'),
       langueAbsente: v('langueAbsente'),
       nonRelu: v('nonRelu'),
+      gloseNevrosisme: v('gloseNevrosisme'),
       tensionsTitre: v('tensionsTitre'),
       tensionsIntro: v('tensionsIntro'),
       tension: mes('vue.tension', { a: '{a}', b: '{b}', ecart: '{ecart}' })
@@ -255,6 +258,11 @@ export function ResultView({
                         />
                         {domainLabel(code, locale, 'short')}
                       </p>
+                      {code === 'N' && (
+                        <p className='mt-0.5 text-legende text-texte-3'>
+                          {vue.gloseNevrosisme}
+                        </p>
+                      )}
                       <div className='mt-1'>
                         <LevelBadge
                           niveau={domaine.niveau}
@@ -385,8 +393,12 @@ export function ResultView({
                 {remplir(vue.tension, {
                   a: libelleFacette(tension.facettes[0], locale),
                   b: libelleFacette(tension.facettes[1], locale),
+                  // Écart des deux totaux sur 20, l'unité des facettes affichées.
                   ecart: formatNombre(
-                    Math.round(tension.ecart * 10) / 10,
+                    Math.abs(
+                      profil.facettes[tension.facettes[0]].score -
+                        profil.facettes[tension.facettes[1]].score
+                    ),
                     locale
                   )
                 })}

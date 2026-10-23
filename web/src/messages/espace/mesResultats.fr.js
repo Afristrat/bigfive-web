@@ -45,10 +45,12 @@ const mesResultatsFr = {
       'Les textes d’interprétation ne sont pas encore disponibles dans cette langue.',
     nonRelu:
       'Texte non relu : ce contenu n’a pas encore fait l’objet d’une relecture.',
+    gloseNevrosisme:
+      'Sensibilité aux émotions négatives et au stress ; ce n’est pas un diagnostic.',
     tensionsTitre: 'Tensions internes',
     tensionsIntro:
       'Facettes d’un même domaine dont les niveaux s’écartent nettement.',
-    tension: 'Entre {a} et {b} : écart de {ecart}'
+    tension: 'Entre {a} et {b} : écart de {ecart} sur 20'
   }
 };
 

@@ -11,10 +11,12 @@ import styles from '@/components/resultats/result-motion.module.css';
 import { loadMesBinomes, type MonBinome } from '@/lib/binome-data';
 import { formatDateMaroc, isolerEnArabe } from '@/lib/format';
 import { requireViewer } from '@/lib/session';
+import { lireDecision } from '@/lib/binome-decision';
 import { Link } from '@/navigation';
 
 interface Props {
   params: Promise<{ locale: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export const dynamic = 'force-dynamic';
@@ -38,10 +40,12 @@ const etat = (b: MonBinome): 'decision' | 'attente' | 'actif' | 'retire' =>
 
 // Les propositions de binôme qui concernent la personne connectée. Le rapport
 // n'est proposé à la lecture que lorsque les deux accords sont donnés ; la base
-// refuse de toute façon toute autre lecture.
-export default async function BinomesPage({ params }: Props) {
+// refuse de toute façon toute autre lecture. Après un retrait ou un refus, la
+// personne arrive ici avec « decision » : la liste le confirme en tête.
+export default async function BinomesPage({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const decision = lireDecision((await searchParams)?.decision);
   const viewer = await requireViewer(locale, '/mes-resultats/binomes');
   const binomes = await loadMesBinomes(viewer);
   const t = await getTranslations('binome');
@@ -58,6 +62,14 @@ export default async function BinomesPage({ params }: Props) {
         titre={t('liste.titre')}
         chapo={t('liste.intro')}
       />
+      {decision && (
+        <p
+          role='status'
+          className='mt-10 max-w-[44em] border-s-2 border-safran bg-surface px-5 py-4 font-medium text-encre'
+        >
+          {t(`confirmation.${decision}`)}
+        </p>
+      )}
       {binomes.length === 0 ? (
         <p className='mt-12 max-w-[40em] border-t-2 border-encre pt-8 text-chapo text-texte-2'>
           {t('liste.vide')}

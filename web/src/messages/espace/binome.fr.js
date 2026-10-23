@@ -29,6 +29,12 @@ const binomeFr = {
       retire: 'Retiré'
     }
   },
+  confirmation: {
+    retrait:
+      'Votre accord est retiré. Le rapport de ce binôme n’est plus lisible, et ce retrait est définitif pour cette proposition.',
+    refus:
+      'Vous avez refusé cette proposition. Le rapport de ce binôme ne sera pas lisible, et ce refus est définitif.'
+  },
   consent: {
     explication:
       'Si vous acceptez, vous deux pourrez lire un rapport qui place vos résultats côte à côte. Le consultant de l’organisation peut le lire aussi ; le responsable de l’organisation n’y a pas accès. Un refus ou un retrait est définitif pour cette proposition.',
@@ -91,7 +97,7 @@ const binomeFr = {
     titre: 'Les quatre domaines',
     intro:
       'Pour chaque domaine : le total de chaque personne (de 24 à 120), son niveau de convention et l’écart entre les deux.',
-    ecart: 'Écart : {valeur}'
+    ecart: 'Écart : {valeur} sur 120'
   },
   ouverture: {
     retiree:

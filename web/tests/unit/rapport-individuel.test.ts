@@ -727,6 +727,62 @@ describe('RapportIndividuel : rendu', () => {
     expect(html).not.toContain(fr.mesResultats.vue.question);
   });
 
+  it('tensions : l’écart est un écart de totaux sur 20, l’unité de la carte des facettes', () => {
+    const rapport = construireRapportIndividuel({
+      scores: SCORES_AM,
+      locale: 'fr',
+      audience: 'personne'
+    });
+    expect(rapport.tensions.length).toBeGreaterThan(0);
+    const total = (code: FacetteCode): number =>
+      rapport.carte.find((ligne) => ligne.code === code)?.score ?? NaN;
+    const t = texte(rendreRapport('personne')).replace(/\s+/g, ' ');
+    for (const tension of rapport.tensions) {
+      const ecart = Math.abs(
+        total(tension.facettes[0]) - total(tension.facettes[1])
+      );
+      expect(Number.isInteger(ecart)).toBe(true);
+      expect(t).toContain(`écart de ${ecart} sur 20`);
+    }
+  });
+
+  it('glose du névrosisme sous l’en-tête du domaine N, une seule fois', () => {
+    for (const audience of ['personne', 'consultant'] as const) {
+      const html = rendreRapport(audience);
+      const section =
+        /data-domaine="N"[\s\S]*?<\/section>/.exec(html)?.[0] ?? '';
+      expect(section).toContain(fr.mesResultats.vue.gloseNevrosisme);
+      expect(html.split(fr.mesResultats.vue.gloseNevrosisme).length - 1).toBe(
+        1
+      );
+    }
+  });
+
+  it('les questions d’entretien ne sont pas annoncées au nombre de trois (il y en a de zéro à trois)', () => {
+    for (const catalogue of [fr, en, ar]) {
+      expect(catalogue.rapport.ensemble.entretienIntro).not.toMatch(
+        /trois|three|ثلاثة/i
+      );
+    }
+  });
+
+  it('« Conscience » n’est jamais le nom du domaine C dans les textes de l’application', () => {
+    const espaces = ['rapport', 'mesResultats', 'niveaux', 'binome'] as const;
+    for (const espace of espaces) {
+      const valeurs = feuilles(
+        (fr as unknown as Record<string, Tree>)[espace] as Tree
+      ).map(([, v]) => v);
+      for (const v of valeurs) {
+        expect(v).not.toMatch(/\bConscience\b(?! de soi)/);
+      }
+    }
+    for (const audience of ['personne', 'consultant'] as const) {
+      expect(texte(rendreRapport(audience))).not.toMatch(
+        /\bConscience\b(?! de soi)/
+      );
+    }
+  });
+
   it('les textes « Lire ce rapport » existent dans les deux voix, dans les trois langues', () => {
     for (const catalogue of [fr, en, ar]) {
       const lire = catalogue.rapport.lire;

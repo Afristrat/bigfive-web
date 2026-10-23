@@ -44,9 +44,11 @@ const mesResultatsEn = {
     langueAbsente:
       'The interpretation texts are not yet available in this language.',
     nonRelu: 'Unreviewed text: this content has not been reviewed yet.',
+    gloseNevrosisme:
+      'Sensitivity to negative emotions and stress; not a diagnosis.',
     tensionsTitre: 'Internal tensions',
     tensionsIntro: 'Facets of the same domain whose levels differ markedly.',
-    tension: 'Between {a} and {b}: gap of {ecart}'
+    tension: 'Between {a} and {b}: gap of {ecart} out of 20'
   }
 };
 

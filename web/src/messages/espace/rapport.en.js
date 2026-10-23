@@ -69,7 +69,7 @@ const rapportEn = {
     ressortAucun: 'All facets sit in the middle of the scale.',
     entretienTitre: 'Questions for the interview',
     entretienIntro:
-      'Three open questions drawn from the library texts, to explore together.',
+      'Open questions drawn from the library texts, to explore together.',
     entretienAucune:
       'The questions will be available once the texts are reviewed.'
   },
@@ -88,7 +88,7 @@ const rapportEn = {
     titre: 'Internal tensions',
     intro:
       'Facets of the same domain whose levels are clearly apart. They are points to explore, not contradictions.',
-    ligne: 'Between {a} and {b}: gap of {ecart}',
+    ligne: 'Between {a} and {b}: gap of {ecart} out of 20',
     aucune: 'No marked tension between facets of the same domain.'
   },
   fiabilite: {
