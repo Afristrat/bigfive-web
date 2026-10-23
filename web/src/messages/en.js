@@ -1146,11 +1146,14 @@ const english = {
     surtitre: 'Questionnaire result',
     result: 'Find a result',
     explanation:
-      'At the end of the questionnaire you were given a twenty-four character ID. Enter it, or paste the address of the result page, to see your profile again.',
-    idInput: 'Result ID or address',
+      'At the end of the questionnaire you were given a twenty-four character ID. Enter it, or paste the link to the result page, to see your profile again.',
+    idInput: 'Result ID or result page link',
     urlOrId: 'For example 58a70606a835c400c8b38e84',
     invalid:
       'This ID is not in the right format: twenty-four characters, digits and the letters a to f.',
+    courriel:
+      'This field does not accept an email address. If you took the questionnaire with your account, your results are in',
+    courrielLien: 'My results',
     getResult: 'Show the result',
     viewPrevious: 'See the last result from this browser'
   },

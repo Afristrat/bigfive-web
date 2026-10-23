@@ -5,7 +5,11 @@ import clsx from 'clsx';
 import { ArrowRightIcon } from '@/components/icons';
 import { labelClass, secondaryButtonClass } from '@/components/form-styles';
 import { boutonPrincipal } from '@/components/primitives';
-import { formatAndValidateId, formatId } from '@/lib/helpers';
+import {
+  formatAndValidateId,
+  formatId,
+  ressembleCourriel
+} from '@/lib/helpers';
 import { Link, useRouter } from '@/navigation';
 
 interface GetResultPageProps {
@@ -13,6 +17,8 @@ interface GetResultPageProps {
     champ: string;
     exemple: string;
     invalide: string;
+    courriel: string;
+    courrielLien: string;
     afficher: string;
     precedent: string;
   };
@@ -30,6 +36,7 @@ export const GetResultPage = ({ labels }: GetResultPageProps) => {
   const [verifie, setVerifie] = useState(false);
 
   const invalide = verifie && saisie !== '' && !formatAndValidateId(saisie);
+  const courriel = invalide && ressembleCourriel(saisie);
 
   useEffect(() => {
     try {
@@ -76,7 +83,18 @@ export const GetResultPage = ({ labels }: GetResultPageProps) => {
         role='alert'
         className='mt-2 min-h-[1.5em] text-petit text-erreur'
       >
-        {invalide ? labels.invalide : ''}
+        {courriel ? (
+          <>
+            {labels.courriel}{' '}
+            <Link href='/mes-resultats' className='font-semibold underline'>
+              {labels.courrielLien}
+            </Link>
+          </>
+        ) : invalide ? (
+          labels.invalide
+        ) : (
+          ''
+        )}
       </p>
       <div className='mt-4 flex flex-wrap gap-3'>
         <button type='submit' data-aimant='' className={boutonPrincipal()}>

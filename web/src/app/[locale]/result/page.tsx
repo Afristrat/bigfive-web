@@ -26,6 +26,8 @@ export default async function ResultPage({ params }: Props) {
             champ: t('idInput'),
             exemple: t('urlOrId'),
             invalide: t('invalid'),
+            courriel: t('courriel'),
+            courrielLien: t('courrielLien'),
             afficher: t('getResult'),
             precedent: t('viewPrevious')
           }}

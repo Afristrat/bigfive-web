@@ -13,6 +13,12 @@ export const formatAndValidateId = (id: string): boolean => {
   return validId(formattedId);
 };
 
+// Une adresse électronique saisie à la place d'un identifiant : la page
+// publique ne cherche jamais par adresse (tout le monde pourrait lire le profil
+// d'autrui), elle renvoie vers « Mes résultats ».
+export const ressembleCourriel = (saisie: string): boolean =>
+  /^[^\s@/]+@[^\s@/]+$/.test(saisie.trim());
+
 export const isDev: boolean = process.env.NEXT_PUBLIC_ENV === 'development';
 
 export function calculateReadingTime(content: string) {

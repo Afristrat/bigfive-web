@@ -1160,11 +1160,14 @@ const french = {
     surtitre: 'Résultat du questionnaire',
     result: 'Retrouver un résultat',
     explanation:
-      'À la fin du questionnaire, un identifiant de vingt-quatre caractères vous a été donné. Saisissez-le, ou collez l’adresse de la page de résultat, pour afficher à nouveau votre profil.',
-    idInput: 'Identifiant ou adresse du résultat',
+      'À la fin du questionnaire, un identifiant de vingt-quatre caractères vous a été donné. Saisissez-le, ou collez le lien de la page de résultat, pour afficher à nouveau votre profil.',
+    idInput: 'Identifiant ou lien de la page de résultat',
     urlOrId: 'Par exemple 58a70606a835c400c8b38e84',
     invalid:
       'Cet identifiant n’a pas le bon format : vingt-quatre caractères, chiffres et lettres de a à f.',
+    courriel:
+      'Ce champ n’accepte pas d’adresse électronique. Si vous avez passé le questionnaire avec votre compte, vos résultats sont dans',
+    courrielLien: 'Mes résultats',
     getResult: 'Afficher le résultat',
     viewPrevious: 'Revoir le dernier résultat de ce navigateur'
   },
