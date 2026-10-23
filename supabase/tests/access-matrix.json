@@ -628,7 +628,7 @@
           "admin_tenga": "autorise"
         }
       },
-      "note": "Migration 0023 : mes participations éligibles (dans un groupe de leur campagne), avec organisation, campagne et statut. AUCUNE ligne tant que l'interrupteur private.settings.reseau_releve_ouvert est fermé (défaut) ; une personne sans participation éligible n'obtient aucune ligne."
+      "note": "Migration 0023 : mes participations éligibles (dans un groupe de leur campagne), avec organisation, campagne et statut. Interrupteur private.settings.reseau_releve_ouvert fermé (défaut) : seulement les participations qui ont déjà une ligne de membre (chemin du retrait et de l'opposition) ; une personne sans participation éligible n'obtient aucune ligne."
     },
     {
       "objet": "app.reseau_releve",
@@ -640,7 +640,7 @@
           "membre_a_et_b": "autorise"
         }
       },
-      "note": "Migration 0023 : titulaire de la participation seul. Interrupteur fermé : {\"ouvert\": false} et rien d'autre. Sinon son état, les autres membres informés et non opposés de son groupe (nom de profil ; vide tant qu'il n'est pas informé ou s'il est opposé) et ses SEULES réponses. Participation d'autrui, inexistante ou hors groupe : P0002, même message."
+      "note": "Migration 0023 : titulaire de la participation seul. Interrupteur fermé : {\"ouvert\": false, \"moi\": null} sans ligne de membre, sinon {\"ouvert\": false, \"moi\": {dates, \"nb_reponses\"}}, jamais la liste de l'équipe ni une donnée d'autrui. Sinon son état, les autres membres informés et non opposés de son groupe (nom de profil ; vide tant qu'il n'est pas informé ou s'il est opposé) et ses SEULES réponses. Participation d'autrui, inexistante ou hors groupe : P0002, même message."
     },
     {
       "objet": "app.reseau_informer",

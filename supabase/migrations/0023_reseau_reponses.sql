@@ -36,9 +36,12 @@
 --   table ni règle pour anon, authenticated ou service_role : tout passe par les
 --   fonctions.
 --
---   app.mes_releves_reseau() : mes participations éligibles (dans un groupe) ; aucune
---     ligne tant que l'interrupteur est fermé.
---   app.reseau_releve(p_participation) : {"ouvert": false} si fermé ; sinon mon état,
+--   app.mes_releves_reseau() : mes participations éligibles (dans un groupe) ;
+--     interrupteur fermé, seulement celles qui ont déjà une ligne de membre (la
+--     personne retrouve le chemin du retrait et de l'opposition).
+--   app.reseau_releve(p_participation) : fermé, {"ouvert": false, "moi": null} sans
+--     ligne de membre, sinon {"ouvert": false, "moi": {dates, "nb_reponses"}},
+--     jamais la liste de l'équipe ni une donnée d'autrui ; ouvert, mon état,
 --     les autres membres informés et non opposés de mon groupe (vide tant que je ne
 --     suis pas informé ou si je suis opposé) et mes seules réponses.
 --   app.reseau_informer(p_participation, p_opposition) : information lue ; opposition
@@ -227,14 +230,14 @@ SECURITY DEFINER
 SET search_path = ''
 AS $$
 DECLARE
-  v_uid uuid := auth.uid();
+  v_uid    uuid := auth.uid();
+  v_ouvert boolean := private.reseau_releve_ouvert();
 BEGIN
   IF v_uid IS NULL THEN
     RAISE EXCEPTION 'Connexion requise' USING ERRCODE = '42501';
   END IF;
-  IF NOT private.reseau_releve_ouvert() THEN
-    RETURN;
-  END IF;
+  -- Interrupteur fermé : seulement les participations qui ont déjà une ligne de
+  -- membre (retrait et opposition restent possibles).
   RETURN QUERY
     SELECT pa.id, o.nom, c.titre, c.statut
       FROM app.participations pa
@@ -242,6 +245,7 @@ BEGIN
       JOIN app.campaigns c ON c.id = pa.campaign_id
       JOIN app.organizations o ON o.id = pa.organization_id
      WHERE pa.user_id = v_uid
+       AND (v_ouvert OR EXISTS (SELECT 1 FROM app.reseau_membres rm WHERE rm.participation_id = pa.id))
      ORDER BY c.ouverte_le DESC NULLS LAST, pa.id;
 END
 $$;
@@ -265,7 +269,21 @@ BEGIN
     RAISE EXCEPTION 'Connexion requise' USING ERRCODE = '42501';
   END IF;
   IF NOT private.reseau_releve_ouvert() THEN
-    RETURN pg_catalog.jsonb_build_object('ouvert', false);
+    -- Interrupteur fermé : ma seule ligne de membre (retrait et opposition restent
+    -- possibles), jamais la liste de l'équipe ni une donnée d'autrui. Une
+    -- participation d'autrui, inexistante ou sans ligne rend « moi » nul.
+    SELECT m.* INTO v_moi
+      FROM app.reseau_membres m
+      JOIN app.participations pa ON pa.id = m.participation_id
+     WHERE m.participation_id = p_participation AND pa.user_id = v_uid;
+    RETURN pg_catalog.jsonb_build_object(
+      'ouvert', false,
+      'moi', CASE WHEN v_moi.participation_id IS NULL THEN NULL
+                  ELSE pg_catalog.jsonb_build_object(
+                         'informe_le', v_moi.informe_le, 'oppose_le', v_moi.oppose_le,
+                         'accord_repondre_le', v_moi.accord_repondre_le, 'accord_carte_le', v_moi.accord_carte_le,
+                         'nb_reponses', (SELECT pg_catalog.count(*)::integer FROM app.reseau_reponses r
+                                          WHERE r.repondant = p_participation)) END);
   END IF;
   SELECT r.campaign_id, r.group_id, r.campagne_statut INTO v_campagne, v_groupe, v_statut
     FROM private.reseau_participation(p_participation, v_uid) r;

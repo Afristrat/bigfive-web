@@ -10,7 +10,7 @@
 -- jamais une table app.* entière.
 -- (Enveloppé dans une transaction annulée par scripts/test-sql.sh.)
 SET LOCAL search_path TO tests, pg_catalog, public;
-SELECT plan(145);
+SELECT plan(150);
 
 CREATE FUNCTION pg_temp.comme(p_uid uuid, p_role text, p_sql text) RETURNS text
 LANGUAGE plpgsql AS $$
@@ -299,9 +299,9 @@ SELECT throws_ok(format($$INSERT INTO app.reseau_membres (participation_id, camp
 
 -- ===== Interrupteur FERMÉ (posé explicitement : le fichier reste juste après une ouverture réelle) =====
 UPDATE private.settings SET reseau_releve_ouvert = false;
-SELECT is(pg_temp.mes(pg_temp.u(1)), '0', 'fermé : mes_releves_reseau ne rend aucune ligne');
-SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1))), '{"ouvert": false}'::jsonb, 'fermé : reseau_releve rend {"ouvert": false} et rien d''autre');
-SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(255))), '{"ouvert": false}'::jsonb, 'fermé : même réponse pour un identifiant forgé (aucune fuite)');
+SELECT is(pg_temp.mes(pg_temp.u(1)), '0', 'fermé : mes_releves_reseau ne rend aucune participation sans ligne de membre');
+SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1))), '{"ouvert": false, "moi": null}'::jsonb, 'fermé, sans ligne de membre : {"ouvert": false, "moi": null} et rien d''autre');
+SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(255))), '{"ouvert": false, "moi": null}'::jsonb, 'fermé : même réponse pour un identifiant forgé (aucune fuite)');
 SELECT is(pg_temp.inf(pg_temp.u(1), pg_temp.p(1), false), pg_temp.ferme(), 'fermé : lire l''information sans s''opposer est refusé (55000)');
 SELECT is(pg_temp.inf(pg_temp.u(5), pg_temp.p(5), true), 'oppose', 'fermé : s''opposer reste permis (défaut protecteur, non validé) : Élise s''oppose');
 SELECT is(pg_temp.cons(pg_temp.u(1), pg_temp.p(1), true, true), pg_temp.ferme(), 'fermé : reseau_consentir refusé (55000)');
@@ -309,6 +309,16 @@ SELECT is(pg_temp.rep(pg_temp.u(1), pg_temp.p(1), '[]'), pg_temp.ferme(), 'ferm�
 SELECT is(pg_temp.ret(pg_temp.u(1), pg_temp.p(1)), '0', 'fermé : reseau_retirer reste permis (rien à retirer : 0)');
 SELECT is((SELECT string_agg(pg_temp.code(m.participation_id) || ':' || (m.oppose_le IS NOT NULL)::text, ',') FROM app.reseau_membres m WHERE m.campaign_id IN (pg_temp.k1(), pg_temp.kb())),
   'E:true', 'fermé : seule la ligne d''opposition d''Élise est écrite');
+SELECT is(pg_temp.mes(pg_temp.u(5), 'string_agg(x.participation_id::text, '','')'), pg_temp.p(5)::text,
+  'fermé : la liste ne rend que la participation qui a une ligne de membre (chemin du retrait et de l''opposition)');
+SELECT is((SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.rel(pg_temp.u(5), pg_temp.p(5)))) k) || '/'
+          || (SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.rel(pg_temp.u(5), pg_temp.p(5))) -> 'moi') k) || '/'
+          || (pg_temp.j(pg_temp.rel(pg_temp.u(5), pg_temp.p(5))) #>> '{moi,nb_reponses}') || '/'
+          || ((pg_temp.j(pg_temp.rel(pg_temp.u(5), pg_temp.p(5))) #>> '{moi,oppose_le}') IS NOT NULL)::text,
+  'moi,ouvert/accord_carte_le,accord_repondre_le,informe_le,nb_reponses,oppose_le/0/true',
+  'fermé, avec ligne : seul « moi » (dates et nombre de réponses), ni équipe ni réponses');
+SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(5))), '{"ouvert": false, "moi": null}'::jsonb,
+  'fermé : la ligne d''une autre personne n''est jamais rendue');
 SELECT is(
   (SELECT string_agg(DISTINCT x, '|') FROM unnest(ARRAY[
      pg_temp.comme(NULL, 'authenticated', 'select count(*)::text from app.mes_releves_reseau()'),
@@ -542,8 +552,9 @@ SELECT is(pg_temp.inf(pg_temp.u(1), pg_temp.p(1), false), 'informe', 'campagne c
 
 -- ===== Interrupteur refermé : retrait toujours permis =====
 UPDATE private.settings SET reseau_releve_ouvert = false;
-SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1))) || jsonb_build_object('mes', pg_temp.mes(pg_temp.u(1))),
-  '{"ouvert": false, "mes": "0"}'::jsonb, 'refermé : plus rien n''est montré');
+SELECT is((SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1)))) k) || '|'
+          || (pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1))) #>> '{moi,nb_reponses}') || '|' || pg_temp.mes(pg_temp.u(1)),
+  'moi,ouvert|0|1', 'refermé : Alice ne voit que sa propre ligne (aucune réponse) et retrouve son relevé dans la liste');
 SELECT is(pg_temp.ret(pg_temp.u(2), pg_temp.p(2)), '0', 'refermé : le retrait reste permis');
 
 -- ===== Purge : durée lue dans private.settings, traces sans acteur =====
@@ -562,6 +573,10 @@ SELECT is(pg_temp.rep(pg_temp.u(13), pg_temp.p(13), pg_temp.liste(pg_temp.e(pg_t
 SELECT ok((SELECT m.maj_le = now() FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(13)),
   'répondre rafraîchit maj_le de la ligne du répondant');
 UPDATE private.settings SET reseau_releve_ouvert = false;
+SELECT is((pg_temp.j(pg_temp.rel(pg_temp.u(13), pg_temp.p(13))) #>> '{moi,nb_reponses}') || '|'
+          || (position(pg_temp.p(14)::text IN pg_temp.rel(pg_temp.u(13), pg_temp.p(13))) + position('Jamal' IN pg_temp.rel(pg_temp.u(13), pg_temp.p(13))))::text,
+  '1|0', 'fermé : Inès voit le nombre de ses réponses, jamais la personne citée');
+SELECT is(pg_temp.mes(pg_temp.u(13)) || ',' || pg_temp.mes(pg_temp.u(6)), '1,0', 'fermé : liste filtrée (Inès a une ligne, Farid non)');
 SELECT set_config('zz.repere', (SELECT coalesce(max(l.id), 0)::text FROM private.audit_log l), true);
 UPDATE private.settings SET conservation_reseau_mois = 36;
 SELECT private.purger_quotidien();
