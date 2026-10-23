@@ -68,10 +68,12 @@
 --   P0002 « Participation introuvable » ; une campagne interdite ou inexistante
 --   rend 42501, même message.
 --
---   app.exporter_mes_donnees() (droit d'accès) : redéfinie à l'identique de 0021,
---     avec une clé de plus, « reseau » (mes lignes de membre, mes réponses avec le
+--   app.exporter_mes_donnees() (droit d'accès) : redéfinie à l'identique de 0022
+--     (relecture de la bibliothèque, clé « relecture » comprise), avec une clé de
+--     plus, « reseau » (mes lignes de membre, mes réponses avec le
 --     nom de la personne citée). Mêmes signature, attributs et droits.
---   private.purger_quotidien() : redéfinie à l'identique de 0018, avec la purge des
+--   private.purger_quotidien() : redéfinie à l'identique de 0022 (appel de
+--     private.purger_historique_relecture() compris), avec la purge des
 --     réponses (repondu_le) puis des lignes de membre (maj_le) plus anciennes que
 --     conservation_reseau_mois, et deux traces chiffrées sans acteur.
 --
@@ -607,9 +609,9 @@ BEGIN
 END
 $$;
 
--- 6.8 Droit d'accès : l'export de la personne (dernière définition : 0021) gagne la
+-- 6.8 Droit d'accès : l'export de la personne (dernière définition : 0022) gagne la
 -- clé « reseau ». Mêmes signature, attributs et droits, mêmes clés et même forme
--- qu'en 0021 ; une clé en plus, un objet à deux tableaux (vides si la personne n'a
+-- qu'en 0022 ; une clé en plus, un objet à deux tableaux (vides si la personne n'a
 -- pris part à aucun relevé) : « membres » (ma ligne par participation : campagne,
 -- organisation, dates d'information, d'opposition, des deux accords, de mise à
 -- jour) et « reponses » (mes réponses, avec le nom de profil de la personne citée,
@@ -693,6 +695,13 @@ BEGIN
       FROM app.binomes b
       JOIN app.participations mine ON mine.user_id = v_uid AND mine.id IN (b.participation_a, b.participation_b)
       JOIN app.organizations o ON o.id = b.organization_id), '[]'::jsonb),
+    'relecture', pg_catalog.jsonb_build_object(
+      'ajoute_le', (SELECT rb.ajoute_le FROM private.relecteurs_bibliotheque rb WHERE rb.user_id = v_uid),
+      'verdicts', COALESCE((
+        SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+                 'bloc', v.bloc, 'empreinte', v.empreinte, 'verdict', v.verdict,
+                 'commentaire', v.commentaire, 'cree_le', v.cree_le) ORDER BY v.ordre)
+        FROM app.relectures_blocs v WHERE v.relecteur = v_uid), '[]'::jsonb)),
     'journal', COALESCE((
       SELECT pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object('action', l.action, 'date', l.cree_le) ORDER BY l.id)
       FROM private.audit_log l WHERE l.acteur = v_uid), '[]'::jsonb)
@@ -702,7 +711,7 @@ BEGIN
 END
 $$;
 
--- 7. Purge quotidienne (remplace celle de 0018, à l'identique) : s'ajoutent les
+-- 7. Purge quotidienne (remplace celle de 0022, à l'identique) : s'ajoutent les
 -- réponses du relevé puis les lignes de membre plus anciennes que
 -- conservation_reseau_mois (la suppression d'une ligne de membre efface en
 -- cascade ses liens restants), et deux traces chiffrées sans acteur.
@@ -786,6 +795,7 @@ BEGIN
     END IF;
   END LOOP;
 
+  PERFORM private.purger_historique_relecture();
   PERFORM private.journaliser(NULL, 'purge.liens_connexion', NULL, NULL, NULL, v_liens);
   PERFORM private.journaliser(NULL, 'purge.journal', NULL, NULL, NULL, v_journal);
   PERFORM private.journaliser(NULL, 'purge.invitations', NULL, NULL, NULL, v_invitations);

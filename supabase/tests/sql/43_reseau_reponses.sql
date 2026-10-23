@@ -526,7 +526,7 @@ SELECT is((SELECT count(*)::int FROM private.audit_log l WHERE l.action ~ '^rese
 
 -- ===== Droit d'accès : export de mes données =====
 SELECT is((SELECT string_agg(k, ',' ORDER BY k COLLATE "C") FROM jsonb_object_keys(pg_temp.j(pg_temp.exp(pg_temp.u(1)))) k),
-  'appartenances,binomes,compte,exporte_le,journal,participations,profil,reseau,resultats,tentatives', 'l''export garde ses clés et gagne « reseau »');
+  'appartenances,binomes,compte,exporte_le,journal,participations,profil,relecture,reseau,resultats,tentatives', 'l''export garde ses clés (dont « relecture », 0022) et gagne « reseau »');
 SELECT is((SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.exp(pg_temp.u(1))) -> 'reseau') k) || '/'
           || jsonb_array_length(pg_temp.j(pg_temp.exp(pg_temp.u(1))) -> 'reseau' -> 'membres')::text || '/'
           || (SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.exp(pg_temp.u(1))) -> 'reseau' -> 'membres' -> 0) k),
