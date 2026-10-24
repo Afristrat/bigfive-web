@@ -229,8 +229,30 @@ SELECT is(
   'private.purger_historique_relecture : SECURITY DEFINER, search_path vide, tenga_owner, exécutable par aucun rôle de l''API');
 SELECT matches(pg_get_functiondef('private.purger_quotidien()'::regprocedure), 'PERFORM private\.purger_historique_relecture\(\);',
   'la purge quotidienne appelle la purge de l''historique de relecture');
-SELECT is(md5(replace(replace(replace(replace(
+SELECT is(md5(replace(replace(replace(replace(replace(replace(replace(
          (SELECT p.prosrc FROM pg_proc p WHERE p.oid = 'private.purger_quotidien()'::regprocedure),
+         $blk$  v_reseau_groupe   uuid;
+$blk$, ''),
+         $blk$  -- Verrou de chaque groupe concerné (0024), dans l'ordre croissant, avant tout
+  -- verrou de ligne du relevé : même clé et même ordre que reseau_repondre et
+  -- l'opposition (groupe, puis lignes), aucun interblocage.
+  FOR v_reseau_groupe IN
+    SELECT x.group_id
+      FROM (SELECT r.group_id FROM app.reseau_reponses r
+             WHERE r.repondu_le < now() - pg_catalog.make_interval(months => (SELECT s.conservation_reseau_mois FROM private.settings s))
+            UNION
+            SELECT m.group_id FROM app.reseau_membres m
+             WHERE m.maj_le < now() - pg_catalog.make_interval(months => (SELECT s.conservation_reseau_mois FROM private.settings s))) x
+     ORDER BY x.group_id
+  LOOP
+    PERFORM pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(v_reseau_groupe::text, 0));
+  END LOOP;
+$blk$, ''),
+         $blk$
+     -- Garde (0024) : jamais une ligne encore citée ou citante (la cascade
+     -- effacerait des réponses non échues).
+     AND NOT EXISTS (SELECT 1 FROM app.reseau_reponses r
+                      WHERE r.cite = reseau_membres.participation_id OR r.repondant = reseau_membres.participation_id)$blk$, ''),
          E'  PERFORM private.purger_historique_relecture();\n', ''),
          $blk$  v_reseau_reponses integer;
   v_reseau_membres  integer;
@@ -248,7 +270,7 @@ $blk$, ''),
   PERFORM private.journaliser(NULL, 'purge.reseau_membres', NULL, NULL, NULL, v_reseau_membres);
 $blk$, '')),
   '0fef778e812a5b2227b95447fc62eff3',
-  'le corps de la purge quotidienne est celui de 0018, hors la seule ligne de 0022 et les seuls ajouts du réseau (0023) (md5)');
+  'le corps de la purge quotidienne est celui de 0018, hors la seule ligne de 0022, les seuls ajouts du réseau (0023) et ceux de 0024 (verrou de groupe, garde) (md5)');
 SELECT is(private.duree_historique_relecture(), interval '30 days', 'conservation de l''historique de relecture : 30 jours (décision d''Amine)');
 
 -- ===== suis_relecteur =====

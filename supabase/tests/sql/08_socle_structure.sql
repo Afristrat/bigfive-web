@@ -151,12 +151,16 @@ app.profiles>authenticated>SELECT
 app.results>authenticated>SELECT$f$,
   'droits figés : authenticated lit onze tables (SELECT seul) ; anon et service_role n''ont aucun droit sur les tables');
 
--- Fonctions exécutables par l'API, figées
+-- Fonctions exécutables par l'API, figées. La seule ligne ajoutée par la migration
+-- 0024 (app.reseau_exporter>authenticated, vérifiée par le test 44) est retirée à
+-- l'identique : la liste reste juste avant et après l'application de la 0024.
 SELECT is(
+  replace(
   (SELECT string_agg(n.nspname || '.' || p.proname || '>' || r.rol, E'\n' ORDER BY n.nspname, p.proname, r.rol)
      FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
      CROSS JOIN unnest(ARRAY['anon', 'authenticated', 'service_role']) AS r(rol)
     WHERE n.nspname IN ('app', 'private') AND has_function_privilege(r.rol, p.oid, 'EXECUTE')),
+  E'\napp.reseau_exporter>authenticated\n', E'\n'),
   $f$app.accepter_invitation>service_role
 app.affecter_membre>authenticated
 app.ajouter_admin_tenga>authenticated

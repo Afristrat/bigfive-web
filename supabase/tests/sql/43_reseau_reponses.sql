@@ -274,7 +274,8 @@ SELECT is(
                      || has_function_privilege('authenticated', p.oid, 'EXECUTE')::text,
                      E'\n' ORDER BY p.proname)
      FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
-    WHERE n.nspname = 'app' AND (p.proname ~ '^reseau_' OR p.proname = 'mes_releves_reseau')),
+    WHERE n.nspname = 'app' AND (p.proname ~ '^reseau_' OR p.proname = 'mes_releves_reseau')
+      AND p.proname <> 'reseau_exporter'),
   $f$mes_releves_reseau|true|s|true|tenga_owner|false|false|false|true
 reseau_consentir|true|v|true|tenga_owner|false|false|false|true
 reseau_informer|true|v|true|tenga_owner|false|false|false|true
@@ -481,8 +482,8 @@ SELECT is(pg_temp.en_base(pg_temp.p(1)) || '/' || pg_temp.en_base(pg_temp.p(2)),
   'les autres réponses d''Alice et de Bruno restent');
 SELECT ok((SELECT m.oppose_le IS NOT NULL AND m.accord_repondre_le IS NULL AND m.accord_carte_le IS NULL FROM app.reseau_membres m WHERE m.participation_id = pg_temp.p(4)),
   'opposition datée, accords effacés');
-SELECT is((SELECT m ->> 'oppose' FROM jsonb_array_elements(pg_temp.j(pg_temp.lire(pg_temp.u(8), pg_temp.k1())) -> 'groupes' -> 0 -> 'membres') m WHERE m ->> 'nom' = 'Driss'),
-  'true', 'la lecture du consultant dit Driss opposé (non représenté), sans aucun lien');
+SELECT is((SELECT m ->> 'oppose' FROM jsonb_array_elements(pg_temp.j(pg_temp.lire(pg_temp.u(10), pg_temp.k1())) -> 'groupes' -> 0 -> 'membres') m WHERE m ->> 'nom' = 'Driss'),
+  'true', 'la lecture de l''administrateur Tenga dit Driss opposé (non représenté), sans aucun lien (le consultant n''en voit que le nombre depuis la 0024, test 44)');
 SELECT is(pg_temp.noms(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1)))), 'Bruno,Camille', 'Driss n''est plus proposé à Alice');
 SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(4), pg_temp.p(4))) -> 'membres', '[]'::jsonb, 'une personne opposée ne voit aucun membre');
 SELECT is(pg_temp.cons(pg_temp.u(4), pg_temp.p(4), true, false), pg_temp.sans_info(), 'une personne opposée ne consent pas (55000)');
