@@ -89,8 +89,9 @@ export function dumbbellSvg(a, b, titres, ecartFn) {
 // ---------- Carte des liens : personnes en cercle, épaisseur selon la fréquence, flèche selon le sens ----------
 // Sans option : carte des liens déclarés au cas (structure prévue), relations de cas.relations.
 // Avec { lien } (conseil, information, confiance, dependance) : carte du réseau réel pour ce type de lien, liens de
-// faits.reseau_reel.liens[lien] ; trait sans flèche = réciproque, flèche = déclaré d'un seul côté, de la personne qui
-// déclare vers la personne citée. Chaque carte d'une même page porte son propre marqueur de flèche (option marqueur).
+// faits.reseau_reel.liens[lien] ; seuls les liens réciproques (déclarés des deux côtés) sont tracés, sans flèche et avec
+// leurs noms. Les liens déclarés d'un seul côté ne sont ni tracés ni nommés : un décompte anonyme figure dans la légende.
+// Chaque carte d'une même page porte son propre marqueur de flèche (option marqueur), utilisé par la carte prévue.
 const LIEN_REEL = {
   conseil: { titre: 'conseil', verbe: 'demande conseil à', legende: 'Conseil : qui demande conseil à qui' },
   information: { titre: 'information', verbe: 'reçoit une information utile de', legende: 'Information : qui reçoit une information utile de qui' },
@@ -116,13 +117,15 @@ export function reseauSvg(ps, relations, natures = {}, options = {}) {
   const freqFr = { quotidienne: 'quotidien', hebdomadaire: 'hebdomadaire', mensuelle: 'mensuel' };
   const interFr = { sequentielle: 'séquence', reciproque: 'réciprocité', 'mise-en-commun': 'mise en commun' };
   // Réseau réel : un lien est ramené à la forme d'une relation (sens, épaisseur) ; l'épaisseur suit la réponse la plus haute des deux.
+  const dansCarte = (l) => pos[l.a] && pos[l.b];
+  const unSeulCote = reel ? relations.filter((l) => !l.reciproque && dansCarte(l)).length : 0;
   const rels = (reel
-    ? relations.map((l) => ({
+    ? relations.filter((l) => l.reciproque).map((l) => ({
       ...l,
-      sens: l.reciproque ? 'reciproque' : (l.declare_par === l.b ? 'b->a' : 'a->b'),
+      sens: 'reciproque',
       largeur: echelle.epais[Math.max(l.a_vers_b ?? 0, l.b_vers_a ?? 0)] ?? 1.2
     }))
-    : relations).filter((l) => pos[l.a] && pos[l.b]);
+    : relations).filter(dansCarte);
   const n = (v) => v.toFixed(1);
   const traits = rels.map((l, i) => {
     const [de, vers] = l.sens === 'b->a' ? [pos[l.b], pos[l.a]] : [pos[l.a], pos[l.b]];
@@ -138,10 +141,13 @@ export function reseauSvg(ps, relations, natures = {}, options = {}) {
     const ancre = c > 0.3 ? 'start' : c < -0.3 ? 'end' : 'middle';
     return `<g class="noeud">${marque(p.forme, x, y, r * 0.62, p.couleur)}<text class="ent" x="${n(x + c * (r + 4))}" y="${n(y + sn * (r + 6) + 4.5)}" text-anchor="${ancre}">${esc(p.code)}</text></g>`;
   }).join('');
+  const comptageUnSeulCote = unSeulCote
+    ? `${unSeulCote} ${unSeulCote > 1 ? 'liens déclarés' : 'lien déclaré'} d'un seul côté, non ${unSeulCote > 1 ? 'montrés' : 'montré'} nominativement`
+    : "aucun lien déclaré d'un seul côté";
   const legendeReel = () => {
     const paliers = Object.keys(echelle.epais).map(Number).sort((u, v) => v - u);
     const traitsLeg = paliers.map((v, k) => `<line class="lien-reseau" x1="${k * 140}" y1="0" x2="${k * 140 + 30}" y2="0" stroke-width="${echelle.epais[v]}"/><text class="gn" x="${k * 140 + 36}" y="4.5">${esc(echelle.libelles[v])}</text>`).join('');
-    return `<g transform="translate(20,${H - 50})">${traitsLeg}<text class="gn" x="0" y="24">flèche : déclaré d'un seul côté, vers la personne citée</text><text class="gn" x="0" y="44">sans flèche : déclaré des deux côtés (réciproque)</text></g>`;
+    return `<g transform="translate(20,${H - 50})">${traitsLeg}<text class="gn" x="0" y="24">trait : déclaré des deux côtés (réciproque)</text><text class="gn" x="0" y="44">${esc(comptageUnSeulCote)}</text></g>`;
   };
   const legende = reel
     ? legendeReel()
@@ -151,13 +157,13 @@ export function reseauSvg(ps, relations, natures = {}, options = {}) {
   const table = reel
     ? tableau(titre, ['Paire', 'Sens', 'Réponse de la première personne', 'Réponse de la seconde personne'], rels.map((l) => [
       `${l.a} et ${l.b}`,
-      l.reciproque ? 'réciproque' : `${l.declare_par} ${L.verbe} ${l.declare_par === l.a ? l.b : l.a} (déclaré par ${l.declare_par} seulement)`,
+      'réciproque',
       `${l.a} : ${valeurReel(l.a_vers_b)}`,
       `${l.b} : ${valeurReel(l.b_vers_a)}`
     ]))
     : tableau(titre, ['Lien', 'Nature', 'Sens', 'Fréquence', 'Interdépendance'], rels.map((l) => [`${l.a} et ${l.b}`, natures[l.nature] ?? l.nature, l.sens === 'reciproque' ? 'sans direction dominante' : (l.sens === 'b->a' ? `${l.b} vers ${l.a}` : `${l.a} vers ${l.b}`), freqFr[l.frequence] ?? l.frequence, interFr[l.interdependance] ?? l.interdependance]));
   const aria = reel
-    ? `${titre} : chaque personne est un point, l'épaisseur d'un trait dit la réponse la plus haute des deux personnes, une flèche part de la personne qui déclare un lien que l'autre ne déclare pas`
+    ? `${titre} : chaque personne est un point, l'épaisseur d'un trait dit la réponse la plus haute des deux personnes, seuls les liens déclarés des deux côtés sont tracés ; ${comptageUnSeulCote}`
     : `${titre} : chaque personne est un point, l'épaisseur d'un trait dit la fréquence du lien, une flèche dit qui oriente, décide ou fournit pour l'autre`;
   const legendeVisible = reel ? `<figcaption>${esc(L.legende)}</figcaption>` : '';
   return `<figure class="reseau anim" role="region" tabindex="0" aria-label="${esc(titre)}">${legendeVisible}<svg viewBox="0 0 ${T} ${H}" role="img" aria-label="${esc(aria)}"><title>${esc(titre)}</title><defs><marker id="${esc(marqueur)}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="fleche"/></marker></defs>${traits}${noeuds}${legende}</svg>${table}</figure>`;

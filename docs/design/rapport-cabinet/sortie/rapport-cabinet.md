@@ -5891,11 +5891,11 @@ Chaque membre de l’équipe a accepté que la carte nominative de l’équipe s
 
 Constaté
 
-Conseil, à qui chacun demande conseil pour résoudre un problème de travail (au moins chaque mois) : 3 paires reliées sur 6 possibles. Liens réciproques : AM et KB ; SR et HT. Lien déclaré d’un seul côté : KB demande conseil à HT (déclaré par KB seulement).
+Conseil, à qui chacun demande conseil pour résoudre un problème de travail (au moins chaque mois) : 3 paires reliées sur 6 possibles. Liens réciproques : AM et KB ; SR et HT. 1 lien déclaré d’un seul côté.
 
 Constaté
 
-Information, de qui chacun reçoit une information utile à son travail (au moins chaque mois) : 5 paires reliées sur 6 possibles. Liens réciproques : AM et KB ; KB et SR ; KB et HT ; SR et HT. Lien déclaré d’un seul côté : AM reçoit une information utile de SR (déclaré par AM seulement).
+Information, de qui chacun reçoit une information utile à son travail (au moins chaque mois) : 5 paires reliées sur 6 possibles. Liens réciproques : AM et KB ; KB et SR ; KB et HT ; SR et HT. 1 lien déclaré d’un seul côté.
 
 Constaté
 

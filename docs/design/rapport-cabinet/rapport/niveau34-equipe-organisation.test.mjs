@@ -537,9 +537,15 @@ test('réseau réel : section juste après la structure, relevé fictif, seuils,
   assert.match(t, /Borgatti et Molina \(2003\)/);
   assert.ok(r.reference_ids.includes('borgatti-molina-2003'));
   assert.match(t, /Chaque membre de l'équipe a accepté que la carte nominative/);
-  assert.match(t, /Conseil, à qui chacun demande conseil[^\n]*: 3 paires reliées sur 6 possibles\. Liens réciproques : AM et KB ; SR et HT\. Lien déclaré d'un seul côté : KB demande conseil à HT \(déclaré par KB seulement\)\./);
+  assert.match(t, /Conseil, à qui chacun demande conseil[^\n]*: 3 paires reliées sur 6 possibles\. Liens réciproques : AM et KB ; SR et HT\. 1 lien déclaré d'un seul côté\./);
   assert.match(t, /Information[^\n]*: 5 paires reliées sur 6 possibles/);
-  assert.match(t, /AM reçoit une information utile de SR \(déclaré par AM seulement\)/);
+  assert.match(t, /Information[^\n]*1 lien déclaré d'un seul côté\./);
+  // Décision d'Amine du 24/10 : aucun nom sur un lien déclaré d'un seul côté, seulement un décompte anonyme.
+  const phrasesUnSeulCote = t.split(/\n|(?<=\.) /).filter((l) => /d'un seul côté|seulement\)|demande conseil à|reçoit une information utile de/.test(l));
+  assert.ok(phrasesUnSeulCote.length > 0);
+  for (const l of phrasesUnSeulCote) assert.ok(!/\b(AM|KB|SR|HT)\b|Amine|Karim|Salma|Hind|seulement\)/.test(l), `nom dans un lien à sens unique : ${l.slice(0, 120)}`);
+  assert.ok(!/déclaré par (AM|KB|SR|HT)/.test(t), 'aucune mention de qui a déclaré');
+  assert.ok(!/\b(AM|KB|SR|HT) vers (AM|KB|SR|HT)\b/.test(t), 'aucune direction nominative');
   assert.match(t, /15 liens réciproques/);
   assert.ok(!SANS_CLASSEMENT.test(t + verifsReseau(r)), 'jamais de classement de personnes');
 });

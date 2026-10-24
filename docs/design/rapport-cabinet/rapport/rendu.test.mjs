@@ -266,17 +266,18 @@ test('réseau réel : une carte par type de lien, après la carte prévue, chacu
   const sec = h.slice(h.indexOf('id="n3-reseau-reel"'));
   for (const l of ['conseil', 'information', 'confiance', 'dependance']) {
     assert.equal(h.split(`id="reseau-fleche-${l}"`).length - 1, 1, `marqueur ${l} unique`);
-    assert.ok(sec.includes(`url(#reseau-fleche-${l})`) || l !== 'conseil', `flèche ${l} référencée`);
   }
   assert.equal(h.split('id="reseau-fleche"').length - 1, 1, 'marqueur de la carte prévue inchangé et unique');
   assert.ok(h.indexOf('Carte des liens déclarés au cas') < h.indexOf('Carte du réseau réel : conseil'));
   for (const t of ['conseil', 'information', 'confiance', 'dépendance']) assert.ok(sec.includes(`Carte du réseau réel : ${t}`), t);
-  assert.ok(sec.includes('déclaré par KB seulement'), 'tableau des valeurs : lien d’un seul côté');
+  assert.ok(!/déclaré par (AM|KB|SR|HT)/.test(sec) && !sec.includes('seulement)'), 'aucun déclarant nommé pour un lien d’un seul côté');
+  assert.ok(!sec.includes('marker-end'), 'aucune flèche à sens unique sur les cartes');
+  assert.ok(/\d+ liens? déclarés? d(?:&#39;|')un seul côté, non montrés? nominativement/.test(sec), 'décompte anonyme sur la carte');
   assert.ok(sec.includes('cartes-reseau'));
   // Titre visible par carte, qui donne aussi le sens de la flèche ; légende qui dit vers qui pointe la flèche.
   for (const t of ['Conseil : qui demande conseil à qui', 'Information : qui reçoit une information utile de qui', 'Confiance : qui pourrait signaler une erreur sans crainte à qui', 'Dépendance : qui attend le travail de qui']) assert.ok(sec.includes(`<figcaption>${t}</figcaption>`), t);
-  assert.ok(sec.includes('flèche : déclaré d&#39;un seul côté, vers la personne citée') || sec.includes('flèche : déclaré d\'un seul côté, vers la personne citée'));
-  assert.ok(sec.includes('sans flèche : déclaré des deux côtés (réciproque)'));
+  assert.ok(!sec.includes('vers la personne citée'), 'plus de légende de flèche');
+  assert.ok(sec.includes('trait : déclaré des deux côtés (réciproque)'));
   assert.ok(!h.slice(0, h.indexOf('id="n3-reseau-reel"')).includes('<figcaption>'), 'carte prévue inchangée');
 });
 

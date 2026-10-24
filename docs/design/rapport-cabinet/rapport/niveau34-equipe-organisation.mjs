@@ -419,9 +419,9 @@ export function construire(ctx) {
           const phrases = [`${tete} : ${relies}.`];
           if (rec.length) phrases.push(`${rec.length > 1 ? 'Liens réciproques' : 'Lien réciproque'} : ${rec.map((x) => `${x.a} et ${x.b}`).join(' ; ')}.`);
           if (un.length) {
-            const cible = (x) => (x.declare_par === x.a ? x.b : x.a);
-            phrases.push(`${un.length > 1 ? "Liens déclarés d'un seul côté" : "Lien déclaré d'un seul côté"} : ${un.map((x) => `${x.declare_par} ${L.verbe} ${cible(x)} (déclaré par ${x.declare_par} seulement)`).join(' ; ')}.`);
-            declares.push(...un.map((x) => `${x.declare_par} vers ${cible(x)} (${L.titre.toLowerCase()})`));
+            // Décision d'Amine du 24/10 : un lien déclaré d'un seul côté n'est jamais nommé, seulement compté.
+            phrases.push(`${un.length} ${pluriel(un.length, 'lien déclaré', 'liens déclarés')} d'un seul côté.`);
+            declares.push(l);
           }
           specR.push(c(phrases.join(' ')));
         } else {
