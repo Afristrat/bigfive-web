@@ -435,6 +435,7 @@ SELECT is((SELECT md5(replace(replace(p.prosrc, $blk$    'reseau', pg_catalog.js
                  'participation', rm.participation_id, 'campagne', c.titre, 'organisation', o.nom,
                  'informe_le', rm.informe_le, 'oppose_le', rm.oppose_le,
                  'accord_repondre_le', rm.accord_repondre_le, 'accord_carte_le', rm.accord_carte_le,
+                 'accord_rapport_le', rm.accord_rapport_le,
                  'maj_le', rm.maj_le) ORDER BY rm.informe_le, rm.participation_id)
         FROM app.reseau_membres rm
         JOIN app.participations p ON p.id = rm.participation_id

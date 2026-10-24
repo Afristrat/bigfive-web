@@ -83,8 +83,8 @@ $$;
 CREATE FUNCTION pg_temp.inf(p_uid uuid, p_part uuid, p_opp boolean) RETURNS text LANGUAGE sql AS $$
   SELECT pg_temp.comme(p_uid, 'authenticated', format('select app.reseau_informer(%L, %L)', p_part, p_opp))
 $$;
-CREATE FUNCTION pg_temp.cons(p_uid uuid, p_part uuid, p_r boolean, p_c boolean) RETURNS text LANGUAGE sql AS $$
-  SELECT pg_temp.comme(p_uid, 'authenticated', format('select app.reseau_consentir(%L, %L, %L)', p_part, p_r, p_c))
+CREATE FUNCTION pg_temp.cons(p_uid uuid, p_part uuid, p_r boolean, p_c boolean, p_rapport boolean DEFAULT false) RETURNS text LANGUAGE sql AS $$
+  SELECT pg_temp.comme(p_uid, 'authenticated', format('select app.reseau_consentir(%L, %L, %L, %L)', p_part, p_r, p_c, p_rapport))
 $$;
 CREATE FUNCTION pg_temp.rep(p_uid uuid, p_part uuid, p_json text) RETURNS text LANGUAGE sql AS $$
   SELECT pg_temp.comme(p_uid, 'authenticated', format('select app.reseau_repondre(%L, %L::jsonb)::text', p_part, p_json))
@@ -288,7 +288,7 @@ SELECT is(
   pg_get_function_result('app.mes_releves_reseau()'::regprocedure) || '|'
   || pg_get_function_result('app.reseau_releve(uuid)'::regprocedure) || '|'
   || pg_get_function_result('app.reseau_informer(uuid, boolean)'::regprocedure) || '|'
-  || pg_get_function_result('app.reseau_consentir(uuid, boolean, boolean)'::regprocedure) || '|'
+  || pg_get_function_result('app.reseau_consentir(uuid, boolean, boolean, boolean)'::regprocedure) || '|'
   || pg_get_function_result('app.reseau_repondre(uuid, jsonb)'::regprocedure) || '|'
   || pg_get_function_result('app.reseau_retirer(uuid)'::regprocedure) || '|'
   || pg_get_function_result('app.reseau_lire(uuid)'::regprocedure),
@@ -327,7 +327,7 @@ SELECT is((SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j
           || (SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.rel(pg_temp.u(5), pg_temp.p(5))) -> 'moi') k) || '/'
           || (pg_temp.j(pg_temp.rel(pg_temp.u(5), pg_temp.p(5))) #>> '{moi,nb_reponses}') || '/'
           || ((pg_temp.j(pg_temp.rel(pg_temp.u(5), pg_temp.p(5))) #>> '{moi,oppose_le}') IS NOT NULL)::text,
-  'moi,ouvert/accord_carte_le,accord_repondre_le,informe_le,nb_reponses,oppose_le/0/true',
+  'moi,ouvert/accord_carte_le,accord_rapport_le,accord_repondre_le,informe_le,nb_reponses,oppose_le/0/true',
   'fermé, avec ligne : seul « moi » (dates et nombre de réponses), ni équipe ni réponses');
 SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(5))), '{"ouvert": false, "moi": null}'::jsonb,
   'fermé : la ligne d''une autre personne n''est jamais rendue');
@@ -378,7 +378,7 @@ SELECT is(pg_temp.noms(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1)))), 'Bru
 SELECT is((SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1)))) k) || '/'
           || (SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1))) -> 'moi') k) || '/'
           || (SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.rel(pg_temp.u(1), pg_temp.p(1))) -> 'membres' -> 0) k),
-  'campagne_ouverte,membres,moi,ouvert,reponses/accord_carte_le,accord_repondre_le,informe_le,oppose_le/nom,participation_id',
+  'campagne_ouverte,membres,moi,ouvert,reponses/accord_carte_le,accord_rapport_le,accord_repondre_le,informe_le,oppose_le/nom,participation_id',
   'forme du relevé conforme au contrat');
 SELECT is(pg_temp.j(pg_temp.rel(pg_temp.u(12), pg_temp.p(12))) -> 'membres', '[]'::jsonb,
   'Ghita, non informée, ne voit aucun membre');
@@ -510,7 +510,7 @@ SELECT is((SELECT string_agg(pg_temp.code((r ->> 'de')::uuid) || '>' || pg_temp.
   'A>B:conseil:1,A>C:confiance:3,B>A:conseil:2',
   'réponses brutes de l''Équipe 1 (de, vers, lien, valeur)');
 SELECT is((SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.lire(pg_temp.u(8), pg_temp.k1())) -> 'groupes' -> 0 -> 'membres' -> 0) k),
-  'a_repondu,accord_carte,accord_repondre,informe,nom,oppose,participation_id', 'forme d''un membre conforme au contrat');
+  'a_repondu,accord_carte,accord_rapport,accord_repondre,informe,nom,oppose,participation_id', 'forme d''un membre conforme au contrat');
 SELECT is(pg_temp.j(pg_temp.lire(pg_temp.u(10), pg_temp.k1())), pg_temp.j(pg_temp.lire(pg_temp.u(8), pg_temp.k1())),
   'l''administrateur Tenga lit le même relevé');
 SELECT is(pg_temp.lire(pg_temp.u(7), pg_temp.k1()), pg_temp.refus_lire(), 'le responsable de l''organisation ne lit RIEN (42501)');
@@ -542,7 +542,7 @@ SELECT is((SELECT string_agg(k, ',' ORDER BY k COLLATE "C") FROM jsonb_object_ke
 SELECT is((SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.exp(pg_temp.u(1))) -> 'reseau') k) || '/'
           || jsonb_array_length(pg_temp.j(pg_temp.exp(pg_temp.u(1))) -> 'reseau' -> 'membres')::text || '/'
           || (SELECT string_agg(k, ',' ORDER BY k) FROM jsonb_object_keys(pg_temp.j(pg_temp.exp(pg_temp.u(1))) -> 'reseau' -> 'membres' -> 0) k),
-  'membres,reponses/1/accord_carte_le,accord_repondre_le,campagne,informe_le,maj_le,oppose_le,organisation,participation',
+  'membres,reponses/1/accord_carte_le,accord_rapport_le,accord_repondre_le,campagne,informe_le,maj_le,oppose_le,organisation,participation',
   'export : une ligne de membre par participation, avec ses dates');
 SELECT is((SELECT string_agg((r ->> 'personne_citee') || ':' || (r ->> 'lien') || ':' || (r ->> 'valeur'), ',' ORDER BY r ->> 'personne_citee')
              FROM jsonb_array_elements(pg_temp.j(pg_temp.exp(pg_temp.u(1))) -> 'reseau' -> 'reponses') r),
