@@ -41,6 +41,13 @@ export default function PrivacyPage() {
           We will create statistical, aggregated data from the test results for
           analytical purposes.
         </p>
+        <h2>Network survey: objections</h2>
+        <p>
+          When a person objects to being named in a team network survey, their
+          name is kept for that sole purpose: to prove that the objection is
+          respected. The named report delivered to Tenga Conseil includes only
+          the answers of people who gave a separate consent.
+        </p>
         <h2>How to contact us?</h2>
         <p>
           {supportEmail ? (

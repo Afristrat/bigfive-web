@@ -111,7 +111,8 @@ export function releveApercu(
         informeLe: DATE,
         opposeLe: oppose ? DATE : null,
         accordRepondreLe: oppose ? null : DATE,
-        accordCarteLe: oppose ? null : DATE
+        accordCarteLe: oppose ? null : DATE,
+        accordRapportLe: oppose ? null : DATE
       },
       membres: [],
       reponses: []
@@ -126,7 +127,8 @@ export function releveApercu(
           opposeLe: etape === 'oppose' ? DATE : null,
           accordRepondreLe:
             etape === 'releve' || etape === 'repondu' ? DATE : null,
-          accordCarteLe: etape === 'repondu' ? DATE : null
+          accordCarteLe: etape === 'repondu' ? DATE : null,
+          accordRapportLe: etape === 'repondu' ? DATE : null
         };
 
   // Réponses fabriquées, variées et toujours dans l'échelle de chaque lien.

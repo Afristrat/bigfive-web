@@ -31,7 +31,7 @@ const reseauEn = {
   information: {
     titre: 'You may be named',
     texte:
-      'The members of your team will be asked to describe how they work with you and with their other colleagues: advice, information, trust and dependence. You may therefore be named in their answers. These answers are used only for a feedback workshop with the team; none of them is shared with management or used for any decision about you. You may object to being named: your links are then removed from the map and you do not answer the survey; there is no other consequence.',
+      'The members of your team will be asked to describe how they work with you and with their other colleagues: advice, information, trust and dependence. You may therefore be named in their answers. These answers are used for a feedback workshop with the team and, only for those who have given their separate consent, for a named report delivered to Tenga Conseil; none of them is shared with management or used for any decision about you. You may object to being named: your links are then removed from the map and you do not answer the survey; there is no other consequence.',
     opposition: 'I object to being named in this survey.',
     oppositionAide:
       'Any answers that name you are then deleted. You can withdraw your objection later.',
@@ -41,12 +41,16 @@ const reseauEn = {
   consentement: {
     titre: 'Your consent',
     texte:
-      'Tenga Conseil invites you to answer four questions about how you work with the members of your team: advice, information, trust and dependence. Your answers name colleagues. They are used only to describe how the team actually works, during a feedback workshop. Only the consultant in charge of the assignment and the platform’s administrators can read your answers one by one. They will never be shared with your management and will not be used for any decision about you or your colleagues. Taking part is optional: declining has no consequence, and your employer will not know whether you answered. You can change your answers until the campaign closes, and withdraw them at any time.',
+      'Tenga Conseil invites you to answer four questions about how you work with the members of your team: advice, information, trust and dependence. Your answers name colleagues. They are used to describe how the team actually works, during a feedback workshop and, if you agree below, in a named report delivered to Tenga Conseil. Only the Tenga Conseil consultants assigned to your organisation and the platform’s administrators can read your answers one by one. They will never be shared with your management and will not be used for any decision about you or your colleagues. Taking part is optional: declining has no consequence, and your employer will not know whether you answered. You can change your answers until the campaign closes, and withdraw them at any time.',
     repondre: 'I agree to answer.',
     carte:
       'I agree that the team map, showing first names or codes, may be shown to the members of the team during the workshop.',
     carteAide:
       'The map is shown only if every member of the team agrees; otherwise the workshop presents indicators without names.',
+    rapport:
+      'I agree that my answers may appear by name in the report delivered to Tenga Conseil.',
+    rapportAide:
+      'Without this box, your answers appear in no named report; this choice has no consequence. This box is available only if you agree to answer.',
     refusAide:
       'Without the first box, you do not answer; this choice has no consequence. Unticking the first box deletes any answers already saved.',
     confirmerRefus: 'Confirm: delete my answers',
@@ -106,6 +110,9 @@ const reseauEn = {
     carteOui: 'You agree that the team map may be shown at the workshop.',
     carteNon:
       'You do not agree that the team map may be shown at the workshop.',
+    rapportOui:
+      'You agree that your answers may appear by name in the report delivered to Tenga Conseil.',
+    rapportNon: 'Your answers appear in no named report.',
     modifier: 'Change my consent',
     annuler: 'Cancel'
   },

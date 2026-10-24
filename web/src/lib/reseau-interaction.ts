@@ -85,12 +85,12 @@ export function reduireInteraction(
 }
 
 /**
- * Clé du formulaire d'accords, dérivée des deux dates : quand un accord change
+ * Clé du formulaire d'accords, dérivée des trois dates : quand un accord change
  * (retrait, nouvel accord), le formulaire est remonté et ses cases repartent de
  * l'état enregistré.
  */
 export const cleAccords = (moi: EtatMoi | null): string =>
-  `${moi?.accordRepondreLe ?? 'non'}|${moi?.accordCarteLe ?? 'non'}`;
+  `${moi?.accordRepondreLe ?? 'non'}|${moi?.accordCarteLe ?? 'non'}|${moi?.accordRapportLe ?? 'non'}`;
 
 /** Retirer l'accord de répondre supprime les réponses : on le fait confirmer. */
 export const doitConfirmerRefus = (

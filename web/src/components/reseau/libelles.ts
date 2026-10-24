@@ -29,6 +29,8 @@ export type LibellesReseau = {
     repondre: string;
     carte: string;
     carteAide: string;
+    rapport: string;
+    rapportAide: string;
     refusAide: string;
     confirmerRefus: string;
     enregistrer: string;
@@ -63,6 +65,8 @@ export type LibellesReseau = {
     repondre: string;
     carteOui: string;
     carteNon: string;
+    rapportOui: string;
+    rapportNon: string;
     modifier: string;
     annuler: string;
   };
@@ -143,6 +147,8 @@ export function libellesReseau(t: Traducteur, contact: string): LibellesReseau {
       repondre: t('consentement.repondre'),
       carte: t('consentement.carte'),
       carteAide: t('consentement.carteAide'),
+      rapport: t('consentement.rapport'),
+      rapportAide: t('consentement.rapportAide'),
       refusAide: t('consentement.refusAide'),
       confirmerRefus: t('consentement.confirmerRefus'),
       enregistrer: t('consentement.enregistrer')
@@ -190,6 +196,8 @@ export function libellesReseau(t: Traducteur, contact: string): LibellesReseau {
       repondre: t('accords.repondre'),
       carteOui: t('accords.carteOui'),
       carteNon: t('accords.carteNon'),
+      rapportOui: t('accords.rapportOui'),
+      rapportNon: t('accords.rapportNon'),
       modifier: t('accords.modifier'),
       annuler: t('accords.annuler')
     },

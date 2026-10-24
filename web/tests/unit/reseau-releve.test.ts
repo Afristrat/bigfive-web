@@ -25,6 +25,7 @@ const moi = (surcharge: Partial<EtatMoi> = {}): EtatMoi => ({
   opposeLe: null,
   accordRepondreLe: null,
   accordCarteLe: null,
+  accordRapportLe: null,
   ...surcharge
 });
 

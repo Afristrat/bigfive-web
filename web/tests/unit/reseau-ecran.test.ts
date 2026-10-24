@@ -44,6 +44,7 @@ const moi = (surcharge: Partial<EtatMoi> = {}): EtatMoi => ({
   opposeLe: null,
   accordRepondreLe: null,
   accordCarteLe: null,
+  accordRapportLe: null,
   ...surcharge
 });
 
@@ -140,19 +141,20 @@ describe('premier temps : information et opposition', () => {
   });
 });
 
-describe('deuxième temps : consentement à deux cases distinctes', () => {
+describe('deuxième temps : consentement à trois cases distinctes', () => {
   const html = rendre(releve({ moi: moi(), membres }));
 
-  it('deux cases distinctes, non cochées, chacune avec son libellé', () => {
+  it('trois cases distinctes, non cochées, chacune avec son libellé', () => {
     const cases = [...html.matchAll(/<input[^>]*type="checkbox"[^>]*>/g)].map(
       (m) => m[0]
     );
-    expect(cases).toHaveLength(2);
+    expect(cases).toHaveLength(3);
     for (const c of cases) expect(c).not.toContain('checked');
     const ids = cases.map((c) => /id="([^"]+)"/.exec(c)?.[1]);
-    expect(new Set(ids).size).toBe(2);
+    expect(new Set(ids).size).toBe(3);
     expect(html).toContain(echappe(fr.reseau.consentement.repondre));
     expect(html).toContain(echappe(fr.reseau.consentement.carte));
+    expect(html).toContain(echappe(fr.reseau.consentement.rapport));
   });
 
   it('le texte de consentement et les mentions', () => {

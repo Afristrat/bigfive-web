@@ -102,6 +102,7 @@ const releveFerme = z
         oppose_le: date.nullable(),
         accord_repondre_le: date.nullable(),
         accord_carte_le: date.nullable(),
+        accord_rapport_le: date.nullable(),
         nb_reponses: z.number().int().nonnegative()
       })
       .strict()
@@ -117,7 +118,8 @@ const releveOuvert = z
         informe_le: date,
         oppose_le: date.nullable(),
         accord_repondre_le: date.nullable(),
-        accord_carte_le: date.nullable()
+        accord_carte_le: date.nullable(),
+        accord_rapport_le: date.nullable()
       })
       .strict()
       .nullable(),
@@ -172,7 +174,8 @@ export async function loadReleveReseau(
           informeLe: lu.moi.informe_le,
           opposeLe: lu.moi.oppose_le,
           accordRepondreLe: lu.moi.accord_repondre_le,
-          accordCarteLe: lu.moi.accord_carte_le
+          accordCarteLe: lu.moi.accord_carte_le,
+          accordRapportLe: lu.moi.accord_rapport_le
         },
         membres: [],
         reponses: []
@@ -186,7 +189,8 @@ export async function loadReleveReseau(
         informeLe: lu.moi.informe_le,
         opposeLe: lu.moi.oppose_le,
         accordRepondreLe: lu.moi.accord_repondre_le,
-        accordCarteLe: lu.moi.accord_carte_le
+        accordCarteLe: lu.moi.accord_carte_le,
+        accordRapportLe: lu.moi.accord_rapport_le
       },
       membres: lu.membres.map((m) => ({
         participationId: m.participation_id,
@@ -224,6 +228,7 @@ const lectureSchema = z
                 oppose: z.boolean(),
                 accord_repondre: z.boolean(),
                 accord_carte: z.boolean(),
+                accord_rapport: z.boolean(),
                 a_repondu: z.boolean()
               })
               .strict()

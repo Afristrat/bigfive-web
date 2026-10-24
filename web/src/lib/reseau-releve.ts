@@ -32,6 +32,8 @@ export type EtatMoi = {
   opposeLe: string | null;
   accordRepondreLe: string | null;
   accordCarteLe: string | null;
+  /** Accord distinct : rapport nominatif remis au cabinet. */
+  accordRapportLe: string | null;
 };
 
 export type MembreReseau = {
@@ -106,7 +108,8 @@ export type ActionsReseau = {
   consentir: (
     participation: string,
     repondre: boolean,
-    carte: boolean
+    carte: boolean,
+    rapport: boolean
   ) => Promise<ResultatReseau>;
   repondre: (
     participation: string,
@@ -129,7 +132,8 @@ export const peutRetirer = (releve: ReleveReseau): boolean =>
   releve.reponses.length > 0 ||
   releve.nbReponses > 0 ||
   releve.moi?.accordRepondreLe != null ||
-  releve.moi?.accordCarteLe != null;
+  releve.moi?.accordCarteLe != null ||
+  releve.moi?.accordRapportLe != null;
 
 /** Brouillon de saisie : une valeur par couple (personne citée, lien). */
 export type Brouillon = Readonly<Record<string, number>>;

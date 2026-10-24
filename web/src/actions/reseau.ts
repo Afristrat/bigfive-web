@@ -162,25 +162,36 @@ export async function informerReseau(
 }
 
 /**
- * Les deux accords, indépendants : répondre, et montrer la carte de l'équipe en
- * atelier. Retirer l'accord de répondre supprime mes réponses.
+ * Les trois accords, indépendants : répondre, montrer la carte de l'équipe en
+ * atelier, remettre au cabinet le rapport nominatif. Retirer l'accord de
+ * répondre supprime mes réponses ; le rapport n'a de sens que si je réponds.
  */
 export async function consentirReseau(
   participation: string,
   repondre: boolean,
-  carte: boolean
+  carte: boolean,
+  rapport: boolean
 ): Promise<ResultatReseau> {
   const accessToken = await jeton();
   if (!accessToken) return { status: 'reconnexion' };
   const id = uuid.safeParse(participation);
   const r = booleen.safeParse(repondre);
   const c = booleen.safeParse(carte);
-  if (!id.success || !r.success || !c.success) return { status: 'invalid' };
+  const p = booleen.safeParse(rapport);
+  if (!id.success || !r.success || !c.success || !p.success) {
+    return { status: 'invalid' };
+  }
+  if (p.data && !r.data) return { status: 'invalid' };
   return appeler(
     accessToken,
     'consentir',
     'reseau_consentir',
-    { p_participation: id.data, p_repondre: r.data, p_carte: c.data },
+    {
+      p_participation: id.data,
+      p_repondre: r.data,
+      p_carte: c.data,
+      p_rapport: p.data
+    },
     z.literal('enregistre'),
     () => 'enregistre'
   );
@@ -207,7 +218,7 @@ export async function repondreReseau(
   );
 }
 
-/** Retrait à tout moment : mes réponses et mes deux accords sont supprimés. */
+/** Retrait à tout moment : mes réponses et mes trois accords sont supprimés. */
 export async function retirerReseau(
   participation: string
 ): Promise<ResultatReseau> {

@@ -33,7 +33,7 @@ const reseauFr = {
   information: {
     titre: 'Vous pouvez être cité',
     texte:
-      'Les membres de votre équipe vont être invités à décrire leurs échanges de travail avec vous et avec leurs autres collègues : conseil, information, confiance, dépendance. Vous pouvez donc être cité dans leurs réponses. Ces réponses servent uniquement à un atelier de restitution de l’équipe ; aucune n’est communiquée à la hiérarchie ni utilisée pour une décision vous concernant. Vous pouvez vous opposer à être cité : vos liens sont alors retirés de la carte et vous ne répondez pas au relevé ; aucune autre conséquence.',
+      'Les membres de votre équipe vont être invités à décrire leurs échanges de travail avec vous et avec leurs autres collègues : conseil, information, confiance, dépendance. Vous pouvez donc être cité dans leurs réponses. Ces réponses servent à un atelier de restitution de l’équipe et, pour les seules personnes ayant donné leur accord distinct, à un rapport nominatif remis à Tenga Conseil ; aucune n’est communiquée à la hiérarchie ni utilisée pour une décision vous concernant. Vous pouvez vous opposer à être cité : vos liens sont alors retirés de la carte et vous ne répondez pas au relevé ; aucune autre conséquence.',
     opposition: 'Je m’oppose à être cité dans ce relevé.',
     oppositionAide:
       'Les réponses qui vous citent sont alors supprimées. Vous pourrez lever votre opposition plus tard.',
@@ -43,12 +43,16 @@ const reseauFr = {
   consentement: {
     titre: 'Votre accord',
     texte:
-      'Tenga Conseil vous propose de répondre à quatre questions sur vos échanges de travail avec les membres de votre équipe : conseil, information, confiance, dépendance. Vos réponses nomment des collègues. Elles servent uniquement à décrire la façon dont l’équipe travaille réellement, lors d’un atelier de restitution. Seuls le consultant chargé de la mission et les administrateurs de la plateforme peuvent lire vos réponses une à une. Elles ne seront jamais communiquées à votre hiérarchie et ne serviront à aucune décision vous concernant ou concernant vos collègues. Répondre est facultatif : refuser n’a aucune conséquence, et votre employeur ne saura pas si vous avez répondu. Vous pouvez modifier vos réponses jusqu’à la clôture, puis les retirer à tout moment.',
+      'Tenga Conseil vous propose de répondre à quatre questions sur vos échanges de travail avec les membres de votre équipe : conseil, information, confiance, dépendance. Vos réponses nomment des collègues. Elles servent à décrire la façon dont l’équipe travaille réellement, lors d’un atelier de restitution et, si vous l’acceptez ci-dessous, dans un rapport nominatif remis à Tenga Conseil. Seuls les consultants de Tenga Conseil affectés à votre organisation et les administrateurs de la plateforme peuvent lire vos réponses une à une. Elles ne seront jamais communiquées à votre hiérarchie et ne serviront à aucune décision vous concernant ou concernant vos collègues. Répondre est facultatif : refuser n’a aucune conséquence, et votre employeur ne saura pas si vous avez répondu. Vous pouvez modifier vos réponses jusqu’à la clôture, puis les retirer à tout moment.',
     repondre: 'J’accepte de répondre.',
     carte:
       'J’accepte que la carte de l’équipe, avec les prénoms ou les codes, soit montrée aux membres de l’équipe lors de l’atelier.',
     carteAide:
       'La carte n’est montrée que si chaque membre de l’équipe l’accepte ; sinon, l’atelier ne présente que des indicateurs sans noms.',
+    rapport:
+      'J’accepte que mes réponses figurent nommément dans le rapport remis à Tenga Conseil.',
+    rapportAide:
+      'Sans cette case, vos réponses ne figurent dans aucun rapport nominatif ; ce choix n’a aucune conséquence. Cette case n’est disponible que si vous acceptez de répondre.',
     refusAide:
       'Sans la première case, vous ne répondez pas ; ce choix n’a aucune conséquence. Décocher la première case supprime les réponses déjà enregistrées.',
     confirmerRefus: 'Confirmer : supprimer mes réponses',
@@ -109,6 +113,9 @@ const reseauFr = {
     carteOui: 'Vous acceptez que la carte de l’équipe soit montrée en atelier.',
     carteNon:
       'Vous n’acceptez pas que la carte de l’équipe soit montrée en atelier.',
+    rapportOui:
+      'Vous acceptez que vos réponses figurent nommément dans le rapport remis à Tenga Conseil.',
+    rapportNon: 'Vos réponses ne figurent dans aucun rapport nominatif.',
     modifier: 'Modifier mes accords',
     annuler: 'Annuler'
   },

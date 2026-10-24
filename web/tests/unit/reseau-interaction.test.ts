@@ -19,6 +19,7 @@ const moi = (surcharge: Partial<EtatMoi> = {}): EtatMoi => ({
   opposeLe: null,
   accordRepondreLe: null,
   accordCarteLe: null,
+  accordRapportLe: null,
   ...surcharge
 });
 
@@ -37,6 +38,11 @@ describe('clé du formulaire d’accords (case de carte restée cochée après r
     expect(cleAccords(moi())).not.toBe(avant);
     expect(cleAccords(moi({ accordRepondreLe: 'a' }))).not.toBe(avant);
     expect(cleAccords(moi({ accordCarteLe: 'b' }))).not.toBe(avant);
+    expect(
+      cleAccords(
+        moi({ accordRepondreLe: 'a', accordCarteLe: 'b', accordRapportLe: 'c' })
+      )
+    ).not.toBe(avant);
   });
   it('stable tant que rien ne change ; définie sans ligne', () => {
     expect(cleAccords(moi({ accordCarteLe: 'b' }))).toBe(

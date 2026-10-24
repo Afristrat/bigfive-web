@@ -86,7 +86,7 @@ const PAGE_RELEVE = ['/[locale]/mes-resultats/reseau/[participation]', 'page'];
 describe('revalidation de la page du relevé', () => {
   const appels: [string, () => Promise<unknown>, unknown][] = [
     ['informer', () => informerReseau(PART, false), 'informe'],
-    ['consentir', () => consentirReseau(PART, true, false), 'enregistre'],
+    ['consentir', () => consentirReseau(PART, true, false, false), 'enregistre'],
     [
       'repondre',
       () => repondreReseau(PART, [{ cite: M1, lien: 'conseil', valeur: 2 }]),
@@ -200,7 +200,7 @@ describe('informerReseau : information préalable et opposition', () => {
 describe('consentirReseau : deux accords distincts', () => {
   it('sans session : reconnexion, aucun appel', async () => {
     currentViewer.mockResolvedValue({ status: 'anonymous' });
-    expect(await consentirReseau(PART, true, false)).toEqual({
+    expect(await consentirReseau(PART, true, false, false)).toEqual({
       status: 'reconnexion'
     });
     expect(rpc).not.toHaveBeenCalled();
@@ -208,35 +208,37 @@ describe('consentirReseau : deux accords distincts', () => {
 
   it('transmet les deux accords tels quels', async () => {
     rpc.mockResolvedValue('enregistre');
-    expect(await consentirReseau(PART, true, false)).toEqual({
+    expect(await consentirReseau(PART, true, false, false)).toEqual({
       status: 'enregistre'
     });
     expect(rpc).toHaveBeenCalledWith('reseau_consentir', {
       p_participation: PART,
       p_repondre: true,
-      p_carte: false
+      p_carte: false,
+      p_rapport: false
     });
-    await consentirReseau(PART, false, true);
+    await consentirReseau(PART, false, true, false);
     expect(rpc).toHaveBeenLastCalledWith('reseau_consentir', {
       p_participation: PART,
       p_repondre: false,
-      p_carte: true
+      p_carte: true,
+      p_rapport: false
     });
   });
 
   it('accord non booléen : invalid, aucun appel', async () => {
-    expect(await consentirReseau(PART, 1 as unknown as boolean, false)).toEqual(
+    expect(await consentirReseau(PART, 1 as unknown as boolean, false, false)).toEqual(
       { status: 'invalid' }
     );
     expect(
-      await consentirReseau(PART, true, undefined as unknown as boolean)
+      await consentirReseau(PART, true, undefined as unknown as boolean, false)
     ).toEqual({ status: 'invalid' });
     expect(rpc).not.toHaveBeenCalled();
   });
 
   it.each(ERREURS)('code SQL %s : %s', async (code, status) => {
     rpc.mockRejectedValue(new GatewayError(400, code));
-    expect(await consentirReseau(PART, true, true)).toEqual({ status });
+    expect(await consentirReseau(PART, true, true, false)).toEqual({ status });
   });
 });
 
@@ -396,7 +398,8 @@ const releveOuvert = (surcharge: Record<string, unknown> = {}) => ({
     informe_le: '2026-10-23T09:00:00Z',
     oppose_le: null,
     accord_repondre_le: '2026-10-23T09:05:00Z',
-    accord_carte_le: null
+    accord_carte_le: null,
+    accord_rapport_le: null
   },
   membres: [
     { participation_id: M1, nom: 'Karim B.' },
@@ -437,6 +440,7 @@ describe('loadReleveReseau : app.reseau_releve', () => {
         oppose_le: null,
         accord_repondre_le: '2026-10-23T09:05:00Z',
         accord_carte_le: null,
+        accord_rapport_le: null,
         nb_reponses: 4
       }
     });
@@ -448,7 +452,8 @@ describe('loadReleveReseau : app.reseau_releve', () => {
         informeLe: '2026-10-23T09:00:00Z',
         opposeLe: null,
         accordRepondreLe: '2026-10-23T09:05:00Z',
-        accordCarteLe: null
+        accordCarteLe: null,
+        accordRapportLe: null
       },
       membres: [],
       reponses: []
@@ -465,7 +470,8 @@ describe('loadReleveReseau : app.reseau_releve', () => {
         informeLe: '2026-10-23T09:00:00Z',
         opposeLe: null,
         accordRepondreLe: '2026-10-23T09:05:00Z',
-        accordCarteLe: null
+        accordCarteLe: null,
+        accordRapportLe: null
       },
       membres: [
         { participationId: M1, nom: 'Karim B.' },
@@ -502,7 +508,8 @@ describe('loadReleveReseau : app.reseau_releve', () => {
           informe_le: '2026-10-23T09:00:00Z',
           oppose_le: null,
           accord_repondre_le: null,
-          accord_carte_le: null
+          accord_carte_le: null,
+          accord_rapport_le: null
         }
       }
     ],
@@ -515,6 +522,7 @@ describe('loadReleveReseau : app.reseau_releve', () => {
           oppose_le: null,
           accord_repondre_le: null,
           accord_carte_le: null,
+          accord_rapport_le: null,
           nb_reponses: -1
         }
       }
@@ -538,7 +546,8 @@ describe('loadReleveReseau : app.reseau_releve', () => {
           informe_le: null,
           oppose_le: null,
           accord_repondre_le: null,
-          accord_carte_le: null
+          accord_carte_le: null,
+          accord_rapport_le: null
         }
       })
     ]
@@ -584,6 +593,7 @@ const lecture = () => ({
           oppose: false,
           accord_repondre: true,
           accord_carte: true,
+          accord_rapport: false,
           a_repondu: true
         },
         {
@@ -593,6 +603,7 @@ const lecture = () => ({
           oppose: true,
           accord_repondre: false,
           accord_carte: false,
+          accord_rapport: false,
           a_repondu: false
         },
         {
@@ -602,6 +613,7 @@ const lecture = () => ({
           oppose: false,
           accord_repondre: true,
           accord_carte: false,
+          accord_rapport: false,
           a_repondu: true
         }
       ],

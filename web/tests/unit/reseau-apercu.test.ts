@@ -131,7 +131,7 @@ describe('actions neutralisées', () => {
     expect(await actionsApercuReseau.informer(p, true)).toEqual({
       status: 'apercu'
     });
-    expect(await actionsApercuReseau.consentir(p, true, true)).toEqual({
+    expect(await actionsApercuReseau.consentir(p, true, true, true)).toEqual({
       status: 'apercu'
     });
     expect(await actionsApercuReseau.repondre(p, [])).toEqual({

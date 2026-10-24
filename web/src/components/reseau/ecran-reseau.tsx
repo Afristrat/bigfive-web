@@ -50,8 +50,9 @@ import {
 import { Link } from '@/navigation';
 
 // Écran du relevé du réseau réel, en trois temps : (1) information des
-// personnes citées, avec opposition possible ; (2) consentement, deux cases
-// distinctes jamais cochées d'office ; (3) liste fermée, quatre questions par
+// personnes citées, avec opposition possible ; (2) consentement, trois cases
+// distinctes jamais cochées d'office (la troisième, rapport nominatif, n'est
+// offerte que si « répondre » est cochée) ; (3) liste fermée, quatre questions par
 // membre, un seul enregistrement. Le retrait et l'opposition restent possibles
 // ensuite, campagne close comprise. La base décide de tout : l'écran envoie
 // l'action reçue en props (réelle, ou neutre dans l'aperçu) et dit ce qui
@@ -268,12 +269,13 @@ export function EcranReseau({
                 pending={pending}
                 repondreAccorde={releve.moi?.accordRepondreLe != null}
                 carteAccordee={releve.moi?.accordCarteLe != null}
+                rapportAccorde={releve.moi?.accordRapportLe != null}
                 panneau={interaction.panneau}
                 dispatch={dispatch}
                 enregistrer={enregistrer}
-                onEnvoyer={(repondre, carte) =>
+                onEnvoyer={(repondre, carte, rapport) =>
                   envoyer(() =>
-                    actions.consentir(participationId, repondre, carte)
+                    actions.consentir(participationId, repondre, carte, rapport)
                   )
                 }
               />
@@ -316,13 +318,19 @@ export function EcranReseau({
                   pending={pending}
                   repondreAccorde={releve.moi?.accordRepondreLe != null}
                   carteAccordee={releve.moi?.accordCarteLe != null}
+                  rapportAccorde={releve.moi?.accordRapportLe != null}
                   panneau={interaction.panneau}
                   dispatch={dispatch}
                   enregistrer={enregistrer}
                   premierChamp
-                  onEnvoyer={(repondre, carte) =>
+                  onEnvoyer={(repondre, carte, rapport) =>
                     envoyer(() =>
-                      actions.consentir(participationId, repondre, carte)
+                      actions.consentir(
+                        participationId,
+                        repondre,
+                        carte,
+                        rapport
+                      )
                     )
                   }
                   onAnnuler={() => dispatch({ type: 'fermer' })}
@@ -547,7 +555,8 @@ function Case({
   onChange,
   libelle,
   aide,
-  refEntree
+  refEntree,
+  desactivee = false
 }: {
   id: string;
   name: string;
@@ -556,16 +565,21 @@ function Case({
   libelle: string;
   aide?: string;
   refEntree?: (noeud: HTMLElement | null) => void;
+  /** Case indisponible (condition préalable non remplie) : grisée, non cliquable. */
+  desactivee?: boolean;
 }) {
   return (
     <div className='colonne-lecture'>
       <label
         htmlFor={id}
         className={clsx(
-          'flex min-h-11 cursor-pointer items-start gap-3 rounded-controle border bg-surface px-4 py-3 text-corps text-encre transition-colors duration-courte ease-tenga',
-          checked
-            ? 'border-accent'
-            : 'border-trait [@media(hover:hover)]:hover:border-trait-fort'
+          'flex min-h-11 items-start gap-3 rounded-controle border bg-surface px-4 py-3 text-corps text-encre transition-colors duration-courte ease-tenga',
+          desactivee && 'cursor-not-allowed border-trait opacity-60',
+          !desactivee && 'cursor-pointer',
+          !desactivee &&
+            (checked
+              ? 'border-accent'
+              : 'border-trait [@media(hover:hover)]:hover:border-trait-fort')
         )}
       >
         <input
@@ -574,9 +588,11 @@ function Case({
           type='checkbox'
           name={name}
           checked={checked}
+          disabled={desactivee}
+          aria-disabled={desactivee ? true : undefined}
           onChange={(event) => onChange(event.target.checked)}
           aria-describedby={aide ? `${id}-aide` : undefined}
-          className='mt-0.5 size-5 shrink-0 cursor-pointer accent-accent'
+          className='mt-0.5 size-5 shrink-0 cursor-pointer accent-accent disabled:cursor-not-allowed'
         />
         <span className={checked ? 'font-semibold' : 'font-medium'}>
           {libelle}
@@ -640,8 +656,10 @@ function EtapeInformation({
 }
 
 // ---------------------------------------------------------------------------
-// Deuxième temps : deux accords distincts. Retirer l'accord de répondre
-// supprime les réponses : ce geste passe par une confirmation.
+// Deuxième temps : trois accords distincts. Retirer l'accord de répondre
+// supprime les réponses : ce geste passe par une confirmation. L'accord de
+// rapport nominatif dépend de « répondre » : indisponible tant qu'il est
+// décoché, et décoché d'office quand « répondre » l'est.
 
 function FormulaireAccords({
   base,
@@ -649,6 +667,7 @@ function FormulaireAccords({
   pending,
   repondreAccorde,
   carteAccordee,
+  rapportAccorde,
   panneau,
   dispatch,
   enregistrer,
@@ -661,16 +680,19 @@ function FormulaireAccords({
   pending: boolean;
   repondreAccorde: boolean;
   carteAccordee: boolean;
+  rapportAccorde: boolean;
   panneau: Panneau | null;
   dispatch: Envoyer;
   enregistrer: Enregistrer;
   /** Vrai quand le formulaire est le contenu du panneau « Modifier mes accords ». */
   premierChamp?: boolean;
-  onEnvoyer: (repondre: boolean, carte: boolean) => void;
+  onEnvoyer: (repondre: boolean, carte: boolean, rapport: boolean) => void;
   onAnnuler?: () => void;
 }) {
   const [repondre, setRepondre] = useState(repondreAccorde);
   const [carte, setCarte] = useState(carteAccordee);
+  // Jamais coché sans « répondre », même si la base portait un accord resté.
+  const [rapport, setRapport] = useState(repondreAccorde && rapportAccorde);
   const soumettre = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     if (pending) return;
@@ -678,7 +700,7 @@ function FormulaireAccords({
       dispatch({ type: 'ouvrir', panneau: 'refus' });
       return;
     }
-    onEnvoyer(repondre, carte);
+    onEnvoyer(repondre, carte, rapport);
   };
   const caseRepondre = (noeud: HTMLElement | null): void => {
     enregistrer('declencheur:refus')(noeud);
@@ -693,6 +715,7 @@ function FormulaireAccords({
         onChange={(valeur) => {
           setRepondre(valeur);
           if (valeur) dispatch({ type: 'repondreRecoche' });
+          else setRapport(false);
         }}
         libelle={libelles.consentement.repondre}
         aide={libelles.consentement.refusAide}
@@ -706,6 +729,15 @@ function FormulaireAccords({
         libelle={libelles.consentement.carte}
         aide={libelles.consentement.carteAide}
       />
+      <Case
+        id={`${base}-rapport`}
+        name='rapport'
+        checked={rapport}
+        onChange={setRapport}
+        libelle={libelles.consentement.rapport}
+        aide={libelles.consentement.rapportAide}
+        desactivee={!repondre}
+      />
       {panneau === 'refus' ? (
         <PanneauConfirmation
           id={`${base}-refus`}
@@ -716,7 +748,7 @@ function FormulaireAccords({
           working={libelles.working}
           pending={pending}
           enregistrer={enregistrer}
-          onConfirmer={() => onEnvoyer(repondre, carte)}
+          onConfirmer={() => onEnvoyer(repondre, carte, rapport)}
           onAnnuler={() => dispatch({ type: 'fermer' })}
         />
       ) : (
@@ -760,12 +792,16 @@ function ResumeAccords({
   onBasculer: () => void;
 }) {
   const carte = releve.moi?.accordCarteLe != null;
+  const rapport = releve.moi?.accordRapportLe != null;
   return (
     <div className='colonne-lecture flex flex-col gap-3 rounded-panneau border border-trait bg-surface px-5 py-4 sm:flex-row sm:items-center sm:justify-between'>
       <div className='text-petit text-texte-2'>
         <p className='font-semibold text-encre'>{libelles.accords.titre}</p>
         <p className='mt-1'>{libelles.accords.repondre}</p>
         <p>{carte ? libelles.accords.carteOui : libelles.accords.carteNon}</p>
+        <p>
+          {rapport ? libelles.accords.rapportOui : libelles.accords.rapportNon}
+        </p>
       </div>
       {modifiable && (
         <button

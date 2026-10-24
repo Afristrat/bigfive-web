@@ -19,7 +19,8 @@ export async function informerApercu(
 export async function consentirApercu(
   _participation: string,
   _repondre: boolean,
-  _carte: boolean
+  _carte: boolean,
+  _rapport: boolean
 ): Promise<ResultatReseau> {
   return neutre;
 }
