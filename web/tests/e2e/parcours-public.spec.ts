@@ -6,14 +6,22 @@ test('la page d’accueil répond en 200', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
 });
 
-test('/fr/test affiche la première question', async ({ page }) => {
-  const response = await page.goto('/fr/test');
-  expect(response?.status()).toBe(200);
-  await expect(page.getByRole('progressbar')).toBeVisible();
-  const question = page.getByRole('heading', { level: 2 }).first();
-  await expect(question).toBeVisible();
-  await expect(question).not.toHaveText('');
-  await expect(page.getByRole('radio').first()).toBeVisible();
+// Parcours anonyme fermé (PARCOURS_ANONYME_OUVERT dans config/site.ts) : sans
+// session, le questionnaire public et les résultats publics mènent à la connexion.
+test.describe('parcours anonyme fermé', () => {
+  for (const [path, retour] of [
+    ['/fr/test', '/test'],
+    ['/fr/result', '/mes-resultats'],
+    ['/fr/result/0123456789abcdef01234567', '/mes-resultats']
+  ]) {
+    test(`${path} sans session mène à la connexion`, async ({ page }) => {
+      const response = await page.goto(path);
+      expect(response?.status()).toBe(200);
+      const url = new URL(page.url());
+      expect(url.pathname).toBe('/fr/connexion');
+      expect(url.searchParams.get('next')).toBe(retour);
+    });
+  }
 });
 
 test.describe('anciennes pages retirées', () => {

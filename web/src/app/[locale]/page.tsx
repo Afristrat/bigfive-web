@@ -11,7 +11,11 @@ import { ratioDeScore } from '@/components/home/pentagone';
 import { PostListItem } from '@/components/post-list-item';
 import { secondaryButtonClass } from '@/components/form-styles';
 import { Link } from '@/navigation';
-import { basePath } from '@/config/site';
+import {
+  ARTICLES_PUBLICS,
+  PARCOURS_ANONYME_OUVERT,
+  basePath
+} from '@/config/site';
 import { DomainCode, domainCodes, domainLabel } from '@/lib/domain-labels';
 import { formatNombre, localeRegionale } from '@/lib/format';
 import '@/components/home/accueil.css';
@@ -61,6 +65,7 @@ export default async function Home({ params }: HomeProps) {
   const h = await getTranslations('home');
   const p = await getTranslations('presentation');
   const toolbar = await getTranslations('toolbar');
+  const login = await getTranslations('login');
   const ratios = profils.map((profil) =>
     domainCodes.map((code) => ratioDeScore(profil[code]))
   );
@@ -72,11 +77,14 @@ export default async function Home({ params }: HomeProps) {
     { valeur: 3, label: h('figures.languages') }
   ];
 
-  // Articles seulement dans la langue exacte de la page (aucun en FR ni en AR).
-  const posts = allPosts
-    .filter((post) => post.locale === locale)
-    .sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)))
-    .slice(0, 3);
+  // Articles seulement dans la langue exacte de la page (aucun en FR ni en AR) ;
+  // aucun tant que la rubrique est occultée.
+  const posts = ARTICLES_PUBLICS
+    ? allPosts
+        .filter((post) => post.locale === locale)
+        .sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)))
+        .slice(0, 3)
+    : [];
 
   return (
     <>
@@ -127,8 +135,15 @@ export default async function Home({ params }: HomeProps) {
             style={rang(2)}
             className='apparait-tard mt-9 flex flex-wrap gap-3'
           >
-            <Link href='/test' data-aimant='' className={boutonPrincipal()}>
-              {t('call_to_action')}
+            {/* Parcours anonyme fermé : l'appel mène à la connexion. */}
+            <Link
+              href={PARCOURS_ANONYME_OUVERT ? '/test' : '/connexion'}
+              data-aimant=''
+              className={boutonPrincipal()}
+            >
+              {PARCOURS_ANONYME_OUVERT
+                ? t('call_to_action')
+                : login('connect.button')}
               <ArrowRightIcon size={18} />
             </Link>
             <Link

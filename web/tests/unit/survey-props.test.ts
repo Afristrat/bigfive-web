@@ -71,6 +71,13 @@ const VIEWER = {
 const ID = '22222222-2222-4222-8222-222222222222';
 const ID2 = '55555555-5555-4555-8555-555555555555';
 
+// Rendu du parcours anonyme tel qu'il revient quand l'interrupteur est rouvert ;
+// le parcours fermé est couvert par parcours-anonyme-ferme.test.ts.
+vi.mock('@/config/site', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/config/site')>()),
+  PARCOURS_ANONYME_OUVERT: true
+}));
+
 const currentViewer = vi.fn();
 const requireViewer = vi.fn();
 vi.mock('@/lib/session', () => ({
@@ -300,7 +307,7 @@ beforeEach(() => {
   savePublicTest.mockReset();
 });
 
-describe('page /test (parcours public)', () => {
+describe('page /test (parcours public, interrupteur ouvert)', () => {
   const rendre = async () =>
     TestPage({ params: Promise.resolve({ locale: 'fr' }) });
 

@@ -884,7 +884,8 @@ const french = {
   },
   notFound: {
     title: 'Cette page n’existe pas',
-    text: 'L’adresse a peut-être été mal saisie, ou la page a été déplacée. Repartez de l’accueil, ou commencez directement le questionnaire.',
+    // Défaut non validé par Amine (24/10/2026).
+    text: 'La page demandée n’existe pas ou n’existe plus.',
     home: 'Retour à l’accueil',
     test: 'Commencer le questionnaire'
   },

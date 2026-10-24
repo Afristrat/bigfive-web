@@ -1,4 +1,5 @@
 import { compareDesc } from 'date-fns';
+import { notFound as introuvable } from 'next/navigation';
 import { allPosts } from 'contentlayer/generated';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { title } from '@/components/primitives';
@@ -6,18 +7,22 @@ import { MotsCinetiques } from '@/components/home-sections';
 import { PostListItem } from '@/components/post-list-item';
 import { Link } from '@/navigation';
 import { getTranslationLocale } from '@/lib/helpers';
+import { ARTICLES_PUBLICS } from '@/config/site';
 
 interface ArticlesProps {
   params: Promise<{ locale: string }>;
 }
 
 export async function generateMetadata({ params }: ArticlesProps) {
+  // Rubrique occultée : 404 dans toutes les langues, avant toute lecture.
+  if (!ARTICLES_PUBLICS) introuvable();
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'toolbar' });
   return { title: t('articles') };
 }
 
 export default async function ArticlesPage({ params }: ArticlesProps) {
+  if (!ARTICLES_PUBLICS) introuvable();
   const { locale } = await params;
   setRequestLocale(locale);
   const toolbar = await getTranslations('toolbar');

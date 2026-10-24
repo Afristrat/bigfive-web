@@ -8,8 +8,11 @@ import {
   loadParticipationsAPasser,
   type ParticipationPassation
 } from '@/lib/passation-data';
-import { currentViewer } from '@/lib/session';
+import { PARCOURS_ANONYME_OUVERT } from '@/config/site';
+import { localizedPath } from '@/lib/safe-path';
+import { currentViewer, requireViewer, type Viewer } from '@/lib/session';
 import { Link } from '@/navigation';
+import { redirect } from 'next/navigation';
 import { connection } from 'next/server';
 
 interface Props {
@@ -18,9 +21,12 @@ interface Props {
 
 // Une personne connectée qui a un questionnaire de campagne à passer doit le
 // faire depuis sa passation : ce parcours public écrit ailleurs. Aucune panne de
-// lecture ne doit empêcher le parcours public.
-async function participationsAPasser(): Promise<ParticipationPassation[]> {
+// lecture ne doit empêcher la page. `connu` : personne déjà vérifiée par la page.
+async function participationsAPasser(
+  connu: Viewer | null
+): Promise<ParticipationPassation[]> {
   try {
+    if (connu) return await loadParticipationsAPasser(connu);
     const state = await currentViewer();
     return state.status === 'ok'
       ? await loadParticipationsAPasser(state.viewer)
@@ -38,11 +44,21 @@ export default async function TestPage({ params }: Props) {
   // page part statique avec une liste vide.
   await connection();
   const { locale } = await params;
+  // Parcours anonyme fermé : sans session, connexion avec retour sûr sur /test,
+  // avant toute lecture. Avec session, seulement l'encart de passation de
+  // campagne : ni formulaire public ni écriture MongoDB.
+  const connu = PARCOURS_ANONYME_OUVERT
+    ? null
+    : await requireViewer(locale, '/test');
   setRequestLocale(locale);
-  const questions = getLocalizedItems(locale);
   const t = await getTranslations('test');
   const p = await getTranslations('passation');
-  const aPasser = await participationsAPasser();
+  const aPasser = await participationsAPasser(connu);
+  // Fermé et rien à passer (ou lecture en panne, journalisée) : « Mes résultats ».
+  if (!PARCOURS_ANONYME_OUVERT && aPasser.length === 0) {
+    redirect(localizedPath(locale, '/mes-resultats'));
+  }
+  const questions = PARCOURS_ANONYME_OUVERT ? getLocalizedItems(locale) : [];
   return (
     <>
       <h1 className='sr-only'>{t('heading')}</h1>
@@ -65,13 +81,15 @@ export default async function TestPage({ params }: Props) {
             </Link>
           </Notice>
         ))}
-        <Survey
-          questions={questions}
-          labels={libellesSurvey(t, locale, questions.length)}
-          onSubmit={savePublicTest}
-          storageKey='b5'
-          locale={locale}
-        />
+        {PARCOURS_ANONYME_OUVERT && (
+          <Survey
+            questions={questions}
+            labels={libellesSurvey(t, locale, questions.length)}
+            onSubmit={savePublicTest}
+            storageKey='b5'
+            locale={locale}
+          />
+        )}
       </div>
     </>
   );

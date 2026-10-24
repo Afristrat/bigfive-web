@@ -12,7 +12,7 @@ import { ShareArticle } from '@/components/share-article';
 import { Link } from '@/navigation';
 import { calculateReadingTime, getTranslationLocale } from '@/lib/helpers';
 import { formatDate, formatNombre } from '@/lib/format';
-import { basePath } from '@/config/site';
+import { ARTICLES_PUBLICS, basePath } from '@/config/site';
 
 interface PostLayoutProps {
   params: Promise<{
@@ -21,12 +21,14 @@ interface PostLayoutProps {
   }>;
 }
 
+// Rubrique occultée : aucune page pré-rendue, 404 avant toute lecture.
 export const generateStaticParams = async () =>
-  allPosts.map((post) => ({ slug: post.slug }));
+  ARTICLES_PUBLICS ? allPosts.map((post) => ({ slug: post.slug })) : [];
 
 export const generateMetadata = async ({
   params
 }: PostLayoutProps): Promise<Metadata> => {
+  if (!ARTICLES_PUBLICS) notFound();
   const { slug, locale } = await params;
   const translationLocale = getTranslationLocale(locale);
   const localizedPosts = allPosts.filter(
@@ -65,6 +67,7 @@ export const generateMetadata = async ({
 };
 
 const PostLayout = async ({ params }: PostLayoutProps) => {
+  if (!ARTICLES_PUBLICS) notFound();
   const { slug, locale } = await params;
   const translationLocale = getTranslationLocale(locale);
   const localizedPosts = allPosts.filter(

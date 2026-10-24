@@ -6,6 +6,7 @@ import { PentagoneTrace } from '@/components/cadre/pentagone-trace';
 import { ArrowRightIcon } from '@/components/icons';
 import { MotsCinetiques } from '@/components/mots-cinetiques';
 import { boutonPrincipal, subtitle, title } from '@/components/primitives';
+import { PARCOURS_ANONYME_OUVERT } from '@/config/site';
 
 // Page introuvable : le pentagone se trace sans se refermer, un côté manque ;
 // le titre monte mot à mot, le texte et le retour suivent.
@@ -35,13 +36,16 @@ export default function NotFound() {
           <Link href='/' data-aimant='' className={boutonPrincipal()}>
             {t('home')}
           </Link>
-          <Link
-            href='/test'
-            className='lien-fleche inline-flex min-h-11 items-center gap-2 text-petit font-medium text-accent underline-offset-4 hover:text-accent-survol hover:underline'
-          >
-            {t('test')}
-            <ArrowRightIcon size={18} />
-          </Link>
+          {/* Parcours anonyme fermé : plus de raccourci vers le questionnaire. */}
+          {PARCOURS_ANONYME_OUVERT && (
+            <Link
+              href='/test'
+              className='lien-fleche inline-flex min-h-11 items-center gap-2 text-petit font-medium text-accent underline-offset-4 hover:text-accent-survol hover:underline'
+            >
+              {t('test')}
+              <ArrowRightIcon size={18} />
+            </Link>
+          )}
         </div>
       </div>
     </section>

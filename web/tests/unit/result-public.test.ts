@@ -50,6 +50,13 @@ vi.mock('@/navigation', () => ({
     )
 }));
 
+// Rendu du parcours anonyme tel qu'il revient quand l'interrupteur est rouvert ;
+// le parcours fermé est couvert par parcours-anonyme-ferme.test.ts.
+vi.mock('@/config/site', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/config/site')>()),
+  PARCOURS_ANONYME_OUVERT: true
+}));
+
 const findOne = vi.fn();
 vi.mock('@/db', () => ({
   connectToDatabase: async () => ({
@@ -216,7 +223,7 @@ const paquet = createRequire(import.meta.url)(
 
 const DOMAINES: DomainCode[] = ['N', 'E', 'O', 'A', 'C'];
 
-describe('page publique /result/[id]', () => {
+describe('page publique /result/[id] (interrupteur ouvert)', () => {
   it('rend par ResultView : cinq domaines, trente facettes, libellés de la bibliothèque', async () => {
     findOne.mockResolvedValue(document());
     const html = await rendre();

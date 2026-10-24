@@ -18,6 +18,7 @@ import {
   facetLabel
 } from '@/lib/domain-labels';
 import { formatNombre } from '@/lib/format';
+import { PARCOURS_ANONYME_OUVERT } from '@/config/site';
 import { Link } from '@/navigation';
 
 // Le titre cinétique vit dans son propre module (utilisable côté client) ; les
@@ -472,6 +473,7 @@ export async function HomeClosing({
   const c = await getTranslations({ locale, namespace: 'common' });
   const t = await getTranslations({ locale, namespace: 'frontpage' });
   const p = await getTranslations({ locale, namespace: 'presentation' });
+  const login = await getTranslations({ locale, namespace: 'login' });
 
   return (
     <section
@@ -500,12 +502,15 @@ export async function HomeClosing({
           {h('closing.text')}
         </p>
         <div className='mt-10 flex flex-wrap gap-3'>
+          {/* Parcours anonyme fermé : l'appel mène à la connexion. */}
           <Link
-            href='/test'
+            href={PARCOURS_ANONYME_OUVERT ? '/test' : '/connexion'}
             data-aimant=''
             className='appui inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-controle bg-safran px-6 font-semibold text-[#14182B] hover:bg-fond'
           >
-            {t('call_to_action')}
+            {PARCOURS_ANONYME_OUVERT
+              ? t('call_to_action')
+              : login('connect.button')}
             <ArrowRightIcon size={18} />
           </Link>
           <Link

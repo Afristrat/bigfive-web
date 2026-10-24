@@ -7,6 +7,7 @@ import { getItems } from '@bigfive-org/questions';
 import { testId, testSchema } from '@/schemas';
 import { isRateLimited, limits } from '@/lib/rate-limit';
 import { QUESTIONNAIRE_VERSION } from '@/lib/question-overrides';
+import { PARCOURS_ANONYME_OUVERT } from '@/config/site';
 import {
   profilDepuisScores,
   scoresDepuisReponsesMongo,
@@ -32,6 +33,9 @@ export type Report = {
 // Résultat public : le profil vient du moteur unique (cinq niveaux), jamais des
 // textes du paquet de résultats d’origine.
 export async function getTestResult(id: string): Promise<Report> {
+  // Parcours anonyme fermé : aucun résultat lu par identifiant, même par un
+  // appel direct à l'action.
+  if (!PARCOURS_ANONYME_OUVERT) throw notFound(id);
   const parsedId = testId.safeParse({ id });
   if (!parsedId.success) throw notFound(id);
   if (await isRateLimited('getResult', limits.getResult)) {
@@ -73,6 +77,13 @@ export async function getTestResult(id: string): Promise<Report> {
 }
 
 export async function saveTest(testResult: DbResult) {
+  // Parcours anonyme fermé : refus avant toute validation, plafond ou écriture.
+  if (!PARCOURS_ANONYME_OUVERT) {
+    throw new B5Error({
+      name: 'SavingError',
+      message: 'The public test is closed.'
+    });
+  }
   const parsed = testSchema.safeParse(testResult);
   if (!parsed.success || (await isRateLimited('saveTest', limits.saveTest))) {
     throw new B5Error({
@@ -105,10 +116,14 @@ export async function saveTest(testResult: DbResult) {
   }
 }
 
-/** Parcours public (défaut conservé) : enregistre dans MongoDB et renvoie l'adresse du résultat. */
+/**
+ * Parcours public : enregistre dans MongoDB et renvoie l'adresse du résultat.
+ * Parcours anonyme fermé : refus (« closed »), sans écriture ni appel MongoDB.
+ */
 export async function savePublicTest(
   testResult: DbResult
-): Promise<{ href: string }> {
+): Promise<{ href: string } | { error: 'closed' }> {
+  if (!PARCOURS_ANONYME_OUVERT) return { error: 'closed' };
   const { id } = await saveTest(testResult);
   return { href: `/result/${id}` };
 }

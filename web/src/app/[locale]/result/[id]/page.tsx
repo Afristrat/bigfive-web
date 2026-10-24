@@ -9,8 +9,9 @@ import {
   ResultView,
   libellesResultView
 } from '@/components/resultats/result-view';
-import { basePath } from '@/config/site';
+import { PARCOURS_ANONYME_OUVERT, basePath } from '@/config/site';
 import { formatDate, remplir } from '@/lib/format';
+import { versMesResultats } from '@/lib/parcours-anonyme';
 import { Link } from '@/navigation';
 import { CopyId } from './copy-id';
 import { PrintButton } from './print-button';
@@ -45,6 +46,8 @@ export default async function ResultPage({
   params
 }: ResultPageParams): Promise<ReactElement> {
   const { id, locale } = await params;
+  // Parcours anonyme fermé : redirection avant toute lecture de MongoDB.
+  if (!PARCOURS_ANONYME_OUVERT) await versMesResultats(locale);
 
   let report: Report;
   try {

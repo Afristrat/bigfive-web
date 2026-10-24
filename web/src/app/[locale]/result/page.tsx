@@ -1,6 +1,8 @@
 import { GetResultPage } from './get-result';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ResultHeader } from '@/components/resultats/result-header';
+import { PARCOURS_ANONYME_OUVERT } from '@/config/site';
+import { versMesResultats } from '@/lib/parcours-anonyme';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -10,6 +12,8 @@ interface Props {
 // de résultat (surtitre réglé, titre qui monte mot à mot), puis le champ.
 export default async function ResultPage({ params }: Props) {
   const { locale } = await params;
+  // Parcours anonyme fermé : chacun lit son résultat derrière la connexion.
+  if (!PARCOURS_ANONYME_OUVERT) await versMesResultats(locale);
   setRequestLocale(locale);
   const t = await getTranslations('getResult');
 

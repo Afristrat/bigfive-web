@@ -1,12 +1,44 @@
 import { MetadataRoute } from 'next';
-import { basePath, locales } from '@/config/site';
+import {
+  ARTICLES_PUBLICS,
+  PARCOURS_ANONYME_OUVERT,
+  basePath,
+  locales
+} from '@/config/site';
 import { allPosts } from 'contentlayer/generated';
-
-const postUrls = allPosts.map((post) => post.url);
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const alternatesPageLang = (path: string = '') =>
     locales.reduce((a, v) => ({ ...a, [v]: basePath + `/${v}${path}` }), {});
+  // Rubrique occultée : ni la liste ni les articles ne sont annoncés.
+  const articles: MetadataRoute.Sitemap = ARTICLES_PUBLICS
+    ? [
+        { url: `${basePath}/articles`, lastModified: new Date() },
+        ...['', '/no'].flatMap((lang) =>
+          allPosts.map((post) => ({
+            url: `${basePath}${lang}${post.url}`,
+            lastModified: new Date()
+          }))
+        )
+      ]
+    : [];
+  // Parcours anonyme fermé : ni le questionnaire public ni la recherche de
+  // résultat ne sont annoncés.
+  const parcoursAnonyme: MetadataRoute.Sitemap = PARCOURS_ANONYME_OUVERT
+    ? [
+        {
+          url: basePath + '/result',
+          lastModified: new Date(),
+          alternates: {
+            languages: alternatesPageLang('/result')
+          }
+        },
+        {
+          url: `${basePath}/test`,
+          lastModified: new Date()
+        }
+      ]
+    : [];
   return [
     {
       url: basePath,
@@ -15,18 +47,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         languages: alternatesPageLang()
       }
     },
-    {
-      url: basePath + '/result',
-      lastModified: new Date(),
-      alternates: {
-        languages: alternatesPageLang('/result')
-      }
-    },
-    {
-      url: `${basePath}/test`,
-      lastModified: new Date()
-      // add lang
-    },
+    ...parcoursAnonyme,
     {
       url: `${basePath}/about`,
       lastModified: new Date()
@@ -53,15 +74,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${basePath}/privacy`,
       lastModified: new Date()
     },
-    {
-      url: `${basePath}/articles`,
-      lastModified: new Date()
-    },
-    ...['', '/no'].flatMap((lang) =>
-      postUrls.map((article) => ({
-        url: `${basePath}${lang}${article}`,
-        lastModified: new Date()
-      }))
-    )
+    ...articles
   ];
 }

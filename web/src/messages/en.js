@@ -870,7 +870,8 @@ const english = {
   },
   notFound: {
     title: 'This page does not exist',
-    text: 'The address may have been mistyped, or the page has moved. Start again from the home page, or go straight to the questionnaire.',
+    // Default not yet validated by Amine (24/10/2026).
+    text: 'The page you asked for does not exist or no longer exists.',
     home: 'Back to the home page',
     test: 'Start the questionnaire'
   },

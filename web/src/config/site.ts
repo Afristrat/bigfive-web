@@ -84,6 +84,24 @@ export const languages: Language[] = [
 
 export const locales = languages.map((lang) => lang.code) as string[];
 
+// ponytail: rubrique occultée le 24/10/2026 (articles en anglais seulement, de 2024) ; à rétablir quand les articles sont traduits et relus.
+// Interrupteur unique : navigation, routes /articles et sitemap le lisent.
+// Les contenus restent dans le dépôt (posts/).
+export const ARTICLES_PUBLICS: boolean = false;
+
+const lienArticles = ARTICLES_PUBLICS
+  ? [{ label: 'articles', href: '/articles' }]
+  : [];
+
+// ponytail: parcours anonyme fermé le 24/10/2026 (résultat lu dans MongoDB par identifiant, sans connexion) ; à rouvrir seulement si Amine le décide.
+// Interrupteur unique : /test et /result exigent une session, la navigation,
+// le sitemap et les appels à l'action des pages publiques le lisent. Aucun code
+// ni aucune donnée MongoDB n'est supprimé.
+export const PARCOURS_ANONYME_OUVERT: boolean = false;
+
+const lienResultat = (label: string) =>
+  PARCOURS_ANONYME_OUVERT ? [{ label, href: '/result' }] : [];
+
 export const siteConfig = {
   name: 'Tenga Assessments',
   description: 'Questionnaire de personnalité de Tenga Conseil',
@@ -92,14 +110,8 @@ export const siteConfig = {
       label: 'home',
       href: '/'
     },
-    {
-      label: 'result',
-      href: '/result'
-    },
-    {
-      label: 'articles',
-      href: '/articles'
-    },
+    ...lienResultat('result'),
+    ...lienArticles,
     {
       label: 'about',
       href: '/about'
@@ -114,14 +126,8 @@ export const siteConfig = {
       label: 'home',
       href: '/'
     },
-    {
-      label: 'see_results',
-      href: '/result'
-    },
-    {
-      label: 'articles',
-      href: '/articles'
-    },
+    ...lienResultat('see_results'),
+    ...lienArticles,
     {
       label: 'privacy',
       href: '/privacy'
@@ -144,10 +150,7 @@ export const siteConfig = {
       label: 'home',
       href: '/'
     },
-    {
-      label: 'articles',
-      href: '/articles'
-    },
+    ...lienArticles,
     {
       label: 'privacy',
       href: '/privacy'
