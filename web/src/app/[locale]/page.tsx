@@ -174,7 +174,6 @@ export default async function Home({ params }: HomeProps) {
                 <dd className='chiffres font-display text-[clamp(2.75rem,1.9rem+3.6vw,4.75rem)] font-semibold leading-none tracking-[-0.04em] text-encre'>
                   <span
                     data-compteur={chiffre.valeur}
-                    data-ouverture={1000 + i * 90}
                     data-locale={regionale}
                     aria-hidden='true'
                   >
