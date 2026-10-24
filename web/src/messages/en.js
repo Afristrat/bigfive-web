@@ -8,6 +8,7 @@ import apercuEn from './espace/apercu.en.js';
 import relectureEn from './espace/relecture.en.js';
 import pilotageEn from './espace/pilotage.en.js';
 import reseauEn from './espace/reseau.en.js';
+import confidentialiteEn from './espace/confidentialite.en.js';
 
 const english = {
   language: {
@@ -1168,6 +1169,7 @@ const english = {
   relecture: relectureEn,
   pilotage: pilotageEn,
   reseau: reseauEn,
+  confidentialite: confidentialiteEn,
   // Mouvement du parcours (questionnaire et résultat).
   flow: {
     railLabel: 'Result contents',
