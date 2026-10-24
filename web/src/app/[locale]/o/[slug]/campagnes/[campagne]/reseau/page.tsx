@@ -36,8 +36,12 @@ const CHIFFRES = [
 
 // Relevé du réseau d'une campagne, pour le consultant de l'organisation et
 // l'administrateur Tenga : des nombres par groupe, jamais un nom ni une carte.
-// La lecture passe par app.reseau_lire, qui refuse le responsable et inscrit
-// chaque lecture au journal ; les réponses brutes ne sortent que par l'export.
+// « Oppositions » est le nombre rendu par la base pour chaque groupe (le
+// consultant ne reçoit ni la ligne ni le nom des personnes opposées) ;
+// « Informés » compte les personnes informées et non opposées. La lecture
+// passe par app.reseau_lire, qui refuse le responsable et inscrit chaque
+// lecture au journal ; les réponses ne sortent que par l'export
+// (app.reseau_exporter, journalisée à part).
 // 404 uniforme : identifiant hors format, rôle sans droit, campagne d'une autre
 // organisation, refus de la base.
 export default async function ReseauConsultantPage({ params }: Props) {

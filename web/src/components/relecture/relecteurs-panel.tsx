@@ -17,6 +17,7 @@ import {
 import { labelClass } from '@/components/form-styles';
 import { LiveMessage, type MessageTon } from '@/components/live-message';
 import { boutonPrincipal } from '@/components/primitives';
+import { appelSansRejet } from '@/lib/appel-sans-rejet';
 
 export type RelecteurLigne = {
   userId: string;
@@ -66,6 +67,19 @@ const boutonRetrait =
 const champ =
   'block min-h-11 w-full max-w-md rounded-controle border border-trait-fort bg-surface px-3 text-corps text-encre transition-colors duration-courte ease-tenga hover:border-encre focus-visible:border-accent motion-reduce:transition-none';
 
+// Un rejet de l'appel (réseau coupé, action introuvable après un déploiement)
+// devient « erreur » : l'adresse saisie reste dans le champ.
+const designerSansRejet = (
+  avant: RelecteurState,
+  data: FormData
+): Promise<RelecteurState> =>
+  appelSansRejet(() => designerRelecteur(avant, data), { status: 'erreur' });
+const retirerSansRejet = (
+  avant: RetraitRelecteurState,
+  data: FormData
+): Promise<RetraitRelecteurState> =>
+  appelSansRejet(() => retirerRelecteur(avant, data), { status: 'erreur' });
+
 const soumettre =
   (pending: boolean, run: (data: FormData) => void) =>
   (event: FormEvent<HTMLFormElement>): void => {
@@ -99,11 +113,11 @@ export function RelecteursPanel({
   const ajoutId = `${id}-ajout`;
   const retraitId = `${id}-retrait`;
   const [ajout, designer, ajoutEnCours] = useActionState(
-    designerRelecteur,
+    designerSansRejet,
     idleAjout
   );
   const [retrait, retirer, retraitEnCours] = useActionState(
-    retirerRelecteur,
+    retirerSansRejet,
     idleRetrait
   );
   const [adresse, setAdresse] = useState('');
@@ -127,6 +141,7 @@ export function RelecteursPanel({
         inconnu: labels.inconnu,
         invalide: labels.invalide,
         plafond: labels.plafond,
+        interdit: labels.interdit,
         erreur: labels.erreur
       }[etatAjout];
   const tonAjout: MessageTon =

@@ -8,6 +8,7 @@ import {
   blocsBibliotheque,
   empreinteBloc,
   empreinteTexte,
+  rafraichirApresEcriture,
   rafraichirEtatRelecture,
   type LigneEtatRelecture
 } from '@/lib/bibliotheque';
@@ -230,6 +231,40 @@ describe('rafraîchissement de l’état', () => {
     fin([]);
     await Promise.all([a, b]);
     expect(chargeur).toHaveBeenCalledOnce();
+  });
+
+  it('après une écriture, sans chargement en cours : un seul chargement', async () => {
+    const chargeur = vi
+      .fn()
+      .mockResolvedValue([relu('E3/haut', empreinteBloc('E3/haut') ?? '')]);
+    await expect(rafraichirApresEcriture(chargeur)).resolves.toBe(true);
+    expect(chargeur).toHaveBeenCalledOnce();
+    expect(blocFacette('E3/haut', 'fr', 'personne').etat).toBe('affiche');
+  });
+
+  it('après une écriture, un chargement en cours (lu avant le verdict) est suivi d’un nouveau, qui fait foi', async () => {
+    const fins: ((lignes: LigneEtatRelecture[]) => void)[] = [];
+    const chargeur = vi.fn(
+      () =>
+        new Promise<LigneEtatRelecture[]>((ok) => {
+          fins.push(ok);
+        })
+    );
+    // Un chargement part avant le verdict (il lira l'état ancien)…
+    const ancien = rafraichirEtatRelecture(chargeur);
+    await vi.waitFor(() => expect(chargeur).toHaveBeenCalledOnce());
+    // … le verdict est écrit, deux actions demandent l'état frais.
+    const frais = rafraichirApresEcriture(chargeur);
+    const frais2 = rafraichirApresEcriture(chargeur);
+    fins[0]?.([]);
+    await ancien;
+    await vi.waitFor(() => expect(chargeur).toHaveBeenCalledTimes(2));
+    fins[1]?.([relu('E3/haut', empreinteBloc('E3/haut') ?? '')]);
+    await expect(frais).resolves.toBe(true);
+    await expect(frais2).resolves.toBe(true);
+    // Un seul chargement de plus pour toutes les écritures en attente.
+    expect(chargeur).toHaveBeenCalledTimes(2);
+    expect(blocFacette('E3/haut', 'fr', 'personne').etat).toBe('affiche');
   });
 
   it('hors du serveur Next.js (tests), blocFacette ne déclenche aucun chargement', () => {

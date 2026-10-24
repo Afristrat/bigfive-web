@@ -234,6 +234,23 @@ describe('blocs et filtres', { timeout: 30_000 }, () => {
     expect(html).toContain('id="selection-relecture"');
   });
 
+  it('le titre d’un bloc nomme sa facette ET son niveau : deux blocs voisins ne se confondent pas', async () => {
+    const html = await rendre({ statut: 'tous' });
+    const titre = (ancre: string): string => {
+      const trouve = new RegExp(
+        `<h2[^>]*id="${ancre}-titre"[^>]*>(.*?)</h2>`
+      ).exec(html);
+      return (trouve?.[1] ?? '').replace(/<[^>]+>/g, '');
+    };
+    const bas = titre('bloc-N1-bas');
+    const haut = titre('bloc-N1-haut');
+    expect(bas).toContain('Niveau bas');
+    expect(haut).toContain('Niveau haut');
+    expect(bas).not.toBe(haut);
+    // Facette et niveau séparés par une espace dans le nom accessible.
+    expect(bas).toMatch(/\S Niveau bas$/);
+  });
+
   it('textes saisis en sens d’écriture automatique (commentaire et champ)', async () => {
     const mien = evenement('N1/bas', 'a_corriger');
     loadHistorique.mockResolvedValue([mien]);

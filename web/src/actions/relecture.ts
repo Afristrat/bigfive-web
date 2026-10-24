@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { basePath } from '@/config/site';
-import { empreinteBloc, rafraichirEtatRelecture } from '@/lib/bibliotheque';
+import { empreinteBloc, rafraichirApresEcriture } from '@/lib/bibliotheque';
 import { localeOf } from '@/lib/locale-field';
 import { toMailLocale } from '@/lib/login-mail';
 import { sendMail } from '@/lib/mailer';
@@ -58,6 +58,7 @@ export type RelecteurState = {
     | 'inconnu'
     | 'invalide'
     | 'plafond'
+    | 'interdit'
     | 'erreur';
 };
 
@@ -98,7 +99,9 @@ const commentaireSchema = z
  * Verdict sur un bloc (fonction SQL relire_bloc). Refusé sans appel si le
  * texte a changé depuis l'affichage (empreinte différente de celle servie) :
  * un verdict ne vaut que pour le texte relu. Après un verdict, l'état servi
- * aux personnes est relu aussitôt dans ce processus.
+ * aux personnes est relu en base dans ce processus avant la réponse ; un
+ * chargement déjà en cours, qui a pu lire la base avant le verdict, est suivi
+ * d'un nouveau (rafraichirApresEcriture).
  */
 export async function relireBloc(
   _previous: RelectureState,
@@ -156,7 +159,7 @@ export async function relireBloc(
         return { status: 'erreur' };
     }
   }
-  await rafraichirEtatRelecture();
+  await rafraichirApresEcriture();
   revalidatePath(localizedPath(locale, CHEMIN));
   return { status: parsed.data.verdict };
 }
@@ -242,7 +245,13 @@ export async function designerRelecteur(
       plafondAtteint('designer');
       return { status: 'plafond' };
     }
-    if (sqlOutcome(error) === 'invalid') return { status: 'inconnu' };
+    switch (sqlOutcome(error)) {
+      case 'invalid':
+        return { status: 'inconnu' };
+      // Droit de super administrateur retiré entre la page et l'envoi.
+      case 'forbidden':
+        return { status: 'interdit' };
+    }
     avertir('designer', error);
     return { status: 'erreur' };
   }

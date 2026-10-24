@@ -59,10 +59,10 @@ vi.mock('@/lib/security-log', () => ({
   logSecurityEvent: (...args: unknown[]) => logSecurityEvent(...args)
 }));
 
-const rafraichirEtatRelecture = vi.fn();
+const rafraichirApresEcriture = vi.fn();
 vi.mock('@/lib/bibliotheque', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/bibliotheque')>()),
-  rafraichirEtatRelecture: () => rafraichirEtatRelecture()
+  rafraichirApresEcriture: () => rafraichirApresEcriture()
 }));
 
 const revalidatePath = vi.fn();
@@ -88,7 +88,7 @@ beforeEach(() => {
   findOrCreateUser.mockReset();
   discardCreatedAccount.mockReset();
   isRateLimited.mockReset().mockResolvedValue(false);
-  rafraichirEtatRelecture.mockReset().mockResolvedValue(true);
+  rafraichirApresEcriture.mockReset().mockResolvedValue(true);
   revalidatePath.mockReset();
   sendMail.mockReset().mockResolvedValue(true);
   logSecurityEvent.mockReset();
@@ -121,7 +121,7 @@ describe('relireBloc', () => {
       p_verdict: 'relu',
       p_commentaire: null
     });
-    expect(rafraichirEtatRelecture).toHaveBeenCalledOnce();
+    expect(rafraichirApresEcriture).toHaveBeenCalledOnce();
     expect(revalidatePath).toHaveBeenCalledWith('/fr/admin/relecture');
   });
 
@@ -201,7 +201,7 @@ describe('relireBloc', () => {
     await expect(relireBloc(idle, verdict())).resolves.toEqual({
       status: 'plafond'
     });
-    expect(rafraichirEtatRelecture).not.toHaveBeenCalled();
+    expect(rafraichirApresEcriture).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
@@ -215,7 +215,7 @@ describe('relireBloc', () => {
     await expect(relireBloc(idle, verdict())).resolves.toEqual({
       status: attendu
     });
-    expect(rafraichirEtatRelecture).not.toHaveBeenCalled();
+    expect(rafraichirApresEcriture).not.toHaveBeenCalled();
     expect(revalidatePath).not.toHaveBeenCalled();
     for (const appel of avertir.mock.calls) {
       expect(String(appel[0])).not.toMatch(/@|N1\/bas|[0-9a-f]{64}/);
@@ -326,6 +326,19 @@ describe('designerRelecteur', () => {
       'relecture.designation_notice_failed',
       { ip: '203.0.113.1', reason: 'refused' }
     );
+  });
+
+  it('refus 42501 de la base (droit retiré entre-temps) : « interdit », sans avis ni journal d’échec', async () => {
+    findOrCreateUser.mockResolvedValue({ id: CIBLE, created: false });
+    rpc.mockRejectedValue(new GatewayError(403, '42501'));
+    const avertir = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await expect(designerRelecteur(idle, designation())).resolves.toEqual({
+      status: 'interdit'
+    });
+    expect(sendMail).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
+    expect(avertir).not.toHaveBeenCalled();
+    avertir.mockRestore();
   });
 
   it('n’envoie rien si la base refuse', async () => {

@@ -89,6 +89,7 @@ export const GetResultPage = ({ labels }: GetResultPageProps) => {
             <Link href='/mes-resultats' className='font-semibold underline'>
               {labels.courrielLien}
             </Link>
+            .
           </>
         ) : invalide ? (
           labels.invalide

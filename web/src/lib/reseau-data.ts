@@ -8,14 +8,20 @@ import {
 import type { Viewer } from '@/lib/session';
 import { GatewayError, userClient } from '@/lib/supabase/server';
 
-// Chargeurs du relevé du réseau réel : trois fonctions de la base, et rien
-// d'autre (contrat §2).
+// Chargeurs du relevé du réseau réel : quatre fonctions de la base, et rien
+// d'autre (contrat §2, migration 0024 pour la lecture et l'export).
 //   - app.mes_releves_reseau()      : mes participations éligibles ; aucune
 //     ligne tant que l'interrupteur est fermé ;
 //   - app.reseau_releve(p)          : mon état, les autres membres et mes
 //     réponses, ou {"ouvert": false} ;
-//   - app.reseau_lire(campagne)     : rendu brut pour le consultant de
-//     l'organisation et l'administrateur Tenga, journalisé AVANT de répondre.
+//   - app.reseau_lire(campagne)     : affichage, pour le consultant de
+//     l'organisation et l'administrateur Tenga, journalisé (reseau.lire)
+//     AVANT de répondre ; seuls les décomptes en sont gardés ;
+//   - app.reseau_exporter(campagne) : même rendu, pour l'export seul,
+//     journalisé (reseau.exporter) AVANT de répondre.
+// Rendu commun : par groupe, le nombre d'oppositions ; « informe » veut dire
+// informé ET non opposé ; les lignes (et les noms) des personnes opposées ne
+// sont rendues qu'à l'administrateur Tenga, jamais au consultant.
 // Aucune table n'est lue ici et la clé de service n'est jamais utilisée. Les
 // schémas sont STRICTS : une clé que le contrat ne prévoit pas fait lever, pour
 // qu'aucune donnée inattendue (adresse, réponse d'autrui) ne passe à l'écran.
@@ -208,6 +214,7 @@ const lectureSchema = z
           groupe_id: uuid,
           nom: z.string(),
           effectif: z.number().int().nonnegative(),
+          oppositions: z.number().int().nonnegative(),
           membres: z.array(
             z
               .object({
@@ -246,45 +253,69 @@ export type DecompteGroupeReseau = {
   accordsCarte: number;
 };
 
+/** Ce que l'affichage garde du rendu : des nombres par groupe, rien d'autre. */
 export type LectureReseau = {
   statut: z.infer<typeof statutCampagne>;
   groupes: DecompteGroupeReseau[];
-  /** Rendu de reseau_lire, validé : réservé à l'export du consultant. */
-  brut: LectureReseauBrute;
 };
 
 /**
- * Relevé d'une campagne pour le consultant de l'organisation ou
- * l'administrateur Tenga. Chaque appel est inscrit au journal par la base.
- * `null` quand la base refuse (responsable, autre organisation, campagne
- * inexistante : même réponse).
+ * Rendu validé d'une des deux fonctions de lecture de campagne ; `null` quand
+ * la base refuse (responsable, autre organisation, campagne inexistante :
+ * même réponse). Lève si l'identifiant est hors format, si la réponse sort du
+ * contrat ou si la passerelle tombe.
  */
-export async function loadReseauCampagne(
+async function lireCampagne(
   viewer: Viewer,
+  fn: 'reseau_lire' | 'reseau_exporter',
   campagneId: string
-): Promise<LectureReseau | null> {
+): Promise<LectureReseauBrute | null> {
   const p_campagne = uuid.parse(campagneId);
   try {
-    const brut = await userClient(viewer.accessToken).rpc(
-      'reseau_lire',
+    return await userClient(viewer.accessToken).rpc(
+      fn,
       { p_campagne },
       lectureSchema
     );
-    return {
-      statut: brut.campagne_statut,
-      groupes: brut.groupes.map((g) => ({
-        groupeId: g.groupe_id,
-        nom: g.nom,
-        effectif: g.effectif,
-        informes: g.membres.filter((m) => m.informe).length,
-        oppositions: g.membres.filter((m) => m.oppose).length,
-        repondants: g.membres.filter((m) => m.a_repondu).length,
-        accordsCarte: g.membres.filter((m) => m.accord_carte).length
-      })),
-      brut
-    };
   } catch (error) {
     if (estRefus(error)) return null;
     throw error;
   }
 }
+
+/**
+ * Relevé d'une campagne à l'affichage, pour le consultant de l'organisation
+ * ou l'administrateur Tenga (app.reseau_lire, journalisée). Les oppositions
+ * sont lues du rendu : le consultant ne reçoit pas les lignes des personnes
+ * opposées. `null` quand la base refuse.
+ */
+export async function loadReseauCampagne(
+  viewer: Viewer,
+  campagneId: string
+): Promise<LectureReseau | null> {
+  const brut = await lireCampagne(viewer, 'reseau_lire', campagneId);
+  if (!brut) return null;
+  return {
+    statut: brut.campagne_statut,
+    groupes: brut.groupes.map((g) => ({
+      groupeId: g.groupe_id,
+      nom: g.nom,
+      effectif: g.effectif,
+      informes: g.membres.filter((m) => m.informe).length,
+      oppositions: g.oppositions,
+      repondants: g.membres.filter((m) => m.a_repondu).length,
+      accordsCarte: g.membres.filter((m) => m.accord_carte).length
+    }))
+  };
+}
+
+/**
+ * Rendu complet pour l'export JSON du consultant (app.reseau_exporter,
+ * journalisée « reseau.exporter » avant de répondre). Même schéma strict et
+ * mêmes refus que l'affichage. `null` quand la base refuse.
+ */
+export const exportReseauCampagne = (
+  viewer: Viewer,
+  campagneId: string
+): Promise<LectureReseauBrute | null> =>
+  lireCampagne(viewer, 'reseau_exporter', campagneId);

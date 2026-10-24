@@ -3,7 +3,8 @@ import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Relevé du réseau réel : actions (informer, consentir, répondre, retirer) et
-// chargeurs (mes_releves_reseau, reseau_releve, reseau_lire). Contrat : §2 de
+// chargeurs (mes_releves_reseau, reseau_releve, reseau_lire, reseau_exporter).
+// Contrat : §2 de
 // contrat-reseau.md. La base décide de tout ; ces modules valident les entrées,
 // lisent les réponses avec des schémas stricts et traduisent les refus.
 
@@ -36,6 +37,11 @@ vi.mock('@/lib/supabase/server', async (importOriginal) => ({
   })
 }));
 
+const revalidatePath = vi.fn();
+vi.mock('next/cache', () => ({
+  revalidatePath: (...args: unknown[]) => revalidatePath(...args)
+}));
+
 import {
   consentirReseau,
   informerReseau,
@@ -43,6 +49,7 @@ import {
   retirerReseau
 } from '@/actions/reseau';
 import {
+  exportReseauCampagne,
   loadMesRelevesReseau,
   loadMesRelevesReseauOuVide,
   loadReleveReseau,
@@ -59,6 +66,7 @@ beforeEach(() => {
   rpc.mockReset();
   select.mockReset();
   warn.mockClear();
+  revalidatePath.mockReset();
 });
 
 const ERREURS: [string, string][] = [
@@ -70,6 +78,60 @@ const ERREURS: [string, string][] = [
 
 // ---------------------------------------------------------------------------
 // Actions.
+
+// Revalidation de la page du relevé (toutes langues, toutes participations) :
+// la réponse de l'action porte le nouvel état, l'écran n'a plus à rafraîchir.
+const PAGE_RELEVE = ['/[locale]/mes-resultats/reseau/[participation]', 'page'];
+
+describe('revalidation de la page du relevé', () => {
+  const appels: [string, () => Promise<unknown>, unknown][] = [
+    ['informer', () => informerReseau(PART, false), 'informe'],
+    ['consentir', () => consentirReseau(PART, true, false), 'enregistre'],
+    [
+      'repondre',
+      () => repondreReseau(PART, [{ cite: M1, lien: 'conseil', valeur: 2 }]),
+      4
+    ],
+    ['retirer', () => retirerReseau(PART), 0]
+  ];
+
+  it.each(appels)(
+    '%s réussi : la page est revalidée',
+    async (_n, appel, ok) => {
+      rpc.mockResolvedValue(ok);
+      await appel();
+      expect(revalidatePath).toHaveBeenCalledOnce();
+      expect(revalidatePath).toHaveBeenCalledWith(...PAGE_RELEVE);
+    }
+  );
+
+  it.each([
+    ['55000', 'closed'],
+    ['22023', 'invalid']
+  ])(
+    'état changé ailleurs (code %s, %s) : la page est revalidée',
+    async (code) => {
+      rpc.mockRejectedValue(new GatewayError(400, code));
+      await informerReseau(PART, false);
+      expect(revalidatePath).toHaveBeenCalledWith(...PAGE_RELEVE);
+    }
+  );
+
+  it('session expirée, refus, panne ou entrée forgée : aucune revalidation (le brouillon reste à l’écran)', async () => {
+    rpc.mockRejectedValue(new GatewayError(401, null));
+    await informerReseau(PART, false);
+    rpc.mockRejectedValue(new GatewayError(400, '42501'));
+    await informerReseau(PART, false);
+    rpc.mockRejectedValue(new GatewayError(400, 'P0002'));
+    await informerReseau(PART, false);
+    rpc.mockRejectedValue(new GatewayError(502, null));
+    await informerReseau(PART, false);
+    await informerReseau('x', false);
+    currentViewer.mockResolvedValue({ status: 'anonymous' });
+    await informerReseau(PART, false);
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
+});
 
 describe('informerReseau : information préalable et opposition', () => {
   it('session absente ou expirée : reconnexion, aucun appel', async () => {
@@ -502,6 +564,9 @@ describe('loadReleveReseau : app.reseau_releve', () => {
   });
 });
 
+// Rendu de l'administrateur Tenga (migration 0024) : la ligne de la personne
+// opposée est présente, « informe » y vaut faux (informé ET non opposé), et le
+// groupe porte le nombre d'oppositions.
 const lecture = () => ({
   campagne_id: CAMPAGNE,
   campagne_statut: 'ouverte',
@@ -510,6 +575,7 @@ const lecture = () => ({
       groupe_id: GROUPE,
       nom: 'Équipe Atlas',
       effectif: 5,
+      oppositions: 1,
       membres: [
         {
           participation_id: PART,
@@ -523,7 +589,7 @@ const lecture = () => ({
         {
           participation_id: M1,
           nom: 'Karim B.',
-          informe: true,
+          informe: false,
           oppose: true,
           accord_repondre: false,
           accord_carte: false,
@@ -544,10 +610,25 @@ const lecture = () => ({
   ]
 });
 
-describe('loadReseauCampagne : app.reseau_lire (consultant)', () => {
-  it('appelle la fonction journalisée et compte par groupe', async () => {
+// Rendu du consultant : aucune ligne ni aucun nom de personne opposée, le
+// nombre d'oppositions par groupe seul.
+const lectureConsultant = () => {
+  const brut = lecture();
+  return {
+    ...brut,
+    groupes: brut.groupes.map((g) => ({
+      ...g,
+      oppositions: 2,
+      membres: g.membres.filter((m) => !m.oppose)
+    }))
+  };
+};
+
+describe('loadReseauCampagne : app.reseau_lire (affichage)', () => {
+  it('appelle la fonction d’affichage, jamais celle d’export, et compte par groupe', async () => {
     rpc.mockResolvedValue(lecture());
     const lu = await loadReseauCampagne(VIEWER, CAMPAGNE);
+    expect(rpc).toHaveBeenCalledOnce();
     expect(rpc).toHaveBeenCalledWith('reseau_lire', { p_campagne: CAMPAGNE });
     expect(select).not.toHaveBeenCalled();
     expect(lu?.statut).toBe('ouverte');
@@ -556,7 +637,7 @@ describe('loadReseauCampagne : app.reseau_lire (consultant)', () => {
         groupeId: GROUPE,
         nom: 'Équipe Atlas',
         effectif: 5,
-        informes: 3,
+        informes: 2,
         oppositions: 1,
         repondants: 2,
         accordsCarte: 1
@@ -574,14 +655,40 @@ describe('loadReseauCampagne : app.reseau_lire (consultant)', () => {
     expect(decomptes).not.toContain('valeur');
   });
 
-  it('le rendu brut est gardé tel quel pour l’export', async () => {
+  it('rendu consultant sans lignes d’opposés : oppositions lues du rendu, informés comptés', async () => {
+    rpc.mockResolvedValue(lectureConsultant());
+    const lu = await loadReseauCampagne(VIEWER, CAMPAGNE);
+    expect(lu?.groupes[0]).toMatchObject({
+      effectif: 5,
+      informes: 2,
+      oppositions: 2,
+      repondants: 2,
+      accordsCarte: 1
+    });
+  });
+
+  it('l’affichage ne garde que les décomptes : aucun rendu brut', async () => {
     rpc.mockResolvedValue(lecture());
     const lu = await loadReseauCampagne(VIEWER, CAMPAGNE);
-    expect(lu?.brut).toEqual(lecture());
+    expect(lu).not.toHaveProperty('brut');
+    expect(Object.keys(lu ?? {}).sort()).toEqual(['groupes', 'statut']);
   });
 
   it('clé inattendue : refusé', async () => {
     rpc.mockResolvedValue({ ...lecture(), responsable_voit: true });
+    await expect(loadReseauCampagne(VIEWER, CAMPAGNE)).rejects.toThrow();
+  });
+
+  it('nombre d’oppositions absent ou négatif : hors contrat, refusé', async () => {
+    const sans = lecture();
+    const [premier] = sans.groupes;
+    const { oppositions: _retire, ...groupe } = premier ?? { oppositions: 0 };
+    rpc.mockResolvedValue({ ...sans, groupes: [groupe] });
+    await expect(loadReseauCampagne(VIEWER, CAMPAGNE)).rejects.toThrow();
+    rpc.mockResolvedValue({
+      ...sans,
+      groupes: [{ ...premier, oppositions: -1 }]
+    });
     await expect(loadReseauCampagne(VIEWER, CAMPAGNE)).rejects.toThrow();
   });
 
@@ -602,6 +709,40 @@ describe('loadReseauCampagne : app.reseau_lire (consultant)', () => {
   });
 });
 
+describe('exportReseauCampagne : app.reseau_exporter (export)', () => {
+  it('appelle la fonction d’export journalisée, jamais celle d’affichage, et rend le rendu validé', async () => {
+    rpc.mockResolvedValue(lectureConsultant());
+    const lu = await exportReseauCampagne(VIEWER, CAMPAGNE);
+    expect(rpc).toHaveBeenCalledOnce();
+    expect(rpc).toHaveBeenCalledWith('reseau_exporter', {
+      p_campagne: CAMPAGNE
+    });
+    expect(select).not.toHaveBeenCalled();
+    expect(lu).toEqual(lectureConsultant());
+  });
+
+  it('même schéma strict : clé inattendue refusée', async () => {
+    rpc.mockResolvedValue({ ...lecture(), responsable_voit: true });
+    await expect(exportReseauCampagne(VIEWER, CAMPAGNE)).rejects.toThrow();
+  });
+
+  it.each([
+    ['42501', new GatewayError(403, '42501')],
+    ['401', new GatewayError(401, null)]
+  ])('refus %s : null, donc 404', async (_, erreur) => {
+    rpc.mockRejectedValue(erreur);
+    expect(await exportReseauCampagne(VIEWER, CAMPAGNE)).toBeNull();
+  });
+
+  it('panne de la passerelle : non avalée ; identifiant hors format : lève sans appel', async () => {
+    rpc.mockRejectedValue(new GatewayError(502, null));
+    await expect(exportReseauCampagne(VIEWER, CAMPAGNE)).rejects.toThrow();
+    rpc.mockReset();
+    await expect(exportReseauCampagne(VIEWER, 'x')).rejects.toThrow();
+    expect(rpc).not.toHaveBeenCalled();
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Contrats de source.
 
@@ -616,7 +757,12 @@ describe('contrats de source', () => {
     const s = source('lib/reseau-data.ts');
     expect(s).not.toMatch(/\.select\(/);
     expect(s).not.toContain('serviceClient');
-    for (const fn of ['mes_releves_reseau', 'reseau_releve', 'reseau_lire']) {
+    for (const fn of [
+      'mes_releves_reseau',
+      'reseau_releve',
+      'reseau_lire',
+      'reseau_exporter'
+    ]) {
       expect(s).toContain(`'${fn}'`);
     }
   });

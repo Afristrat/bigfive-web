@@ -68,6 +68,7 @@ vi.mock('@/lib/session', () => ({
 const loadMesRelevesReseau = vi.fn();
 const loadReleveReseau = vi.fn();
 const loadReseauCampagne = vi.fn();
+const exportReseauCampagne = vi.fn();
 vi.mock('@/lib/reseau-data', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/reseau-data')>()),
   loadMesRelevesReseau: (viewer: unknown) => loadMesRelevesReseau(viewer),
@@ -76,7 +77,9 @@ vi.mock('@/lib/reseau-data', async (importOriginal) => ({
   loadReleveReseau: (viewer: unknown, id: string) =>
     loadReleveReseau(viewer, id),
   loadReseauCampagne: (viewer: unknown, id: string) =>
-    loadReseauCampagne(viewer, id)
+    loadReseauCampagne(viewer, id),
+  exportReseauCampagne: (viewer: unknown, id: string) =>
+    exportReseauCampagne(viewer, id)
 }));
 
 const loadMesParticipations = vi.fn();
@@ -126,6 +129,7 @@ beforeEach(() => {
   loadMesRelevesReseau.mockReset().mockResolvedValue([]);
   loadReleveReseau.mockReset();
   loadReseauCampagne.mockReset();
+  exportReseauCampagne.mockReset();
   loadMesParticipations.mockReset().mockResolvedValue([]);
   loadOrgPage.mockReset().mockResolvedValue({
     org: { id: ORG, nom: 'Acme', slug: 'acme' },
@@ -308,30 +312,34 @@ const lecture = {
       repondants: 4,
       accordsCarte: 3
     }
-  ],
-  brut: {
-    campagne_id: CAMPAGNE,
-    campagne_statut: 'ouverte',
-    groupes: [
-      {
-        groupe_id: GROUPE,
-        nom: 'Équipe Atlas',
-        effectif: 6,
-        membres: [
-          {
-            participation_id: M1,
-            nom: 'Karim Bennani',
-            informe: true,
-            oppose: false,
-            accord_repondre: true,
-            accord_carte: true,
-            a_repondu: true
-          }
-        ],
-        reponses: []
-      }
-    ]
-  }
+  ]
+};
+
+// Rendu de reseau_exporter : celui du consultant, sans ligne de personne
+// opposée, le nombre d'oppositions par groupe seul.
+const rendu = {
+  campagne_id: CAMPAGNE,
+  campagne_statut: 'ouverte',
+  groupes: [
+    {
+      groupe_id: GROUPE,
+      nom: 'Équipe Atlas',
+      effectif: 6,
+      oppositions: 1,
+      membres: [
+        {
+          participation_id: M1,
+          nom: 'Karim Bennani',
+          informe: true,
+          oppose: false,
+          accord_repondre: true,
+          accord_carte: true,
+          a_repondu: true
+        }
+      ],
+      reponses: []
+    }
+  ]
 };
 
 const paramsConsultant = (surcharge: Record<string, string> = {}) =>
@@ -360,6 +368,8 @@ describe('page du consultant : /o/[slug]/campagnes/[campagne]/reseau', () => {
     expect(html).not.toContain('Karim');
     expect(html).not.toContain(M1);
     expect(loadReseauCampagne).toHaveBeenCalledWith(VIEWER, CAMPAGNE);
+    // Affichage par reseau_lire : la page ne déclenche jamais l'export.
+    expect(exportReseauCampagne).not.toHaveBeenCalled();
   });
 
   it('propose l’export JSON par la route serveur', async () => {
@@ -405,9 +415,12 @@ describe('export JSON du relevé', () => {
       params: paramsConsultant(surcharge)
     });
 
-  it('rend le rendu brut de reseau_lire, en pièce jointe, sans cache', async () => {
-    loadReseauCampagne.mockResolvedValue(lecture);
+  it('rend le rendu de reseau_exporter (export journalisé), en pièce jointe, sans cache', async () => {
+    exportReseauCampagne.mockResolvedValue(rendu);
     const reponse = await appeler();
+    expect(exportReseauCampagne).toHaveBeenCalledWith(VIEWER, CAMPAGNE);
+    // L'export ne passe jamais par la fonction d'affichage.
+    expect(loadReseauCampagne).not.toHaveBeenCalled();
     expect(reponse.status).toBe(200);
     expect(reponse.headers.get('Content-Type')).toBe(
       'application/json; charset=utf-8'
@@ -417,21 +430,24 @@ describe('export JSON du relevé', () => {
     );
     expect(reponse.headers.get('Cache-Control')).toBe('private, no-store');
     expect(reponse.headers.get('X-Content-Type-Options')).toBe('nosniff');
-    expect(await reponse.json()).toEqual(lecture.brut);
+    expect(await reponse.json()).toEqual(rendu);
   });
 
   it('refus, responsable ou campagne étrangère : 404 sans contenu', async () => {
-    loadReseauCampagne.mockResolvedValue(null);
+    exportReseauCampagne.mockResolvedValue(null);
     expect((await appeler()).status).toBe(404);
     loadOrgPage.mockResolvedValue({
       org: { id: ORG, nom: 'Acme', slug: 'acme' },
       isAdmin: false,
       role: 'responsable'
     });
-    loadReseauCampagne.mockResolvedValue(lecture);
+    exportReseauCampagne.mockResolvedValue(rendu);
+    exportReseauCampagne.mockClear();
     const refus = await appeler();
     expect(refus.status).toBe(404);
     expect(await refus.text()).not.toContain('Karim');
+    // Responsable : refusé avant tout appel, rien n'est journalisé.
+    expect(exportReseauCampagne).not.toHaveBeenCalled();
     loadOrgPage.mockResolvedValue(null);
     expect((await appeler()).status).toBe(404);
     expect((await appeler({ campagne: 'x' })).status).toBe(404);

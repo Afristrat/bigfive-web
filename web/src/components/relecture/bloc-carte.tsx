@@ -145,11 +145,14 @@ export function BlocCarte({
             {labels.statuts[statut]}
           </PastilleStatut>
         </p>
+        {/* Le titre nomme le bloc entier (facette et niveau, comme son
+            identifiant) : les cinq niveaux d'une facette ne se confondent ni
+            dans la liste des titres ni au focus posé après un verdict. */}
         <h2 id={titreId} tabIndex={-1} className='mt-3 text-titre-3 text-encre'>
-          {labels.facette}
+          <span className='block'>{labels.facette}</span>{' '}
+          <span className='block text-petit font-medium'>{labels.niveau}</span>
         </h2>
         <p className='mt-1 text-petit text-texte-2'>{labels.domaine}</p>
-        <p className='text-petit font-medium text-encre'>{labels.niveau}</p>
 
         <p className='chiffres mt-5 text-petit text-texte-2'>
           {labels.frequence}

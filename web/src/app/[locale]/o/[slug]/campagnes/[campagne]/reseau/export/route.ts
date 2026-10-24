@@ -4,7 +4,7 @@ import {
   loadCampagneOrganisation,
   peutLireResultats
 } from '@/lib/consultant-data';
-import { loadReseauCampagne } from '@/lib/reseau-data';
+import { exportReseauCampagne } from '@/lib/reseau-data';
 import { requireViewer } from '@/lib/session';
 import { parseCampaignId } from '@/lib/synthese-data';
 
@@ -14,10 +14,13 @@ interface Props {
 
 export const dynamic = 'force-dynamic';
 
-// Export JSON du relevé du réseau d'une campagne : le rendu brut de
-// app.reseau_lire (noms et réponses), pour préparer le rapport. Mêmes gardes
-// que la page du consultant ; la base reste l'autorité, refuse le responsable
-// et inscrit la lecture au journal avant de répondre. Tout refus : 404 vide.
+// Export JSON du relevé du réseau d'une campagne : le rendu de
+// app.reseau_exporter (noms et réponses des personnes non opposées ; nombre
+// d'oppositions par groupe ; les lignes des personnes opposées pour
+// l'administrateur Tenga seul), pour préparer le rapport. Mêmes gardes que la
+// page du consultant ; la base reste l'autorité, refuse le responsable et
+// inscrit l'export au journal (reseau.exporter) avant de répondre. Tout
+// refus : 404 vide.
 
 const introuvable = (): Response =>
   new Response(null, {
@@ -50,10 +53,10 @@ export async function GET(
     campaignId
   );
   if (!campagne) return introuvable();
-  const lecture = await loadReseauCampagne(viewer, campaignId);
-  if (!lecture) return introuvable();
+  const rendu = await exportReseauCampagne(viewer, campaignId);
+  if (!rendu) return introuvable();
 
-  return new Response(JSON.stringify(lecture.brut, null, 2), {
+  return new Response(JSON.stringify(rendu, null, 2), {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Content-Disposition': `attachment; filename="reseau-${campaignId}.json"`,

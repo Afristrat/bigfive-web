@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import ar from '@/messages/ar.js';
 import en from '@/messages/en.js';
@@ -42,6 +44,25 @@ describe('textes de « Retrouver un résultat »', () => {
       expect(catalogue.getResult.courriel).toEqual(expect.any(String));
       expect(catalogue.getResult.courriel.length).toBeGreaterThan(20);
       expect(catalogue.getResult.courrielLien).toEqual(expect.any(String));
+    }
+  );
+});
+
+describe('ponctuation du message pour une adresse électronique', () => {
+  const source = readFileSync(
+    resolve(__dirname, '../../src/app/[locale]/result/get-result.tsx'),
+    'utf8'
+  );
+
+  it('le point final suit le lien « Mes résultats », hors du lien', () => {
+    expect(source).toMatch(/\{labels\.courrielLien\}\s*<\/Link>\s*\.\s*<\/>/);
+  });
+
+  it.each(Object.entries({ fr, en, ar }))(
+    '%s : ni le texte ni le lien ne portent le point (il est rendu après le lien)',
+    (_langue, catalogue) => {
+      expect(catalogue.getResult.courriel).not.toMatch(/[.。]\s*$/);
+      expect(catalogue.getResult.courrielLien).not.toMatch(/[.。]\s*$/);
     }
   );
 });

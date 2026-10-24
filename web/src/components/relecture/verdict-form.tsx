@@ -6,6 +6,7 @@ import { secondaryButtonClass } from '@/components/form-styles';
 import { MessageBox, type MessageTon } from '@/components/live-message';
 import { boutonPrincipal } from '@/components/primitives';
 import { useAnnoncesRelecture } from '@/components/relecture/annonces-relecture';
+import { appelSansRejet } from '@/lib/appel-sans-rejet';
 import { voisinDuBloc } from '@/lib/relecture-focus';
 
 export type VerdictFormLabels = {
@@ -60,8 +61,8 @@ const texteDe = (
  * Verdict sur un bloc : un commentaire (obligatoire pour une correction) et
  * deux boutons d'envoi dont le nom porte le verdict, dans un groupe légendé
  * (le formulaire n'est pas un repère nommé : 150 blocs, 150 repères sinon).
- * L'envoi passe par une transition : un refus laisse la saisie en place ; un
- * verdict enregistré la vide. Le résultat s'affiche ici et s'annonce par la
+ * L'envoi passe par une transition : un refus, comme un appel rejeté (réseau
+ * coupé), laisse la saisie en place ; un verdict enregistré la vide. Le résultat s'affiche ici et s'annonce par la
  * région vivante de la page, qui survit à la sortie du bloc de la sélection ;
  * le focus passe alors au titre du bloc voisin. Pendant un envoi, une seconde
  * soumission est ignorée.
@@ -106,7 +107,9 @@ export function VerdictForm({
     // Rendu de la page avant le verdict : sa revalidation se lit à son changement.
     const jetonAvant = jeton();
     startTransition(async () => {
-      const resultat = await relireBloc(state, data);
+      const resultat = await appelSansRejet(() => relireBloc(state, data), {
+        status: 'erreur'
+      });
       setState(resultat);
       const reussi =
         resultat.status === 'relu' || resultat.status === 'a_corriger';

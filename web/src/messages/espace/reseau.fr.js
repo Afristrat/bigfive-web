@@ -187,14 +187,14 @@ const reseauFr = {
       close: 'Close'
     },
     effectif: 'Effectif',
-    informes: 'Informés',
+    informes: 'Informés, sans opposition',
     oppositions: 'Oppositions',
     repondants: 'Répondants',
     accordsCarte: 'Accords de carte',
     aucunGroupe: 'Aucun groupe dans cette campagne.',
     exporter: 'Exporter les réponses (JSON)',
     exportAide:
-      'Le fichier contient les noms et les réponses de chaque personne : ne le transmettez à personne hors de la mission.'
+      'Le fichier contient les réponses de chaque personne et le nom des personnes citées ; pour le consultant, les personnes qui se sont opposées n’y figurent que par leur nombre. Ne le transmettez à personne hors de la mission.'
   }
 };
 

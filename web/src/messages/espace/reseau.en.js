@@ -184,14 +184,14 @@ const reseauEn = {
       close: 'Closed'
     },
     effectif: 'Group size',
-    informes: 'Notified',
+    informes: 'Notified, no objection',
     oppositions: 'Objections',
     repondants: 'Respondents',
     accordsCarte: 'Map consents',
     aucunGroupe: 'No group in this campaign.',
     exporter: 'Export the answers (JSON)',
     exportAide:
-      'The file contains each person’s name and answers: do not share it with anyone outside the assignment.'
+      'The file contains each person’s answers and the names of the people they cite; for the consultant, people who objected appear only as a count. Do not share it with anyone outside the assignment.'
   }
 };
 

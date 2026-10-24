@@ -17,6 +17,7 @@ import styles from '@/components/formulaires.module.css';
 import { LiveMessage } from '@/components/live-message';
 import { PendingButton } from '@/components/pending-button';
 import type { LibellesReseau } from '@/components/reseau/libelles';
+import { appelSansRejet } from '@/lib/appel-sans-rejet';
 import { formatNombre, remplir } from '@/lib/format';
 import {
   INTERACTION_INITIALE,
@@ -46,17 +47,20 @@ import {
   type ReponseLien,
   type ResultatReseau
 } from '@/lib/reseau-releve';
-import { Link, useRouter } from '@/navigation';
+import { Link } from '@/navigation';
 
 // Écran du relevé du réseau réel, en trois temps : (1) information des
 // personnes citées, avec opposition possible ; (2) consentement, deux cases
 // distinctes jamais cochées d'office ; (3) liste fermée, quatre questions par
 // membre, un seul enregistrement. Le retrait et l'opposition restent possibles
 // ensuite, campagne close comprise. La base décide de tout : l'écran envoie
-// l'action reçue en props (réelle, ou neutre dans l'aperçu), dit ce qui s'est
-// passé dans une région vivante persistante, puis rafraîchit la page pour
-// suivre l'état réel. Panneaux, focus et messages suivent la logique pure de
-// lib/reseau-interaction (testée sans DOM). Mouvement : la nouvelle étape
+// l'action reçue en props (réelle, ou neutre dans l'aperçu) et dit ce qui
+// s'est passé dans une région vivante persistante ; l'action réelle revalide
+// la page, dont le nouvel état arrive avec sa réponse. Un appel rejeté (réseau
+// coupé) devient « failed » : la saisie reste. Le brouillon de la liste vit
+// sous la section, dont la clé est l'étape : il repart des réponses
+// enregistrées à chaque changement d'étape. Panneaux, focus et messages
+// suivent la logique pure de lib/reseau-interaction (testée sans DOM). Mouvement : la nouvelle étape
 // monte à sa place (courbe de la marque) ; sous « réduire les animations »,
 // tout est posé d'emblée.
 
@@ -90,10 +94,11 @@ export function EcranReseau({
   reconnexion
 }: Props) {
   const base = useId();
-  const router = useRouter();
   const [pending, demarrer] = useTransition();
   const [statut, setStatut] = useState<ResultatReseau['status'] | null>(null);
-  const [incomplet, setIncomplet] = useState(false);
+  // Questions sans réponse après une tentative d'enregistrement incomplète
+  // (recomptées à chaque choix) ; null : aucune tentative à signaler.
+  const [manque, setManque] = useState<number | null>(null);
   const [interaction, dispatch] = useReducer(
     reduireInteraction,
     INTERACTION_INITIALE
@@ -101,9 +106,6 @@ export function EcranReseau({
 
   const etape = etapeReseau(releve.moi);
   const ouverte = releve.campagneOuverte;
-  const [brouillon, setBrouillon] = useState<Brouillon>(() =>
-    brouillonDepuis(releve)
-  );
 
   // Éléments à qui donner le focus : titre de l'étape, déclencheurs, boutons
   // de confirmation et premier champ des panneaux, enregistrés par clé.
@@ -113,17 +115,6 @@ export function EcranReseau({
     if (noeud) noeuds.current.set(cle, noeud);
     else noeuds.current.delete(cle);
   };
-
-  // À chaque changement d'étape : focus au titre de la nouvelle étape, et le
-  // brouillon repart des réponses enregistrées.
-  const etapeAffichee = useRef(etape);
-  useEffect(() => {
-    if (etapeAffichee.current === etape) return;
-    etapeAffichee.current = etape;
-    setBrouillon(brouillonDepuis(releve));
-    setIncomplet(false);
-    titre.current?.focus();
-  }, [etape, releve]);
 
   // Focus décidé par la logique d'interaction, posé une fois puis consommé.
   useEffect(() => {
@@ -139,26 +130,31 @@ export function EcranReseau({
 
   const envoyer = (action: () => Promise<ResultatReseau>): void => {
     if (pending) return;
-    setIncomplet(false);
+    setManque(null);
     demarrer(async () => {
-      const retour = await action();
-      setStatut(retour.status);
-      if (SUCCES_RESEAU.includes(retour.status)) {
-        dispatch({ type: 'succes' });
-        router.refresh();
-      } else if (retour.status === 'closed' || retour.status === 'invalid') {
-        // L'état a changé ailleurs (clôture, liste de l'équipe) : la page le montre.
-        router.refresh();
-      }
+      const retour = await appelSansRejet(action, { status: 'failed' });
+      // Après l'attente, les mises à jour sont remarquées transition : React
+      // les valide avec le nouvel état de la page, revalidé par l'action, en
+      // un seul rendu. Le focus va donc une seule fois au titre, celui de
+      // l'étape affichée ; aussi après « closed », qui peut remplacer
+      // l'élément focalisé (clôture, interrupteur fermé).
+      demarrer(() => {
+        setStatut(retour.status);
+        if (
+          SUCCES_RESEAU.includes(retour.status) ||
+          retour.status === 'closed'
+        ) {
+          dispatch({ type: 'succes' });
+        }
+      });
     });
   };
 
-  const restantes = manquantes(releve.membres, brouillon);
   const message = messageReseau(
     {
       pending,
-      incomplet,
-      restantes,
+      incomplet: manque !== null,
+      restantes: manque ?? 0,
       statut,
       campagneOuverte: ouverte,
       locale
@@ -343,16 +339,17 @@ export function EcranReseau({
             ) : ouverte ? (
               <ListeFermee
                 base={base}
-                membres={releve.membres}
-                brouillon={brouillon}
-                setBrouillon={setBrouillon}
+                releve={releve}
                 libelles={libelles}
                 locale={locale}
                 pending={pending}
-                onIncomplet={() => {
+                onIncomplet={(restantes) => {
                   setStatut(null);
-                  setIncomplet(true);
+                  setManque(restantes);
                 }}
+                onSaisie={(restantes) =>
+                  setManque((avant) => (avant === null ? null : restantes))
+                }
                 onEnvoyer={(reponses) =>
                   envoyer(() => actions.repondre(participationId, reponses))
                 }
@@ -801,39 +798,49 @@ const nomAffiche = (
     remplir(libelles.releve.repli, { numero: formatNombre(index + 1, locale) })
   );
 
+// Le brouillon est l'état de ce composant, monté dans la section dont la clé
+// est l'étape : un changement d'étape le remonte, et le brouillon repart des
+// réponses enregistrées.
 function ListeFermee({
   base,
-  membres,
-  brouillon,
-  setBrouillon,
+  releve,
   libelles,
   locale,
   pending,
   onIncomplet,
+  onSaisie,
   onEnvoyer
 }: {
   base: string;
-  membres: MembreReseau[];
-  brouillon: Brouillon;
-  setBrouillon: (modifier: (avant: Brouillon) => Brouillon) => void;
+  releve: ReleveReseau;
   libelles: LibellesReseau;
   locale: string;
   pending: boolean;
-  onIncomplet: () => void;
+  /** Tentative d'enregistrement incomplète, avec le nombre de questions restantes. */
+  onIncomplet: (restantes: number) => void;
+  /** Chaque choix, avec le nombre de questions restantes. */
+  onSaisie: (restantes: number) => void;
   onEnvoyer: (reponses: ReponseLien[]) => void;
 }) {
+  const membres = releve.membres;
+  const [brouillon, setBrouillon] = useState<Brouillon>(() =>
+    brouillonDepuis(releve)
+  );
   const total = membres.length * LIENS.length;
   const restantes = manquantes(membres, brouillon);
   const faites = total - restantes;
 
-  const choisir = (cite: string, lien: Lien, valeur: number): void =>
-    setBrouillon((avant) => ({ ...avant, [cleReponse(cite, lien)]: valeur }));
+  const choisir = (cite: string, lien: Lien, valeur: number): void => {
+    const suivant = { ...brouillon, [cleReponse(cite, lien)]: valeur };
+    setBrouillon(suivant);
+    onSaisie(manquantes(membres, suivant));
+  };
 
   const soumettre = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     if (pending) return;
     if (restantes > 0) {
-      onIncomplet();
+      onIncomplet(restantes);
       const premier = membres.findIndex((m) =>
         LIENS.some(
           (lien) => brouillon[cleReponse(m.participationId, lien)] === undefined

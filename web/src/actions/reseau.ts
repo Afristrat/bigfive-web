@@ -1,8 +1,10 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import {
   LIENS,
+  SUCCES_RESEAU,
   valeurValide,
   type ReponseLien,
   type ResultatReseau
@@ -58,7 +60,41 @@ const avertir = (action: string, error: unknown): void => {
   );
 };
 
+// Page du relevé, toutes langues et toutes participations : chaque page est
+// propre à sa personne (force-dynamic), seul le cache du routeur est à vider.
+const PAGE_RELEVE = '/[locale]/mes-resultats/reseau/[participation]';
+
+/**
+ * Statuts après lesquels la base a changé (écriture faite, ou état modifié
+ * ailleurs : clôture, liste de l'équipe) : la page est revalidée, et la
+ * réponse de l'action porte son nouvel état. Jamais sur « reconnexion » (le
+ * rendu renverrait vers la connexion et effacerait le brouillon), ni sur un
+ * refus ou une panne (rien n'a changé, la saisie reste à l'écran).
+ */
+const aRevalider = (status: ResultatReseau['status']): boolean =>
+  SUCCES_RESEAU.includes(status) || status === 'closed' || status === 'invalid';
+
 async function appeler<S extends z.ZodTypeAny>(
+  accessToken: string,
+  action: string,
+  fn: string,
+  args: Record<string, unknown>,
+  schema: S,
+  succes: (valeur: z.infer<S>) => ResultatReseau['status']
+): Promise<ResultatReseau> {
+  const resultat = await executer(
+    accessToken,
+    action,
+    fn,
+    args,
+    schema,
+    succes
+  );
+  if (aRevalider(resultat.status)) revalidatePath(PAGE_RELEVE, 'page');
+  return resultat;
+}
+
+async function executer<S extends z.ZodTypeAny>(
   accessToken: string,
   action: string,
   fn: string,

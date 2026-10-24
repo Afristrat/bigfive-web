@@ -171,7 +171,7 @@ type ChargeurEtat = () => Promise<readonly LigneEtatRelecture[]>;
 
 // Durée de validité de l'état en mémoire : un verdict rendu dans un autre
 // processus s'applique au plus tard après ce délai (l'action de verdict
-// rafraîchit l'état aussitôt dans le sien).
+// relit l'état en base dans le sien avant de répondre, rafraichirApresEcriture).
 // ponytail: une seule instance de l'application ; plafond : une minute d'écart
 // entre deux instances ; réexamen : passage à plusieurs réplicas.
 const DUREE_ETAT_MS = 60_000;
@@ -180,6 +180,8 @@ type EtatPartage = {
   verdicts: ReadonlyMap<string, VerdictRelecture> | null;
   chargeLe: number;
   enCours: Promise<boolean> | null;
+  /** Chargement qui suivra celui en cours, demandé après une écriture. */
+  apres: Promise<boolean> | null;
 };
 // Sur globalThis : pages et actions serveur sont des paquets distincts qui
 // doivent partager le même état (même principe que rate-limit.ts).
@@ -190,7 +192,8 @@ const etatPartage = (): EtatPartage =>
   (partage.__tengaRelecture ??= {
     verdicts: null,
     chargeLe: 0,
-    enCours: null
+    enCours: null,
+    apres: null
   });
 const cle = (bloc: string, empreinte: string): string => `${bloc}|${empreinte}`;
 
@@ -251,6 +254,24 @@ export function rafraichirEtatRelecture(
     });
   etat.enCours = enCours;
   return enCours;
+}
+
+/**
+ * Relit l'état en base après une écriture (verdict). Un chargement déjà en
+ * cours a pu lire la base avant l'écriture : un nouveau part à sa fin, un seul
+ * pour toutes les écritures qui l'attendent, et c'est lui qui fait foi.
+ */
+export function rafraichirApresEcriture(
+  chargeur: ChargeurEtat = chargeurParDefaut
+): Promise<boolean> {
+  const etat = etatPartage();
+  if (!etat.enCours) return rafraichirEtatRelecture(chargeur);
+  // `enCours` est remis à null par son `finally`, avant cette suite.
+  etat.apres ??= etat.enCours.then(() => {
+    etat.apres = null;
+    return rafraichirEtatRelecture(chargeur);
+  });
+  return etat.apres;
 }
 
 // Sur le serveur Next.js seulement (ni en test, ni au build) : un état périmé
