@@ -154,13 +154,17 @@ app.results>authenticated>SELECT$f$,
 -- Fonctions exécutables par l'API, figées. La seule ligne ajoutée par la migration
 -- 0024 (app.reseau_exporter>authenticated, vérifiée par le test 44) est retirée à
 -- l'identique : la liste reste juste avant et après l'application de la 0024.
+-- Même retrait pour les trois fonctions de la 0026 (app.reseau_a_informer et
+-- app.reseau_marquer_informes>authenticated, app.reseau_courriels>service_role),
+-- vérifiées par le test 46.
 SELECT is(
-  replace(
+  regexp_replace(replace(
   (SELECT string_agg(n.nspname || '.' || p.proname || '>' || r.rol, E'\n' ORDER BY n.nspname, p.proname, r.rol)
      FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
      CROSS JOIN unnest(ARRAY['anon', 'authenticated', 'service_role']) AS r(rol)
     WHERE n.nspname IN ('app', 'private') AND has_function_privilege(r.rol, p.oid, 'EXECUTE')),
   E'\napp.reseau_exporter>authenticated\n', E'\n'),
+  E'\napp\\.reseau_(a_informer>authenticated|marquer_informes>authenticated|courriels>service_role)(?=\n|$)', '', 'g'),
   $f$app.accepter_invitation>service_role
 app.affecter_membre>authenticated
 app.ajouter_admin_tenga>authenticated
