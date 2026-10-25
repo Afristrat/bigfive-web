@@ -31,7 +31,9 @@ const confidentialiteEn = {
   reseau: {
     titre: 'Network survey: objections',
     texte:
-      'When a person objects to being named in a team network survey, their name is kept for that sole purpose: to prove that the objection is respected. The named report delivered to Tenga Conseil includes only the answers of people who gave a separate consent.'
+      'When a person objects to being named in a team network survey, their name is kept for that sole purpose: to prove that the objection is respected. The named report delivered to Tenga Conseil includes only the answers of people who gave a separate consent.',
+    conservation:
+      'A cited person’s record is kept as long as an answer still within its retention period cites them.'
   },
   contact: {
     titre: 'How to contact us?',

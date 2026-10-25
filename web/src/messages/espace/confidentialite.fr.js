@@ -32,7 +32,9 @@ const confidentialiteFr = {
   reseau: {
     titre: 'Relevé du réseau : opposition',
     texte:
-      'Lorsqu’une personne s’oppose à être nommée dans un relevé du réseau de son équipe, son nom est conservé à cette seule fin : prouver que l’opposition est respectée. Le rapport nominatif remis à Tenga Conseil ne comprend que les réponses des personnes qui ont donné un accord distinct.'
+      'Lorsqu’une personne s’oppose à être nommée dans un relevé du réseau de son équipe, son nom est conservé à cette seule fin : prouver que l’opposition est respectée. Le rapport nominatif remis à Tenga Conseil ne comprend que les réponses des personnes qui ont donné un accord distinct.',
+    conservation:
+      'La ligne d’une personne citée est conservée tant qu’une réponse encore dans sa durée de conservation la cite.'
   },
   contact: {
     titre: 'Comment nous contacter ?',

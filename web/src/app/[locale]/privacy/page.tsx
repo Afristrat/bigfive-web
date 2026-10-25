@@ -35,6 +35,7 @@ export default async function PrivacyPage({ params }: Props) {
         <p>{t('usage.texte')}</p>
         <h2>{t('reseau.titre')}</h2>
         <p>{t('reseau.texte')}</p>
+        <p>{t('reseau.conservation')}</p>
         <h2>{t('contact.titre')}</h2>
         <p>
           {supportEmail ? (
