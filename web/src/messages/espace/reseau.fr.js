@@ -199,6 +199,21 @@ const reseauFr = {
     repondants: 'Répondants',
     accordsCarte: 'Accords de carte',
     aucunGroupe: 'Aucun groupe dans cette campagne.',
+    information: {
+      bouton: 'Envoyer le courriel d’information',
+      envoi: 'Envoi en cours…',
+      aide: 'Envoie le courriel d’information (art. 5 de la loi 09-08) aux personnes des groupes de cette campagne qui n’ont pas encore pris connaissance de l’information dans l’application. Chaque personne le reçoit une seule fois ; l’envoi est inscrit au journal. Possible seulement relevé ouvert.',
+      aucun: 'Toutes les personnes ont déjà été informées : aucun courriel à envoyer.',
+      termine: '{n} courriel(s) envoyé(s).',
+      echecs: '{n} courriel(s) non envoyé(s) : relancez l’envoi, seules ces personnes seront reprises.',
+      restants: '{n} personne(s) restent à informer : relancez l’envoi.',
+      nonTraces: '{n} courriel(s) sont partis sans que l’envoi soit inscrit au journal : ces personnes risquent de le recevoir une seconde fois. Prévenez Tenga.',
+      ferme: 'Le relevé du réseau est fermé : aucun courriel ne peut partir.',
+      interdit: 'Cet envoi est réservé au consultant de l’organisation et aux administrateurs Tenga.',
+      plafond: 'Trop d’envois sur la dernière heure : réessayez plus tard.',
+      reconnexion: 'Votre session a expiré : reconnectez-vous puis relancez l’envoi.',
+      erreur: 'L’envoi a échoué : réessayez ; si cela se répète, prévenez Tenga.'
+    },
     exporter: 'Exporter les réponses (JSON)',
     exportAide:
       'Le fichier contient les réponses de chaque personne et le nom des personnes citées ; pour le consultant, les personnes qui se sont opposées n’y figurent que par leur nombre. Ne le transmettez à personne hors de la mission.'

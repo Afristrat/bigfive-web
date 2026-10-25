@@ -13,11 +13,17 @@ import fr from '@/messages/fr.js';
 
 type Tree = { [key: string]: string | Tree };
 vi.mock('next-intl/server', () => {
-  const lookup = (namespace: string, key: string): string => {
+  const noeud = (namespace: string, key: string): string | Tree => {
     let node: string | Tree | undefined = (fr as Tree)[namespace];
     for (const part of key.split('.')) {
       node = typeof node === 'object' ? node[part] : undefined;
     }
+    if (node === undefined)
+      throw new Error(`Message absent ${namespace}.${key}`);
+    return node;
+  };
+  const lookup = (namespace: string, key: string): string => {
+    const node = noeud(namespace, key);
     if (typeof node !== 'string')
       throw new Error(`Message absent ${namespace}.${key}`);
     return node;
@@ -26,11 +32,14 @@ vi.mock('next-intl/server', () => {
     setRequestLocale: () => undefined,
     getTranslations: async (arg: string | { namespace: string }) => {
       const namespace = typeof arg === 'string' ? arg : arg.namespace;
-      return (key: string, values?: Record<string, string>) =>
-        lookup(namespace, key).replace(
-          /\{(\w+)\}/g,
-          (whole, name: string) => values?.[name] ?? whole
-        );
+      return Object.assign(
+        (key: string, values?: Record<string, string>) =>
+          lookup(namespace, key).replace(
+            /\{(\w+)\}/g,
+            (whole, name: string) => values?.[name] ?? whole
+          ),
+        { raw: (key: string) => noeud(namespace, key) }
+      );
     }
   };
 });
@@ -379,6 +388,22 @@ describe('page du consultant : /o/[slug]/campagnes/[campagne]/reseau', () => {
       `href="/fr/o/acme/campagnes/${CAMPAGNE}/reseau/export"`
     );
   });
+
+  it('campagne ouverte : propose le courriel d’information, sans adresse ni nom', async () => {
+    loadReseauCampagne.mockResolvedValue(lecture);
+    const html = await rendreConsultant();
+    expect(html).toContain(fr.reseau.consultant.information.bouton);
+    expect(html).not.toMatch(/@/);
+  });
+
+  it.each(['brouillon', 'close'] as const)(
+    'campagne %s : aucun bouton d’envoi du courriel d’information',
+    async (statut) => {
+      loadReseauCampagne.mockResolvedValue({ ...lecture, statut });
+      const html = await rendreConsultant();
+      expect(html).not.toContain(fr.reseau.consultant.information.bouton);
+    }
+  );
 
   it('aucun groupe : état vide', async () => {
     loadReseauCampagne.mockResolvedValue({ ...lecture, groupes: [] });

@@ -1,6 +1,10 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { EntetePilotage } from '@/components/pilotage/entete-pilotage';
+import {
+  EnvoiInformation,
+  type EnvoiInformationLabels
+} from '@/components/reseau/envoi-information';
 import { loadOrgPage, parseOrgSlug } from '@/lib/campaign-data';
 import {
   loadCampagneOrganisation,
@@ -71,6 +75,10 @@ export default async function ReseauConsultantPage({ params }: Props) {
   const tp = await getTranslations('pilotage');
   // L'export est une route serveur ; l'anglais (langue par défaut) est servi sans préfixe.
   const prefixe = locale === 'en' ? '' : `/${locale}`;
+  // Textes à champs {n} : lus bruts, le composant client les remplit.
+  const labelsInformation = t.raw(
+    'consultant.information'
+  ) as EnvoiInformationLabels;
   const exportHref = `${prefixe}/o/${slug}/campagnes/${campaignId}/reseau/export`;
 
   return (
@@ -154,6 +162,16 @@ export default async function ReseauConsultantPage({ params }: Props) {
           {t('consultant.exportAide')}
         </p>
       </div>
+
+      {lecture.statut === 'ouverte' ? (
+        <div className='flex flex-col gap-3 border-t border-trait pt-6'>
+          <EnvoiInformation
+            campagne={campaignId}
+            locale={locale}
+            labels={labelsInformation}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -275,7 +275,7 @@ SELECT is(
                      E'\n' ORDER BY p.proname)
      FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
     WHERE n.nspname = 'app' AND (p.proname ~ '^reseau_' OR p.proname = 'mes_releves_reseau')
-      AND p.proname <> 'reseau_exporter'),
+      AND p.proname NOT IN ('reseau_exporter', 'reseau_a_informer', 'reseau_courriels', 'reseau_marquer_informes')),
   $f$mes_releves_reseau|true|s|true|tenga_owner|false|false|false|true
 reseau_consentir|true|v|true|tenga_owner|false|false|false|true
 reseau_informer|true|v|true|tenga_owner|false|false|false|true

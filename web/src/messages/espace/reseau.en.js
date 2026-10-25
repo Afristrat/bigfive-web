@@ -196,6 +196,21 @@ const reseauEn = {
     repondants: 'Respondents',
     accordsCarte: 'Map consents',
     aucunGroupe: 'No group in this campaign.',
+    information: {
+      bouton: 'Send the information e-mail',
+      envoi: 'Sending…',
+      aide: 'Sends the information e-mail (art. 5 of law 09-08) to the people in this campaign’s groups who have not yet read the information in the application. Each person receives it only once; the sending is recorded in the log. Possible only while the survey is open.',
+      aucun: 'Everyone has already been informed: no e-mail to send.',
+      termine: '{n} e-mail(s) sent.',
+      echecs: '{n} e-mail(s) not sent: send again, only these people will be picked up.',
+      restants: '{n} person(s) still to be informed: send again.',
+      nonTraces: '{n} e-mail(s) went out without the sending being recorded in the log: these people may receive it a second time. Tell Tenga.',
+      ferme: 'The network survey is closed: no e-mail can be sent.',
+      interdit: 'This sending is reserved for the organisation’s consultant and Tenga administrators.',
+      plafond: 'Too many sendings in the last hour: try again later.',
+      reconnexion: 'Your session has expired: sign in again, then send again.',
+      erreur: 'The sending failed: try again; if it keeps happening, tell Tenga.'
+    },
     exporter: 'Export the answers (JSON)',
     exportAide:
       'The file contains each person’s answers and the names of the people they cite; for the consultant, people who objected appear only as a count. Do not share it with anyone outside the assignment.'
