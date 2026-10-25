@@ -7,7 +7,7 @@ interface Props {
 }
 
 // Texte traduit en français et en arabe sans engagement nouveau : il relève
-// d'Amine et d'une relecture juridique (textes.md § 9). L'arabe est un brouillon.
+// d'Amine et d'une relecture juridique (textes.md § 9). L'arabe est validé par Amine (25/10/2026).
 export default async function PrivacyPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
