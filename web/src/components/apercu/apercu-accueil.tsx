@@ -93,6 +93,132 @@ const REGLES: readonly string[] = [
   'Rien ne bouge et rien ne change de couleur selon votre réponse.'
 ];
 
+type Point = { titre: string; texte: string };
+
+// Textes repris de la page d'accueil en production (messages fr), sauf mention.
+const TEMPS: readonly Point[] = [
+  {
+    titre: 'Vous répondez',
+    texte:
+      '120 affirmations, sans limite de temps. Pour chacune, dites comment vous êtes d’habitude, pas comment vous aimeriez être. Vous pouvez vous arrêter et reprendre plus tard sur cet appareil.'
+  },
+  {
+    titre: 'Vous lisez votre profil',
+    texte:
+      'Cinq grands facteurs et trente facettes, chacun décrit comme une tendance. Rien ne vous classe, rien n’est un diagnostic.'
+  },
+  {
+    titre: 'Vous le conservez',
+    texte:
+      'Un identifiant vous permet de retrouver votre profil. La page s’imprime, ou s’enregistre au format PDF, depuis votre navigateur.'
+  }
+];
+
+// « dans des dizaines de langues » retiré : chiffre non sourcé dans le texte actuel.
+const RECHERCHE: readonly Point[] = [
+  {
+    titre: 'Une structure qui voyage',
+    texte:
+      'Les cinq grands facteurs ont été retrouvés dans la plupart des cultures étudiées.'
+  },
+  {
+    titre: 'Un lien réel, mais modeste',
+    texte:
+      'Parmi les cinq facteurs, la conscienciosité est celui dont le lien avec la performance professionnelle est le plus régulièrement observé. Son ampleur est modeste.'
+  },
+  {
+    titre: 'Des groupes, pas des personnes',
+    texte:
+      'Ces résultats décrivent des tendances de groupe. Ils ne prédisent pas une personne, et les traits ne sont qu’un élément parmi d’autres : les compétences, l’expérience et le contexte comptent aussi.'
+  }
+];
+
+const LIMITES: readonly Point[] = [
+  {
+    titre: 'Il ne pose pas de diagnostic',
+    texte:
+      'Il décrit des tendances habituelles de comportement, d’après vos propres réponses.'
+  },
+  {
+    titre: 'Il n’est pas un examen',
+    texte:
+      'Il n’est pas un test de compétences, d’intelligence ni un examen de santé.'
+  },
+  {
+    titre: 'Il ne dit que ce que vous dites de vous',
+    texte:
+      'Ses résultats reposent sur vos propres réponses : une information précieuse, mais partielle.'
+  },
+  {
+    titre: 'Il n’est pas conçu pour trier des candidats',
+    texte:
+      'Quand l’enjeu est élevé, en recrutement par exemple, des réponses peuvent être embellies. Nous ne recommandons pas ce questionnaire pour sélectionner.'
+  }
+];
+
+const FICHE: readonly (readonly [string, string])[] = [
+  ['Inventaire', 'IPIP-NEO-120, de John A. Johnson (2014)'],
+  ['Origine des affirmations', 'International Personality Item Pool'],
+  ['Statut', 'Domaine public'],
+  ['Contenu', '120 affirmations, 5 facteurs, 30 facettes'],
+  ['Langues', 'Français, العربية, English'],
+  ['Durée', 'Sans limite de temps'],
+  [
+    'Formulations',
+    'Quelques-unes retouchées, sans changer la facette mesurée ni le sens de cotation.'
+  ],
+  [
+    'Validation de cette version',
+    'Aucune étude de validation à ce jour. Nous le disons, plutôt que de le laisser deviner.'
+  ]
+];
+
+const FAQ: readonly (readonly [string, string])[] = [
+  [
+    'Est-ce scientifique ?',
+    'Le modèle des cinq grands facteurs a fait l’objet de très nombreuses études, dont une méta-analyse de 410 échantillons et de plus de 400 000 personnes (Judge et coll., 2013). Le questionnaire reprend un inventaire publié et placé dans le domaine public. Il n’a pas pour but de vous évaluer ni de vous classer. Ses limites, nous les disons : il décrit ce que vous dites de vous-même, et nous n’avons trouvé aucune étude qui le valide en arabe marocain ni en français pour le Maroc.'
+  ],
+  [
+    'À quoi ça sert ?',
+    'À vous donner des mots pour décrire votre façon de travailler, et à ouvrir une conversation avec vos collègues. Ce n’est pas une promesse de résultat : c’est un support de dialogue.'
+  ],
+  [
+    'Le questionnaire pose-t-il un diagnostic ?',
+    'Non. Il décrit des tendances de comportement d’après vos propres réponses. Ce n’est ni un test de compétences, ni un test d’intelligence, ni un examen de santé.'
+  ]
+];
+
+function Points({
+  id,
+  titre,
+  intro,
+  points
+}: {
+  id: string;
+  titre: string;
+  intro: string;
+  points: readonly Point[];
+}): ReactNode {
+  return (
+    <section className={styles.section} aria-labelledby={id}>
+      <div className={styles.deux}>
+        <div className={styles.collant}>
+          <h2 id={id}>{titre}</h2>
+          <p className={styles.sous}>{intro}</p>
+        </div>
+        <ul className={styles.points}>
+          {points.map((p) => (
+            <li key={p.titre}>
+              <h3>{p.titre}</h3>
+              <p>{p.texte}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 function Schema({ sombre }: { sombre: boolean }): ReactNode {
   const conteneur = useRef<HTMLDivElement>(null);
   const f0 = useRef<HTMLDivElement>(null);
@@ -211,6 +337,32 @@ export function ApercuAccueil(): ReactNode {
 
       <div className={styles.gouttiere}>
         <div className={styles.contenu}>
+          <section className={styles.section} aria-labelledby='t-depart'>
+            <div className={styles.deux}>
+              <h2 id='t-depart'>Le point de départ</h2>
+              <div className={styles.organisation}>
+                <p>
+                  On compose une équipe. On conduit un changement. On choisit
+                  une formation. Chaque fois, il faut comprendre comment les
+                  personnes travaillent.
+                </p>
+                <p>
+                  Le questionnaire donne un vocabulaire commun pour en
+                  parler&nbsp;: cinq facteurs, trente facettes, des définitions
+                  publiques. Il ouvre la conversation&nbsp;; il ne la remplace
+                  pas.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <Points
+            id='t-temps'
+            titre='Trois temps, à votre rythme'
+            intro='Rien à préparer, rien à réviser&nbsp;: il n’y a ni bonne ni mauvaise réponse.'
+            points={TEMPS}
+          />
+
           <section className={styles.section} aria-labelledby='t-profil'>
             <div className={`${styles.deux} ${styles.centre}`}>
               <div>
@@ -264,6 +416,13 @@ export function ApercuAccueil(): ReactNode {
             </div>
           </section>
 
+          <Points
+            id='t-recherche'
+            titre='Ce que la recherche établit, et jusqu’où'
+            intro='Trois constats, sans en forcer la portée. Les références complètes sont publiées.'
+            points={RECHERCHE}
+          />
+
           <section
             id='ecran'
             className={styles.section}
@@ -308,13 +467,53 @@ export function ApercuAccueil(): ReactNode {
             </div>
           </section>
 
+          <Points
+            id='t-limites'
+            titre='Ce que le questionnaire ne fera pas'
+            intro='Une méthode se juge aussi à ce qu’elle refuse de promettre.'
+            points={LIMITES}
+          />
+
+          <section className={styles.section} aria-labelledby='t-fiche'>
+            <div className={styles.deux}>
+              <div>
+                <h2 id='t-fiche'>Fiche de l’instrument</h2>
+                <p className={styles.sous}>
+                  De quoi vérifier par vous-même, sans nous croire sur parole.
+                </p>
+              </div>
+              <dl className={styles.fiche}>
+                {FICHE.map(([terme, valeur]) => (
+                  <div key={terme}>
+                    <dt>{terme}</dt>
+                    <dd>{valeur}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </section>
+
+          <section className={styles.section} aria-labelledby='t-faq'>
+            <div className={styles.deux}>
+              <h2 id='t-faq'>Trois questions avant de commencer</h2>
+              <div className={styles.faq}>
+                {FAQ.map(([question, reponse]) => (
+                  <details key={question}>
+                    <summary>{question}</summary>
+                    <p>{reponse}</p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </section>
+
           <section
             id='presentation'
             className={styles.section}
             aria-labelledby='t-presentation'
           >
             <div className={styles.deux}>
-              <h2 id='t-presentation'>Pour votre organisation</h2>
+              <h2 id='t-presentation'>Un tiers de confiance</h2>
               <div className={styles.organisation}>
                 <p>
                   Tenga Conseil est le tiers entre votre direction et vos
@@ -322,12 +521,14 @@ export function ApercuAccueil(): ReactNode {
                   transmet rien d’individuel à l’organisation.
                 </p>
                 <p>
-                  Demandez une présentation&nbsp;: Tenga Conseil vous répond
-                  pour convenir d’un échange.
+                  Pour votre organisation, demandez une présentation&nbsp;:
+                  Tenga Conseil vous répond pour convenir d’un échange.
                 </p>
               </div>
             </div>
           </section>
+
+          <p className={styles.signature}>Comprendre avant de juger.</p>
         </div>
       </div>
     </div>

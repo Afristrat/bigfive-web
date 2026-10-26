@@ -14,6 +14,10 @@
   --sidebar-foreground: #f4f5fc;
   --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
 
+  /* Pleine largeur : sort du <main> du site (max-w-6xl, marges haute et basse) sans toucher à la mise en page globale. */
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  margin-block: -2.5rem -6rem;
   position: relative;
   overflow-x: clip;
   background: var(--background);
@@ -36,6 +40,9 @@
   --primary-foreground: #0a0a0a;
   --sidebar-foreground: #fafafa;
 }
+/* 100vw inclut la barre de défilement : sans ceci, un défilement horizontal apparaît sur la page. */
+:global(body):has(.racine) { overflow-x: clip; }
+@media (min-width: 768px) { .racine { margin-block-start: -4rem; } }
 .racine *, .racine *::before, .racine *::after { box-sizing: border-box; }
 .racine :focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
 .racine :where(h1, h2, h3, p, ul, figure) { margin: 0; padding: 0; }
@@ -127,6 +134,22 @@
 .choix input:focus-visible + label { outline: 2px solid var(--ring); outline-offset: 3px; }
 .ecran-note { margin-top: 28px; font-size: 0.875rem; color: var(--muted-foreground); }
 
+.points li { padding-block: 28px; border-top: 1px solid var(--border); }
+.points li:first-child { border-top: 0; padding-top: 0; }
+.points h3 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; }
+.points p { margin-top: 8px; max-width: 58ch; color: var(--muted-foreground); }
+
+.fiche > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 24px; padding-block: 16px; border-top: 1px solid var(--border); }
+.fiche > div:first-child { border-top: 0; padding-top: 0; }
+.fiche dt { color: var(--muted-foreground); font-size: 0.9375rem; }
+.fiche dd { margin: 0; }
+
+.faq details { border-top: 1px solid var(--border); padding-block: 18px; }
+.faq details:first-child { border-top: 0; padding-top: 0; }
+.faq summary { cursor: pointer; font-weight: 600; font-size: 1.0625rem; }
+.faq details p { margin-top: 12px; max-width: 62ch; color: var(--muted-foreground); }
+.signature { padding-block: 48px 72px; border-top: 1px solid var(--border); font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 600; letter-spacing: -0.02em; }
+
 .organisation p:first-child { max-width: 52ch; font-size: 1.125rem; }
 .organisation p + p { margin-top: 16px; max-width: 52ch; color: var(--muted-foreground); }
 
@@ -139,6 +162,7 @@
   .heros { padding-block: 40px 56px; }
   .collant { position: static; }
   .section { padding-block: 48px; }
+  .fiche > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .ecran { padding: 24px 18px; }
   .choix { grid-template-columns: minmax(0, 1fr); }
   .choix label { flex-direction: row; justify-content: flex-start; min-height: 52px; padding: 12px 16px; text-align: start; font-size: 0.875rem; }
