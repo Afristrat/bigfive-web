@@ -38,8 +38,8 @@
 }
 .racine *, .racine *::before, .racine *::after { box-sizing: border-box; }
 .racine :focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
-.racine h1, .racine h2, .racine h3, .racine p, .racine ul, .racine figure { margin: 0; padding: 0; }
-.racine ul { list-style: none; }
+.racine :where(h1, h2, h3, p, ul, figure) { margin: 0; padding: 0; }
+.racine :where(ul) { list-style: none; }
 
 .note {
   background: var(--card);
