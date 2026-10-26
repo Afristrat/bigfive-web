@@ -60,7 +60,7 @@
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   gap: 40px;
   align-items: center;
-  padding-block: 56px 96px;
+  padding-block: 56px 48px;
 }
 .heros h1 { font-size: clamp(2.25rem, 4.6vw, 3.75rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
 .chapeau { margin-top: 24px; max-width: 44ch; font-size: 1.125rem; opacity: 0.8; }
@@ -134,6 +134,17 @@
 .choix input:focus-visible + label { outline: 2px solid var(--ring); outline-offset: 3px; }
 .ecran-note { margin-top: 28px; font-size: 0.875rem; color: var(--muted-foreground); }
 
+.facteurs .facettes-titre { margin-top: 16px; font-size: 0.875rem; font-weight: 500; color: var(--foreground); }
+.facettes { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.facettes li { font-size: 0.9375rem; color: var(--muted-foreground); }
+.chiffres { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-block: 0; padding-block: 28px 56px; border-top: 1px solid rgb(255 255 255 / 0.18); }
+.chiffres > div { display: flex; flex-direction: column-reverse; gap: 2px; }
+.chiffres dd { margin: 0; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+.chiffres dt { font-size: 0.875rem; opacity: 0.7; }
+.lien { margin-top: 16px; }
+.lien a { font-weight: 500; color: var(--primary); text-decoration: underline; text-underline-offset: 4px; }
+.source { margin-top: 24px; max-width: 62ch; font-size: 0.875rem; color: var(--muted-foreground); }
+.source a { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
 .points li { padding-block: 28px; border-top: 1px solid var(--border); }
 .points li:first-child { border-top: 0; padding-top: 0; }
 .points h3 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; }
@@ -159,7 +170,8 @@
 }
 @media (max-width: 860px) {
   .heros, .deux { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-  .heros { padding-block: 40px 56px; }
+  .heros { padding-block: 40px 32px; }
+  .chiffres { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-block-end: 40px; }
   .collant { position: static; }
   .section { padding-block: 48px; }
   .fiche > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }

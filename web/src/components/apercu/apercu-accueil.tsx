@@ -2,9 +2,20 @@
 
 import { useRef, type CSSProperties, type ReactNode } from 'react';
 import { useTheme } from 'next-themes';
+import { facetLabel, type DomainCode } from '@/lib/domain-labels';
+import { Link } from '@/navigation';
 import { AnimatedBeam } from './animated-beam';
 import { Instrument } from './instrument';
 import styles from './apercu.module.css';
+
+const FACETTES = [1, 2, 3, 4, 5, 6] as const;
+
+const CHIFFRES: readonly (readonly [string, string])[] = [
+  ['120', 'affirmations'],
+  ['5', 'grands facteurs'],
+  ['30', 'facettes'],
+  ['3', 'langues']
+];
 
 type Facteur = {
   cle: string;
@@ -192,12 +203,14 @@ function Points({
   id,
   titre,
   intro,
-  points
+  points,
+  lien
 }: {
   id: string;
   titre: string;
   intro: string;
   points: readonly Point[];
+  lien?: { href: '/methode'; texte: string };
 }): ReactNode {
   return (
     <section className={styles.section} aria-labelledby={id}>
@@ -205,6 +218,11 @@ function Points({
         <div className={styles.collant}>
           <h2 id={id}>{titre}</h2>
           <p className={styles.sous}>{intro}</p>
+          {lien ? (
+            <p className={styles.lien}>
+              <Link href={lien.href}>{lien.texte}</Link>
+            </p>
+          ) : null}
         </div>
         <ul className={styles.points}>
           {points.map((p) => (
@@ -332,6 +350,14 @@ export function ApercuAccueil(): ReactNode {
               </figcaption>
             </figure>
           </div>
+          <dl className={`${styles.contenu} ${styles.chiffres}`}>
+            {CHIFFRES.map(([valeur, libelle]) => (
+              <div key={libelle}>
+                <dd>{valeur}</dd>
+                <dt>{libelle}</dt>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
 
@@ -409,6 +435,14 @@ export function ApercuAccueil(): ReactNode {
                     <div>
                       <h3>{f.nom}</h3>
                       <p>{f.texte}</p>
+                      <p className={styles['facettes-titre']}>Six facettes</p>
+                      <ul className={styles.facettes}>
+                        {FACETTES.map((n) => (
+                          <li key={n}>
+                            {facetLabel(f.initiale as DomainCode, n, 'fr')}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </li>
                 ))}
@@ -421,6 +455,7 @@ export function ApercuAccueil(): ReactNode {
             titre='Ce que la recherche établit, et jusqu’où'
             intro='Trois constats, sans en forcer la portée. Les références complètes sont publiées.'
             points={RECHERCHE}
+            lien={{ href: '/methode', texte: 'Consulter la méthode et les références' }}
           />
 
           <section
@@ -481,15 +516,33 @@ export function ApercuAccueil(): ReactNode {
                 <p className={styles.sous}>
                   De quoi vérifier par vous-même, sans nous croire sur parole.
                 </p>
+                <p className={styles.lien}>
+                  <Link href='/methode'>Méthode et références</Link>
+                </p>
               </div>
-              <dl className={styles.fiche}>
-                {FICHE.map(([terme, valeur]) => (
-                  <div key={terme}>
-                    <dt>{terme}</dt>
-                    <dd>{valeur}</dd>
-                  </div>
-                ))}
-              </dl>
+              <div>
+                <dl className={styles.fiche}>
+                  {FICHE.map(([terme, valeur]) => (
+                    <div key={terme}>
+                      <dt>{terme}</dt>
+                      <dd>{valeur}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className={styles.source}>
+                  Questions et calcul des scores&nbsp;: International
+                  Personality Item Pool (
+                  <a
+                    href='https://ipip.ori.org'
+                    rel='noopener noreferrer'
+                    target='_blank'
+                  >
+                    ipip.ori.org
+                  </a>
+                  ), questionnaire IPIP-NEO-120 de John A. Johnson (2014),
+                  placé dans le domaine public.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -503,6 +556,9 @@ export function ApercuAccueil(): ReactNode {
                     <p>{reponse}</p>
                   </details>
                 ))}
+                <p className={styles.lien}>
+                  <Link href='/faq'>Toutes les questions fréquentes</Link>
+                </p>
               </div>
             </div>
           </section>
