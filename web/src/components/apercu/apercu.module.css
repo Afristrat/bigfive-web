@@ -106,8 +106,8 @@
 .noeud-sortie { width: 60px; height: 60px; font-size: 0.75rem; }
 
 /* Facteurs */
-.facteurs li { display: grid; grid-template-columns: 6px minmax(0, 1fr); gap: 24px; padding-block: 28px; border-top: 1px solid var(--border); }
-.facteurs li:first-child { border-top: 0; padding-top: 0; }
+.facteurs > li { display: grid; grid-template-columns: 6px minmax(0, 1fr); gap: 24px; padding-block: 28px; border-top: 1px solid var(--border); }
+.facteurs > li:first-child { border-top: 0; padding-top: 0; }
 .fil { border-radius: 2px; background: var(--c); }
 .facteurs h3 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; }
 .facteurs p { margin-top: 8px; max-width: 58ch; color: var(--muted-foreground); }
