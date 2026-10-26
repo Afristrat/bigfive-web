@@ -175,13 +175,6 @@ export function ApercuAccueil(): ReactNode {
 
   return (
     <div className={styles.racine} lang='fr' dir='ltr'>
-      <p className={`${styles.note} ${styles.gouttiere}`}>
-        <span className={styles.contenu} style={{ display: 'block' }}>
-          Aperçu de travail, non indexé. Textes provisoires, version française
-          seule.
-        </span>
-      </p>
-
       <div className={styles.bande}>
         <div className={styles.gouttiere}>
           <div className={`${styles.contenu} ${styles.heros}`}>

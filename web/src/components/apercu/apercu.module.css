@@ -41,14 +41,6 @@
 .racine :where(h1, h2, h3, p, ul, figure) { margin: 0; padding: 0; }
 .racine :where(ul) { list-style: none; }
 
-.note {
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  color: var(--muted-foreground);
-  font-size: 0.8125rem;
-  padding-block: 10px;
-}
-
 .gouttiere {
   padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
 }

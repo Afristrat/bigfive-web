@@ -12,7 +12,7 @@ const inter = Inter({
 
 // Aperçu de travail : jamais indexé, absent du plan du site.
 export const metadata: Metadata = {
-  title: 'Aperçu de l’accueil',
+  title: 'Tenga Conseil',
   robots: { index: false, follow: false }
 };
 
