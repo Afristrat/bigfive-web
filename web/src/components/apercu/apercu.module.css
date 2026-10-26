@@ -137,7 +137,6 @@
 
 .organisation p:first-child { max-width: 52ch; font-size: 1.125rem; }
 .organisation p + p { margin-top: 16px; max-width: 52ch; color: var(--muted-foreground); }
-.pied { padding-block: 32px 56px; border-top: 1px solid var(--border); font-size: 0.875rem; color: var(--muted-foreground); }
 
 @media (min-width: 640px) {
   .etiquette { display: block; }

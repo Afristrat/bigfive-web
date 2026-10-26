@@ -335,11 +335,6 @@ export function ApercuAccueil(): ReactNode {
               </div>
             </div>
           </section>
-
-          <footer className={styles.pied}>
-            Tenga Conseil, Maroc. Aperçu de travail. Faisceaux : Animated Beam,
-            de Magic UI (MIT).
-          </footer>
         </div>
       </div>
     </div>
